@@ -2,12 +2,19 @@ import { registerEventHandler } from "~/lib/core"
 import { getGuild, getReactionFromPartial } from "~/lib/helpers"
 import { APPLICATION_ID, ROLES } from "~/lib/constants"
 
-const MESSAGE_ID = "1097479968872747079"
+const MESSAGE_ID = ""
 
 const OPTIONS = {
-  "🇹": ROLES.PRONOUNS_THEY_THEM,
-  "🇸": ROLES.PRONOUNS_SHE_HER,
-  "🇭": ROLES.PRONOUNS_HE_HIM,
+  "🖤": ROLES.REGION_USA,
+  "❤️": ROLES.REGION_CANADA,
+  "🧡": ROLES.REGION_MEXICO,
+  "💛": ROLES.REGION_SOUTH_AMERICA,
+  "💚": ROLES.REGION_AFRICA,
+  "💙": ROLES.REGION_ASIA,
+  "💜": ROLES.REGION_AUSTRALIA,
+  "🤍": ROLES.REGION_EUROPE,
+  "🇳🇿": ROLES.REGION_NEW_ZEALAND,
+  "🇬🇧": ROLES.REGION_UNITED_KINGDOM,
 }
 
 function isValidOption(name: string | null): name is keyof typeof OPTIONS {
@@ -63,66 +70,4 @@ registerEventHandler("messageReactionRemove", async (partialReaction, partialUse
 
   // Remove role from this member
   await member.roles.remove(OPTIONS[option])
-})
-
-registerEventHandler("ready", async (client) => {
-  //   const guild = await getGuild(client)
-  //   const channel = await getChannel(guild, CHANNELS.SERVER_MAP_AND_ROLES)
-  //   if (!channel.isTextBased()) {
-  //     throw Error("Expected CHANNELS.SERVER_MAP_AND_ROLES channel to be text based")
-  //   }
-  //   const message = await channel.send({
-  //     embeds: [
-  //       new EmbedBuilder({
-  //         description:
-  //           "React to this message to add your preferred pronouns to your roles!" +
-  //           "\n" +
-  //           "🇹" +
-  //           "\n" +
-  //           "They/Them" +
-  //           "\n" +
-  //           "🇸" +
-  //           "\n" +
-  //           "She/Her" +
-  //           "\n" +
-  //           "🇭" +
-  //           "\n" +
-  //           "He/Him",
-  //       }),
-  //     ],
-  //   })
-  //   try {
-  //     // Do not parallelize as we want to maintain this order
-  //     await message.react("🇹")
-  //     await message.react("🇸")
-  //     await message.react("🇭")
-  //   } catch (error) {
-  //     console.error("One of the emojis failed to react:", error)
-  //   }
-  // })
-  // async function handlePronouns(
-  //   partialReaction: MessageReaction | PartialMessageReaction,
-  //   partialUser: User | PartialUser
-  // ) {
-  //   // Ignore bot own reactions
-  //   if (partialUser.id === APPLICATION_ID) return
-  //   const [guild, reaction, user] = await Promise.all([
-  //     getGuild(bot),
-  //     getReactionFromPartial(partialReaction),
-  //     getUserFromPartial(partialUser),
-  //   ])
-  //   const member =
-  //     guild.members.cache.find((member) => member.id === partialUser.id) ?? (await guild.members.fetch({ user }))
-  //   const roles = member
-  //   switch (reaction.emoji.name) {
-  //     case "🇹":
-  //       member.roles.remove()
-  //       user.break
-  //     case "🇸":
-  //       break
-  //     case "🇭":
-  //       break
-  //     default:
-  //       await reaction.remove()
-  //   }
 })
