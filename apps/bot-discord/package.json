@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx --watch ./src/index.ts"
+    "dev": "tsx watch ./src/index.ts",
+    "sync": "tsx ./src/scripts/sync.ts"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
