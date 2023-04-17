@@ -1,6 +1,6 @@
 import { Client, MessageReaction, PartialMessageReaction, PartialUser, User } from "discord.js"
 
-import { getGuild, getReactionFromPartial, getUserFromPartial } from "~/lib/helpers"
+import { getGuild, getReactionFromPartial } from "~/lib/helpers"
 import { APPLICATION_ID, ROLES } from "~/lib/constants"
 
 const MESSAGE_ID = "1097479968872747079"
@@ -31,34 +31,21 @@ export default async function (
 
   const [guild, reaction] = await Promise.all([getGuild(client), getReactionFromPartial(partialReaction)])
 
-  // Ensure fresh member data
+  // Ensure member data is fresh
   const member = guild.members.resolve(partialUser.id)
 
-  if (!member) throw Error("Could not resolve member")
+  if (!member) throw Error(`Could not resolve member for user ${partialUser}`)
 
-  // Remove other reactions and roles from this member
-  await Promise.all(
-    reaction.message.reactions.cache.map(async (messageReaction) => {
-      if (messageReaction.emoji.name === option) return
-      return messageReaction.users.remove(partialUser.id)
-    })
-  )
+  // Remove other reactions from this member
+  const reactionsPromises = reaction.message.reactions.cache.map(async (messageReaction) => {
+    if (messageReaction.emoji.name !== option) return messageReaction.users.remove(partialUser.id)
+  })
 
-  // Remove other reactions and roles from this member
-  // Promise.all(
-  //   reaction.message.reactions.cache.map(async (messageReaction) => {
-  //     const users = await messageReaction.users.fetch()
-  //     if (messageReaction.emoji.name !== option) {
-  //       console.log("removing other reaction:", reaction.emoji.name)
-  //       messageReaction.users.cache.delete(user.id)
-  //       await member.roles.remove(OPTIONS[option])
-  //     }
-  //   })
-  // )
+  // Remove other roles from this member
+  const rolesPromises = Object.entries(OPTIONS).map(([k, v]) => {
+    if (k === option) return member.roles.add(v)
+    if (member.roles.cache.has(v)) return member.roles.remove(v)
+  })
 
-  // // Member already has selected role. Bail out
-  // if (member.roles.cache.has(OPTIONS[option])) return
-
-  // // Add the new role
-  // await member.roles.add(OPTIONS[option])
+  await Promise.all([...reactionsPromises, ...rolesPromises])
 }
