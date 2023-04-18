@@ -3,7 +3,7 @@ import { EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from "discord.
 import { registerSlashCommand } from "~/lib/core"
 import { CHANNELS } from "~/lib/constants"
 
-export const builder = new SlashCommandBuilder()
+const builder = new SlashCommandBuilder()
   .setName("bootstrapreactionsmessages")
   .setDescription("Creates the neccesary messages for the reactions system to work")
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)

@@ -2,7 +2,7 @@ import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js"
 
 import { registerSlashCommand } from "~/lib/core"
 
-export const builder = new SlashCommandBuilder()
+const builder = new SlashCommandBuilder()
   .setName("say")
   .setDescription("Make PAL say something in the current channel")
   .addStringOption((option) => option.setName("message").setDescription("Message to send").setRequired(true))
