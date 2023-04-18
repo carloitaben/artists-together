@@ -67,9 +67,9 @@ registerEventHandler("messageReactionRemove", async (partialReaction, partialUse
 
 registerEventHandler("ready", async (client) => {
   //   const guild = await getGuild(client)
-  //   const channel = await getChannel(guild, CHANNELS.SERVER_MAP_AND_ROLES)
+  //   const channel = await getChannel(guild, CHANNELS.ROLES)
   //   if (!channel.isTextBased()) {
-  //     throw Error("Expected CHANNELS.SERVER_MAP_AND_ROLES channel to be text based")
+  //     throw Error("Expected CHANNELS.ROLES channel to be text based")
   //   }
   //   const message = await channel.send({
   //     embeds: [
