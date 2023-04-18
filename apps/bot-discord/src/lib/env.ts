@@ -9,10 +9,4 @@ const schema = z.object({
   DISCORD_SERVER_ID: z.string().nonempty(),
 })
 
-schema.parse(process.env)
-
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv extends z.infer<typeof schema> {}
-  }
-}
+export const env = schema.parse(process.env)

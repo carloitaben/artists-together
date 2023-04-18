@@ -1,5 +1,7 @@
 import { MessageReaction, PartialMessageReaction, Client } from "discord.js"
 
+import { env } from "~/lib/env"
+
 export async function getReactionFromPartial(reaction: MessageReaction | PartialMessageReaction) {
   if (!reaction.partial) return reaction
 
@@ -11,7 +13,5 @@ export async function getReactionFromPartial(reaction: MessageReaction | Partial
 }
 
 export async function getGuild(client: Client) {
-  return (
-    client.guilds.cache.get(process.env.DISCORD_SERVER_ID) ?? (await client.guilds.fetch(process.env.DISCORD_SERVER_ID))
-  )
+  return client.guilds.cache.get(env.DISCORD_SERVER_ID) ?? (await client.guilds.fetch(env.DISCORD_SERVER_ID))
 }

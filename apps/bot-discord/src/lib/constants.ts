@@ -1,7 +1,9 @@
+import { env } from "~/lib/env"
+
 export const APPLICATION_ID = "1097235077966073927"
 
 export const CHANNELS =
-  process.env.NODE_ENV === "development"
+  env.NODE_ENV === "development"
     ? {
         ROLES: "1097464220720840795",
       }
@@ -10,7 +12,7 @@ export const CHANNELS =
       }
 
 export const ROLES =
-  process.env.NODE_ENV === "development"
+  env.NODE_ENV === "development"
     ? {
         PRONOUNS_THEY_THEM: "1097474639384555550",
         PRONOUNS_SHE_HER: "1097474589841436722",
