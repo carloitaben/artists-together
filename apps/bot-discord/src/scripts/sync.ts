@@ -1,9 +1,11 @@
 import { REST, Routes } from "discord.js"
 
+import "~/lib/env"
 import { APPLICATION_ID } from "~/lib/constants"
 import { slashCommandsMap } from "~/lib/core"
 
 import "~/app/admin/say"
+import "~/app/admin/bootstrapReactionsMessages"
 import "~/app/reactions/pronouns"
 import "~/app/reactions/region"
 
