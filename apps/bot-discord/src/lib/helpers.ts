@@ -1,7 +1,5 @@
 import { User, PartialUser, MessageReaction, PartialMessageReaction, Client, Message, Channel } from "discord.js"
 
-import { env } from "./env"
-
 export async function getUserFromPartial(user: User | PartialUser) {
   if (!user.partial) return user
 
@@ -23,7 +21,9 @@ export async function getReactionFromPartial(reaction: MessageReaction | Partial
 }
 
 export async function getGuild(client: Client) {
-  return client.guilds.cache.get(env.DISCORD_SERVER_ID) ?? (await client.guilds.fetch(env.DISCORD_SERVER_ID))
+  return (
+    client.guilds.cache.get(process.env.DISCORD_SERVER_ID) ?? (await client.guilds.fetch(process.env.DISCORD_SERVER_ID))
+  )
 }
 
 export async function getChannel(client: Client, channelId: string) {
