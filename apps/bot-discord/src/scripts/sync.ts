@@ -6,8 +6,8 @@ import { APPLICATION_ID } from "~/lib/constants"
 
 import "~/app/admin/say"
 import "~/app/admin/bootstrapReactionsMessages"
-import "~/app/reactions/pronouns"
-import "~/app/reactions/region"
+import "~/app/role-reactions/pronouns"
+import "~/app/role-reactions/region"
 
 const rest = new REST({ version: "10" }).setToken(env.DISCORD_BOT_TOKEN)
 const body = Array.from(slashCommandsMap.values()).map((value) => value.toJSON())
