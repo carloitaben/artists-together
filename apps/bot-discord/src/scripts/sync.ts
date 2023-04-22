@@ -1,11 +1,16 @@
 import { REST, Routes } from "discord.js"
 
-import { APPLICATION_ID } from "~/lib/constants"
 import { env } from "~/lib/env"
-import { say } from "~/index"
+import { slashCommandsMap } from "~/lib/core"
+import { APPLICATION_ID } from "~/lib/constants"
+
+import "~/app/admin/commands"
+import "~/app/unlock-server"
+import "~/app/role-reactions/pronouns"
+import "~/app/role-reactions/region"
 
 const rest = new REST({ version: "10" }).setToken(env.DISCORD_BOT_TOKEN)
-const body = [say.toJSON()]
+const body = Array.from(slashCommandsMap.values()).map((value) => value.toJSON())
 
 try {
   await rest.put(Routes.applicationGuildCommands(APPLICATION_ID, env.DISCORD_SERVER_ID), {

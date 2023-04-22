@@ -1,11 +1,11 @@
 {
   "name": "bot-discord",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch ./src/index.ts",
-    "sync": "tsx ./src/scripts/sync.ts"
+    "dev": "NODE_ENV=development tsx watch ./src/index.ts",
+    "sync": "NODE_ENV=development tsx ./src/scripts/sync.ts"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",

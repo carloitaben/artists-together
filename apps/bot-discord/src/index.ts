@@ -1,57 +1,22 @@
-import { Client, Events, GatewayIntentBits, SlashCommandBuilder, PermissionFlagsBits } from "discord.js"
+import { Client, Partials, GatewayIntentBits } from "discord.js"
 
 import { env } from "~/lib/env"
+import { handlersMap } from "~/lib/core"
 
-export const say = new SlashCommandBuilder()
-  .setName("say")
-  .setDescription("Make PAL say something in the current channel")
-  .addStringOption((option) => option.setName("message").setDescription("Message to send").setRequired(true))
-  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-  .setDMPermission(false)
+import "~/app/admin/commands"
+import "~/app/unlock-server"
+import "~/app/role-reactions/pronouns"
+import "~/app/role-reactions/region"
 
 const bot = new Client({
-  intents: [GatewayIntentBits.Guilds],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
+  partials: [Partials.Message, Partials.Channel, Partials.Reaction],
+})
+
+bot.once("ready", () => console.log("🚀"))
+
+handlersMap.forEach((callbacks, event) => {
+  bot.addListener(event, (...args) => callbacks.forEach((callback) => callback(...args)))
 })
 
 await bot.login(env.DISCORD_BOT_TOKEN)
-
-bot.addListener(Events.ClientReady, () => {
-  console.log("ready")
-})
-
-bot.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return
-
-  switch (interaction.commandName) {
-    case say.name:
-      const message = interaction.options.getString("message")
-
-      if (!message) {
-        await interaction.reply({
-          ephemeral: true,
-          content: "You have to write a message!",
-        })
-
-        return
-      }
-
-      if (!interaction.channel) {
-        throw Error("Expected channel property in interaction")
-      }
-
-      await Promise.all([
-        interaction.channel.send(message),
-        interaction.reply({
-          content: "Done!",
-          ephemeral: true,
-        }),
-      ])
-
-      break
-    default:
-      interaction.reply({
-        ephemeral: true,
-        content: "Oops! I cannot handle that command.",
-      })
-  }
-})
