@@ -51,25 +51,25 @@ bot.once("ready", async (client) => {
           "\n" +
           "(We're based in the US, so the locations may be inconsiderately broad the further away you get to us D: very open to suggestion to restructure this!)" +
           "\n" +
-          "🦓 - AAA" +
+          "🦓 - Africa" +
           "\n" +
-          "🐻 - AAA" +
+          "🐻 - West Europe" +
           "\n" +
-          "🐺 - AAA" +
+          "🐺 - East Europe" +
           "\n" +
-          "🐯 - AAA" +
+          "🐯 - West Asia" +
           "\n" +
-          "🐍 - AAA" +
+          "🐍 - East Asia" +
           "\n" +
-          "🦫 - AAA" +
+          "🦫 - North America" +
           "\n" +
-          "🐸 - AAA" +
+          "🐸 - South America" +
           "\n" +
-          "🦘 - AAA" +
+          "🦘 - Oceania" +
           "\n" +
-          "🦩 - AAA" +
+          "🦩 - Caribbean" +
           "\n" +
-          "🐪 - AAA",
+          "🐪 - Middle East",
         footer: {
           text: "(Please contact @admin if you are having issues with this role assignment message or if you would like your region specified!)",
         },
