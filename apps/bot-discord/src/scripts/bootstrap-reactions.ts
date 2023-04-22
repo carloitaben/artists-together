@@ -16,20 +16,24 @@ bot.once("ready", async (client) => {
     embeds: [
       new EmbedBuilder({
         color: 0x5a65ea,
-        description:
-          "React to this message to add your preferred pronouns to your roles!" +
-          "\n" +
-          "🇹" +
-          "\n" +
-          "They/Them" +
-          "\n" +
-          "🇸" +
-          "\n" +
-          "She/Her" +
-          "\n" +
-          "🇭" +
-          "\n" +
-          "He/Him",
+        description: "React to this message to add your preferred pronouns to your roles!",
+        fields: [
+          {
+            name: "🇹  They/Them",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🇸  She/Her",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🇭  He/Him",
+            value: "",
+            inline: false,
+          },
+        ],
       }),
     ],
   })
@@ -46,33 +50,59 @@ bot.once("ready", async (client) => {
     embeds: [
       new EmbedBuilder({
         color: 0x5a65ea,
-        description:
-          "React to this Message to add a location role! We'd like to know this for logistical reasons involving shipping and distribution." +
-          "\n" +
-          "(We're based in the US, so the locations may be inconsiderately broad the further away you get to us D: very open to suggestion to restructure this!)" +
-          "\n" +
-          "🦓 - Africa" +
-          "\n" +
-          "🐻 - West Europe" +
-          "\n" +
-          "🐺 - East Europe" +
-          "\n" +
-          "🐯 - West Asia" +
-          "\n" +
-          "🐍 - East Asia" +
-          "\n" +
-          "🦫 - North America" +
-          "\n" +
-          "🐸 - South America" +
-          "\n" +
-          "🦘 - Oceania" +
-          "\n" +
-          "🦩 - Caribbean" +
-          "\n" +
-          "🐪 - Middle East",
-        footer: {
-          text: "(Please contact @admin if you are having issues with this role assignment message or if you would like your region specified!)",
-        },
+        description: "React to this message to add a region role!",
+        fields: [
+          {
+            name: "🦓  Africa",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🐻  West Europe",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🐺  East Europe",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🐯  West Asia",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🐍  East Asia",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🦫  North America",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🐸  South America",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🦘  Oceania",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🦩  Caribbean",
+            value: "",
+            inline: false,
+          },
+          {
+            name: "🐪  Middle East",
+            value: "",
+            inline: false,
+          },
+        ],
       }),
     ],
   })
