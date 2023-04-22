@@ -2,7 +2,7 @@ import { registerEventHandler } from "~/lib/core"
 import { getMember, getReactionFromPartial } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
-const MESSAGE_ID = "1099028911670702151"
+const MESSAGE_ID = "1099292065495519242"
 
 const OPTIONS = {
   "🦓": ROLES.REGION_AFRICA,

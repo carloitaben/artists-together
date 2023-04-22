@@ -5,7 +5,6 @@ import { slashCommandsMap } from "~/lib/core"
 import { APPLICATION_ID } from "~/lib/constants"
 
 import "~/app/admin/say"
-import "~/app/admin/bootstrapReactionsMessages"
 import "~/app/role-reactions/pronouns"
 import "~/app/role-reactions/region"
 

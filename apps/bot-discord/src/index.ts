@@ -4,7 +4,6 @@ import { env } from "~/lib/env"
 import { handlersMap } from "~/lib/core"
 
 import "~/app/admin/say"
-import "~/app/admin/bootstrapReactionsMessages"
 import "~/app/role-reactions/pronouns"
 import "~/app/role-reactions/region"
 
