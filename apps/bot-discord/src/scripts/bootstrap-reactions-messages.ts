@@ -17,6 +17,7 @@ bot.once("ready", async (client) => {
   const pronounsMessage = await channel.send({
     embeds: [
       new EmbedBuilder({
+        color: 0x5a65ea,
         description:
           "React to this message to add your preferred pronouns to your roles!" +
           "\n" +
@@ -46,6 +47,7 @@ bot.once("ready", async (client) => {
   const regionMessage = await channel.send({
     embeds: [
       new EmbedBuilder({
+        color: 0x5a65ea,
         description:
           "React to this Message to add a location role! We'd like to know this for logistical reasons involving shipping and distribution." +
           "\n" +
