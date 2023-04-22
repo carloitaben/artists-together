@@ -1,9 +1,13 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from "discord.js"
+import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js"
 
 import { registerSlashCommand } from "~/lib/core"
 
+import handleSaySubcommand from "./say"
+import handleExtinguishSubcommand from "./extinguish"
+
 const SUBCOMMANDS = {
   SAY: "say",
+  EXTINGUISH: "extinguish",
 } as const
 
 const builder = new SlashCommandBuilder()
@@ -16,29 +20,9 @@ const builder = new SlashCommandBuilder()
       .setDescription("Makes PAL say something in the current channel")
       .addStringOption((option) => option.setName("message").setDescription("Message to send").setRequired(true))
   )
-
-async function handleSaySubcommand(interaction: ChatInputCommandInteraction) {
-  const message = interaction.options.getString("message")
-
-  if (!message) {
-    return interaction.reply({
-      ephemeral: true,
-      content: "You have to write a message!",
-    })
-  }
-
-  if (!interaction.channel) {
-    throw Error("Expected channel property in interaction")
-  }
-
-  await Promise.all([
-    interaction.channel.send(message),
-    interaction.reply({
-      content: "Done!",
-      ephemeral: true,
-    }),
-  ])
-}
+  .addSubcommand((subcommand) =>
+    subcommand.setName(SUBCOMMANDS.EXTINGUISH).setDescription("Removes all messages from ART emergencies")
+  )
 
 registerSlashCommand(builder, async (interaction) => {
   if (!interaction.isChatInputCommand()) return
@@ -46,6 +30,8 @@ registerSlashCommand(builder, async (interaction) => {
   switch (interaction.options.getSubcommand()) {
     case SUBCOMMANDS.SAY:
       return handleSaySubcommand(interaction)
+    case SUBCOMMANDS.EXTINGUISH:
+      return handleExtinguishSubcommand(interaction)
     default:
       return interaction.reply({
         content: "Unknown subcommand",

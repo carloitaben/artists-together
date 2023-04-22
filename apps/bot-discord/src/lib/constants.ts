@@ -5,10 +5,12 @@ export const APPLICATION_ID = "1097235077966073927"
 export const CHANNELS =
   env.NODE_ENV === "development"
     ? ({
+        ART_EMERGENCIES: "1099334764835651624",
         INTRODUCTIONS: "1099296890538963016",
         ROLES: "1097464220720840795",
       } as const)
     : ({
+        ART_EMERGENCIES: "",
         INTRODUCTIONS: "",
         ROLES: "",
       } as const)
