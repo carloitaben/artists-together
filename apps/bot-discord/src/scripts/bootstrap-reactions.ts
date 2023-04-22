@@ -9,8 +9,6 @@ const bot = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 })
 
-await bot.login(env.DISCORD_BOT_TOKEN)
-
 bot.once("ready", async (client) => {
   const channel = await getTextBasedChannel(client, CHANNELS.ROLES)
 
@@ -94,3 +92,5 @@ bot.once("ready", async (client) => {
     console.error("One of the emojis failed to react:", error)
   }
 })
+
+await bot.login(env.DISCORD_BOT_TOKEN)

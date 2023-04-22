@@ -15,8 +15,8 @@ const bot = new Client({
 
 bot.once("ready", () => console.log("🚀"))
 
-await bot.login(env.DISCORD_BOT_TOKEN)
-
 handlersMap.forEach((callbacks, event) => {
   bot.addListener(event, (...args) => callbacks.forEach((callback) => callback(...args)))
 })
+
+await bot.login(env.DISCORD_BOT_TOKEN)
