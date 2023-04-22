@@ -12,7 +12,7 @@ const bot = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 })
 
-bot.addListener("ready", () => console.log("🚀"))
+bot.once("ready", () => console.log("🚀"))
 
 await bot.login(env.DISCORD_BOT_TOKEN)
 
