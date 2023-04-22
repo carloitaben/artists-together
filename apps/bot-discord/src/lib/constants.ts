@@ -5,10 +5,12 @@ export const APPLICATION_ID = "1097235077966073927"
 export const CHANNELS =
   env.NODE_ENV === "development"
     ? ({
+        INTRODUCTIONS: "1099296890538963016",
         ROLES: "1097464220720840795",
       } as const)
     : ({
-        ROLES: "780233965310181407",
+        INTRODUCTIONS: "",
+        ROLES: "",
       } as const)
 
 export type Channels = typeof CHANNELS
@@ -17,6 +19,7 @@ export type Channel = Channels[keyof Channels]
 export const ROLES =
   env.NODE_ENV === "development"
     ? ({
+        FRIEND: "1099296505438937088",
         PRONOUNS_THEY_THEM: "1097474639384555550",
         PRONOUNS_SHE_HER: "1097474589841436722",
         PRONOUNS_HE_HIM: "1097474617960042628",
@@ -32,6 +35,7 @@ export const ROLES =
         REGION_MIDDLE_EAST: "1099278805065011331",
       } as const)
     : ({
+        FRIEND: "",
         PRONOUNS_THEY_THEM: "",
         PRONOUNS_SHE_HER: "",
         PRONOUNS_HE_HIM: "",
