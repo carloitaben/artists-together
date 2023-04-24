@@ -1,7 +1,6 @@
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   ignoredRouteFiles: ["**/.*"],
-  serverBuildPath: "api/index.js",
   serverDependenciesToBundle: [/.*/],
   future: {
     unstable_tailwind: true,
