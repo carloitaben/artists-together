@@ -4,6 +4,7 @@ module.exports = {
   serverBuildPath: "api/index.js",
   serverDependenciesToBundle: [/.*/],
   future: {
+    unstable_tailwind: true,
     v2_errorBoundary: true,
     v2_meta: true,
     v2_normalizeFormMethod: true,

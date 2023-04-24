@@ -6,10 +6,13 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import type { LoaderArgs } from "@vercel/remix"
+import type { LinksFunction, LoaderArgs } from "@vercel/remix"
 
 import { authenticator } from "~/services/auth.server"
 import Sidebar from "./components/Sidebar"
+import rootStyles from "./root.css"
+
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: rootStyles }]
 
 export async function loader({ request }: LoaderArgs) {
   const session = await authenticator.isAuthenticated(request)
