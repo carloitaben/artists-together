@@ -1,5 +1,5 @@
 import { Authenticator } from "remix-auth"
-import { OTPStrategy } from "remix-auth-otp"
+import { OTPStrategy } from "./otp/index.server"
 import type { User } from "db"
 import { connect, eq, users, otps } from "db"
 

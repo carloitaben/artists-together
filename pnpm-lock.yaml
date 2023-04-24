@@ -34,6 +34,9 @@ importers:
       '@vercel/remix':
         specifier: ^1.15.0
         version: 1.15.0(react-dom@18.2.0)(react@18.2.0)
+      crypto-js:
+        specifier: ^4.1.1
+        version: 4.1.1
       db:
         specifier: workspace:*
         version: link:../../packages/db
@@ -46,9 +49,6 @@ importers:
       remix-auth:
         specifier: ^3.4.0
         version: 3.4.0(@remix-run/react@1.15.0)(@remix-run/server-runtime@1.15.0)
-      remix-auth-otp:
-        specifier: ^2.3.0
-        version: 2.3.0(@remix-run/server-runtime@1.15.0)(remix-auth@3.4.0)
       resend:
         specifier: ^0.13.0
         version: 0.13.0
@@ -62,6 +62,9 @@ importers:
       '@remix-run/serve':
         specifier: ^1.15.0
         version: 1.15.0
+      '@types/crypto-js':
+        specifier: ^4.1.1
+        version: 4.1.1
       '@types/react':
         specifier: ^18.0.35
         version: 18.0.35
@@ -2603,6 +2606,10 @@ packages:
 
   /@types/cookie@0.4.1:
     resolution: {integrity: sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==}
+
+  /@types/crypto-js@4.1.1:
+    resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
+    dev: true
 
   /@types/debug@4.1.7:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
@@ -7494,11 +7501,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /otp-generator@4.0.1:
-    resolution: {integrity: sha512-2TJ52vUftA0+J3eque4wwVtpaL4/NdIXDL0gFWFJFVUAZwAN7+9tltMhL7GCNYaHJtuONoier8Hayyj4HLbSag==}
-    engines: {node: '>=14.10.0'}
-    dev: false
-
   /outdent@0.8.0:
     resolution: {integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==}
     dev: true
@@ -8207,19 +8209,6 @@ packages:
       mdast-util-to-hast: 11.3.0
       unified: 10.1.2
     dev: true
-
-  /remix-auth-otp@2.3.0(@remix-run/server-runtime@1.15.0)(remix-auth@3.4.0):
-    resolution: {integrity: sha512-idA35j80TsOMU7RDpnGwviR0yZSjNSbb1ieiurHh22lI/tCzzB8HV/lD8z4ReNjJ8tU23P+yIFps8oFbvOuGog==}
-    engines: {node: '>=16'}
-    peerDependencies:
-      '@remix-run/server-runtime': ^1.10.0
-      remix-auth: ^3.4.0
-    dependencies:
-      '@remix-run/server-runtime': 1.15.0
-      crypto-js: 4.1.1
-      otp-generator: 4.0.1
-      remix-auth: 3.4.0(@remix-run/react@1.15.0)(@remix-run/server-runtime@1.15.0)
-    dev: false
 
   /remix-auth@3.4.0(@remix-run/react@1.15.0)(@remix-run/server-runtime@1.15.0):
     resolution: {integrity: sha512-VRliJo9VRAS4sSYgMjYbi7rYRixPWU2Tb8PFZb06OIj0nONK/1KRzHf2+Y6VGZeIacepLVgan6g2IUJjayE2rQ==}
