@@ -1,10 +1,12 @@
 import type { LoaderArgs } from "@vercel/remix"
 import { useLoaderData } from "@remix-run/react"
 import { authenticator } from "~/services/auth.server"
-import { db, eq, users } from "db"
+import { connect, eq, users } from "db"
 
 export async function loader({ request, params }: LoaderArgs) {
   if (!params.handle) throw Error("nooo")
+
+  const db = connect()
 
   const auth = await authenticator.isAuthenticated(request).catch(console.error)
   const [user] = await db.select().from(users).limit(1).where(eq(users.handle, params.handle))

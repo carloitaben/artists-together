@@ -4,7 +4,7 @@ import { OTPStrategy } from "remix-auth-otp"
 import { Resend } from "resend"
 
 import type { User } from "db"
-import { db, eq, users, otp } from "db"
+import { connect, eq, users, otp } from "db"
 
 import { sessionStorage } from "./session.server"
 
@@ -24,6 +24,7 @@ authenticator.use(
       // It should return a Promise<void>.
       storeCode: async (code) => {
         console.log("storeCode", { code })
+        const db = connect()
 
         await db.insert(otp).values({
           active: true,
@@ -69,6 +70,8 @@ authenticator.use(
       // Validate code.
       // It should return a Promise<{code: string, active: boolean, attempts: number}>.
       validateCode: async (code) => {
+        const db = connect()
+
         const [_otp] = await db
           .select({ code: otp.code, active: otp.active, attempts: otp.attempts })
           .from(otp)
@@ -92,6 +95,8 @@ authenticator.use(
       // Invalidate code.
       // It should return a Promise<void>.
       invalidateCode: async (code, active, attempts) => {
+        const db = connect()
+
         if (!active) {
           await db.delete(otp).where(eq(otp.code, code))
         } else {
@@ -119,6 +124,8 @@ authenticator.use(
       if (magicLink) {
         console.log("Magic Link clicked.")
       }
+
+      const db = connect()
 
       // Get user from database.
       const [user] = await db.select().from(users).limit(1).where(eq(users.email, email))

@@ -1,10 +1,13 @@
-import { drizzle } from "drizzle-orm/planetscale-serverless"
-import { connect } from "@planetscale/database"
+import { drizzle, DrizzleConfig } from "drizzle-orm/planetscale-serverless"
+import { connect as pscaleConnect, Config } from "@planetscale/database"
 
-const connection = connect({
-  host: process.env["DATABASE_HOST"],
-  username: process.env["DATABASE_USERNAME"],
-  password: process.env["DATABASE_PASSWORD"],
-})
+export function connect(config?: { drizzleConfig?: DrizzleConfig; dbConfig?: Partial<Config> }) {
+  const connection = pscaleConnect({
+    host: process.env["DATABASE_HOST"],
+    username: process.env["DATABASE_USERNAME"],
+    password: process.env["DATABASE_PASSWORD"],
+    ...config?.dbConfig,
+  })
 
-export const db = drizzle(connection)
+  return drizzle(connection, config?.drizzleConfig)
+}
