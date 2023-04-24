@@ -9,9 +9,9 @@ function uuid() {
 
 export const otps = mysqlTable("otps", {
   id: uuid().primaryKey(),
-  code: text("code"),
-  active: boolean("active").default(false),
-  attempts: int("attempts").default(0),
+  code: text("code").notNull(),
+  active: boolean("active").notNull().default(false),
+  attempts: int("attempts").notNull().default(0),
 })
 
 export type Otp = InferModel<typeof otps>

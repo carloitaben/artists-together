@@ -37,18 +37,14 @@ authenticator.use(
           magicLink,
           user,
           form,
-          request,
-        })
-
-        console.log({
-          code,
-          magicLink,
         })
       },
 
       // Validate code.
       // It should return a Promise<{code: string, active: boolean, attempts: number}>.
       validateCode: async (code) => {
+        console.log("validateCode", code)
+
         const db = connect()
 
         const [otp] = await db
@@ -60,9 +56,6 @@ authenticator.use(
         console.log("validateCode", otp)
 
         if (!otp) throw new Error("OTP code not found.")
-        if (otp.code == null) throw new Error("OTP code null.")
-        if (otp.active == null) throw new Error("OTP active null.")
-        if (otp.attempts == null) throw new Error("OTP attempts null.")
 
         return {
           code: otp.code,
