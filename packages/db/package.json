@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.16.0",
-    "drizzle-kit": "0.17.1-5df459e",
+    "drizzle-kit": "0.17.6-76e73f3",
     "typescript": "^5.0.4"
   },
   "dependencies": {
