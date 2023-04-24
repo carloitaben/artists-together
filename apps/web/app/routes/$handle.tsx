@@ -4,6 +4,8 @@ import { connect, eq, users } from "db"
 
 import { authenticator } from "~/services/auth.server"
 
+export const config = { runtime: "edge", regions: ["iad1"] }
+
 export async function loader({ request, params }: LoaderArgs) {
   if (!params.handle) throw Error("nooo")
 
