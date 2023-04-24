@@ -5,6 +5,8 @@ import { Form, useLoaderData } from "@remix-run/react"
 import { authenticator } from "~/services/auth.server"
 import { getSession, commitSession } from "~/services/session.server"
 
+export const config = { runtime: "edge" }
+
 export async function loader({ request }: DataFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     successRedirect: "/account",
@@ -38,7 +40,7 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function Login() {
-  const { user, hasSentEmail, email, error } = useLoaderData<typeof loader>()
+  const { user, hasSentEmail, error } = useLoaderData<typeof loader>()
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
