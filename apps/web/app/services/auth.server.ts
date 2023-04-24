@@ -115,7 +115,7 @@ authenticator.use(
         if (!handle) throw Error("could not find handle in form")
 
         await db.insert(users).values({
-          handle: "",
+          handle: handle.toString(),
           email,
         })
 

@@ -1,8 +1,14 @@
-import { InferModel } from "drizzle-orm"
-import { mysqlTable, text, int, boolean, serial } from "drizzle-orm/mysql-core"
+import { sql, InferModel } from "drizzle-orm"
+import { mysqlTable, text, int, boolean, varchar } from "drizzle-orm/mysql-core"
+
+function uuid() {
+  return varchar("id", { length: 36 })
+    .notNull()
+    .default(sql`(uuid())`)
+}
 
 export const otps = mysqlTable("otps", {
-  id: serial("id").primaryKey(),
+  id: uuid().primaryKey(),
   code: text("code"),
   active: boolean("active").default(false),
   attempts: int("attempts").default(0),
@@ -11,7 +17,7 @@ export const otps = mysqlTable("otps", {
 export type Otp = InferModel<typeof otps>
 
 export const users = mysqlTable("users", {
-  id: serial("id").primaryKey(),
+  id: uuid().primaryKey(),
   email: text("email").notNull(),
   handle: text("handle").notNull(),
 })
