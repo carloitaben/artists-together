@@ -1,32 +1,27 @@
-// app/services/auth.server.ts
 import { Authenticator } from "remix-auth"
 import { OTPStrategy } from "remix-auth-otp"
-import { Resend } from "resend"
-
 import type { User } from "db"
-import { connect, eq, users, otp } from "db"
+import { connect, eq, users, otps } from "db"
 
 import { sessionStorage } from "./session.server"
 
-// Create an instance of the authenticator, pass a generic with what
-// strategies will return and will store in the session
 export const authenticator = new Authenticator<User>(sessionStorage, {
   throwOnError: true,
 })
 
-// Tell the Authenticator to use the form strategy
 authenticator.use(
   new OTPStrategy(
     {
-      secret: "STRONG_SECRET",
+      secret: process.env.SESSION_SECRET || "STRONG_SECRET",
 
       // Store encrypted code in database.
       // It should return a Promise<void>.
       storeCode: async (code) => {
         console.log("storeCode", { code })
+
         const db = connect()
 
-        await db.insert(otp).values({
+        await db.insert(otps).values({
           active: true,
           attempts: 0,
           code,
@@ -45,25 +40,9 @@ authenticator.use(
           request,
         })
 
-        const resend = new Resend(process.env["RESEND_API_KEY"])
-
-        await resend.sendEmail({
-          // from: "localhost@example.com",
-          from: "onboarding@resend.dev",
-          to: email,
-          subject: "Here's your OTP Code.",
-          html: `
-            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-            <html>
-              <head>
-                <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
-              </head>
-              <body>
-                <h1>Code: ${code}</h1>
-                ${magicLink && `<p>Alternatively, you can click the Magic Link: ${magicLink}</p>`}
-              </body>
-            </html>
-          `,
+        console.log({
+          code,
+          magicLink,
         })
       },
 
@@ -72,23 +51,23 @@ authenticator.use(
       validateCode: async (code) => {
         const db = connect()
 
-        const [_otp] = await db
-          .select({ code: otp.code, active: otp.active, attempts: otp.attempts })
-          .from(otp)
+        const [otp] = await db
+          .select({ code: otps.code, active: otps.active, attempts: otps.attempts })
+          .from(otps)
           .limit(1)
-          .where(eq(otp.code, code))
+          .where(eq(otps.code, code))
 
-        console.log("validateCode", _otp)
+        console.log("validateCode", otp)
 
-        if (!_otp) throw new Error("OTP code not found.")
-        if (_otp.code == null) throw new Error("OTP code null.")
-        if (_otp.active == null) throw new Error("OTP active null.")
-        if (_otp.attempts == null) throw new Error("OTP attempts null.")
+        if (!otp) throw new Error("OTP code not found.")
+        if (otp.code == null) throw new Error("OTP code null.")
+        if (otp.active == null) throw new Error("OTP active null.")
+        if (otp.attempts == null) throw new Error("OTP attempts null.")
 
         return {
-          code: _otp.code,
-          active: _otp.active,
-          attempts: _otp.attempts,
+          code: otp.code,
+          active: otp.active,
+          attempts: otp.attempts,
         }
       },
 
@@ -98,9 +77,9 @@ authenticator.use(
         const db = connect()
 
         if (!active) {
-          await db.delete(otp).where(eq(otp.code, code))
+          await db.delete(otps).where(eq(otps.code, code))
         } else {
-          await db.update(otp).set({ active, attempts }).where(eq(otp.code, code))
+          await db.update(otps).set({ active, attempts }).where(eq(otps.code, code))
         }
       },
     },
@@ -145,7 +124,6 @@ authenticator.use(
         return _user
       }
 
-      // Return user as Session.
       return user
     }
   )

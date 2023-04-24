@@ -1,14 +1,14 @@
 import type { LoaderArgs } from "@vercel/remix"
-import { useLoaderData } from "@remix-run/react"
-import { authenticator } from "~/services/auth.server"
+import { Form, useLoaderData } from "@remix-run/react"
 import { connect, eq, users } from "db"
+
+import { authenticator } from "~/services/auth.server"
 
 export async function loader({ request, params }: LoaderArgs) {
   if (!params.handle) throw Error("nooo")
 
   const db = connect()
-
-  const auth = await authenticator.isAuthenticated(request).catch(console.error)
+  const session = await authenticator.isAuthenticated(request)
   const [user] = await db.select().from(users).limit(1).where(eq(users.handle, params.handle))
 
   if (!user)
@@ -18,7 +18,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
   return {
     handle: params.handle,
-    self: auth?.handle === params.handle,
+    self: session?.handle === params.handle,
     user,
   }
 }
@@ -30,7 +30,11 @@ export default function Route() {
     <div>
       <h1>profile slug {handle}</h1>
       <div>email: {user.email}</div>
-      {self && <div>you can view this because this is your profile!!!</div>}
+      {self && (
+        <Form action="/logout" method="post">
+          <button>Log Out</button>
+        </Form>
+      )}
     </div>
   )
 }

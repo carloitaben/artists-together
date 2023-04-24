@@ -16,7 +16,6 @@ export async function loader({ request }: DataFunctionArgs) {
   const email = session.get("auth:email")
   const error = session.get(authenticator.sessionErrorKey)
 
-  // Commits Session to clear any possible error message.
   return json(
     { user, hasSentEmail, email, error },
     {
@@ -29,14 +28,9 @@ export async function loader({ request }: DataFunctionArgs) {
 
 export async function action({ request }: DataFunctionArgs) {
   await authenticator.authenticate("OTP", request, {
-    // Setting `successRedirect` it's required.
-    // ...
     // User is not authenticated yet.
     // We want to redirect to the verify code form. (/verify-code or any other route)
     successRedirect: "/login",
-
-    // Setting `failureRedirect` it's required.
-    // ...
     // We want to display any possible error message.
     // Otherwise the ErrorBoundary / CatchBoundary will be triggered.
     failureRedirect: "/login",
@@ -44,7 +38,7 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function Login() {
-  let { user, hasSentEmail, email, error } = useLoaderData<typeof loader>()
+  const { user, hasSentEmail, email, error } = useLoaderData<typeof loader>()
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
@@ -55,8 +49,7 @@ export default function Login() {
       {!user && !hasSentEmail && (
         <Form method="post">
           <label htmlFor="email">Email</label>
-          <input name="email" placeholder="Insert email .." required />
-
+          <input name="email" placeholder="Email" required />
           <button type="submit">Send Code</button>
         </Form>
       )}

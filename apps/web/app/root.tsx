@@ -6,6 +6,20 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import type { LoaderArgs } from "@vercel/remix"
+
+import { authenticator } from "~/services/auth.server"
+import Sidebar from "./components/Sidebar"
+
+export async function loader({ request }: LoaderArgs) {
+  const session = await authenticator.isAuthenticated(request)
+
+  return {
+    session,
+  }
+}
+
+export type Loader = typeof loader
 
 export default function App() {
   return (
@@ -17,11 +31,12 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <Sidebar />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
       </body>
     </html>
-  );
+  )
 }
