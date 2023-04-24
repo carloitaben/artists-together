@@ -8,5 +8,5 @@ export async function loader({ request }: DataFunctionArgs) {
     failureRedirect: "/login",
   })
 
-  return redirect(session.handle)
+  return redirect(`/${session.handle}`)
 }
