@@ -1,8 +1,7 @@
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   ignoredRouteFiles: ["**/.*"],
-  serverDependenciesToBundle: [/.*/],
-  serverPlatform: "neutral",
+  serverDependenciesToBundle: ["@planetscale/database"],
   future: {
     unstable_tailwind: true,
     v2_errorBoundary: true,
