@@ -2,6 +2,7 @@
 module.exports = {
   ignoredRouteFiles: ["**/.*"],
   serverDependenciesToBundle: [/.*/],
+  serverPlatform: "neutral",
   future: {
     unstable_tailwind: true,
     v2_errorBoundary: true,
