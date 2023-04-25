@@ -21,6 +21,7 @@ export type Channel = Channels[keyof Channels]
 export const ROLES =
   env.NODE_ENV === "development"
     ? ({
+        LIVE_NOW: "1100357964772151317",
         FRIEND: "1099296505438937088",
         PRONOUNS_THEY_THEM: "1097474639384555550",
         PRONOUNS_SHE_HER: "1097474589841436722",
@@ -37,6 +38,7 @@ export const ROLES =
         REGION_MIDDLE_EAST: "1099278805065011331",
       } as const)
     : ({
+        LIVE_NOW: "",
         FRIEND: "",
         PRONOUNS_THEY_THEM: "",
         PRONOUNS_SHE_HER: "",
