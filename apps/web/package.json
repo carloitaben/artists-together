@@ -3,8 +3,12 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev",
+    "build:remix": "remix build",
+    "build:routes": "remix-routes",
+    "build": "pnpm run \"/^build:.*/\"",
+    "dev:remix": "remix dev",
+    "dev:routes": "remix-routes -w",
+    "dev": "pnpm run \"/^dev:.*/\"",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -17,6 +21,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remix-auth": "^3.4.0",
+    "remix-routes": "^1.4.1",
     "resend": "^0.13.0"
   },
   "devDependencies": {
