@@ -7,7 +7,7 @@ export default function Sidebar() {
   const session = useSession()
 
   return (
-    <aside>
+    <aside className="bg-gray-100">
       <nav>
         <ul className="flex flex-col">
           <li>
@@ -27,7 +27,7 @@ export default function Sidebar() {
           </li>
           <li>
             {session ? (
-              <NavLink to={$path("/:username", { username: session.username })}>Home</NavLink>
+              <NavLink to={$path("/:username", { username: session.username })}>{session.username}</NavLink>
             ) : (
               <NavLink to={$path("/login")}>Login</NavLink>
             )}
