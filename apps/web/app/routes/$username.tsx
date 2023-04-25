@@ -1,5 +1,6 @@
 import type { ActionArgs, LoaderArgs } from "@vercel/remix"
 import { Form, useLoaderData } from "@remix-run/react"
+import { $params } from "remix-routes"
 import { connect, eq, users } from "db"
 
 import { authenticator } from "~/services/auth.server"
@@ -7,31 +8,32 @@ import { authenticator } from "~/services/auth.server"
 export const config = { runtime: "edge", regions: ["iad1"] }
 
 export async function loader({ request, params }: LoaderArgs) {
-  if (!params.username) throw Error("nooo")
+  const { username } = $params("/:username", params)
 
   const db = connect()
   const session = await authenticator.isAuthenticated(request)
-  const [user] = await db.select().from(users).limit(1).where(eq(users.username, params.username))
+  const [user] = await db.select().from(users).limit(1).where(eq(users.username, username))
 
   if (!user)
-    throw new Response(`User ${params.username} not found`, {
+    throw new Response(`User ${username} not found`, {
       status: 404,
     })
 
   return {
-    username: params.username,
-    self: session?.username === params.username,
+    username: username,
+    self: session?.username === username,
     user,
   }
 }
 
 export async function action({ request, params }: ActionArgs) {
+  const { username } = $params("/:username", params)
+
   const session = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   })
 
-  if (!params.username) throw Error("nooo")
-  if (session.username !== params.username) throw Error("no podés")
+  if (session.username !== username) throw Error("no podés")
 
   const form = await request.formData()
   const bio = form.get("bio")?.toString()
