@@ -5,7 +5,9 @@ import { connect, eq, users, otps } from "db"
 
 import { sessionStorage } from "./session.server"
 
-export const authenticator = new Authenticator<User>(sessionStorage, {
+type PartialUser = Pick<User, "id" | "username" | "email">
+
+export const authenticator = new Authenticator<PartialUser>(sessionStorage, {
   throwOnError: true,
 })
 
@@ -100,7 +102,11 @@ authenticator.use(
       const db = connect()
 
       // Get user from database.
-      const [user] = await db.select().from(users).limit(1).where(eq(users.email, email))
+      const [user] = await db
+        .select({ id: users.id, username: users.username, email: users.email })
+        .from(users)
+        .limit(1)
+        .where(eq(users.email, email))
 
       if (!user) {
         const username = form.get("username")
@@ -112,7 +118,11 @@ authenticator.use(
           email,
         })
 
-        const [_user] = await db.select().from(users).limit(1).where(eq(users.email, email))
+        const [_user] = await db
+          .select({ id: users.id, username: users.username, email: users.email })
+          .from(users)
+          .limit(1)
+          .where(eq(users.email, email))
 
         return _user
       }

@@ -14,10 +14,11 @@ export async function loader({ request, params }: LoaderArgs) {
   const session = await authenticator.isAuthenticated(request)
   const [user] = await db.select().from(users).limit(1).where(eq(users.username, username))
 
-  if (!user)
+  if (!user) {
     throw new Response(`User ${username} not found`, {
       status: 404,
     })
+  }
 
   return {
     username: username,
@@ -39,9 +40,7 @@ export async function action({ request, params }: ActionArgs) {
   const bio = form.get("bio")?.toString()
 
   const db = connect()
-  await db.update(users).set({
-    bio,
-  })
+  await db.update(users).set({ bio })
 
   return null
 }

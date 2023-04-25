@@ -15,8 +15,6 @@ export const users = mysqlTable("users", {
   email: text("email").notNull(),
   username: text("username").notNull(),
   bio: text("bio"),
-  // created_at: timestamp("created_at").notNull().defaultNow().onUpdateNow(),
-  // updated_at: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
 })
 
 export type User = InferModel<typeof users>
@@ -26,8 +24,6 @@ export type User = InferModel<typeof users>
 //   url: varchar("name", { length: 255 }),
 //   name: varchar("name", { length: 32 }),
 //   userId: int("user_id").references(() => users.id),
-//   // created_at: timestamp("created_at").notNull().defaultNow().onUpdateNow(),
-//   // updated_at: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
 // })
 
 // export type UserSocial = InferModel<typeof userSocials>
