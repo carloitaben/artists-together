@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@vercel/remix"
+import type { ActionArgs, LoaderArgs } from "@vercel/remix"
 import { Form, useLoaderData } from "@remix-run/react"
 import { connect, eq, users } from "db"
 
@@ -25,6 +25,25 @@ export async function loader({ request, params }: LoaderArgs) {
   }
 }
 
+export async function action({ request, params }: ActionArgs) {
+  const session = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/login",
+  })
+
+  if (!params.username) throw Error("nooo")
+  if (session.username !== params.username) throw Error("no podés")
+
+  const form = await request.formData()
+  const bio = form.get("bio")?.toString()
+
+  const db = connect()
+  await db.update(users).set({
+    bio,
+  })
+
+  return null
+}
+
 export default function Route() {
   const { username, user, self } = useLoaderData<typeof loader>()
 
@@ -32,10 +51,17 @@ export default function Route() {
     <div>
       <h1>profile slug {username}</h1>
       <div>email: {user.email}</div>
+      {!self && user.bio && <p>bio: {user.bio}</p>}
       {self && (
-        <Form action="/logout" method="post">
-          <button>Log Out</button>
-        </Form>
+        <>
+          <Form method="post">
+            <textarea name="bio" defaultValue={user.bio || ""} placeholder="write your bio here" />
+            <button>Edit bio</button>
+          </Form>
+          <Form action="/logout" method="post">
+            <button>Log Out</button>
+          </Form>
+        </>
       )}
     </div>
   )
