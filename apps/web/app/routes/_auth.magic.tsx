@@ -7,9 +7,9 @@ import { authenticator } from "~/services/auth.server"
 export const config = { runtime: "edge" }
 
 export async function loader({ request }: DataFunctionArgs) {
-  const user = await authenticator.authenticate("OTP", request, {
+  const session = await authenticator.authenticate("OTP", request, {
     failureRedirect: $path("/login"),
   })
 
-  if (user) return redirect($path("/:username", { username: user.username }))
+  if (session) return redirect($path("/:username", { username: session.username }))
 }
