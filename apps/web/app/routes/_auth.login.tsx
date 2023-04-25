@@ -1,5 +1,5 @@
 import type { DataFunctionArgs } from "@vercel/remix"
-import { json } from "@vercel/remix"
+import { redirect, json } from "@vercel/remix"
 import { Form, useLoaderData } from "@remix-run/react"
 
 import { authenticator } from "~/services/auth.server"
@@ -8,9 +8,9 @@ import { getSession, commitSession } from "~/services/session.server"
 export const config = { runtime: "edge" }
 
 export async function loader({ request }: DataFunctionArgs) {
-  const user = await authenticator.isAuthenticated(request, {
-    successRedirect: "/account",
-  })
+  const user = await authenticator.isAuthenticated(request)
+
+  if (user) return redirect(`/${user.handle}`)
 
   const session = await getSession(request.headers.get("Cookie"))
   const hasSentEmail = session.has("auth:otp")
