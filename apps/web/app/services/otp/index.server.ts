@@ -329,7 +329,7 @@ export class OTPStrategy<User> extends Strategy<User, OTPVerifyParams> {
   private readonly magicLinkGenerationDefaults = {
     enabled: true,
     baseUrl: undefined,
-    callbackPath: "/magic-link",
+    callbackPath: "/magic",
   }
   private readonly customErrorsDefaults = {
     requiredEmail: "Email address is required.",
