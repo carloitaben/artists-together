@@ -4,13 +4,14 @@ import { Form, useLoaderData } from "@remix-run/react"
 
 import { authenticator } from "~/services/auth.server"
 import { getSession, commitSession } from "~/services/session.server"
+import { $path } from "remix-routes"
 
 export const config = { runtime: "edge" }
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await authenticator.isAuthenticated(request)
 
-  if (user) return redirect(`/${user.username}`)
+  if (user) return redirect($path("/:username", { username: user.username }))
 
   const session = await getSession(request.headers.get("Cookie"))
   const hasSentEmail = session.has("auth:otp")
@@ -32,10 +33,10 @@ export async function action({ request }: DataFunctionArgs) {
   await authenticator.authenticate("OTP", request, {
     // User is not authenticated yet.
     // We want to redirect to the verify code form. (/verify-code or any other route)
-    successRedirect: "/login",
+    successRedirect: $path("/login"),
     // We want to display any possible error message.
     // Otherwise the ErrorBoundary / CatchBoundary will be triggered.
-    failureRedirect: "/login",
+    failureRedirect: $path("/login"),
   })
 }
 

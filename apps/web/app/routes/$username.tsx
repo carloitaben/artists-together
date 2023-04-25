@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from "@vercel/remix"
 import { Form, useLoaderData } from "@remix-run/react"
-import { $params } from "remix-routes"
+import { $path, $params } from "remix-routes"
 import { connect, eq, users } from "db"
 
 import { authenticator } from "~/services/auth.server"
@@ -30,7 +30,7 @@ export async function action({ request, params }: ActionArgs) {
   const { username } = $params("/:username", params)
 
   const session = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: $path("/login"),
   })
 
   if (session.username !== username) throw Error("no podés")
@@ -60,7 +60,7 @@ export default function Route() {
             <textarea name="bio" defaultValue={user.bio || ""} placeholder="write your bio here" />
             <button>Edit bio</button>
           </Form>
-          <Form action="/logout" method="post">
+          <Form action={$path("/logout")} method="post">
             <button>Log Out</button>
           </Form>
         </>
