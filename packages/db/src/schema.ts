@@ -19,7 +19,7 @@ export type Otp = InferModel<typeof otps>
 export const users = mysqlTable("users", {
   id: uuid().primaryKey(),
   email: text("email").notNull(),
-  handle: text("handle").notNull(),
+  username: text("username").notNull(),
 })
 
 export type User = InferModel<typeof users>

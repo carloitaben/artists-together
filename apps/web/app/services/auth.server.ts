@@ -103,12 +103,12 @@ authenticator.use(
       const [user] = await db.select().from(users).limit(1).where(eq(users.email, email))
 
       if (!user) {
-        const handle = form.get("handle")
+        const username = form.get("username")
 
-        if (!handle) throw Error("could not find handle in form")
+        if (!username) throw Error("could not find username in form")
 
         await db.insert(users).values({
-          handle: handle.toString(),
+          username: username.toString(),
           email,
         })
 

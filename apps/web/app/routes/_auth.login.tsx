@@ -10,7 +10,7 @@ export const config = { runtime: "edge" }
 export async function loader({ request }: DataFunctionArgs) {
   const user = await authenticator.isAuthenticated(request)
 
-  if (user) return redirect(`/${user.handle}`)
+  if (user) return redirect(`/${user.username}`)
 
   const session = await getSession(request.headers.get("Cookie"))
   const hasSentEmail = session.has("auth:otp")

@@ -27,7 +27,7 @@ export default function Sidebar() {
           </li>
           <li>
             {session ? (
-              <NavLink to={$path("/:handle", { handle: session.handle })}>Home</NavLink>
+              <NavLink to={$path("/:username", { username: session.username })}>Home</NavLink>
             ) : (
               <NavLink to={$path("/login")}>Login</NavLink>
             )}

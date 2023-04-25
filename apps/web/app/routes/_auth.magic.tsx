@@ -10,5 +10,5 @@ export async function loader({ request }: DataFunctionArgs) {
     failureRedirect: "/login",
   })
 
-  if (user) return redirect(`/${user.handle}`)
+  if (user) return redirect(`/${user.username}`)
 }
