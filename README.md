@@ -2,16 +2,20 @@
 
 # Artists Together
 
-An inclusive community for all kinds of artists.
+Artists Together is an online, worldwide inclusive community for all kinds of artists and all skill levels.
 
 ## Directory
 
-| Kind    | Name          |
-| ------- | ------------- |
-| App     | `bot-discord` |
-| App     | `bot-twitch`  |
-| App     | `web`         |
-| Package | `db`          |
+| Kind    | Name                               |
+| ------- | ---------------------------------- |
+| App     | [`bot-discord`](apps/bot-discord/) |
+| App     | [`bot-twitch`](apps/bot-twitch/)   |
+| App     | [`web`](apps/web/)                 |
+| Package | [`db`](apps/db/)                   |
+
+## Contributing
+
+New contributors welcome! Check out our [contributors guide](CONTRIBUTING) for ways to get started.
 
 ## License
 
