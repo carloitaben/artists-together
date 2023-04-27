@@ -15,7 +15,7 @@ Artists Together is an online, worldwide inclusive community for all kinds of ar
 
 ## Contributing
 
-New contributors welcome! Check out our [contributors guide](CONTRIBUTING) for ways to get started.
+New contributors welcome! Check out our [contributors guide](CONTRIBUTING.md) for ways to get started.
 
 ## License
 
