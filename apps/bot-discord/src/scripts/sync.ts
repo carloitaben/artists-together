@@ -5,7 +5,7 @@ import { slashCommandsMap } from "~/lib/core"
 import { APPLICATION_ID } from "~/lib/constants"
 
 import "~/app/admin/command"
-import "~/app/unlock-server"
+import "~/app/artist-role"
 import "~/app/role-reactions/pronouns"
 import "~/app/role-reactions/region"
 
