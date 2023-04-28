@@ -8,11 +8,13 @@ export const CHANNELS =
         ART_EMERGENCIES: "1099334764835651624",
         INTRODUCTIONS: "1099296890538963016",
         ROLES: "1097464220720840795",
+        RULES_N_FAQ: "1100827654355161188",
       } as const)
     : ({
         ART_EMERGENCIES: "",
         INTRODUCTIONS: "",
         ROLES: "",
+        RULES_N_FAQ: "",
       } as const)
 
 export type Channels = typeof CHANNELS
@@ -22,6 +24,7 @@ export const ROLES =
   env.NODE_ENV === "development"
     ? ({
         FRIEND: "1099296505438937088",
+        ARTIST: "1101560472685248583",
         PRONOUNS_THEY_THEM: "1097474639384555550",
         PRONOUNS_SHE_HER: "1097474589841436722",
         PRONOUNS_HE_HIM: "1097474617960042628",
@@ -38,6 +41,7 @@ export const ROLES =
       } as const)
     : ({
         FRIEND: "",
+        ARTIST: "",
         PRONOUNS_THEY_THEM: "",
         PRONOUNS_SHE_HER: "",
         PRONOUNS_HE_HIM: "",
