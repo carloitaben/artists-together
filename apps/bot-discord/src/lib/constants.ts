@@ -5,16 +5,20 @@ export const APPLICATION_ID = "1097235077966073927"
 export const CHANNELS =
   env.NODE_ENV === "development"
     ? ({
+        ABOUT: "1100827961244008510",
         ART_EMERGENCIES: "1099334764835651624",
         INTRODUCTIONS: "1099296890538963016",
         ROLES: "1097464220720840795",
         RULES_N_FAQ: "1100827654355161188",
+        SEEKING_CRITIQUE: "1101849113848463382",
       } as const)
     : ({
+        ABOUT: "",
         ART_EMERGENCIES: "",
         INTRODUCTIONS: "",
         ROLES: "",
         RULES_N_FAQ: "",
+        SEEKING_CRITIQUE: "",
       } as const)
 
 export type Channels = typeof CHANNELS
