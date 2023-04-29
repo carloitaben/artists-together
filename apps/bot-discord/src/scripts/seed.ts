@@ -37,8 +37,6 @@ async function bootstrapRolesChannel(client: Client) {
     getRole(guild.roles, ROLES.SERVER_BOOSTER),
   ])
 
-  await channel.send("ROLES IMAGE")
-
   await channel.send({
     embeds: [
       new EmbedBuilder({

@@ -1,7 +1,21 @@
 import { MessageReaction, PartialMessageReaction, Client, GuildMemberManager, RoleManager } from "discord.js"
+import { validate, schedule } from "node-cron"
 
-import type { Channel, ROLES } from "~/lib/constants"
+import type { Channel } from "~/lib/constants"
 import { env } from "~/lib/env"
+
+export function cron(...args: Parameters<typeof schedule>) {
+  validate(args[0])
+  return schedule(...args)
+}
+
+export function getRandomArrayItem<T>(arr: T[]) {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
+
+export function staticUrl(name: `/${string}.${string}`) {
+  return `https://raw.githubusercontent.com/carloitaben/artists-together/tree/main/apps/bot-discord/static/${name}`
+}
 
 export async function getReactionFromPartial(reaction: MessageReaction | PartialMessageReaction) {
   if (!reaction.partial) return reaction
