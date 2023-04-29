@@ -2,6 +2,8 @@ import { env } from "~/lib/env"
 
 export const APPLICATION_ID = "1097235077966073927"
 
+export const SERVER_ID = env.NODE_ENV === "development" ? String(env.DISCORD_SERVER_ID) : "762197633062141954"
+
 export const CHANNELS =
   env.NODE_ENV === "development"
     ? ({

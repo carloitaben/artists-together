@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development tsx watch ./src/index.ts",
-    "sync": "NODE_ENV=development tsx ./src/scripts/sync.ts",
-    "seed": "NODE_ENV=development tsx ./src/scripts/seed.ts"
+    "dev": "tsx watch ./src/index.ts",
+    "sync": "tsx ./src/scripts/sync.ts",
+    "seed": "tsx ./src/scripts/seed.ts"
   },
   "devDependencies": {
     "@types/node-cron": "^3.0.7",

@@ -1,8 +1,7 @@
 import { MessageReaction, PartialMessageReaction, Client, GuildMemberManager, RoleManager } from "discord.js"
 import { validate, schedule } from "node-cron"
 
-import type { Channel } from "~/lib/constants"
-import { env } from "~/lib/env"
+import { Channel, SERVER_ID } from "~/lib/constants"
 
 export function cron(...args: Parameters<typeof schedule>) {
   validate(args[0])
@@ -28,7 +27,7 @@ export async function getReactionFromPartial(reaction: MessageReaction | Partial
 }
 
 export async function getGuild(client: Client) {
-  return client.guilds.cache.get(env.DISCORD_SERVER_ID) ?? (await client.guilds.fetch(env.DISCORD_SERVER_ID))
+  return client.guilds.cache.get(SERVER_ID) ?? (await client.guilds.fetch(SERVER_ID))
 }
 
 export async function getTextBasedChannel(client: Client, id: Channel) {
