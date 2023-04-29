@@ -1,8 +1,10 @@
+import { env } from "~/lib/env"
 import { registerEventHandler } from "~/lib/core"
 import { getMember } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
-const MESSAGE_ID = "1101561626013999155"
+const MESSAGE_ID = env.NODE_ENV === "development" ? "" : "1101898438234361927"
+
 const REACTION = "🔓"
 
 registerEventHandler("messageReactionAdd", async (partialReaction, partialUser) => {

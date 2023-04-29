@@ -1,8 +1,9 @@
+import { env } from "~/lib/env"
 import { registerEventHandler } from "~/lib/core"
 import { getMember, getReactionFromPartial } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
-const MESSAGE_ID = "1099292057115295755"
+const MESSAGE_ID = env.NODE_ENV === "development" ? "" : "1101898363600916602"
 
 const OPTIONS = {
   "🇹": ROLES.PRONOUNS_THEY_THEM,

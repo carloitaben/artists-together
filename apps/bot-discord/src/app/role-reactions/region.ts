@@ -1,8 +1,9 @@
+import { env } from "~/lib/env"
 import { registerEventHandler } from "~/lib/core"
 import { getMember, getReactionFromPartial } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
-const MESSAGE_ID = "1099292065495519242"
+const MESSAGE_ID = env.NODE_ENV === "development" ? "" : "1101898370211123240"
 
 const OPTIONS = {
   "🦓": ROLES.REGION_AFRICA,
