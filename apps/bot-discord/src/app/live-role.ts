@@ -10,14 +10,18 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence.user) return
   if (newPresence.user.bot) return
 
-  const guild = await getGuild(newPresence.client)
-  const role = await getRole(guild.roles, ROLES.LIVE_NOW)
+  try {
+    const guild = await getGuild(newPresence.client)
+    const role = await getRole(guild.roles, ROLES.LIVE_NOW)
 
-  const isStreaming = newPresence.activities.some((activity) => {
-    return activity.type === ActivityType.Streaming
-  })
+    const isStreaming = newPresence.activities.some((activity) => {
+      return activity.type === ActivityType.Streaming
+    })
 
-  if (!isStreaming) return newPresence.member.roles.remove(role)
+    if (!isStreaming) return newPresence.member.roles.remove(role)
 
-  return newPresence.member.roles.add(role)
+    return newPresence.member.roles.add(role)
+  } catch (error) {
+    console.error(error)
+  }
 })
