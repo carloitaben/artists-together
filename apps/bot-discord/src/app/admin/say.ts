@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, InteractionResponseType } from "discord.js"
+import { ChatInputCommandInteraction } from "discord.js"
 
 export default async function handleSaySubcommand(interaction: ChatInputCommandInteraction) {
   const message = interaction.options.getString("message")
@@ -17,7 +17,7 @@ export default async function handleSaySubcommand(interaction: ChatInputCommandI
 
   await interaction.channel.send({
     content: message ?? undefined,
-    files: attachment ? [attachment] : undefined,
+    files: attachment ? [attachment.url] : undefined,
   })
 
   return interaction.reply({
