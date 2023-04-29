@@ -9,8 +9,10 @@ const bot = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 })
 
-bot.once("ready", async (client) => {
+async function bootstrapRolesChannel(client: Client) {
   const channel = await getTextBasedChannel(client, CHANNELS.ROLES)
+
+  // maybe send some other messages here
 
   const pronounsMessage = await channel.send({
     embeds: [
@@ -38,13 +40,11 @@ bot.once("ready", async (client) => {
     ],
   })
 
-  try {
-    await pronounsMessage.react("🇹")
-    await pronounsMessage.react("🇸")
-    await pronounsMessage.react("🇭")
-  } catch (error) {
-    console.error("One of the emojis failed to react:", error)
-  }
+  await pronounsMessage.react("🇹")
+  await pronounsMessage.react("🇸")
+  await pronounsMessage.react("🇭")
+
+  // maybe send some other messages here
 
   const regionMessage = await channel.send({
     embeds: [
@@ -107,20 +107,41 @@ bot.once("ready", async (client) => {
     ],
   })
 
-  try {
-    await regionMessage.react("🦓")
-    await regionMessage.react("🐻")
-    await regionMessage.react("🐺")
-    await regionMessage.react("🐯")
-    await regionMessage.react("🐍")
-    await regionMessage.react("🦫")
-    await regionMessage.react("🐸")
-    await regionMessage.react("🦘")
-    await regionMessage.react("🦩")
-    await regionMessage.react("🐪")
-  } catch (error) {
-    console.error("One of the emojis failed to react:", error)
-  }
+  await regionMessage.react("🦓")
+  await regionMessage.react("🐻")
+  await regionMessage.react("🐺")
+  await regionMessage.react("🐯")
+  await regionMessage.react("🐍")
+  await regionMessage.react("🦫")
+  await regionMessage.react("🐸")
+  await regionMessage.react("🦘")
+  await regionMessage.react("🦩")
+  await regionMessage.react("🐪")
+}
+
+async function bootstrapRulesChannel(client: Client) {
+  const channel = await getTextBasedChannel(client, CHANNELS.RULES_N_FAQ)
+
+  // maybe send some other messages here
+
+  const unlockServerMessage = await channel.send({
+    embeds: [
+      new EmbedBuilder({
+        color: 0x5a65ea,
+        description:
+          "Good Job! You read all the rules and information you need to be a good citizen of this space. React to this message with 🔓 to unlock the rest of the server.",
+      }),
+    ],
+  })
+
+  await unlockServerMessage.react("🔓")
+
+  // maybe send some other messages here
+}
+
+bot.once("ready", async (client) => {
+  await Promise.all([bootstrapRolesChannel(client), bootstrapRulesChannel(client)])
+  console.log("🎉")
 })
 
 await bot.login(env.DISCORD_BOT_TOKEN)

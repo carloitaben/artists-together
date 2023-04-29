@@ -8,7 +8,7 @@ registerEventHandler("messageCreate", async (message) => {
 
   try {
     const member = await message.guild.members.fetch(message.author.id)
-    member.roles.add(ROLES.FRIEND)
+    member.roles.add(ROLES.ARTIST)
   } catch (error) {
     console.error(error)
   }
