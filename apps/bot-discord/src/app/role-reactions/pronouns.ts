@@ -3,7 +3,7 @@ import { registerEventHandler } from "~/lib/core"
 import { getMember, getReactionFromPartial } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
-const MESSAGE_ID = env.NODE_ENV === "development" ? "" : "1101898363600916602"
+const MESSAGE_ID = env.NODE_ENV === "development" ? "1101880052532125786" : "1101898363600916602"
 
 const OPTIONS = {
   "🇹": ROLES.PRONOUNS_THEY_THEM,
@@ -40,16 +40,7 @@ registerEventHandler("messageReactionAdd", async (partialReaction, partialUser) 
     getMember(partialReaction.message.guild.members, partialUser.id),
   ])
 
-  // Switch role for this member
-  Object.entries(OPTIONS).map(([k, v]) => {
-    if (k === option) return member.roles.add(v).catch(console.error)
-    if (member.roles.cache.has(v)) return member.roles.remove(v).catch(console.error)
-  })
-
-  // Remove other reactions from this member
-  reaction.message.reactions.cache.forEach((reaction) => {
-    if (reaction.emoji.name !== option) return reaction.users.remove(partialUser.id).catch(console.error)
-  })
+  return member.roles.add(OPTIONS[option])
 })
 
 registerEventHandler("messageReactionRemove", async (partialReaction, partialUser) => {
