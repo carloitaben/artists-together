@@ -24,7 +24,7 @@ bot.once("ready", async (client) => {
       "For now I am only capable of computing pretty basic commands but as times goes on I will be able of many more things!" +
       "\n" +
       "\n" +
-      `For more info about me, please check the latest post on ${newsChannel} or check my section on ${aboutChannel}`
+      `For more info about me, please check the latest post on ${newsChannel} or my section on ${aboutChannel}`
   )
 
   console.log("🎉")
