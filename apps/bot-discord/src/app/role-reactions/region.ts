@@ -3,12 +3,12 @@ import { registerEventHandler } from "~/lib/core"
 import { getMember, getReactionFromPartial } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
-const MESSAGE_ID = env.NODE_ENV === "development" ? "" : "1101898370211123240"
+const MESSAGE_ID = env.NODE_ENV === "development" ? "" : "1101904587914481724"
 
 const OPTIONS = {
   "🦓": ROLES.REGION_AFRICA,
-  "🐻": ROLES.REGION_WEST_EUROPE,
-  "🐺": ROLES.REGION_EAST_EUROPE,
+  "🐺": ROLES.REGION_WEST_EUROPE,
+  "🐻": ROLES.REGION_EAST_EUROPE,
   "🐯": ROLES.REGION_WEST_ASIA,
   "🐍": ROLES.REGION_EAST_ASIA,
   "🦫": ROLES.REGION_NORTH_AMERICA,

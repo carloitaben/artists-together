@@ -112,12 +112,12 @@ async function bootstrapRolesChannel(client: Client) {
             inline: false,
           },
           {
-            name: "🐻  West Europe",
+            name: "🐺  West Europe",
             value: "",
             inline: false,
           },
           {
-            name: "🐺  East Europe",
+            name: "🐻  East Europe",
             value: "",
             inline: false,
           },
@@ -162,8 +162,8 @@ async function bootstrapRolesChannel(client: Client) {
   })
 
   await regionMessage.react("🦓")
-  await regionMessage.react("🐻")
   await regionMessage.react("🐺")
+  await regionMessage.react("🐻")
   await regionMessage.react("🐯")
   await regionMessage.react("🐍")
   await regionMessage.react("🦫")
