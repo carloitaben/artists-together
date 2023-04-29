@@ -14,7 +14,8 @@ export function getRandomArrayItem<T>(arr: T[]) {
 }
 
 export function staticUrl(name: `/${string}.${string}`) {
-  return `https://raw.githubusercontent.com/carloitaben/artists-together/tree/main/apps/bot-discord/static/${name}`
+  // return `https://raw.githubusercontent.com/carloitaben/artists-together/tree/main/apps/bot-discord/static${name}`
+  return `https://raw.githubusercontent.com/Carloitaben/artists-together/feat(bot-discord)/1.0/apps/bot-discord/static${name}`
 }
 
 export async function getReactionFromPartial(reaction: MessageReaction | PartialMessageReaction) {

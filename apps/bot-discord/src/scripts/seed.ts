@@ -1,7 +1,7 @@
-import { Client, Partials, GatewayIntentBits, EmbedBuilder } from "discord.js"
+import { Client, Partials, GatewayIntentBits, EmbedBuilder, AttachmentBuilder } from "discord.js"
 
 import { env } from "~/lib/env"
-import { getTextBasedChannel, getRole, getGuild } from "~/lib/helpers"
+import { getTextBasedChannel, getRole, getGuild, staticUrl } from "~/lib/helpers"
 import { CHANNELS, ROLES } from "~/lib/constants"
 
 const bot = new Client({
@@ -36,6 +36,10 @@ async function bootstrapRolesChannel(client: Client) {
     getRole(guild.roles, ROLES.LIVE_NOW),
     getRole(guild.roles, ROLES.SERVER_BOOSTER),
   ])
+
+  await channel.send({
+    files: [new AttachmentBuilder(staticUrl("/images/banners/roles.png"))],
+  })
 
   await channel.send({
     embeds: [
@@ -173,7 +177,9 @@ async function bootstrapRulesChannel(client: Client) {
   const channel = await getTextBasedChannel(client, CHANNELS.RULES_N_FAQ)
   const seekingCritiqueChannel = await getTextBasedChannel(client, CHANNELS.SEEKING_CRITIQUE)
 
-  await channel.send("RULES IMAGE")
+  await channel.send({
+    files: [new AttachmentBuilder(staticUrl("/images/banners/rules.png"))],
+  })
 
   await channel.send({
     embeds: [
@@ -267,7 +273,9 @@ async function bootstrapRulesChannel(client: Client) {
 async function bootstrapAboutChannel(client: Client) {
   const channel = await getTextBasedChannel(client, CHANNELS.ABOUT)
 
-  await channel.send("ABOUT IMAGE")
+  await channel.send({
+    files: [new AttachmentBuilder(staticUrl("/images/banners/about.png"))],
+  })
 
   await channel.send({
     embeds: [
@@ -326,7 +334,9 @@ async function bootstrapAboutChannel(client: Client) {
       "*You can also contact us at info@artiststogether.online*",
   })
 
-  await channel.send("ART IMAGE")
+  await channel.send({
+    files: [new AttachmentBuilder(staticUrl("/images/banners/art.png"))],
+  })
 
   await channel.send({
     embeds: [
@@ -351,7 +361,9 @@ async function bootstrapAboutChannel(client: Client) {
     ],
   })
 
-  await channel.send("PAL IMAGE")
+  await channel.send({
+    files: [new AttachmentBuilder(staticUrl("/images/banners/pal.png"))],
+  })
 
   await channel.send({
     embeds: [
@@ -377,7 +389,6 @@ async function bootstrapAboutChannel(client: Client) {
 
 bot.once("ready", async (client) => {
   await Promise.all([bootstrapRolesChannel(client), bootstrapRulesChannel(client), bootstrapAboutChannel(client)])
-
   console.log("🎉")
 })
 
