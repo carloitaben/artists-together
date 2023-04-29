@@ -17,9 +17,7 @@ registerEventHandler("presenceUpdate", async (_, newPresence) => {
     return activity.type === ActivityType.Streaming
   })
 
-  if (isStreaming) return newPresence.member.roles.add(role)
+  if (!isStreaming) return newPresence.member.roles.remove(role)
 
-  if (newPresence.member.roles.cache.has(ROLES.LIVE_NOW)) {
-    return newPresence.member.roles.remove(role)
-  }
+  return newPresence.member.roles.add(role)
 })
