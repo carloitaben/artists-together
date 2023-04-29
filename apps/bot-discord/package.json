@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development tsx watch ./src/index.ts",
-    "sync": "NODE_ENV=development tsx ./src/scripts/sync.ts"
+    "sync": "NODE_ENV=development tsx ./src/scripts/sync.ts",
+    "seed": "NODE_ENV=development tsx ./src/scripts/seed.ts"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",

@@ -1,6 +1,6 @@
-import { MessageReaction, PartialMessageReaction, Client, GuildMemberManager } from "discord.js"
+import { MessageReaction, PartialMessageReaction, Client, GuildMemberManager, RoleManager } from "discord.js"
 
-import type { Channel } from "~/lib/constants"
+import type { Channel, ROLES } from "~/lib/constants"
 import { env } from "~/lib/env"
 
 export async function getReactionFromPartial(reaction: MessageReaction | PartialMessageReaction) {
@@ -28,4 +28,10 @@ export async function getMember<T extends GuildMemberManager>(manager: T, id: st
   const member = manager.cache.get(id) ?? (await manager.fetch(id))
   if (!member) throw Error(`Member with id ${id} not found`)
   return member
+}
+
+export async function getRole<T extends RoleManager>(manager: T, id: string) {
+  const role = manager.cache.get(id) ?? (await manager.fetch(id))
+  if (!role) throw Error(`Role with id ${id} not found`)
+  return role
 }

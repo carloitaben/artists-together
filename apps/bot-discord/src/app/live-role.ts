@@ -1,6 +1,7 @@
 import { ActivityType } from "discord.js"
 
 import { registerEventHandler } from "~/lib/core"
+import { getRole } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
 registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
@@ -9,10 +10,7 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence.user) return
   if (newPresence.user.bot) return
 
-  const role =
-    newPresence.guild.roles.cache.get(ROLES.LIVE_NOW) ?? (await newPresence.guild.roles.fetch(ROLES.LIVE_NOW))
-
-  if (!role) throw Error("Could not find LIVE_NOW role")
+  const role = await getRole(newPresence.guild.roles, ROLES.LIVE_NOW)
 
   const isStreaming = newPresence.activities.some((activity) => {
     return activity.type === ActivityType.Streaming
