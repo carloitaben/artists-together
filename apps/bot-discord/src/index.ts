@@ -5,7 +5,6 @@ import { handlersMap } from "~/lib/core"
 
 import "~/app/admin/command"
 import "~/app/live-role"
-import "~/app/assign-artist-role"
 import "~/app/role-reactions/friend"
 import "~/app/role-reactions/pronouns"
 import "~/app/role-reactions/region"
