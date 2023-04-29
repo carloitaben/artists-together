@@ -18,7 +18,8 @@ const builder = new SlashCommandBuilder()
     subcommand
       .setName(SUBCOMMANDS.SAY)
       .setDescription("Makes PAL say something in the current channel")
-      .addStringOption((option) => option.setName("message").setDescription("Message to send").setRequired(true))
+      .addStringOption((option) => option.setName("message").setDescription("Message to send"))
+      .addAttachmentOption((option) => option.setName("attachment").setDescription("Optional attatchment"))
   )
   .addSubcommand((subcommand) =>
     subcommand.setName(SUBCOMMANDS.EXTINGUISH).setDescription("Removes all messages from ART emergencies")
