@@ -128,8 +128,7 @@ async function bootstrapRulesChannel(client: Client) {
     embeds: [
       new EmbedBuilder({
         color: 0x5a65ea,
-        description:
-          "Good Job! You read all the rules and information you need to be a good citizen of this space. React to this message with 🔓 to unlock the rest of the server.",
+        description: "Neat! Reacting with 🔓 you agree you've read all the rules of this server.",
       }),
     ],
   })
