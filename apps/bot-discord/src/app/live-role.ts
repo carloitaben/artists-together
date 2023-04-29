@@ -1,7 +1,7 @@
 import { ActivityType } from "discord.js"
 
 import { registerEventHandler } from "~/lib/core"
-import { getRole } from "~/lib/helpers"
+import { getGuild, getRole } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
 registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
@@ -10,7 +10,8 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence.user) return
   if (newPresence.user.bot) return
 
-  const role = await getRole(newPresence.guild.roles, ROLES.LIVE_NOW)
+  const guild = await getGuild(newPresence.client)
+  const role = await getRole(guild.roles, ROLES.LIVE_NOW)
 
   const isStreaming = newPresence.activities.some((activity) => {
     return activity.type === ActivityType.Streaming
