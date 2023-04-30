@@ -30,7 +30,7 @@ async function deleteAllMessages(channel: TextChannel) {
   const messages = await channel.messages.fetch({ limit: 100 })
 
   if (messages.size) {
-    await channel.bulkDelete(messages)
+    await Promise.all(messages.map((message) => message.delete()))
     await deleteAllMessages(channel)
   }
 }
