@@ -12,7 +12,6 @@ registerEventHandler("messageReactionAdd", async (partialReaction, partialUser) 
   if (partialReaction.message.id !== MESSAGE_ID) return
   if (partialUser.bot) return
 
-  // Remove invalid reactions
   if (partialReaction.emoji.name !== REACTION) {
     return partialReaction.remove()
   }
