@@ -17,9 +17,7 @@ const app = new Hono()
 
 app.use("/static/*", serveStatic({ root: "./" }))
 
-serve(app, (info) => {
-  console.log(`Listening on port ${info.port}`)
-})
+serve({ fetch: fetch, port: env.PORT })
 
 const bot = new Client({
   intents: [
