@@ -1,4 +1,9 @@
-import type { ClientEvents, SlashCommandBuilder } from "discord.js"
+import type {
+  AutocompleteInteraction,
+  ChatInputCommandInteraction,
+  ClientEvents,
+  SlashCommandBuilder,
+} from "discord.js"
 
 type RegisterEventCallback<T extends keyof ClientEvents> = (...args: ClientEvents[T]) => void
 
@@ -16,7 +21,7 @@ export const slashCommandsMap = new Map<string, CommandBuilderStub>()
 
 export function registerSlashCommand<T extends CommandBuilderStub>(
   builder: T,
-  callback: (...args: ClientEvents["interactionCreate"]) => void
+  callback: (interaction: AutocompleteInteraction | ChatInputCommandInteraction) => void
 ) {
   if (slashCommandsMap.has(builder.name)) {
     throw Error(`Found duplicated slash command: ${builder.name}`)
@@ -25,8 +30,12 @@ export function registerSlashCommand<T extends CommandBuilderStub>(
   slashCommandsMap.set(builder.name, builder)
 
   registerEventHandler("interactionCreate", (interaction) => {
-    if (!interaction.isChatInputCommand()) return
-    if (interaction.commandName !== builder.name) return
-    callback(interaction)
+    if (interaction.isAutocomplete()) {
+      if (interaction.commandName === builder.name) return callback(interaction)
+    }
+
+    if (interaction.isChatInputCommand()) {
+      if (interaction.commandName === builder.name) return callback(interaction)
+    }
   })
 }

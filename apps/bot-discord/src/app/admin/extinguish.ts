@@ -80,10 +80,8 @@ export default async function handleExtinguishSubcommand(interaction: ChatInputC
           content: "Cancelled",
           components: [],
         })
-      default:
-        throw Error(`Unhandled confirmation id: ${confirmation.customId}`)
     }
-  } catch (e) {
+  } catch (error) {
     return response.edit({
       content: "Confirmation not received within 1 minute, cancelling…",
       components: [],
