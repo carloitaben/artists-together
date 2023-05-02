@@ -30,7 +30,7 @@ export async function getGuild(client: Client) {
   return client.guilds.cache.get(SERVER_ID) ?? (await client.guilds.fetch(SERVER_ID))
 }
 
-export async function getTextBasedChannel(client: Client, id: Channel) {
+export async function getTextBasedChannel(client: Client, id: string) {
   const channel = client.channels.cache.get(id) ?? (await client.channels.fetch(id))
   if (!channel) throw Error(`Channel with id ${id} not found`)
   if (!channel.isTextBased()) throw Error(`Channel with id ${id} is not text based`)

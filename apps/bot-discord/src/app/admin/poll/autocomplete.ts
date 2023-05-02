@@ -4,10 +4,11 @@ import { polls } from "~/store/polls"
 
 export default async function handleAutocompletePoll(interaction: AutocompleteInteraction) {
   const value = interaction.options.getFocused()
+  const pollsArray = Array.from(polls.values())
 
   if (!value) {
     return interaction.respond(
-      Array.from(polls)
+      pollsArray
         .map((poll) => ({
           name: poll.name,
           value: String(poll.id),
@@ -16,7 +17,7 @@ export default async function handleAutocompletePoll(interaction: AutocompleteIn
     )
   }
 
-  const filtered = Array.from(polls).reduce<ApplicationCommandOptionChoiceData[]>((accumulator, poll) => {
+  const filtered = pollsArray.reduce<ApplicationCommandOptionChoiceData[]>((accumulator, poll) => {
     if (poll.name.toLocaleLowerCase().startsWith(value.toLocaleLowerCase())) {
       accumulator.push({
         name: poll.name,

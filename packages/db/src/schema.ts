@@ -1,9 +1,8 @@
-import { mysqlTable, int, boolean, serial, timestamp, char, tinyint, foreignKey, varchar } from "drizzle-orm/mysql-core"
+import { mysqlTable, int, serial, timestamp, char, tinyint, varchar } from "drizzle-orm/mysql-core"
 
 export const discordPolls = mysqlTable("discord_polls", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 4_000 }).notNull(),
-  closed: boolean("closed"),
   deadline: timestamp("deadline"),
   channelId: char("channel_id", { length: 19 }).notNull(),
   messageId: char("message_id", { length: 19 }).notNull(),

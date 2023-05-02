@@ -9,9 +9,10 @@ import {
   TextInputStyle,
 } from "discord.js"
 import { parseDate } from "chrono-node"
-import { connect, discordPolls } from "db"
+import dayjs from "dayjs"
 
 import { registerEventHandler } from "~/lib/core"
+import { addPoll } from "~/store/polls"
 
 const MODAL_ID = "admin-poll"
 
@@ -148,7 +149,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
     switch (confirmation.customId) {
       case BUTTON_IDS.CANCEL:
         return confirmation.update({
-          content: "Poll creation cancelled",
+          content: "Cancelled",
           embeds: [],
           components: [],
         })
@@ -166,13 +167,10 @@ registerEventHandler("interactionCreate", async (interaction) => {
           components: [new ActionRowBuilder<ButtonBuilder>().addComponents(...buttons)],
         })
 
-        const db = connect()
-
-        await db.insert(discordPolls).values({
+        await addPoll(interaction.client, {
           channelId: confirmation.channel.id,
           messageId: pollMessage.id,
           name: titleInput,
-          closed: false,
           deadline: endDate,
         })
 

@@ -12,6 +12,9 @@ importers:
       chrono-node:
         specifier: ^2.6.3
         version: 2.6.3
+      dayjs:
+        specifier: ^1.11.7
+        version: 1.11.7
       db:
         specifier: workspace:*
         version: link:../../packages/db
