@@ -4,6 +4,27 @@ import { registerEventHandler } from "~/lib/core"
 import { getGuild, getRole } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
+registerEventHandler("ready", async (client) => {
+  const guild = await getGuild(client)
+
+  guild.members.cache.forEach((member) => {
+    const hasLiveNowRole = member.roles.cache.has(ROLES.LIVE_NOW)
+
+    const isStreaming =
+      member.presence?.activities.some((activity) => {
+        return activity.type === ActivityType.Streaming
+      }) ?? false
+
+    if (isStreaming && !hasLiveNowRole) {
+      return member.roles.add(ROLES.LIVE_NOW)
+    }
+
+    if (!isStreaming && hasLiveNowRole) {
+      return member.roles.remove(ROLES.LIVE_NOW)
+    }
+  })
+})
+
 registerEventHandler("presenceUpdate", async (_, newPresence) => {
   if (!newPresence.guild) return
   if (!newPresence.member) return
