@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "tsx watch ./src/index.ts",
     "sync": "tsx ./src/scripts/sync.ts",
-    "seed": "tsx ./src/scripts/seed.ts",
     "start": "tsx ./src/index.ts"
   },
   "devDependencies": {
