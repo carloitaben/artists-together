@@ -18,8 +18,8 @@ const cancelButton = new ButtonBuilder()
   .setLabel("Cancel")
 
 export default async function handleClosePollSubcommand(interaction: ChatInputCommandInteraction) {
-  const name = interaction.options.getString("name", true)
-  const poll = polls.get(parseInt(name))
+  const id = interaction.options.getString("name", true)
+  const poll = polls.get(id)
 
   if (!poll) {
     throw Error(`Could not find cached poll with id ${name}`)

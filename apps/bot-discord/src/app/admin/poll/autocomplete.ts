@@ -11,7 +11,7 @@ export default async function handleAutocompletePoll(interaction: AutocompleteIn
       pollsArray
         .map((poll) => ({
           name: poll.name,
-          value: String(poll.id),
+          value: poll.id,
         }))
         .slice(0, 25)
     )
@@ -21,7 +21,7 @@ export default async function handleAutocompletePoll(interaction: AutocompleteIn
     if (poll.name.toLocaleLowerCase().startsWith(value.toLocaleLowerCase())) {
       accumulator.push({
         name: poll.name,
-        value: String(poll.id),
+        value: poll.id,
       })
     }
 

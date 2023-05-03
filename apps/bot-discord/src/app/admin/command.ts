@@ -8,6 +8,7 @@ import handleAutocompletePoll from "./poll/autocomplete"
 import handleCreatePollSubcommand from "./poll/create"
 import handleClosePollSubcommand from "./poll/close"
 import handleVotesPollSubcommand from "./poll/votes"
+import "./poll/vote"
 
 const SUBCOMMANDS = {
   EXTINGUISH: "extinguish",

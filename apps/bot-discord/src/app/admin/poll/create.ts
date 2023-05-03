@@ -9,7 +9,7 @@ import {
   TextInputStyle,
 } from "discord.js"
 import { parseDate } from "chrono-node"
-import dayjs from "dayjs"
+import { nanoid } from "nanoid"
 
 import { registerEventHandler } from "~/lib/core"
 import { addPoll } from "~/store/polls"
@@ -108,10 +108,6 @@ registerEventHandler("interactionCreate", async (interaction) => {
     })
   }
 
-  const buttons = options.map((option) =>
-    new ButtonBuilder().setCustomId(`${titleInput}${option}`).setStyle(ButtonStyle.Secondary).setLabel(option)
-  )
-
   const endDate = durationInput ? parseDate(durationInput, new Date(), { forwardDate: true }) : undefined
 
   const response = await interaction.reply({
@@ -154,7 +150,14 @@ registerEventHandler("interactionCreate", async (interaction) => {
           components: [],
         })
       case BUTTON_IDS.CREATE:
+        const id = nanoid()
+
+        const buttons = options.map((option, index) =>
+          new ButtonBuilder().setCustomId(`poll-button-${index}`).setStyle(ButtonStyle.Secondary).setLabel(option)
+        )
+
         const pollMessage = await confirmation.channel.send({
+          nonce: id,
           embeds: [
             new EmbedBuilder({
               title: titleInput,
@@ -172,6 +175,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
           messageId: pollMessage.id,
           name: titleInput,
           deadline: endDate,
+          id,
         })
 
         return confirmation.update({
