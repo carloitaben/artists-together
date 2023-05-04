@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction } from "discord.js"
+import { APIEmbedField, ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 
 import { countPoll, polls } from "~/store/polls"
 
@@ -11,18 +11,26 @@ export default async function handleVotesPollSubcommand(interaction: ChatInputCo
   }
 
   const count = await countPoll(interaction.client, poll)
+  const total = count.reduce((accumulator, [_, value]) => accumulator + value, 0)
 
-  if (!count.length) {
+  if (!total) {
     return interaction.reply({
       content: "No one has voted in that poll yet!",
       ephemeral: true,
     })
   }
 
-  const responses = count.map(([k, v]) => `${k}: ${v}`).join("\n")
-
   return interaction.reply({
-    content: `Poll id ${id}:\n${responses}`,
+    content: `Poll id ${id}: ${total} votes`,
     ephemeral: true,
+    embeds: [
+      new EmbedBuilder({
+        fields: count.map<APIEmbedField>(([name, value]) => ({
+          name,
+          value: `${value} vote${value === 1 ? "" : "s"} (${Math.round((value / total) * 100)}%)`,
+          inline: false,
+        })),
+      }),
+    ],
   })
 }
