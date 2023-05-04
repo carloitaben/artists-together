@@ -32,11 +32,11 @@ export function registerSlashCommand<T extends CommandBuilderStub>(
   })
 }
 
-export async function getCore() {
+export async function getRegistrations() {
   const files = await glob("src/app/**/*.ts")
   const imports = files.map((file) => import(`../app/${file.replace("src/app", "")}`))
 
-  // Lets side-effects run
+  // Let side-effects run
   await Promise.all(imports)
 
   return {

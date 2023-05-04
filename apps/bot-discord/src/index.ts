@@ -4,7 +4,7 @@ import { serveStatic } from "@hono/node-server/serve-static"
 import { Client, Partials, GatewayIntentBits } from "discord.js"
 
 import { env } from "~/lib/env"
-import { getCore } from "~/lib/core"
+import { getRegistrations } from "~/lib/core"
 
 const app = new Hono()
 
@@ -24,9 +24,9 @@ const bot = new Client({
 
 bot.once("ready", () => console.log("🚀"))
 
-const core = await getCore()
+const registrations = await getRegistrations()
 
-core.handlers.forEach((callbacks, event) => {
+registrations.handlers.forEach((callbacks, event) => {
   bot.addListener(event, (...args) => callbacks.forEach((callback) => callback(...args)))
 })
 
