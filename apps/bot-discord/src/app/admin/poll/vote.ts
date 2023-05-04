@@ -29,7 +29,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
   if (existingUserVote) {
     if (existingUserVote.answer === answer) {
       return interaction.reply({
-        content: "done!",
+        content: "Your vote has been recorded! 🎉",
         ephemeral: true,
       })
     }
@@ -37,7 +37,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
     await db.update(discordPollVotes).set({ answer }).where(eq(discordPollVotes.id, existingUserVote.id))
 
     return interaction.reply({
-      content: "updated!",
+      content: "Your vote has been recorded! 🎉",
       ephemeral: true,
     })
   }
@@ -49,7 +49,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
   })
 
   return interaction.reply({
-    content: "inserted!",
+    content: "Your vote has been recorded! 🎉",
     ephemeral: true,
   })
 })
