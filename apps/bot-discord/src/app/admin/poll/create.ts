@@ -18,6 +18,7 @@ const MODAL_ID = "admin-poll"
 
 const INPUT_IDS = {
   TITLE: `${MODAL_ID}-title`,
+  COLOR: `${MODAL_ID}-color`,
   DURATION: `${MODAL_ID}-duration`,
   DESCRIPTION: `${MODAL_ID}-description`,
   OPTIONS: `${MODAL_ID}-options`,
@@ -55,6 +56,13 @@ export default async function handleCreatePollSubcommand(interaction: ChatInputC
     .setLabel("Title")
     .setPlaceholder("Movie night")
 
+  const colorInput = new TextInputBuilder()
+    .setCustomId(INPUT_IDS.COLOR)
+    .setStyle(TextInputStyle.Short)
+    .setRequired(false)
+    .setLabel("Color (in hexadecimal)")
+    .setPlaceholder("#3924ff")
+
   const durationInput = new TextInputBuilder()
     .setCustomId(INPUT_IDS.DURATION)
     .setStyle(TextInputStyle.Short)
@@ -78,6 +86,7 @@ export default async function handleCreatePollSubcommand(interaction: ChatInputC
 
   modal.addComponents(
     new ActionRowBuilder<TextInputBuilder>().addComponents(titleInput),
+    new ActionRowBuilder<TextInputBuilder>().addComponents(colorInput),
     new ActionRowBuilder<TextInputBuilder>().addComponents(durationInput),
     new ActionRowBuilder<TextInputBuilder>().addComponents(descriptionInput),
     new ActionRowBuilder<TextInputBuilder>().addComponents(optionsInput)
@@ -95,20 +104,35 @@ registerEventHandler("interactionCreate", async (interaction) => {
   }
 
   const titleInput = interaction.fields.getTextInputValue(INPUT_IDS.TITLE)
+  const colorInput = interaction.fields.getTextInputValue(INPUT_IDS.COLOR) || "#3924ff"
   const durationInput = interaction.fields.getTextInputValue(INPUT_IDS.DURATION)
   const descriptionInput = interaction.fields.getTextInputValue(INPUT_IDS.DESCRIPTION)
   const optionsInput = interaction.fields.getTextInputValue(INPUT_IDS.OPTIONS)
 
   const options = optionsInput.split("\n").filter((option) => option)
 
+  if (!colorInput.startsWith("#")) {
+    return interaction.reply({
+      content: `Oops! The color code ${colorInput} doesn't seem to be valid 😅`,
+      ephemeral: true,
+    })
+  }
+
   if (options.length < 2) {
     return interaction.reply({
-      content: "Oops! I need at least two options to create a poll.",
+      content: "Oops! I need at least two options to create a poll 😅",
       ephemeral: true,
     })
   }
 
   const endDate = durationInput ? parseDate(durationInput, new Date(), { forwardDate: true }) : undefined
+
+  if (durationInput && !endDate) {
+    return interaction.reply({
+      content: `Oops! ${durationInput} doesn't seem like a valid duration 😅`,
+      ephemeral: true,
+    })
+  }
 
   const response = await interaction.reply({
     content: `I'll create a poll on this channel with the following data. The poll will run until ${
@@ -128,7 +152,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
           value: "",
           inline: false,
         })),
-      }),
+      }).setColor(colorInput as `#${string}`),
     ],
     components: [new ActionRowBuilder<ButtonBuilder>().addComponents(createButton, cancelButton)],
   })
@@ -165,7 +189,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
               footer: {
                 text: endDate ? `Poll open until ${endDate.toISOString()}` : "",
               },
-            }),
+            }).setColor(colorInput as `#${string}`),
           ],
           components: [new ActionRowBuilder<ButtonBuilder>().addComponents(...buttons)],
         })

@@ -28,8 +28,6 @@ export async function countPoll(client: Client, poll: DiscordPoll) {
 
   const options = message.components[0].components
 
-  console.log(options[0])
-
   const db = connect()
   const votes = await db.select().from(discordPollVotes).where(eq(discordPollVotes.pollId, poll.id))
 

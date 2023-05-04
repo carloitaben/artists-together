@@ -22,7 +22,7 @@ export default async function handleClosePollSubcommand(interaction: ChatInputCo
   const poll = polls.get(id)
 
   if (!poll) {
-    throw Error(`Could not find cached poll with id ${name}`)
+    throw Error(`Could not find cached poll with id ${id}`)
   }
 
   const response = await interaction.reply({
