@@ -18,6 +18,7 @@
   "dependencies": {
     "@hono/node-server": "^0.6.0",
     "discord.js": "^14.9.0",
+    "fast-glob": "^3.2.12",
     "hono": "^3.1.7",
     "node-cron": "^3.0.2",
     "zod": "^3.21.4"

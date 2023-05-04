@@ -4,15 +4,7 @@ import { serveStatic } from "@hono/node-server/serve-static"
 import { Client, Partials, GatewayIntentBits } from "discord.js"
 
 import { env } from "~/lib/env"
-import { handlersMap } from "~/lib/core"
-
-import "~/app/errors"
-import "~/app/avatar"
-import "~/app/live-role"
-import "~/app/admin/command"
-import "~/app/role-reactions/friend"
-import "~/app/role-reactions/pronouns"
-import "~/app/role-reactions/region"
+import { getRegistrations } from "~/lib/core"
 
 const app = new Hono()
 
@@ -32,7 +24,9 @@ const bot = new Client({
 
 bot.once("ready", () => console.log("🚀"))
 
-handlersMap.forEach((callbacks, event) => {
+const registrations = await getRegistrations()
+
+registrations.handlers.forEach((callbacks, event) => {
   bot.addListener(event, (...args) => callbacks.forEach((callback) => callback(...args)))
 })
 
