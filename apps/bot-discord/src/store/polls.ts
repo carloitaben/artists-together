@@ -93,26 +93,11 @@ export async function closePoll(client: Client, poll: DiscordPoll) {
   return deletePoll(poll)
 }
 
-async function trackPoll(client: Client, poll: DiscordPoll) {
-  if (!poll.deadline) return
-
-  // Close polls that are dead as of now
-  const dead = dayjs().isSameOrAfter(dayjs(poll.deadline))
-  if (dead) return closePoll(client, poll)
-
-  // Close future polls
-  const ms = dayjs(poll.deadline).diff(dayjs(), "ms")
-  setTimeout(() => closePoll(client, poll), ms)
-}
-
 export async function addPoll(client: Client, poll: InferModel<typeof discordPolls, "insert">) {
   const db = connect()
   await db.insert(discordPolls).values(poll)
   const [dbPoll] = await db.select().from(discordPolls).where(eq(discordPolls.name, poll.name)).limit(1)
   polls.set(dbPoll.id, dbPoll)
-
-  await trackPoll(client, dbPoll)
-
   return dbPoll
 }
 
@@ -122,8 +107,14 @@ registerEventHandler("ready", async (client) => {
   const dbPolls = await db.select().from(discordPolls)
   dbPolls.forEach((poll) => polls.set(poll.id, poll))
 
-  const trackable = dbPolls.filter((poll) => poll.deadline)
-  trackable.forEach((poll) => trackPoll(client, poll))
+  // Track polls
+  setInterval(() => {
+    polls.forEach((poll) => {
+      if (!poll.deadline) return
+      const dead = dayjs().isSameOrAfter(dayjs(poll.deadline))
+      if (dead) closePoll(client, poll)
+    })
+  }, 60_000)
 })
 
 // If a message with a poll is deleted, remove the poll from both db and cache

@@ -11,6 +11,7 @@ import {
 import { parseDate } from "chrono-node"
 import { nanoid } from "nanoid"
 import { and, connect, discordPolls, eq } from "db"
+import dayjs from "dayjs"
 
 import { registerEventHandler } from "~/lib/core"
 import { addPoll } from "~/store/polls"
@@ -139,6 +140,17 @@ registerEventHandler("interactionCreate", async (interaction) => {
       content: `Oops! ${durationInput} doesn't seem like a valid duration 😅`,
       ephemeral: true,
     })
+  }
+
+  if (endDate) {
+    const minutesFromNow = dayjs(endDate).diff(dayjs(), "minute")
+
+    if (minutesFromNow < 1) {
+      return interaction.reply({
+        content: `Oops! I cannot create a poll with a duration that short 😅`,
+        ephemeral: true,
+      })
+    }
   }
 
   const db = connect()
