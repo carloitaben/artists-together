@@ -10,6 +10,7 @@ import {
 } from "discord.js"
 import { parseDate } from "chrono-node"
 import { nanoid } from "nanoid"
+import { and, connect, discordPolls, eq } from "db"
 
 import { registerEventHandler } from "~/lib/core"
 import { addPoll } from "~/store/polls"
@@ -29,6 +30,8 @@ const BUTTON_IDS = {
   CANCEL: `${MODAL_ID}-button-cancel`,
 } as const
 
+export const BUTTON_OPTION_PREFIX = "poll-button-"
+
 const createButton = new ButtonBuilder()
   .setCustomId(BUTTON_IDS.CREATE)
   .setStyle(ButtonStyle.Primary)
@@ -38,6 +41,10 @@ const cancelButton = new ButtonBuilder()
   .setCustomId(BUTTON_IDS.CANCEL)
   .setStyle(ButtonStyle.Secondary)
   .setLabel("Cancel")
+
+function isValidColor(color: string) {
+  return /^#[0-9A-F]{6}$/i.test(color)
+}
 
 export default async function handleCreatePollSubcommand(interaction: ChatInputCommandInteraction) {
   if (!interaction.channel || !("name" in interaction.channel)) {
@@ -109,14 +116,14 @@ registerEventHandler("interactionCreate", async (interaction) => {
   const descriptionInput = interaction.fields.getTextInputValue(INPUT_IDS.DESCRIPTION)
   const optionsInput = interaction.fields.getTextInputValue(INPUT_IDS.OPTIONS)
 
-  const options = optionsInput.split("\n").filter((option) => option)
-
-  if (!colorInput.startsWith("#")) {
+  if (!isValidColor(colorInput)) {
     return interaction.reply({
       content: `Oops! The color code ${colorInput} doesn't seem to be valid 😅`,
       ephemeral: true,
     })
   }
+
+  const options = optionsInput.split("\n").filter((option) => option)
 
   if (options.length < 2) {
     return interaction.reply({
@@ -130,6 +137,31 @@ registerEventHandler("interactionCreate", async (interaction) => {
   if (durationInput && !endDate) {
     return interaction.reply({
       content: `Oops! ${durationInput} doesn't seem like a valid duration 😅`,
+      ephemeral: true,
+    })
+  }
+
+  const db = connect()
+
+  const [pollInThisChannelWithThisName] = await db
+    .select()
+    .from(discordPolls)
+    .where(and(eq(discordPolls.channelId, interaction.channel.id), eq(discordPolls.name, titleInput)))
+    .limit(1)
+
+  if (pollInThisChannelWithThisName) {
+    return interaction.reply({
+      content:
+        `Oops! A poll with the title "${titleInput}" already exists on this channel 😅` +
+        "\n" +
+        "\n" +
+        "You could…" +
+        "\n" +
+        "✱ Close that poll using the `/admin poll close` command" +
+        "\n" +
+        "✱ Pick a different title for this poll" +
+        "\n" +
+        "✱ Create this poll in a different channel",
       ephemeral: true,
     })
   }
@@ -177,7 +209,10 @@ registerEventHandler("interactionCreate", async (interaction) => {
         const id = nanoid()
 
         const buttons = options.map((option, index) =>
-          new ButtonBuilder().setCustomId(`poll-button-${index}`).setStyle(ButtonStyle.Secondary).setLabel(option)
+          new ButtonBuilder()
+            .setCustomId(`${BUTTON_OPTION_PREFIX}${index}`)
+            .setStyle(ButtonStyle.Secondary)
+            .setLabel(option)
         )
 
         const pollMessage = await confirmation.channel.send({
@@ -208,7 +243,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
           components: [],
         })
     }
-  } catch (e) {
+  } catch (error) {
     await response.edit({
       content: "Confirmation not received within 1 minute, cancelling",
       embeds: [],

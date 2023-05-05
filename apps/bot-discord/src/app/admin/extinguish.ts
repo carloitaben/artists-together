@@ -50,7 +50,7 @@ export default async function handleExtinguishSubcommand(interaction: ChatInputC
 
   try {
     const confirmation = await response.awaitMessageComponent({
-      time: 60000,
+      time: 60_000,
       filter: (i) => i.user.id === interaction.user.id,
       componentType: ComponentType.Button,
     })

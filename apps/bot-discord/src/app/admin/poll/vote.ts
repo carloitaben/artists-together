@@ -3,9 +3,11 @@ import { and, connect, discordPollVotes, eq } from "db"
 import { registerEventHandler } from "~/lib/core"
 import { polls } from "~/store/polls"
 
+import { BUTTON_OPTION_PREFIX } from "./create"
+
 registerEventHandler("interactionCreate", async (interaction) => {
   if (!interaction.isButton()) return
-  if (!interaction.customId.startsWith("poll-button-")) return
+  if (!interaction.customId.startsWith(BUTTON_OPTION_PREFIX)) return
 
   if (!interaction.message.nonce) {
     throw Error("Expected poll UUID in message nonce property")
@@ -17,7 +19,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
     throw Error(`Could not find cached poll with id ${interaction.message.nonce}`)
   }
 
-  const answer = parseInt(interaction.customId.replace("poll-button-", ""))
+  const answer = parseInt(interaction.customId.replace(BUTTON_OPTION_PREFIX, ""))
   const db = connect()
 
   const [existingUserVote] = await db

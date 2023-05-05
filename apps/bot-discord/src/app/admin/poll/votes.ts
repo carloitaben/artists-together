@@ -21,10 +21,14 @@ export default async function handleVotesPollSubcommand(interaction: ChatInputCo
   }
 
   return interaction.reply({
-    content: `Poll id ${id}: ${total} votes`,
+    content: `Here is the current vote count for the poll "${poll.name}"`,
     ephemeral: true,
     embeds: [
       new EmbedBuilder({
+        title: `${poll.name}`,
+        footer: {
+          text: `Total vote count: ${total}`,
+        },
         fields: count.map<APIEmbedField>(([name, value]) => ({
           name,
           value: `${value} vote${value === 1 ? "" : "s"} (${Math.round((value / total) * 100)}%)`,
