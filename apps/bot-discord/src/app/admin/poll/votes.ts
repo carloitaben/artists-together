@@ -1,6 +1,7 @@
-import { APIEmbedField, ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 
 import { countPoll, polls } from "~/store/polls"
+import { formatVotes } from "./lib/utils"
 
 export default async function handleVotesPollSubcommand(interaction: ChatInputCommandInteraction) {
   const id = interaction.options.getString("name", true)
@@ -21,19 +22,15 @@ export default async function handleVotesPollSubcommand(interaction: ChatInputCo
   }
 
   return interaction.reply({
-    content: `Here is the current vote count for the poll "${poll.name}"`,
+    content: "🗳️  **Poll vote count**",
     ephemeral: true,
     embeds: [
       new EmbedBuilder({
         title: `${poll.name}`,
         footer: {
-          text: `Total vote count: ${total}`,
+          text: `${total} vote${total === 1 ? "" : "s"} in total`,
         },
-        fields: count.map<APIEmbedField>(([name, value]) => ({
-          name,
-          value: `${value} vote${value === 1 ? "" : "s"} (${Math.round((value / total) * 100)}%)`,
-          inline: false,
-        })),
+        fields: formatVotes(count),
       }),
     ],
   })

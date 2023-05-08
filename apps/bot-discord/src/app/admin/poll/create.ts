@@ -16,6 +16,8 @@ import dayjs from "dayjs"
 import { registerEventHandler } from "~/lib/core"
 import { addPoll } from "~/store/polls"
 
+import { encodeButtonVoteOptionId } from "./lib/utils"
+
 const MODAL_ID = "admin-poll"
 
 const INPUT_IDS = {
@@ -30,8 +32,6 @@ const BUTTON_IDS = {
   CREATE: `${MODAL_ID}-button-create`,
   CANCEL: `${MODAL_ID}-button-cancel`,
 } as const
-
-export const BUTTON_OPTION_PREFIX = "poll-button-"
 
 const createButton = new ButtonBuilder()
   .setCustomId(BUTTON_IDS.CREATE)
@@ -112,7 +112,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
   }
 
   const titleInput = interaction.fields.getTextInputValue(INPUT_IDS.TITLE)
-  const colorInput = interaction.fields.getTextInputValue(INPUT_IDS.COLOR) || "#3924ff"
+  const colorInput = interaction.fields.getTextInputValue(INPUT_IDS.COLOR) || "#f4f4f4"
   const durationInput = interaction.fields.getTextInputValue(INPUT_IDS.DURATION)
   const descriptionInput = interaction.fields.getTextInputValue(INPUT_IDS.DESCRIPTION)
   const optionsInput = interaction.fields.getTextInputValue(INPUT_IDS.OPTIONS)
@@ -143,9 +143,9 @@ registerEventHandler("interactionCreate", async (interaction) => {
   }
 
   if (endDate) {
-    const minutesFromNow = dayjs(endDate).diff(dayjs(), "minute")
+    const diff = dayjs(endDate).diff(dayjs(), "seconds")
 
-    if (minutesFromNow < 1) {
+    if (diff <= 10) {
       return interaction.reply({
         content: `Oops! I cannot create a poll with a duration that short 😅`,
         ephemeral: true,
@@ -179,9 +179,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
   }
 
   const response = await interaction.reply({
-    content: `I'll create a poll on this channel with the following data. The poll will run until ${
-      endDate ? endDate.toISOString() : "an admin decides to close it"
-    }. Is it ok?`,
+    content: "I'll open a poll on this channel with the following data. Is it ok?",
     ephemeral: true,
     fetchReply: true,
     embeds: [
@@ -222,13 +220,13 @@ registerEventHandler("interactionCreate", async (interaction) => {
 
         const buttons = options.map((option, index) =>
           new ButtonBuilder()
-            .setCustomId(`${BUTTON_OPTION_PREFIX}${index}`)
+            .setCustomId(encodeButtonVoteOptionId(id, index))
             .setStyle(ButtonStyle.Secondary)
             .setLabel(option)
         )
 
         const pollMessage = await confirmation.channel.send({
-          nonce: id,
+          content: "🗳️  **Poll**",
           embeds: [
             new EmbedBuilder({
               title: titleInput,

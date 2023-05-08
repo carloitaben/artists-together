@@ -52,8 +52,7 @@ export default async function handleClosePollSubcommand(interaction: ChatInputCo
         await closePoll(interaction.client, poll)
 
         return confirmation.update({
-          // TODO
-          content: "Done! Show results here",
+          content: "Done!",
           embeds: [],
           components: [],
         })

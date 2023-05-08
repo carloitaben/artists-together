@@ -74,7 +74,7 @@ export async function closePoll(client: Client, poll: DiscordPoll) {
   const responses = count.map(([k, v]) => `${k}: ${v}`).join("\n")
   // TODO: decide what do we do here
   // By default we try to reuse the existing poll message
-  // but it might not be possible
+  // but it might not be possible if it's too old
   if (message.editable) {
     await message.edit({
       content: responses,
@@ -114,7 +114,7 @@ registerEventHandler("ready", async (client) => {
       const dead = dayjs().isSameOrAfter(dayjs(poll.deadline))
       if (dead) closePoll(client, poll)
     })
-  }, 60_000)
+  }, 10_000)
 })
 
 // If a message with a poll is deleted, remove the poll from both db and cache

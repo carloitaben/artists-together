@@ -3,25 +3,20 @@ import { and, connect, discordPollVotes, eq } from "db"
 import { registerEventHandler } from "~/lib/core"
 import { polls } from "~/store/polls"
 
-import { BUTTON_OPTION_PREFIX } from "./create"
+import { BUTTON_OPTION_PREFIX, decodeButtonVoteOptionId } from "./lib/utils"
 
 registerEventHandler("interactionCreate", async (interaction) => {
   if (!interaction.isButton()) return
   if (!interaction.customId.startsWith(BUTTON_OPTION_PREFIX)) return
 
-  if (!interaction.message.nonce) {
-    throw Error("Expected poll UUID in message nonce property")
-  }
-
-  const poll = polls.get(String(interaction.message.nonce))
+  const { pollId, optionIndex } = decodeButtonVoteOptionId(interaction.customId)
+  const poll = polls.get(String(pollId))
 
   if (!poll) {
-    throw Error(`Could not find cached poll with id ${interaction.message.nonce}`)
+    throw Error(`Could not find cached poll with id ${pollId}`)
   }
 
-  const answer = parseInt(interaction.customId.replace(BUTTON_OPTION_PREFIX, ""))
   const db = connect()
-
   const [existingUserVote] = await db
     .select()
     .from(discordPollVotes)
@@ -29,17 +24,17 @@ registerEventHandler("interactionCreate", async (interaction) => {
     .limit(1)
 
   if (existingUserVote) {
-    if (existingUserVote.answer === answer) {
+    if (existingUserVote.answer === optionIndex) {
       return interaction.reply({
-        content: "Your vote has been recorded! 🎉",
+        content: "Your vote has been casted! 🎉\nThank you for participating ❤️",
         ephemeral: true,
       })
     }
 
-    await db.update(discordPollVotes).set({ answer }).where(eq(discordPollVotes.id, existingUserVote.id))
+    await db.update(discordPollVotes).set({ answer: optionIndex }).where(eq(discordPollVotes.id, existingUserVote.id))
 
     return interaction.reply({
-      content: "Your vote has been recorded! 🎉",
+      content: "Your vote has been casted! 🎉\nThank you for participating ❤️",
       ephemeral: true,
     })
   }
@@ -47,11 +42,11 @@ registerEventHandler("interactionCreate", async (interaction) => {
   await db.insert(discordPollVotes).values({
     pollId: poll.id,
     userId: interaction.user.id,
-    answer,
+    answer: optionIndex,
   })
 
   return interaction.reply({
-    content: "Your vote has been recorded! 🎉",
+    content: "Your vote has been casted! 🎉\nThank you for participating ❤️",
     ephemeral: true,
   })
 })

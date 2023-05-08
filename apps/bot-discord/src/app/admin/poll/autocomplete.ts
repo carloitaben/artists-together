@@ -27,7 +27,7 @@ export default async function handleAutocompletePoll(interaction: AutocompleteIn
           const channel = getChannelWithName(interaction, poll.channelId)
 
           return {
-            name: `#${channel.name} · ${poll.name}`,
+            name: `${poll.name} (in #${channel.name})`,
             value: poll.id,
           }
         })
