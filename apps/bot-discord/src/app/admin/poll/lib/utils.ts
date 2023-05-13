@@ -17,7 +17,7 @@ export function decodeButtonVoteOptionId(buttonId: string) {
   }
 }
 
-const VOTE_BAR_FILL = "█"
+const VOTE_BAR_FILL = "▓"
 const VOTE_VAR_EMPTY = "░"
 const VOTE_BAR_WIDTH = 10
 
@@ -30,7 +30,7 @@ export function formatVotes(count: Awaited<ReturnType<typeof countPoll>>) {
 
     return {
       name,
-      value: `\`${voteBar}\` **${percent * 100}%**`,
+      value: `${voteBar} **${percent * 100}%**`,
       inline: false,
     }
   })

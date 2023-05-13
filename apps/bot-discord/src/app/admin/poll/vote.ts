@@ -26,7 +26,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
   if (existingUserVote) {
     if (existingUserVote.answer === optionIndex) {
       return interaction.reply({
-        content: "Your vote has been casted! 🎉\nThank you for participating ❤️",
+        content: "Your vote has been casted! 🎉\nThank you for participating.",
         ephemeral: true,
       })
     }
@@ -34,7 +34,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
     await db.update(discordPollVotes).set({ answer: optionIndex }).where(eq(discordPollVotes.id, existingUserVote.id))
 
     return interaction.reply({
-      content: "Your vote has been casted! 🎉\nThank you for participating ❤️",
+      content: "Your vote has been casted! 🎉\nThank you for participating.",
       ephemeral: true,
     })
   }
@@ -46,7 +46,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
   })
 
   return interaction.reply({
-    content: "Your vote has been casted! 🎉\nThank you for participating ❤️",
+    content: "Your vote has been casted! 🎉\nThank you for participating.",
     ephemeral: true,
   })
 })

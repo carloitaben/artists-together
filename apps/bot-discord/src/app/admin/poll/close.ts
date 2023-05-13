@@ -26,7 +26,7 @@ export default async function handleClosePollSubcommand(interaction: ChatInputCo
   }
 
   const response = await interaction.reply({
-    content: `Are you sure you want to close the poll ${poll.name}? This cannot be undone!`,
+    content: `Are you sure you want to close the poll "${poll.name}"? This cannot be undone!`,
     ephemeral: true,
     fetchReply: true,
     components: [new ActionRowBuilder<ButtonBuilder>().addComponents(closeButton, cancelButton)],

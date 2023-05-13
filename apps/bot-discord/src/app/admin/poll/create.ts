@@ -12,11 +12,16 @@ import { parseDate } from "chrono-node"
 import { nanoid } from "nanoid"
 import { and, connect, discordPolls, eq } from "db"
 import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+import localizedFormat from "dayjs/plugin/localizedFormat"
 
 import { registerEventHandler } from "~/lib/core"
 import { addPoll } from "~/store/polls"
 
 import { encodeButtonVoteOptionId } from "./lib/utils"
+
+dayjs.extend(relativeTime)
+dayjs.extend(localizedFormat)
 
 const MODAL_ID = "admin-poll"
 
@@ -186,8 +191,8 @@ registerEventHandler("interactionCreate", async (interaction) => {
       new EmbedBuilder({
         title: titleInput,
         description: descriptionInput,
-        footer: {
-          text: `Poll open until ${endDate ? endDate.toISOString() : "manually closed"}`,
+        footer: endDate && {
+          text: `Automatically closes on ${dayjs(endDate).format("lll")}`,
         },
         fields: options.map((option, index) => ({
           name: `Option ${index + 1}: ${option}`,
@@ -211,7 +216,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
     switch (confirmation.customId) {
       case BUTTON_IDS.CANCEL:
         return confirmation.update({
-          content: "Cancelled",
+          content: "Poll creation cancelled",
           embeds: [],
           components: [],
         })
@@ -231,9 +236,6 @@ registerEventHandler("interactionCreate", async (interaction) => {
             new EmbedBuilder({
               title: titleInput,
               description: descriptionInput,
-              footer: {
-                text: endDate ? `Poll open until ${endDate.toISOString()}` : "",
-              },
             }).setColor(colorInput as `#${string}`),
           ],
           components: [new ActionRowBuilder<ButtonBuilder>().addComponents(...buttons)],
