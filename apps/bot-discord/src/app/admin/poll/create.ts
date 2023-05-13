@@ -12,6 +12,7 @@ import { parseDate } from "chrono-node"
 import { nanoid } from "nanoid"
 import { and, connect, discordPolls, eq } from "db"
 import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
 import relativeTime from "dayjs/plugin/relativeTime"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 
@@ -20,6 +21,7 @@ import { addPoll } from "~/store/polls"
 
 import { encodeButtonVoteOptionId } from "./lib/utils"
 
+dayjs.extend(utc)
 dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
 
@@ -192,7 +194,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
         title: titleInput,
         description: descriptionInput,
         footer: endDate && {
-          text: `Automatically closes on ${dayjs(endDate).format("lll")}`,
+          text: `Closes on ${dayjs.utc(endDate).format("lll")} UTC`,
         },
         fields: options.map((option, index) => ({
           name: `Option ${index + 1}: ${option}`,
@@ -236,6 +238,9 @@ registerEventHandler("interactionCreate", async (interaction) => {
             new EmbedBuilder({
               title: titleInput,
               description: descriptionInput,
+              footer: endDate && {
+                text: `Closes on ${dayjs.utc(endDate).format("lll")} UTC`,
+              },
             }).setColor(colorInput as `#${string}`),
           ],
           components: [new ActionRowBuilder<ButtonBuilder>().addComponents(...buttons)],
