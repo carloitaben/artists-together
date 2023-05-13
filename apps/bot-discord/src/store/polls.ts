@@ -1,8 +1,9 @@
 import dayjs from "dayjs"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
-import { Client } from "discord.js"
+import { Client, EmbedBuilder } from "discord.js"
 import { InferModel, connect, discordPollVotes, discordPolls, eq } from "db"
 
+import { formatVotes } from "~/app/admin/poll/lib/utils"
 import { registerEventHandler } from "~/lib/core"
 import { getTextBasedChannel } from "~/lib/helpers"
 
@@ -71,21 +72,30 @@ export async function closePoll(client: Client, poll: DiscordPoll) {
   if (!message) return deletePoll(poll)
 
   const count = await countPoll(client, poll)
-  const responses = count.map(([k, v]) => `${k}: ${v}`).join("\n")
-  // TODO: decide what do we do here
+  const total = count.reduce((accumulator, [_, value]) => accumulator + value, 0)
+  const embed = new EmbedBuilder({
+    title: `${poll.name}`,
+    footer: {
+      text: `${total} vote${total === 1 ? "" : "s"} in total`,
+    },
+    fields: formatVotes(count),
+  })
+
   // By default we try to reuse the existing poll message
-  // but it might not be possible if it's too old
+  // but it might not be possible if it's too old,
+  // so we delete it and create another
   if (message.editable) {
     await message.edit({
-      content: responses,
+      content: "🗳️  **Poll results**",
       components: [],
+      embeds: [embed],
     })
   } else {
     Promise.all([
       message.delete(),
       channel.send({
-        content: responses,
-        components: [],
+        content: "🗳️  **Poll results**",
+        embeds: [embed],
       }),
     ])
   }
