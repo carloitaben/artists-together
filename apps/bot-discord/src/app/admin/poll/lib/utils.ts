@@ -25,12 +25,12 @@ export function formatVotes(count: Awaited<ReturnType<typeof countPoll>>) {
   const total = count.reduce((accumulator, [_, value]) => accumulator + value, 0)
 
   return count.map<APIEmbedField>(([name, value]) => {
-    const percent = Math.round(value / total)
-    const voteBar = VOTE_BAR_FILL.repeat(percent * VOTE_BAR_WIDTH).padEnd(VOTE_BAR_WIDTH, VOTE_VAR_EMPTY)
+    const percent = Math.round((value / total) * 100)
+    const voteBar = VOTE_BAR_FILL.repeat((percent / 100) * VOTE_BAR_WIDTH).padEnd(VOTE_BAR_WIDTH, VOTE_VAR_EMPTY)
 
     return {
       name,
-      value: `${voteBar} **${percent * 100}%**`,
+      value: `${voteBar} **${percent}%**`,
       inline: false,
     }
   })
