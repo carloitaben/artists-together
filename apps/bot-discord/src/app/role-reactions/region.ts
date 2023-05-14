@@ -1,13 +1,14 @@
+import { env } from "~/lib/env"
 import { registerEventHandler } from "~/lib/core"
 import { getMember, getReactionFromPartial } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
-const MESSAGE_ID = "1099292065495519242"
+const MESSAGE_ID = env.NODE_ENV === "development" ? "" : "1101904587914481724"
 
 const OPTIONS = {
   "🦓": ROLES.REGION_AFRICA,
-  "🐻": ROLES.REGION_WEST_EUROPE,
-  "🐺": ROLES.REGION_EAST_EUROPE,
+  "🐺": ROLES.REGION_WEST_EUROPE,
+  "🐻": ROLES.REGION_EAST_EUROPE,
   "🐯": ROLES.REGION_WEST_ASIA,
   "🐍": ROLES.REGION_EAST_ASIA,
   "🦫": ROLES.REGION_NORTH_AMERICA,
@@ -26,21 +27,10 @@ registerEventHandler("messageReactionAdd", async (partialReaction, partialUser) 
   if (partialReaction.message.id !== MESSAGE_ID) return
   if (partialUser.bot) return
 
-  // Save this as a constant to get better narrowing with the type predicate
   const option = partialReaction.emoji.name
 
-  // Remove invalid reactions
-  if (!isValidOption(option)) {
-    try {
-      await partialReaction.remove()
-    } catch (error) {
-      console.error(error)
-    } finally {
-      return
-    }
-  }
+  if (!isValidOption(option)) return partialReaction.remove()
 
-  // Resolve partials
   const [reaction, member] = await Promise.all([
     getReactionFromPartial(partialReaction),
     getMember(partialReaction.message.guild.members, partialUser.id),
@@ -63,16 +53,10 @@ registerEventHandler("messageReactionRemove", async (partialReaction, partialUse
   if (partialReaction.message.id !== MESSAGE_ID) return
   if (partialUser.bot) return
 
-  // Save this as a constant to get better narrowing with the type predicate
   const option = partialReaction.emoji.name
 
-  // Ignore invalid reactions
   if (!isValidOption(option)) return
 
-  try {
-    const member = await getMember(partialReaction.message.guild.members, partialUser.id)
-    await member.roles.remove(OPTIONS[option])
-  } catch (error) {
-    console.error(error)
-  }
+  const member = await getMember(partialReaction.message.guild.members, partialUser.id)
+  return member.roles.remove(OPTIONS[option])
 })
