@@ -1,5 +1,6 @@
 import { APIEmbedField } from "discord.js"
-import { countPoll } from "~/store/polls"
+
+import { countPoll } from "./polls"
 
 export const BUTTON_OPTION_PREFIX = "poll-button-"
 

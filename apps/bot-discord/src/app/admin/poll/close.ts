@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction } from "discord.js"
 
-import { closePoll, polls } from "~/store/polls"
+import { closePoll, polls } from "./lib/polls"
 
 const BUTTON_IDS = {
   CLOSE: "poll-close-button-close",

@@ -3,9 +3,10 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 import { Client, EmbedBuilder } from "discord.js"
 import { InferModel, connect, discordPollVotes, discordPolls, eq } from "db"
 
-import { formatVotes } from "~/app/admin/poll/lib/utils"
 import { registerEventHandler } from "~/lib/core"
 import { getTextBasedChannel } from "~/lib/helpers"
+
+import { formatVotes } from "./utils"
 
 dayjs.extend(isSameOrAfter)
 

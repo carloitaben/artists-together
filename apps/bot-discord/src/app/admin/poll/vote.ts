@@ -1,8 +1,8 @@
 import { and, connect, discordPollVotes, eq } from "db"
 
 import { registerEventHandler } from "~/lib/core"
-import { polls } from "~/store/polls"
 
+import { polls } from "./lib/polls"
 import { BUTTON_OPTION_PREFIX, decodeButtonVoteOptionId } from "./lib/utils"
 
 registerEventHandler("interactionCreate", async (interaction) => {

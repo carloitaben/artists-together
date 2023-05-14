@@ -17,8 +17,8 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 
 import { registerEventHandler } from "~/lib/core"
-import { addPoll } from "~/store/polls"
 
+import { addPoll } from "./lib/polls"
 import { encodeButtonVoteOptionId } from "./lib/utils"
 
 dayjs.extend(utc)

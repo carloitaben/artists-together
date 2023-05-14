@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from "discord.js"
 
-import { polls } from "~/store/polls"
+import { polls } from "./lib/polls"
 
 function getChannelWithName(interaction: AutocompleteInteraction, id: string) {
   const channel = interaction.client.channels.cache.get(id)

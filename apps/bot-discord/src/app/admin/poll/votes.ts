@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 
-import { countPoll, polls } from "~/store/polls"
+import { countPoll, polls } from "./lib/polls"
 import { formatVotes } from "./lib/utils"
 
 export default async function handleVotesPollSubcommand(interaction: ChatInputCommandInteraction) {
