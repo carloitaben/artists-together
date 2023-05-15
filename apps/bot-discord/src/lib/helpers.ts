@@ -1,7 +1,7 @@
 import { MessageReaction, PartialMessageReaction, Client, GuildMemberManager, RoleManager } from "discord.js"
 import { validate, schedule } from "node-cron"
 
-import { Channel, SERVER_ID } from "~/lib/constants"
+import { ROLES, SERVER_ID } from "~/lib/constants"
 
 export function cron(...args: Parameters<typeof schedule>) {
   validate(args[0])
@@ -62,4 +62,23 @@ export async function getRole<T extends RoleManager>(manager: T, id: string) {
   }
 
   return role
+}
+
+export async function parseMentions(manager: RoleManager, text: string) {
+  // Early bail out if string is empty
+  if (!text) return text
+
+  // Early bail out if no mentions are found
+  if (!text.includes("@")) return text
+
+  const roles = await Promise.all(
+    Object.entries(ROLES).map(async ([name, id]) => {
+      const role = await getRole(manager, id)
+      return [`@${name}`, role] as const
+    })
+  )
+
+  return roles.reduce((text, [mention, role]) => {
+    return text.replaceAll(mention, role.toString())
+  }, text)
 }
