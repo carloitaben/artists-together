@@ -1,3 +1,4 @@
+import { EmbedBuilder } from "discord.js"
 import { and, connect, discordPollVotes, eq } from "db"
 
 import { registerEventHandler } from "~/lib/core"
@@ -43,6 +44,25 @@ registerEventHandler("interactionCreate", async (interaction) => {
     pollId: poll.id,
     userId: interaction.user.id,
     answer: optionIndex,
+  })
+
+  const embed = interaction.message.embeds[0]
+
+  if (!embed.footer) {
+    throw Error("Missing poll message embed footer")
+  }
+
+  // This is SO ugly I'm sorry
+  const [firstLine] = embed.footer.text.split("\n")
+  const [countWord, votesWord] = firstLine.split(" ")
+  const voteCount = parseInt(countWord)
+  const newFirstLine = firstLine
+    .replace(String(voteCount), String(voteCount + 1))
+    .replace(votesWord, voteCount + 1 === 1 ? "vote" : "votes")
+  const newFooter = embed.footer.text.replace(firstLine, newFirstLine)
+
+  await interaction.message.edit({
+    embeds: [new EmbedBuilder(embed.data).setFooter({ text: newFooter })],
   })
 
   return interaction.reply({
