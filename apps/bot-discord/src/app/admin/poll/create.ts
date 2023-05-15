@@ -245,8 +245,8 @@ registerEventHandler("interactionCreate", async (interaction) => {
             new EmbedBuilder({
               title: titleInput,
               description,
-              footer: endDate && {
-                text: `Closes on ${dayjs.utc(endDate).format("lll")} UTC`,
+              footer: {
+                text: `0 votes in total${endDate ? `\nCloses on ${dayjs.utc(endDate).format("lll")} UTC` : ""}`,
               },
             }).setColor(colorInput as `#${string}`),
           ],
