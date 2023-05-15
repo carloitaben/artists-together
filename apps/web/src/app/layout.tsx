@@ -1,5 +1,7 @@
 import { ReactNode } from "react"
 
+import Navbar from "~/components/Navbar"
+
 import "./globals.css"
 
 export const metadata = {
@@ -13,8 +15,11 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className="h-full">
+      <body className="min-h-full h-full grid [grid-template-columns:4rem_1fr]">
+        <Navbar />
+        {children}
+      </body>
     </html>
   )
 }
