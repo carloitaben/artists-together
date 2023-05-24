@@ -99,13 +99,25 @@ export default function Cursors() {
           return (
             <motion.div key={id} style={style} data-id={id} className="absolute inset-0">
               <motion.div>
-                <motion.div
-                  className="w-4 h-4 bg-pink-500"
+                <motion.svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  fill="none"
                   initial="hide"
                   animate="show"
                   exit="hide"
                   variants={variants}
-                />
+                  className=" drop-shadow-[0px_4px_8px_rgba(0,0,0,0.12)]"
+                >
+                  <path
+                    fill="#FAFAFA"
+                    stroke="#0D0D0D"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17.46 29.756a1 1 0 0 0 1.33.484l3.634-1.7a1 1 0 0 0 .482-1.328l-4.137-8.877h7.898a1 1 0 0 0 .617-1.787L8.619 1.882A1 1 0 0 0 7 2.668v24a1 1 0 0 0 1.813.582l4.536-6.34 4.11 8.846Z"
+                  />
+                </motion.svg>
                 {id}
               </motion.div>
             </motion.div>
