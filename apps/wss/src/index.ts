@@ -89,6 +89,7 @@ wss.on("connection", (webSocket) => {
             })
           } else {
             rooms.set(data, new Set([ws]))
+            send(ws, "room:join", [])
           }
         }
         break
