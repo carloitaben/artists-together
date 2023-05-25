@@ -17,7 +17,7 @@ function extendWebSocket(ws: Omit<WebSocket, "emit">) {
 type ExtendedWebSocket = ReturnType<typeof extendWebSocket>
 
 function send<T extends ServerEvent>(ws: ExtendedWebSocket, event: T, data: ServerEventDataMap[T]) {
-  return ws.send(JSON.stringify([event, data]))
+  if (ws.readyState === ws.OPEN) ws.send(JSON.stringify([event, data]))
 }
 
 const rooms = new Map<string, Set<ExtendedWebSocket>>()
