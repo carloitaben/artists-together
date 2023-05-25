@@ -4,7 +4,7 @@ import { ReactNode, createContext, useCallback, useContext, useEffect, useState 
 import { ClientEvent, ClientEventDataMap, ServerEvent, ServerEventDataMap } from "ws-types"
 import { usePathname } from "next/navigation"
 
-const listeners = new Map<string, Set<(...args: any[]) => void>>()
+const listeners = new Map<string, Set<Function>>()
 const context = createContext<WebSocket | undefined>(undefined)
 
 function useWebSocket() {
