@@ -26,7 +26,7 @@ const variants: Variants = {
   },
 }
 
-function CursorComponnet({ cursor, id }: { cursor: Cursor | null; id: string }) {
+function CursorComponent({ cursor, id }: { cursor: Cursor | null; id: string }) {
   const ref = useRef<HTMLDivElement>(null)
 
   const [pc] = useState(
@@ -125,7 +125,7 @@ export default function Cursors() {
     <div aria-hidden className="absolute inset-0 pointer-events-none">
       <AnimatePresence>
         {Array.from(cursors.entries()).map(([id, cursor]) => (
-          <CursorComponnet key={id} id={id} cursor={cursor} />
+          <CursorComponent key={id} id={id} cursor={cursor} />
         ))}
       </AnimatePresence>
     </div>

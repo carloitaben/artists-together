@@ -1,7 +1,10 @@
+import dynamic from "next/dynamic"
 import { WebSocketProvider } from "~/hooks/ws"
-import Cursors from "~/components/Cursors"
-
 import "./globals.css"
+
+const Cursors = dynamic(() => import("../components/Cursors"), {
+  ssr: false,
+})
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
