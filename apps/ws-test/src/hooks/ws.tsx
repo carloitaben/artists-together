@@ -16,7 +16,8 @@ export function useWebSocketEmitter<T extends ClientEvent>(event: T) {
 
   return useCallback(
     (data: ClientEventDataMap[T]) => {
-      ws?.send(JSON.stringify([event, data]))
+      if (!ws || ws.readyState !== ws.OPEN) return
+      ws.send(JSON.stringify([event, data]))
     },
     [event, ws]
   )
