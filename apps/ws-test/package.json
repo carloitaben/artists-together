@@ -18,6 +18,7 @@
     "framer-motion": "^10.12.16",
     "just-throttle": "^4.2.0",
     "next": "13.4.3",
+    "perfect-cursors": "^1.0.5",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
