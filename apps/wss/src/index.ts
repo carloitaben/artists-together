@@ -2,31 +2,39 @@ import { WebSocket, WebSocketServer } from "ws"
 import { ClientEvent, ClientEventDataMap, Cursor, ServerEvent, ServerEventDataMap } from "ws-types"
 import { nanoid } from "nanoid"
 
-function extendWebSocket(ws: Omit<WebSocket, "emit">) {
-  return Object.assign(ws, {
-    id: nanoid(),
-    room: null,
-    cursor: null,
-  } as {
-    id: string
-    room: string | null
-    cursor: Cursor | null
-  })
+type ExtendedWebSocket = WebSocket & {
+  id: string
+  room: string | null
+  cursor: Cursor | null
+  isAlive: boolean
 }
-
-type ExtendedWebSocket = ReturnType<typeof extendWebSocket>
 
 function send<T extends ServerEvent>(ws: ExtendedWebSocket, event: T, data: ServerEventDataMap[T]) {
   if (ws.readyState === ws.OPEN) ws.send(JSON.stringify([event, data]))
 }
 
 const rooms = new Map<string, Set<ExtendedWebSocket>>()
-const wss = new WebSocketServer({ port: 8080 })
+const wss = new WebSocketServer<ExtendedWebSocket>({ port: 8080 })
 
-wss.on("connection", (webSocket) => {
-  const ws = extendWebSocket(webSocket)
+const pingInterval = setInterval(() => {
+  wss.clients.forEach((ws) => {
+    if (!ws.isAlive) return ws.terminate()
+    ws.isAlive = false
+    ws.ping()
+  })
+}, 30000)
+
+wss.on("connection", (ws) => {
+  ws.id = nanoid()
+  ws.isAlive = true
+  ws.room = null
+  ws.cursor = null
 
   ws.on("error", console.error)
+
+  ws.on("pong", () => {
+    ws.isAlive = true
+  })
 
   ws.on("close", () => {
     if (ws.room) {
@@ -97,4 +105,8 @@ wss.on("connection", (webSocket) => {
       }
     }
   })
+})
+
+wss.on("close", () => {
+  clearInterval(pingInterval)
 })
