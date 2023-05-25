@@ -1,10 +1,11 @@
 "use client"
 
 import throttle from "just-throttle"
+import { Cursor } from "ws-types"
 import { PerfectCursor } from "perfect-cursors"
 import { useEffect, useRef, useState } from "react"
 import { motion, MotionStyle, AnimatePresence, Variants } from "framer-motion"
-import { useWebSocketEvent, useWebSocketEmitter, Cursor } from "~/hooks/ws"
+import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
 
 function limit(number: number) {
   if (number < 0) return 0

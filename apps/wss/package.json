@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@types/ws": "^8.5.4",
-    "tsx": "^3.12.6"
+    "tsx": "^3.12.6",
+    "ws-types": "workspace:*"
   }
 }
