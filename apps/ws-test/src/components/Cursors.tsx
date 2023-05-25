@@ -3,7 +3,7 @@
 import throttle from "just-throttle"
 import { PerfectCursor } from "perfect-cursors"
 import { useEffect, useRef, useState } from "react"
-import { useAnimate, motion, MotionStyle, AnimatePresence, Variants } from "framer-motion"
+import { motion, MotionStyle, AnimatePresence, Variants } from "framer-motion"
 import { useWebSocketEvent, useWebSocketEmitter, Cursor } from "~/hooks/ws"
 
 function limit(number: number) {
@@ -79,7 +79,6 @@ function CursorComponnet({ cursor, id }: { cursor: Cursor | null; id: string }) 
 
 export default function Cursors() {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
-  const [scope, animate] = useAnimate()
 
   useWebSocketEvent("room:join", (room) => {
     setCursors(new Map(room))
@@ -123,7 +122,7 @@ export default function Cursors() {
   }, [updateCursor])
 
   return (
-    <div ref={scope} className="absolute inset-0">
+    <div aria-hidden className="absolute inset-0 pointer-events-none">
       <AnimatePresence>
         {Array.from(cursors.entries()).map(([id, cursor]) => (
           <CursorComponnet key={id} id={id} cursor={cursor} />
