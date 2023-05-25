@@ -125,7 +125,7 @@ export default function Cursors() {
   }, [cursors.size, updateCursor])
 
   return (
-    <div aria-hidden className="absolute inset-0 pointer-events-none">
+    <div aria-hidden className="absolute overflow-hidden inset-0 pointer-events-none ring-4 ring-red-500 ring-inset">
       <AnimatePresence>
         {Array.from(cursors.entries()).map(([id, cursor]) => (
           <CursorComponent key={id} id={id} cursor={cursor} />
