@@ -104,11 +104,13 @@ export default function Cursors() {
   const updateCursor = useWebSocketEmitter("cursor")
 
   useEffect(() => {
+    const interval = cursors.size === 0 ? 3000 : 80
+
     const update = throttle(([x, y, press]: Cursor) => {
       const xPercent = limit((x * 100) / window.innerWidth)
       const yPercent = limit((y * 100) / window.innerHeight)
       updateCursor([xPercent, yPercent, press])
-    }, 80)
+    }, interval)
 
     function onMouseMove(event: MouseEvent) {
       update([event.x, event.y, false])
@@ -119,7 +121,7 @@ export default function Cursors() {
       update.cancel()
       window.removeEventListener("mousemove", onMouseMove)
     }
-  }, [updateCursor])
+  }, [cursors.size, updateCursor])
 
   return (
     <div aria-hidden className="absolute inset-0 pointer-events-none">
