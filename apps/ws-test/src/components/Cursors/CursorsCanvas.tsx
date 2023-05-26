@@ -14,7 +14,7 @@ function limit(number: number) {
   return number
 }
 
-export default function Cursors() {
+export default function CursorsCanvas() {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
 
   useWebSocketEvent("room:join", (room) => {
@@ -33,7 +33,7 @@ export default function Cursors() {
   })
 
   useWebSocketEvent("cursor:update", ([id, cursor]) => {
-    if (!cursors.has(id)) {
+    if (!cursors.get(id)) {
       return setCursors((current) => new Map(current.set(id, cursor)))
     }
   })

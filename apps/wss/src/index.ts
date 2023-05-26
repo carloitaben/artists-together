@@ -50,8 +50,6 @@ wss.on("connection", (ws) => {
   ws.on("message", (rawData) => {
     const [name, _data] = JSON.parse(rawData.toString())
 
-    console.log(ws.id, name, _data)
-
     switch (name as ClientEvent) {
       case "navigate":
         {
@@ -75,7 +73,6 @@ wss.on("connection", (ws) => {
             room?.add(ws)
             room?.forEach((client) => {
               if (client === ws) return
-              console.log("sending to client", client.id, "data of new cursor", ws.id)
               send(client, "room:newconnection", [ws.id, ws.cursor])
             })
           } else {

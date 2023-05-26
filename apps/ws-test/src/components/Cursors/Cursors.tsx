@@ -3,7 +3,7 @@
 import { lazy, startTransition, useState, Suspense } from "react"
 import { useOnMatchMedia } from "~/hooks/media"
 
-const CursorCanvas = lazy(() => import("./CursorCanvas"))
+const CursorsCanvas = lazy(() => import("./CursorsCanvas"))
 
 export default function Cursors() {
   const [mount, setMount] = useState(false)
@@ -12,5 +12,5 @@ export default function Cursors() {
     startTransition(() => setMount(matches))
   })
 
-  return <Suspense>{mount && <CursorCanvas />}</Suspense>
+  return <Suspense>{mount && <CursorsCanvas />}</Suspense>
 }

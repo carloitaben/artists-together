@@ -1,9 +1,10 @@
 "use client"
 
-import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react"
+import { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import { ClientEvent, ClientEventDataMap, ServerEvent, ServerEventDataMap } from "ws-types"
 import { usePathname } from "next/navigation"
 
+const eventBuffer = new Map<string, any>()
 const listeners = new Map<string, Set<Function>>()
 const context = createContext<WebSocket | undefined>(undefined)
 
@@ -24,11 +25,18 @@ export function useWebSocketEmitter<T extends ClientEvent>(event: T) {
 }
 
 export function useWebSocketEvent<T extends ServerEvent>(event: T, callback: (data: ServerEventDataMap[T]) => void) {
+  const calledBuffer = useRef(false)
+
   useEffect(() => {
     if (listeners.has(event)) {
       listeners.get(event)?.add(callback)
     } else {
       listeners.set(event, new Set([callback]))
+    }
+
+    if (eventBuffer.has(event) && !calledBuffer.current) {
+      callback(eventBuffer.get(event))
+      calledBuffer.current = true
     }
 
     return () => {
@@ -51,6 +59,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     function onMessage(event: MessageEvent) {
       const [name, data] = JSON.parse(event.data)
+      eventBuffer.set(name, data)
       listeners.get(name)?.forEach((callback) => callback(data))
     }
 
