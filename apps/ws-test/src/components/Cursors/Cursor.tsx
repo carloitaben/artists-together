@@ -11,11 +11,9 @@ import CursorLabel from "./CursorLabel"
 
 const variants: Variants = {
   hide: {
-    opacity: 0,
-    scale: 0.5,
+    scale: 0,
   },
   show: {
-    opacity: 1,
     scale: 1,
   },
   press: {
@@ -53,7 +51,7 @@ export default function Cursor({ cursor, id }: Props) {
 
   return (
     <motion.div ref={ref} style={style} className="absolute inset-0">
-      <motion.div>
+      <motion.div className="relative inline-flex">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           width="32"
@@ -63,7 +61,7 @@ export default function Cursor({ cursor, id }: Props) {
           animate="show"
           exit="hide"
           variants={variants}
-          className=" drop-shadow-[0px_4px_8px_rgba(0,0,0,0.12)]"
+          className="drop-shadow-[0px_4px_8px_rgba(0,0,0,0.12)]"
         >
           <path
             fill="#FAFAFA"
@@ -73,7 +71,7 @@ export default function Cursor({ cursor, id }: Props) {
             d="M17.46 29.756a1 1 0 0 0 1.33.484l3.634-1.7a1 1 0 0 0 .482-1.328l-4.137-8.877h7.898a1 1 0 0 0 .617-1.787L8.619 1.882A1 1 0 0 0 7 2.668v24a1 1 0 0 0 1.813.582l4.536-6.34 4.11 8.846Z"
           />
         </motion.svg>
-        <CursorLabel>{id}</CursorLabel>
+        <CursorLabel className="-translate-y-3 -translate-x-1">{id}</CursorLabel>
       </motion.div>
     </motion.div>
   )
