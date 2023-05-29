@@ -39,7 +39,7 @@ export default function Cursor({ cursor, id }: Props) {
   )
 
   useWebSocketEvent("cursor:update", ([_id, cursor]) => {
-    if (_id === id) pc.addPoint([cursor[0], cursor[1]])
+    if (_id === id && cursor) pc.addPoint([cursor[0], cursor[1]])
   })
 
   if (!cursor) return null

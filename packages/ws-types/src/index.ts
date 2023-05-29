@@ -1,4 +1,4 @@
-export type Cursor = [x: number, y: number, press: boolean]
+export type Cursor = [x: number, y: number, press: boolean] | null
 
 export type ClientEventDataMap = {
   navigate: string
@@ -8,9 +8,9 @@ export type ClientEventDataMap = {
 export type ClientEvent = keyof ClientEventDataMap
 
 export type ServerEventDataMap = {
-  "room:newconnection": [id: string, cursor: Cursor | null]
+  "room:newconnection": [id: string, cursor: Cursor]
   "room:newdisconnection": string
-  "room:join": (readonly [string, Cursor | null])[]
+  "room:join": (readonly [string, Cursor])[]
   "cursor:update": [id: string, cursor: Cursor]
 }
 
