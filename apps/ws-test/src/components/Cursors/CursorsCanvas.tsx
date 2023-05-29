@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { AnimatePresence } from "framer-motion"
 
 import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
+
 import CursorComponent from "./Cursor"
 
 function limit(number: number) {
@@ -44,13 +45,13 @@ export default function CursorsCanvas() {
     const interval = cursors.size === 0 ? 3000 : 80
 
     const update = throttle(([x, y, press]: Cursor) => {
-      const xPercent = limit((x * 100) / window.innerWidth)
-      const yPercent = limit((y * 100) / window.innerHeight)
+      const xPercent = limit((x * 100) / document.documentElement.scrollWidth)
+      const yPercent = limit((y * 100) / document.documentElement.scrollHeight)
       updateCursor([xPercent, yPercent, press])
     }, interval)
 
     function onMouseMove(event: MouseEvent) {
-      update([event.x, event.y, false])
+      update([event.pageX, event.pageY, false])
     }
 
     window.addEventListener("mousemove", onMouseMove)
