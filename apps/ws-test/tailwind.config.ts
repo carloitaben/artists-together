@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss"
 import type { ScreensConfig } from "tailwindcss/types/config"
+import noscriptPlugin from "tailwindcss-noscript"
 
 export const screens = {
   sm: "640px",
@@ -18,5 +19,5 @@ export default {
   theme: {
     screens,
   },
-  plugins: [],
+  plugins: [noscriptPlugin],
 } satisfies Config
