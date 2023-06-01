@@ -1,6 +1,6 @@
 "use client"
 
-import { AnimatePresence, MotionStyle, Variants, motion, useAnimate, useMotionTemplate, useSpring } from "framer-motion"
+import { AnimatePresence, Variants, motion, useMotionTemplate, useSpring } from "framer-motion"
 import { useEffect, useState } from "react"
 import { CursorState } from "ws-types"
 
@@ -65,7 +65,7 @@ export default function Cursor() {
   const [state, setState] = useState<keyof typeof cursorStateSvg>()
   const coarse = useMatchesMedia("(pointer: coarse)")
 
-  const motionValueScale = useSpring(1, { mass: 0.05 })
+  const motionValueScale = useSpring(1, { mass: 0.05, stiffness: 200 })
   const motionValueX = useSpring(0, { mass: 0.05, stiffness: 175 })
   const motionValueY = useSpring(0, { mass: 0.05, stiffness: 175 })
   const percentX = useMotionTemplate`${motionValueX}%`
@@ -93,9 +93,15 @@ export default function Cursor() {
     function onMouseMove(event: MouseEvent) {
       const x = limit((event.clientX * 100) / window.innerWidth)
       const y = limit((event.clientY * 100) / window.innerHeight)
+
+      if (typeof state === "undefined") {
+        motionValueX.jump(x)
+        motionValueY.jump(y)
+        return setState("idle")
+      }
+
       motionValueX.set(x)
       motionValueY.set(y)
-      setState("idle")
     }
 
     function onMouseDown(event: MouseEvent) {
@@ -116,7 +122,7 @@ export default function Cursor() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [coarse, motionValueScale, motionValueX, motionValueY])
+  }, [coarse, state, motionValueScale, motionValueX, motionValueY])
 
   return (
     <div aria-hidden className="fixed inset-0 overflow-hidden pointer-events-none hidden js:block">
@@ -129,15 +135,10 @@ export default function Cursor() {
       >
         <AnimatePresence initial={false}>
           {!coarse && state && (
-            <motion.div
-              className="inline-block"
-              initial="hide"
-              animate="show"
-              exit="hide"
-              variants={variants}
-              style={{ scale: motionValueScale }}
-            >
-              {cursorStateSvg[state]}
+            <motion.div className="inline-block" initial="hide" animate="show" exit="hide" variants={variants}>
+              <motion.div className="inline-block" style={{ scale: motionValueScale }}>
+                {cursorStateSvg[state]}
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
