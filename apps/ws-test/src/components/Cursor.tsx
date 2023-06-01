@@ -104,11 +104,11 @@ export default function Cursor() {
       motionValueY.set(y)
     }
 
-    function onMouseDown(event: MouseEvent) {
+    function onMouseDown() {
       motionValueScale.set(0.9)
     }
 
-    function onMouseUp(event: MouseEvent) {
+    function onMouseUp() {
       motionValueScale.set(1)
     }
 
