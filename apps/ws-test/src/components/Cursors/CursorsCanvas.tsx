@@ -53,22 +53,38 @@ export default function CursorsCanvas() {
   useEffect(() => {
     if (!hasCursor) return updateCursor(null)
 
+    let pressing = false
+
     const interval = cursors.size === 0 ? 3000 : 80
 
-    const update = throttle(([x, y, press]: NonNullable<Cursor>) => {
+    const update = throttle((x: number, y: number) => {
       const xPercent = limit((x * 100) / document.documentElement.scrollWidth)
       const yPercent = limit((y * 100) / document.documentElement.scrollHeight)
-      updateCursor([xPercent, yPercent, press])
+      updateCursor([xPercent, yPercent, pressing ? "press" : "idle"])
     }, interval)
 
-    function onMouseMove(event: MouseEvent) {
-      update([event.pageX, event.pageY, false])
+    function onMouseDown(event: MouseEvent) {
+      pressing = true
+      update(event.pageX, event.pageY)
     }
 
-    window.addEventListener("mousemove", onMouseMove)
+    function onMouseUp(event: MouseEvent) {
+      pressing = false
+      update(event.pageX, event.pageY)
+    }
+
+    function onMouseMove(event: MouseEvent) {
+      update(event.pageX, event.pageY)
+    }
+
+    window.addEventListener("mousedown", onMouseDown, true)
+    window.addEventListener("mouseup", onMouseUp, true)
+    window.addEventListener("mousemove", onMouseMove, true)
     return () => {
       update.cancel()
-      window.removeEventListener("mousemove", onMouseMove)
+      window.removeEventListener("mousedown", onMouseDown, true)
+      window.removeEventListener("mouseup", onMouseUp, true)
+      window.removeEventListener("mousemove", onMouseMove, true)
     }
   }, [cursors.size, hasCursor, updateCursor])
 

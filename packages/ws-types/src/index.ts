@@ -1,4 +1,8 @@
-export type Cursor = [x: number, y: number, press: boolean] | null
+export type CursorStates = ["idle", "press", "hover", "drag"]
+
+export type CursorState = CursorStates[number]
+
+export type Cursor = [x: number, y: number, state: CursorState] | null
 
 export type ClientEventDataMap = {
   navigate: string

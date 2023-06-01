@@ -1,6 +1,6 @@
 "use client"
 
-import { Cursor } from "ws-types"
+import { Cursor, CursorState } from "ws-types"
 import { PerfectCursor } from "perfect-cursors"
 import { useRef, useState } from "react"
 import { motion, MotionStyle, Variants } from "framer-motion"
@@ -27,31 +27,42 @@ type Props = {
 }
 
 export default function Cursor({ cursor, id }: Props) {
-  const ref = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const [state, setState] = useState<CursorState>(() => {
+    if (!cursor) return "idle"
+    return cursor[2]
+  })
 
   const [pc] = useState(
     () =>
       new PerfectCursor((point) => {
-        ref.current?.style.setProperty("transform", `translate(${point[0]}%, ${point[1]}%)`)
+        containerRef.current?.style.setProperty("transform", `translate(${point[0]}%, ${point[1]}%)`)
       })
   )
 
   useWebSocketEvent("cursor:update", ([_id, cursor]) => {
-    if (_id === id && cursor) pc.addPoint([cursor[0], cursor[1]])
+    if (_id !== id || !cursor) return
+    pc.addPoint([cursor[0], cursor[1]])
+    setState(cursor[2])
   })
 
   if (!cursor) return null
 
-  const [x, y, press] = cursor
+  const [x, y] = cursor
 
-  const style: MotionStyle = {
+  const containerStyle: MotionStyle = {
     x: `${x}%`,
     y: `${y}%`,
   }
 
+  const wrapperStyle: MotionStyle = {
+    scale: state === "press" ? 0.9 : 1,
+  }
+
   return (
-    <motion.div ref={ref} style={style} className="absolute inset-0">
-      <motion.div className="relative inline-flex">
+    <motion.div ref={containerRef} style={containerStyle} className="absolute inset-0">
+      <motion.div className="relative inline-flex" style={wrapperStyle}>
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           width="32"
