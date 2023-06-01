@@ -47,9 +47,17 @@ const cursorStateSvg = {
 const variants: Variants = {
   hide: {
     scale: 0,
+    transition: {
+      type: "spring",
+      mass: 0.05,
+    },
   },
   show: {
     scale: 1,
+    transition: {
+      type: "spring",
+      mass: 0.05,
+    },
   },
 }
 
@@ -57,7 +65,7 @@ export default function Cursor() {
   const [state, setState] = useState<keyof typeof cursorStateSvg>()
   const coarse = useMatchesMedia("(pointer: coarse)")
 
-  const motionValueScale = useSpring(1)
+  const motionValueScale = useSpring(1, { mass: 0.05 })
   const motionValueX = useSpring(0, { mass: 0.05, stiffness: 175 })
   const motionValueY = useSpring(0, { mass: 0.05, stiffness: 175 })
   const percentX = useMotionTemplate`${motionValueX}%`
