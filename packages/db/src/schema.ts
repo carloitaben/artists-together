@@ -1,4 +1,13 @@
-import { mysqlTable, int, serial, timestamp, char, tinyint, varchar } from "drizzle-orm/mysql-core"
+import { mysqlTable, serial, timestamp, char, tinyint, varchar } from "drizzle-orm/mysql-core"
+
+/**
+ * PlanetScale deactivates databases without activity.
+ * In the Discord bot deployment we write daily to this table
+ * to prevent deactivation
+ */
+export const keepAliveDummies = mysqlTable("keep_alive_dummies", {
+  id: serial("id").primaryKey(),
+})
 
 export const discordPolls = mysqlTable("discord_polls", {
   id: char("id", { length: 21 }).notNull().primaryKey(),
