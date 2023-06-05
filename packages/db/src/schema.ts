@@ -1,4 +1,4 @@
-import { mysqlTable, int, serial, timestamp, char, tinyint, varchar } from "drizzle-orm/mysql-core"
+import { mysqlTable, serial, timestamp, char, tinyint, varchar } from "drizzle-orm/mysql-core"
 
 export const discordPolls = mysqlTable("discord_polls", {
   id: char("id", { length: 21 }).notNull().primaryKey(),
