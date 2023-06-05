@@ -5,6 +5,7 @@ import * as Tooltip from "@radix-ui/react-tooltip"
 import Link from "next/link"
 import { ReactNode } from "react"
 import { usePathname } from "next/navigation"
+
 import { artists, calendar, help, home, profile, train } from "./icons"
 
 type Props = {
