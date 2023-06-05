@@ -33,12 +33,13 @@ registerEventHandler("presenceUpdate", async (_, newPresence) => {
 
   const guild = await getGuild(newPresence.client)
   const role = await getRole(guild.roles, ROLES.LIVE_NOW)
+  const isArtist = newPresence.member.roles.cache.has(ROLES.ARTIST)
 
   const isStreaming = newPresence.activities.some((activity) => {
     return activity.type === ActivityType.Streaming
   })
 
-  if (!isStreaming) return newPresence.member.roles.remove(role)
+  if (!isStreaming || !isArtist) return newPresence.member.roles.remove(role)
 
   return newPresence.member.roles.add(role)
 })

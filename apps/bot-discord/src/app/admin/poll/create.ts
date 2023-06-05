@@ -17,6 +17,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 
 import { registerEventHandler } from "~/lib/core"
+import { parseMentions } from "~/lib/helpers"
 
 import { addPoll } from "./lib/polls"
 import { encodeButtonVoteOptionId } from "./lib/utils"
@@ -114,6 +115,10 @@ registerEventHandler("interactionCreate", async (interaction) => {
   if (!interaction.isModalSubmit()) return
   if (interaction.customId !== MODAL_ID) return
 
+  if (!interaction.guild) {
+    throw Error("Missing guild property in modal interaction")
+  }
+
   if (!interaction.channel) {
     throw Error("Missing channel property in modal interaction")
   }
@@ -185,6 +190,8 @@ registerEventHandler("interactionCreate", async (interaction) => {
     })
   }
 
+  const description = await parseMentions(interaction.guild.roles, descriptionInput)
+
   const response = await interaction.reply({
     content: "I'll open a poll on this channel with the following data. Is it ok?",
     ephemeral: true,
@@ -192,7 +199,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
     embeds: [
       new EmbedBuilder({
         title: titleInput,
-        description: descriptionInput,
+        description,
         footer: endDate && {
           text: `Closes on ${dayjs.utc(endDate).format("lll")} UTC`,
         },
@@ -237,9 +244,9 @@ registerEventHandler("interactionCreate", async (interaction) => {
           embeds: [
             new EmbedBuilder({
               title: titleInput,
-              description: descriptionInput,
-              footer: endDate && {
-                text: `Closes on ${dayjs.utc(endDate).format("lll")} UTC`,
+              description,
+              footer: {
+                text: `0 votes in total${endDate ? `\nCloses on ${dayjs.utc(endDate).format("lll")} UTC` : ""}`,
               },
             }).setColor(colorInput as `#${string}`),
           ],
