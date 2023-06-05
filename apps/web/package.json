@@ -15,7 +15,6 @@
     "db": "workspace:*",
     "lucia-auth": "^1.7.1",
     "next": "13.4.4",
-    "next-safe-action": "^2.6.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "zod": "^3.21.4"

@@ -1,8 +1,7 @@
-import { LuciaError } from "lucia-auth"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-import { auth, otpToken } from "~/lib/auth"
+import { auth, getOrCreateValidOtp, otpToken } from "~/lib/auth"
 
 export async function POST(request: Request) {
   const form = await request.formData()
@@ -22,9 +21,9 @@ export async function POST(request: Request) {
     cookies,
   })
 
-  const validation = await authRequest.validateUser()
+  const { session } = await authRequest.validateUser()
 
-  if (validation.session) {
+  if (session) {
     return NextResponse.json({ error: "Already logged in" }, { status: 400 })
   }
 
@@ -41,10 +40,7 @@ export async function POST(request: Request) {
       },
     })
 
-    const session = await auth.createSession(user.userId)
-    authRequest.setSession(session)
-
-    const otp = await otpToken.issue(user.userId)
+    const otp = await getOrCreateValidOtp(user.userId)
 
     console.log({
       email,

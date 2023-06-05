@@ -3,7 +3,7 @@ import { LuciaError } from "lucia-auth"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-import { auth, otpToken } from "~/lib/auth"
+import { auth, getOrCreateValidOtp, otpToken } from "~/lib/auth"
 
 export async function POST(request: Request) {
   const form = await request.formData()
@@ -27,12 +27,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    // creo que esto debería venir del form pero soy tonto y no me daba cuenta jeje
-    const { userId } = await auth.getKey("email", email)
-    const session = await auth.createSession(userId)
-    authRequest.setSession(session)
+    const key = await auth.getKey("email", email)
 
-    const otp = await otpToken.issue(userId)
+    console.log({
+      email,
+      key: key.userId,
+    })
+
+    const otp = await getOrCreateValidOtp(key.userId)
 
     console.log({
       email,

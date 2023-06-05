@@ -6,10 +6,15 @@ import { auth, otpToken } from "~/lib/auth"
 
 export async function POST(request: Request) {
   const form = await request.formData()
+  const email = form.get("email")?.toString()
   const otp = form.get("otp")?.toString()
 
+  if (!email) {
+    return NextResponse.json({ error: "Missing email" }, { status: 400 })
+  }
+
   if (!otp) {
-    throw Error("Missing otp")
+    return NextResponse.json({ error: "Missing OTP" }, { status: 400 })
   }
 
   const authRequest = auth.handleRequest({
@@ -17,26 +22,17 @@ export async function POST(request: Request) {
     cookies,
   })
 
-  const { user, session } = await authRequest.validateUser()
+  const { session } = await authRequest.validateUser()
 
-  console.log({
-    user,
-    session,
-  })
-
-  try {
-    const u = await auth.getUser(user.userId)
-    console.log({ u })
-  } catch (error) {
-    console.log("error getting user", error)
-  }
-
-  if (!session) {
-    return NextResponse.json({ error: "Log in first!!!" }, { status: 400 })
+  if (session) {
+    return NextResponse.json({ error: "Already logged in" }, { status: 400 })
   }
 
   try {
-    await otpToken.validate(otp, session.userId)
+    const key = await auth.getKey("email", email)
+    await otpToken.validate(otp, key.userId)
+    const session = await auth.createSession(key.userId)
+    authRequest.setSession(session)
     return NextResponse.json({ ok: true })
   } catch (e) {
     if (e instanceof LuciaTokenError && e.message === "EXPIRED_TOKEN") {
