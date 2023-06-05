@@ -1,11 +1,10 @@
 /// <reference types="lucia-auth" />
 
 import { InferModel, user } from "db"
-import { Auth } from "~/lib/auth"
 
 type User = InferModel<typeof user, "select">
 
 declare namespace Lucia {
-  type Auth = Auth
+  type Auth = import("./src/lib/auth").Auth
   type UserAttributes = Omit<User, "id">
-}
+}  

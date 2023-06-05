@@ -1,21 +1,17 @@
 import { LuciaTokenError } from "@lucia-auth/tokens"
+import { userSchema } from "db"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
+import { z } from "zod"
 
 import { auth, otpToken } from "~/lib/auth"
 
+const schema = userSchema.pick({ email: true }).extend({
+  otp: z.string().length(15),
+})
+
 export async function POST(request: Request) {
-  const form = await request.formData()
-  const email = form.get("email")?.toString()
-  const otp = form.get("otp")?.toString()
-
-  if (!email) {
-    return NextResponse.json({ error: "Missing email" }, { status: 400 })
-  }
-
-  if (!otp) {
-    return NextResponse.json({ error: "Missing OTP" }, { status: 400 })
-  }
+  const data = schema.parse(Object.fromEntries((await request.formData()).entries()))
 
   const authRequest = auth.handleRequest({
     request,
@@ -29,8 +25,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const key = await auth.getKey("email", email)
-    await otpToken.validate(otp, key.userId)
+    const key = await auth.getKey("email", data.email)
+    await otpToken.validate(data.otp, key.userId)
     const session = await auth.createSession(key.userId)
     authRequest.setSession(session)
     return NextResponse.json({ ok: true })

@@ -11,7 +11,6 @@ export const auth = lucia({
   adapter: planetscale(connection),
   middleware: nextjs(),
   env: process.env.NODE_ENV === "production" ? "PROD" : "DEV",
-  experimental: { debugMode: true },
 })
 
 export type Auth = typeof auth

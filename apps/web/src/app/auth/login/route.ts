@@ -2,18 +2,14 @@ import { LuciaTokenError } from "@lucia-auth/tokens"
 import { LuciaError } from "lucia-auth"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
+import { userSchema } from "db"
 
 import { auth, getOrCreateValidOtp, otpToken } from "~/lib/auth"
 
+const schema = userSchema.pick({ email: true })
+
 export async function POST(request: Request) {
-  const form = await request.formData()
-  const email = form.get("email")?.toString()
-
-  if (!email) {
-    throw Error("Missing email")
-  }
-
-  console.log("login", { email })
+  const data = schema.parse(Object.fromEntries((await request.formData()).entries()))
 
   const authRequest = auth.handleRequest({
     request,
@@ -27,20 +23,10 @@ export async function POST(request: Request) {
   }
 
   try {
-    const key = await auth.getKey("email", email)
-
-    console.log({
-      email,
-      key: key.userId,
-    })
-
+    const key = await auth.getKey("email", data.email)
     const otp = await getOrCreateValidOtp(key.userId)
 
-    console.log({
-      email,
-      otp: otp.toString(),
-    })
-
+    console.log(`Send to email ${data.email} otp code: ${otp.toString()}`)
     return NextResponse.json({ ok: true })
   } catch (error) {
     if (error instanceof LuciaError && error.message === "AUTH_INVALID_KEY_ID") {

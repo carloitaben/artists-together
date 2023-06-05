@@ -1,20 +1,13 @@
+import { userSchema } from "db"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-import { auth, getOrCreateValidOtp, otpToken } from "~/lib/auth"
+import { auth, getOrCreateValidOtp } from "~/lib/auth"
+
+const schema = userSchema.pick({ username: true, email: true })
 
 export async function POST(request: Request) {
-  const form = await request.formData()
-  const username = form.get("username")?.toString()
-  const email = form.get("email")?.toString()
-
-  if (!username) {
-    return NextResponse.json({ error: "Missing username" }, { status: 400 })
-  }
-
-  if (!email) {
-    return NextResponse.json({ error: "Missing email" }, { status: 400 })
-  }
+  const data = schema.parse(Object.fromEntries((await request.formData()).entries()))
 
   const authRequest = auth.handleRequest({
     request,
@@ -31,22 +24,15 @@ export async function POST(request: Request) {
     const user = await auth.createUser({
       primaryKey: {
         providerId: "email",
-        providerUserId: email,
+        providerUserId: data.email,
         password: null,
       },
-      attributes: {
-        email,
-        username,
-      },
+      attributes: data,
     })
 
     const otp = await getOrCreateValidOtp(user.userId)
 
-    console.log({
-      email,
-      otp: otp.toString(),
-    })
-
+    console.log(`Send to email ${data.email} otp code: ${otp.toString()}`)
     return NextResponse.json({ ok: true })
   } catch (error) {
     console.error(error)
