@@ -1,0 +1,21 @@
+import lucia from "lucia-auth"
+import { generateRandomString } from "lucia-auth"
+import { nextjs } from "lucia-auth/middleware"
+import { planetscale } from "@lucia-auth/adapter-mysql"
+import { passwordToken } from "@lucia-auth/tokens"
+import { createConnection } from "db"
+
+const connection = createConnection()
+
+export const auth = lucia({
+  adapter: planetscale(connection),
+  middleware: nextjs(),
+  env: process.env.NODE_ENV === "production" ? "PROD" : "DEV",
+})
+
+export type Auth = typeof auth
+
+export const otpToken = passwordToken(auth, "otp", {
+  expiresIn: 15 * 60, // 15 minutes
+  generate: () => generateRandomString(6, "0123456789"),
+})
