@@ -4,4 +4,3 @@
 - [ ] Setup `prettier` at the workspace scope
 - [ ] Setup basic `prettier`, `eslint` and `tsc` workspace test
 - [ ] Check out `turborepo` sometime in the future
-- [ ] Centralize all `.env` files into a single root `.env`

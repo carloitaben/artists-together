@@ -1,17 +1,17 @@
-# Pal (Programmable Artistic Life-form) @ Discord
+# Pal @ Discord
 
-The source code of the Discord integration of Pal, the assistant bot for the Artist Together community.
+The source code of the Discord integration of Pal (Programmable Artistic Life-form), the assistant bot for the Artist Together community.
 
 ## Development
 
-It is highly recommended that you set up your own test bot and server for local development if you plan on working extensively with the bot, since automated testing of Discord bots is very challenging and not worth the effort.
+It is highly recommended that you set up your own test bot and server for local development if you plan on working extensively with the codebase, since automated testing of Discord bots is very challenging and not worth the effort.
 
 Start by [creating a Discord server](https://support.discord.com/hc/en-us/articles/204849977-How-do-I-create-a-server) and then follow the instructions provided [here](https://discordjs.guide/preparations/setting-up-a-bot-application.html) to create a bot application and add it to your server.
 
-Create a `.env` file in the `apps/bot-discord` directory with the contents of the `.env.example` file and put in values for everything:
+Create a `.env` file in the repository root directory with the contents of the `.env.example` file and put in values for every variable prefixed with `DISCORD`:
 
 ```shell
-touch apps/bot-discord/.env
+touch .env
 ```
 
 Next run the `sync` command in order to configure your server to have the latest slash-commands definitions:

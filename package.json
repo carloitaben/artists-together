@@ -1,3 +1,4 @@
 {
-  "name": "artists-together"
+  "name": "artists-together",
+  "private": true
 }

@@ -11,7 +11,7 @@ Artists Together is an online, worldwide inclusive community for all kinds of ar
 | App     | [`bot-discord`](apps/bot-discord/) |
 | App     | [`bot-twitch`](apps/bot-twitch/)   |
 | App     | [`web`](apps/web/)                 |
-| Package | [`db`](apps/db/)                   |
+| Package | [`db`](packages/db/)               |
 
 ## Contributing
 

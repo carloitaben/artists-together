@@ -30,7 +30,7 @@ async function deleteAllMessages(channel: TextChannel) {
   const messages = await channel.messages.fetch({ limit: 100 })
 
   if (messages.size) {
-    await channel.bulkDelete(messages)
+    await Promise.all(messages.map((message) => message.delete()))
     await deleteAllMessages(channel)
   }
 }
@@ -50,7 +50,7 @@ export default async function handleExtinguishSubcommand(interaction: ChatInputC
 
   try {
     const confirmation = await response.awaitMessageComponent({
-      time: 60000,
+      time: 60_000,
       filter: (i) => i.user.id === interaction.user.id,
       componentType: ComponentType.Button,
     })
@@ -80,10 +80,8 @@ export default async function handleExtinguishSubcommand(interaction: ChatInputC
           content: "Cancelled",
           components: [],
         })
-      default:
-        throw Error(`Unhandled confirmation id: ${confirmation.customId}`)
     }
-  } catch (e) {
+  } catch (error) {
     return response.edit({
       content: "Confirmation not received within 1 minute, cancelling…",
       components: [],
