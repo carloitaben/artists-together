@@ -4,7 +4,7 @@ import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 
-import { auth, otpToken } from "~/lib/auth"
+import { auth, otpToken } from "~/services/auth"
 
 const schema = userSchema.pick({ email: true }).extend({
   otp: z.string().length(15),

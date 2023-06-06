@@ -27,7 +27,7 @@ export async function getOrCreateValidOtp(id: string) {
   return otpToken.issue(id)
 }
 
-export async function getSession() {
+export async function getAuth() {
   const authRequest = auth.handleRequest({ cookies })
   return authRequest.validateUser()
 }

@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { cookies } from "next/headers"
 
-import { auth } from "~/lib/auth"
+import { auth } from "~/services/auth"
 
 export const runtime = "edge"
 

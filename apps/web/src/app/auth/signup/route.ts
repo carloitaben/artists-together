@@ -2,7 +2,7 @@ import { userSchema } from "db"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-import { auth, getOrCreateValidOtp } from "~/lib/auth"
+import { auth, getOrCreateValidOtp } from "~/services/auth"
 
 const schema = userSchema.pick({ username: true, email: true })
 

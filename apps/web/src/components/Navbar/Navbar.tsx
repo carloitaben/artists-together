@@ -39,7 +39,7 @@ function NavbarItem({ href, tooltip, children }: Props) {
   )
 }
 
-export default function Navbar() {
+export default async function Navbar() {
   return (
     <Tooltip.Provider>
       <NavigationMenu.Root

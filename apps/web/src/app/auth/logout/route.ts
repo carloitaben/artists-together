@@ -1,7 +1,7 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-import { auth } from "~/lib/auth"
+import { auth } from "~/services/auth"
 
 export async function POST(request: Request) {
   const authRequest = auth.handleRequest({

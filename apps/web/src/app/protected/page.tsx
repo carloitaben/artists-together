@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation"
 
-import { getSession } from "~/lib/auth"
+import { getAuth } from "~/services/auth"
 
 export const runtime = "edge"
 
 export default async function Page() {
-  const { user } = await getSession()
+  const { user } = await getAuth()
 
   if (!user) redirect("/")
 
