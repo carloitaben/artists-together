@@ -1,5 +1,6 @@
-import { mysqlTable, serial, timestamp, char, tinyint, varchar, bigint, boolean } from "drizzle-orm/mysql-core"
 import { createInsertSchema } from "drizzle-zod"
+import { InferModel } from "drizzle-orm"
+import { mysqlTable, serial, timestamp, char, tinyint, varchar, bigint, boolean } from "drizzle-orm/mysql-core"
 
 /**
  * PlanetScale deactivates databases without activity.
@@ -36,6 +37,8 @@ export const user = mysqlTable("auth_user", {
   email: varchar("email", { length: 255 }).notNull(),
   bio: varchar("bio", { length: 128 }),
 })
+
+export type User = InferModel<typeof user>
 
 export const userSchema = createInsertSchema(user, {
   username: (schema) => schema.username.regex(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/gim),

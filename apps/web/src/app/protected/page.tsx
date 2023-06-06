@@ -1,11 +1,11 @@
-import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
-import { auth } from "~/lib/auth"
+import { getSession } from "~/lib/auth"
+
+export const runtime = "edge"
 
 export default async function Page() {
-  const authRequest = auth.handleRequest({ cookies })
-  const { user } = await authRequest.validateUser()
+  const { user } = await getSession()
 
   if (!user) redirect("/")
 

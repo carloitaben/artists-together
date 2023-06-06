@@ -1,4 +1,5 @@
 import lucia from "lucia-auth"
+import { cookies } from "next/headers"
 import { generateRandomString } from "lucia-auth"
 import { nextjs } from "lucia-auth/middleware"
 import { planetscale } from "@lucia-auth/adapter-mysql"
@@ -24,4 +25,9 @@ export async function getOrCreateValidOtp(id: string) {
   const existingOtp = await otpToken.getUserTokens(id).then((tokens) => tokens.find((token) => !token.expired))
   if (existingOtp) return existingOtp
   return otpToken.issue(id)
+}
+
+export async function getSession() {
+  const authRequest = auth.handleRequest({ cookies })
+  return authRequest.validateUser()
 }
