@@ -1,24 +1,22 @@
 import Link from "next/link"
-import { cookies } from "next/headers"
 
-import { auth } from "~/services/auth"
+import { getAuth } from "~/services/auth"
 
 export const runtime = "edge"
 
 export default async function Home() {
-  const authRequest = auth.handleRequest({ cookies })
-  const { user, session } = await authRequest.validateUser()
+  const auth = await getAuth()
 
   return (
     <main>
-      {user && (
+      {auth.user && (
         <h1>
-          user: <pre>{JSON.stringify(user)}</pre>
+          user: <pre>{JSON.stringify(auth.user)}</pre>
         </h1>
       )}
-      {session && (
+      {auth.session && (
         <h1>
-          session: <pre>{JSON.stringify(session)}</pre>
+          session: <pre>{JSON.stringify(auth.session)}</pre>
         </h1>
       )}
       <Link href="/protected">Try to go to protected page</Link>
