@@ -16,7 +16,7 @@ async function bootstrapRulesChannel(client: Client) {
   ])
 
   await rulesChannel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/rules.png"))],
+    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-rules.png"))],
   })
 
   await rulesChannel.send({
@@ -116,7 +116,7 @@ async function bootstrapAboutChannel(client: Client) {
   const channel = await getTextBasedChannel(client, CHANNELS.ABOUT)
 
   await channel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/about.png"))],
+    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-about.png"))],
   })
 
   await channel.send({
@@ -179,7 +179,7 @@ async function bootstrapAboutChannel(client: Client) {
   })
 
   await channel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/art.png"))],
+    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-art.png"))],
   })
 
   await channel.send({
@@ -206,7 +206,7 @@ async function bootstrapAboutChannel(client: Client) {
   })
 
   await channel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/pal.png"))],
+    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-pal.png"))],
   })
 
   await channel.send({
@@ -240,7 +240,7 @@ async function bootstrapAboutChannel(client: Client) {
   ])
 
   await channel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/roles.png"))],
+    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-roles.png"))],
   })
 
   await channel.send({
