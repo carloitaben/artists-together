@@ -1,7 +1,7 @@
 import { registerEventHandler } from "~/lib/core"
 import { getRandomArrayItem, cron, staticUrl } from "~/lib/helpers"
 
-const avatars = ["icon-02", "icon-15", "icon-16", "icon-17", "icon-18", "icon-19"]
+const avatars = ["0", "1", "2", "3", "4", "5"]
 
 registerEventHandler("ready", (client) => {
   cron("0 0 * * *", () => {
