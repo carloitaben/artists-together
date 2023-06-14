@@ -1,5 +1,6 @@
+import { createInsertSchema } from "drizzle-zod"
 import { InferModel } from "drizzle-orm"
-import { mysqlTable, text, tinyint, int, boolean, varchar, char, serial, timestamp } from "drizzle-orm/mysql-core"
+import { mysqlTable, serial, timestamp, char, tinyint, varchar, bigint, boolean } from "drizzle-orm/mysql-core"
 
 /**
  * PlanetScale deactivates databases without activity.
@@ -30,20 +31,31 @@ export const discordPollVotes = mysqlTable("discord_poll_votes", {
   answer: tinyint("answer").notNull(),
 })
 
-export const otps = mysqlTable("otps", {
-  id: serial("id").primaryKey(),
-  code: text("code").notNull(),
-  active: boolean("active").notNull().default(false),
-  attempts: int("attempts").notNull().default(0),
+export const user = mysqlTable("auth_user", {
+  id: varchar("id", { length: 15 }).notNull().primaryKey(),
+  username: varchar("username", { length: 30 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  bio: varchar("bio", { length: 128 }),
 })
 
-export type Otp = InferModel<typeof otps>
+export type User = InferModel<typeof user>
 
-export const users = mysqlTable("users", {
-  id: serial("id").primaryKey(),
-  email: text("email").notNull(),
-  username: text("username").notNull(),
-  bio: text("bio"),
+export const userSchema = createInsertSchema(user, {
+  username: (schema) => schema.username.regex(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/gim),
+  email: (schema) => schema.email.email(),
 })
 
-export type User = InferModel<typeof users>
+export const session = mysqlTable("auth_session", {
+  id: varchar("id", { length: 128 }).notNull().primaryKey(),
+  userId: varchar("user_id", { length: 15 }).notNull(),
+  activeExpires: bigint("active_expires", { mode: "number" }).notNull(),
+  idleExpires: bigint("idle_expires", { mode: "number" }).notNull(),
+})
+
+export const key = mysqlTable("auth_key", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  userId: varchar("user_id", { length: 15 }).notNull(),
+  primaryKey: boolean("primary_key").notNull(),
+  hashedPassword: varchar("hashed_password", { length: 255 }),
+  expires: bigint("expires", { mode: "number" }),
+})

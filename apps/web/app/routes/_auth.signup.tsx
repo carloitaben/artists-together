@@ -25,7 +25,7 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 export async function action({ request }: DataFunctionArgs) {
-  await login(request)
+  await signup(request)
 }
 
 export default function Login() {
@@ -37,7 +37,8 @@ export default function Login() {
     <div>
       <fetcher.Form method="post">
         <input name="username">username</input>
-        <button type="submit">Request code</button>
+        <input name="email">email</input>
+        <button type="submit">Submit</button>
       </fetcher.Form>
     </div>
   )

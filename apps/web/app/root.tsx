@@ -7,19 +7,28 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import type { LinksFunction, LoaderArgs } from "@vercel/remix"
+import { json } from "@vercel/remix"
 
-import { authenticator } from "~/services/auth.server"
+import { auth } from "~/services/auth.server"
 import Sidebar from "./components/Sidebar"
 import rootStyles from "./root.css"
 
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: rootStyles }]
 
 export async function loader({ request }: LoaderArgs) {
-  const session = await authenticator.isAuthenticated(request)
+  const headers = new Headers()
+  const authRequest = auth.handleRequest(request, headers)
+  const { user, session } = await authRequest.validateUser()
 
-  return {
-    session,
-  }
+  return json(
+    {
+      user,
+      session,
+    },
+    {
+      headers,
+    }
+  )
 }
 
 export type Loader = typeof loader
