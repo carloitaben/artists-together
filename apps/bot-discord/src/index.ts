@@ -8,9 +8,17 @@ import { getRegistrations } from "~/lib/core"
 
 const app = new Hono()
 
-app.use("/static/*", serveStatic({ root: "./" }))
+app.use("/public/*", serveStatic({ root: "./" }))
 
-serve({ fetch: fetch, port: env.PORT })
+serve(
+  {
+    fetch: app.fetch,
+    port: Number(env.PORT || 3333),
+  },
+  (info) => {
+    console.log(`Listening on http://localhost:${info.port}`)
+  }
+)
 
 const bot = new Client({
   intents: [
