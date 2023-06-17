@@ -1,12 +1,12 @@
 import { registerEventHandler } from "~/lib/core"
-import { getRandomArrayItem, cron, staticUrl } from "~/lib/helpers"
+import { cron, getRandomArrayItem, getPublicFile } from "~/lib/helpers"
 
 const avatars = ["0", "1", "2", "3", "4", "5"]
 
 registerEventHandler("ready", (client) => {
-  cron("0 0 * * *", () => {
+  cron("0 0 * * *", async () => {
     const avatar = getRandomArrayItem(avatars)
-    const avatarUrl = staticUrl(`/images/avatars/${avatar}.png`)
-    client.user.setAvatar(avatarUrl)
+    const avatarFile = getPublicFile(`/images/avatars/${avatar}.png`)
+    client.user.setAvatar(avatarFile)
   })
 })

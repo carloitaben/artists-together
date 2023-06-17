@@ -1,7 +1,7 @@
 import { Client, Partials, GatewayIntentBits, EmbedBuilder, AttachmentBuilder } from "discord.js"
 
 import { env } from "~/lib/env"
-import { getTextBasedChannel, getRole, getGuild, staticUrl } from "~/lib/helpers"
+import { getTextBasedChannel, getRole, getGuild, getPublicFile } from "~/lib/helpers"
 import { CHANNELS, ROLES } from "~/lib/constants"
 
 const bot = new Client({
@@ -16,7 +16,7 @@ async function bootstrapRulesChannel(client: Client) {
   ])
 
   await rulesChannel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-rules.png"))],
+    files: [new AttachmentBuilder(getPublicFile("/images/banners/banner-rules.png"))],
   })
 
   await rulesChannel.send({
@@ -116,7 +116,7 @@ async function bootstrapAboutChannel(client: Client) {
   const channel = await getTextBasedChannel(client, CHANNELS.ABOUT)
 
   await channel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-about.png"))],
+    files: [new AttachmentBuilder(getPublicFile("/images/banners/banner-about.png"))],
   })
 
   await channel.send({
@@ -179,7 +179,7 @@ async function bootstrapAboutChannel(client: Client) {
   })
 
   await channel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-art.png"))],
+    files: [new AttachmentBuilder(getPublicFile("/images/banners/banner-art.png"))],
   })
 
   await channel.send({
@@ -206,7 +206,7 @@ async function bootstrapAboutChannel(client: Client) {
   })
 
   await channel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-pal.png"))],
+    files: [new AttachmentBuilder(getPublicFile("/images/banners/banner-pal.png"))],
   })
 
   await channel.send({
@@ -240,7 +240,7 @@ async function bootstrapAboutChannel(client: Client) {
   ])
 
   await channel.send({
-    files: [new AttachmentBuilder(staticUrl("/images/banners/banner-roles.png"))],
+    files: [new AttachmentBuilder(getPublicFile("/images/banners/banner-roles.png"))],
   })
 
   await channel.send({
