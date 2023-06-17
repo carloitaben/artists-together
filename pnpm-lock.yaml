@@ -6,9 +6,6 @@ importers:
 
   apps/bot-discord:
     dependencies:
-      '@hono/node-server':
-        specifier: ^1.0.2
-        version: 1.0.2
       chrono-node:
         specifier: ^2.6.3
         version: 2.6.3
@@ -24,9 +21,6 @@ importers:
       fast-glob:
         specifier: ^3.2.12
         version: 3.2.12
-      hono:
-        specifier: ^3.2.5
-        version: 3.2.5
       nanoid:
         specifier: ^4.0.2
         version: 4.0.2
@@ -372,11 +366,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /@hono/node-server@1.0.2:
-    resolution: {integrity: sha512-j8oduBujeGN2+Zx8G1dp3yhiLrqCs/dMJp1wKSlXmMeAxpjVgUtYLaUjhY69lPVDyTjoBb3fmHXCX6e2iIgB9A==}
-    engines: {node: '>=18.0.0'}
-    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1049,11 +1038,6 @@ packages:
   /heap@0.2.7:
     resolution: {integrity: sha512-2bsegYkkHO+h/9MGbn6KWcE45cHZgPANo5LXF7EvWdT0yT2EguSVO1nDgU5c8+ZOPwp2vMNa7YFsJhVcDR9Sdg==}
     dev: true
-
-  /hono@3.2.5:
-    resolution: {integrity: sha512-saAKnPNGXO3vLq198IJO6ZwunQyXOYj6FkAZS08pBNKXn34lF9b7vb/pdyTrQWv3WvUPFjGCQfDyUjMhcubAMw==}
-    engines: {node: '>=16.0.0'}
-    dev: false
 
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
