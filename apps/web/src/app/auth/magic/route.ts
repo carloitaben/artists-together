@@ -7,7 +7,7 @@ import { z } from "zod"
 import { auth, otpToken } from "~/services/auth"
 
 const schema = userSchema.pick({ email: true }).extend({
-  otp: z.string().length(15),
+  otp: z.string().length(6),
 })
 
 export async function POST(request: Request) {
