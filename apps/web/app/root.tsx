@@ -18,13 +18,10 @@ export const links: LinksFunction = () => [{ rel: "stylesheet", href: rootStyles
 export async function loader({ request }: LoaderArgs) {
   const headers = new Headers()
   const authRequest = auth.handleRequest(request, headers)
-  const { user, session } = await authRequest.validateUser()
+  const { user } = await authRequest.validateUser()
 
   return json(
-    {
-      user,
-      session,
-    },
+    { user },
     {
       headers,
     }

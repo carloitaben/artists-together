@@ -1,10 +1,12 @@
-import { NavLink } from "@remix-run/react"
+import { NavLink, useFetcher } from "@remix-run/react"
 import { $path } from "remix-routes"
 
-import useSession from "~/hooks/useSession"
+import useUser from "~/hooks/useUser"
+import Auth from "./Auth"
 
 export default function Sidebar() {
-  const session = useSession()
+  const user = useUser()
+  const logoutFetcher = useFetcher()
 
   return (
     <aside className="bg-gray-100">
@@ -26,14 +28,21 @@ export default function Sidebar() {
             <NavLink to={$path("/schedule")}>Schedule</NavLink>
           </li>
           <li>
-            {session ? (
-              <NavLink to={$path("/:username", { username: session.username })}>{session.username}</NavLink>
+            {user ? (
+              <NavLink to={$path("/:username", { username: user.userId })}>
+                <div>{user.userId}</div>
+              </NavLink>
             ) : (
-              <NavLink to={$path("/login")}>Login</NavLink>
+              <Auth />
             )}
           </li>
         </ul>
       </nav>
+      {user && (
+        <logoutFetcher.Form action="/logout" method="post">
+          <button>logout</button>
+        </logoutFetcher.Form>
+      )}
     </aside>
   )
 }
