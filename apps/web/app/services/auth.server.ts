@@ -16,7 +16,7 @@ export const auth = lucia({
 export type Auth = typeof auth
 
 export const otpToken = passwordToken(auth, "otp", {
-  expiresIn: 15 * 60, // 15 minutes
+  expiresIn: 5 * 60, // 5 minutes
   generate: () => generateRandomString(6, "0123456789"),
 })
 
