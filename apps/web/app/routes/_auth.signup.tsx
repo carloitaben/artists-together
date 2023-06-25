@@ -1,14 +1,14 @@
-import { json, type LoaderArgs } from "@vercel/remix"
+import type { ActionArgs } from "@vercel/remix"
+import { json } from "@vercel/remix"
+
 import { auth, getOrCreateValidOtp } from "~/services/auth.server"
+import { sendEmail } from "~/services/email.server"
+
+import OtpEmail from "~/emails/otp.server"
 
 export const config = { runtime: "edge", regions: ["iad1"] }
 
-export async function loader(params: LoaderArgs) {
-  console.log("running LOGIN loader")
-  return "something"
-}
-
-export async function action({ request }: LoaderArgs) {
+export async function action({ request }: ActionArgs) {
   const headers = new Headers()
   const authRequest = auth.handleRequest(request, headers)
   const validation = await authRequest.validateUser()
@@ -21,15 +21,22 @@ export async function action({ request }: LoaderArgs) {
 
   const formData = await request.formData()
   const email = formData.get("email")?.toString()
+  const username = formData.get("username")?.toString()
 
-  if (!email) {
+  if (!email || !username) {
     return json(null, { status: 400, headers })
   }
 
   try {
     const key = await auth.getKey("email", email)
     const otp = await getOrCreateValidOtp(key.userId)
-    console.log(`Send to email ${email} otp code: ${otp.toString()}`)
+
+    await sendEmail({
+      to: email,
+      subject: "Your login code",
+      react: <OtpEmail otp={otp.toString()} />,
+    })
+
     return json(null, { status: 200, headers })
   } catch (error) {
     console.error(error)

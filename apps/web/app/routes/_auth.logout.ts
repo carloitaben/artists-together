@@ -1,14 +1,11 @@
-import { json, type LoaderArgs } from "@vercel/remix"
+import type { ActionArgs } from "@vercel/remix"
+import { json } from "@vercel/remix"
+
 import { auth } from "~/services/auth.server"
 
 export const config = { runtime: "edge" }
 
-export async function loader(params: LoaderArgs) {
-  console.log("running LOGOUT loader")
-  return "something"
-}
-
-export async function action({ request }: LoaderArgs) {
+export async function action({ request }: ActionArgs) {
   const headers = new Headers()
   const authRequest = auth.handleRequest(request, headers)
   const { session } = await authRequest.validateUser()
