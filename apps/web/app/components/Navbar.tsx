@@ -35,7 +35,7 @@ type NavbarItemLinkProps = {
 function NavbarItemLink({ children, to }: NavbarItemLinkProps) {
   return (
     <NavigationMenu.Link asChild>
-      <NavLink to={to} className="aria-[current]:text-anamorphic-teal-300 aria-[disabled]:text-anamorphic-teal-700">
+      <NavLink to={to} className="aria-[current]:text-theme-300 aria-[disabled]:text-theme-700">
         <NavbarItemIcon>{children}</NavbarItemIcon>
       </NavLink>
     </NavigationMenu.Link>
@@ -57,10 +57,8 @@ function NavbarItem({ children, label }: NavbarItemProps) {
           </Tooltip.Trigger>
           <Tooltip.Portal>
             <Tooltip.Content sideOffset={5} side="right">
-              <Tooltip.Arrow className="fill-anamorphic-teal-300" />
-              <div className="bg-anamorphic-teal-300 text-anamorphic-teal-700 py-2 px-4 rounded text-center">
-                {label}
-              </div>
+              <Tooltip.Arrow className="fill-theme-300" />
+              <div className="bg-theme-300 text-theme-700 py-2 px-4 rounded text-center">{label}</div>
             </Tooltip.Content>
           </Tooltip.Portal>
         </Tooltip.Root>
@@ -76,7 +74,7 @@ export default function Navbar() {
     <Tooltip.Provider>
       <NavigationMenu.Root
         orientation="vertical"
-        className="w-16 bg-anamorphic-teal-900 text-anamorphic-teal-50 flex items-center justify-center overflow-y-auto fixed left-0 inset-y-0"
+        className="w-16 bg-theme-900 text-theme-50 flex items-center justify-center overflow-y-auto fixed left-0 inset-y-0"
       >
         <NavigationMenu.List className="flex flex-col gap-6 my-6">
           {user ? (

@@ -24,6 +24,7 @@
     "@remix-run/react": "^1.15.0",
     "@vercel/node": "^2.10.3",
     "@vercel/remix": "^1.15.0",
+    "color2k": "^2.0.2",
     "crypto-js": "^4.1.1",
     "db": "workspace:*",
     "lucia-auth": "^1.8.0",

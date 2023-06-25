@@ -9,11 +9,7 @@ export const config = { runtime: "edge" }
 export default function Index() {
   return (
     <main>
-      <div className="h-[75vh] bg-plushie-pink-100" />
-      <div className="h-[75vh] bg-plushie-pink-200" />
-      <div className="h-[75vh] bg-plushie-pink-300" />
-      <div className="h-[75vh] bg-plushie-pink-400" />
-      <div className="h-[75vh] bg-plushie-pink-500" />
+      <h1>hello there</h1>
     </main>
   )
 }

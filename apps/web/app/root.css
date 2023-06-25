@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 @layer base {
+  /* :root {
+    --theme-color-50:  237, 253, 247;
+    --theme-color-100: 204, 250, 234;
+    --theme-color-200: 156, 246, 221;
+    --theme-color-300: 118, 247, 216;
+    --theme-color-400: 10, 199, 183;
+    --theme-color-500: 7, 157, 157;
+    --theme-color-600: 10, 74, 87;
+    --theme-color-700: 2, 68, 86;
+    --theme-color-800: 10, 55, 67;
+    --theme-color-900: 1, 27, 35;
+  } */
+
   @font-face {
     font-family: "Fraunces";
     font-display: block;
