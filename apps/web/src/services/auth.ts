@@ -31,3 +31,8 @@ export async function getAuth() {
   const authRequest = auth.handleRequest({ cookies })
   return authRequest.validateUser()
 }
+
+export async function getUser() {
+  const auth = await getAuth()
+  return auth.user
+}

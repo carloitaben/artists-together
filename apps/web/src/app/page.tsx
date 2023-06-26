@@ -1,22 +1,18 @@
 import Link from "next/link"
 
-import { getAuth } from "~/services/auth"
+import { getUser } from "~/services/auth"
 
 export const runtime = "edge"
+export const dynamic = "force-dynamic"
 
 export default async function Home() {
-  const auth = await getAuth()
+  const user = await getUser()
 
   return (
     <main>
-      {auth.user && (
+      {user && (
         <h1>
-          user: <pre>{JSON.stringify(auth.user)}</pre>
-        </h1>
-      )}
-      {auth.session && (
-        <h1>
-          session: <pre>{JSON.stringify(auth.session)}</pre>
+          user: <pre>{JSON.stringify(user, null, 2)}</pre>
         </h1>
       )}
       <Link href="/protected">Try to go to protected page</Link>
