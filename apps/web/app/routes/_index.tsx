@@ -1,5 +1,6 @@
 import { Await, useLoaderData } from "@remix-run/react"
-import { defer, type V2_MetaFunction } from "@vercel/remix"
+import type { SerializeFrom, V2_MetaFunction } from "@vercel/remix"
+import { defer } from "@vercel/remix"
 import { Suspense } from "react"
 
 export const meta: V2_MetaFunction = () => {
@@ -15,8 +16,10 @@ export async function loader() {
   return defer({ blocking, deferred })
 }
 
+export type Loader = SerializeFrom<typeof loader>
+
 export default function Index() {
-  const data = useLoaderData<typeof loader>()
+  const data = useLoaderData<Loader>()
 
   return (
     <main>
