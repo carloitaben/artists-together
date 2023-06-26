@@ -3,8 +3,7 @@ import { json } from "@vercel/remix"
 
 import { auth, getOrCreateValidOtp } from "~/services/auth.server"
 import { sendEmail } from "~/services/email.server"
-
-import OtpEmail from "~/emails/otp.server"
+import { OtpEmail } from "~/emails/auth.server"
 
 export const config = { runtime: "edge", regions: ["iad1"] }
 

@@ -1,11 +1,11 @@
 import { Tailwind, Body, Button, Container, Head, Heading, Html, Preview, Section, Text } from "@react-email/components"
 import tailwindConfig from "../../tailwind.config"
 
-type Props = {
+type OtpEmailProps = {
   otp: string
 }
 
-export default function OtpEmail({ otp }: Props) {
+export function OtpEmail({ otp }: OtpEmailProps) {
   return (
     <Tailwind config={tailwindConfig}>
       <Html>
