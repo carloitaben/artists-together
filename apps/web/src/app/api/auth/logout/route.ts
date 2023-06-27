@@ -15,9 +15,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  await auth.invalidateSession(session.sessionId)
-  authRequest.setSession(null)
-
-  // Redirect somewhere idk
-  return NextResponse.json({ ok: true })
+  try {
+    await auth.invalidateSession(session.sessionId)
+    authRequest.setSession(null)
+    return NextResponse.json(null, { status: 200 })
+  } catch (error) {
+    return NextResponse.json(null, { status: 500 })
+  }
 }

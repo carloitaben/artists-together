@@ -46,12 +46,8 @@ export async function POST(request: Request) {
       react: <OtpEmail otp={otp.toString()} />,
     })
 
-    return NextResponse.json({ ok: true })
+    return NextResponse.json(null, { status: 200 })
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    )
+    return NextResponse.json(null, { status: 500 })
   }
 }

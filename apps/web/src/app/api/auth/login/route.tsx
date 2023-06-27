@@ -1,7 +1,7 @@
-import { LuciaTokenError } from "@lucia-auth/tokens"
-import { LuciaError } from "lucia-auth"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
+import { LuciaTokenError } from "@lucia-auth/tokens"
+import { LuciaError } from "lucia-auth"
 import { userSchema } from "db"
 
 import { auth, getOtp } from "~/services/auth"
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       react: <OtpEmail otp={otp.toString()} />,
     })
 
-    return NextResponse.json({ ok: true })
+    return NextResponse.json(null, { status: 200 })
   } catch (error) {
     if (
       error instanceof LuciaError &&
@@ -58,10 +58,6 @@ export async function POST(request: Request) {
       )
     }
 
-    console.error(error)
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    )
+    return NextResponse.json(null, { status: 500 })
   }
 }
