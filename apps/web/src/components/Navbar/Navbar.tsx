@@ -17,7 +17,7 @@ export default function Navbar({ user }: Props) {
     <Tooltip.Provider>
       <NavigationMenu.Root
         orientation="vertical"
-        className="fixed inset-y-0 left-0 flex w-16 items-center justify-center overflow-y-auto bg-[#011B23] text-[#024456]"
+        className="fixed inset-y-0 left-0 flex w-16 items-center justify-center overflow-y-auto bg-theme-900 text-theme-50"
       >
         <NavigationMenu.List className="my-4 flex flex-col gap-6">
           <NavbarItem

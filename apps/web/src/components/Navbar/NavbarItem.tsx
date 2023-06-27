@@ -20,13 +20,22 @@ export default function NavbarItem({ href, tooltip, children }: Props) {
     <NavigationMenu.Item>
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
-          <NavigationMenu.Link active={isActive} asChild className={isActive ? "text-[#76F6D8]" : ""}>
-            <Link href={href} className="flex items-center justify-center w-8 h-8">
+          <NavigationMenu.Link
+            active={isActive}
+            asChild
+            className={isActive ? "text-theme-300" : ""}
+          >
+            <Link
+              href={href}
+              className="flex h-8 w-8 items-center justify-center"
+            >
               {children}
               <Tooltip.Portal>
                 <Tooltip.Content sideOffset={5} side="right">
-                  <Tooltip.Arrow className=" fill-[#76F6D8]" />
-                  <div className="bg-[#76F6D8] text-[#0A3743] py-2 px-4 rounded text-center">{tooltip}</div>
+                  <Tooltip.Arrow className=" fill-theme-300" />
+                  <div className="rounded bg-theme-300 px-4 py-2 text-center text-theme-700">
+                    {tooltip}
+                  </div>
                 </Tooltip.Content>
               </Tooltip.Portal>
             </Link>
