@@ -6,6 +6,9 @@ import { z } from "zod"
 
 import { auth, otpToken } from "~/services/auth"
 
+export const runtime = "edge"
+export const preferredRegion = "iad1"
+
 const schema = userSchema.pick({ email: true }).extend({
   otp: z.string().length(6),
 })

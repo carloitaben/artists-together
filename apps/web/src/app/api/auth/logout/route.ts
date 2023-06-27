@@ -3,6 +3,8 @@ import { NextResponse } from "next/server"
 
 import { auth } from "~/services/auth"
 
+export const runtime = "edge"
+
 export async function POST(request: Request) {
   const authRequest = auth.handleRequest({
     request,

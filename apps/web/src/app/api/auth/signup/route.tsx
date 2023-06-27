@@ -6,6 +6,9 @@ import { auth, getOtp } from "~/services/auth"
 import { sendEmail } from "~/services/email"
 import { OtpEmail } from "~/emails/auth"
 
+export const runtime = "edge"
+export const preferredRegion = "iad1"
+
 const schema = userSchema.pick({ username: true, email: true })
 
 export async function POST(request: Request) {
