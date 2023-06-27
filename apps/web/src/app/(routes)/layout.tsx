@@ -3,7 +3,7 @@ import { ReactNode } from "react"
 import "~/styles/index.css"
 
 import { getUser } from "~/services/auth"
-import { getTheme, makeThemeStyle, Theme } from "~/utils/themes"
+import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
 import Navbar from "~/components/Navbar"
 
 type Props = {
