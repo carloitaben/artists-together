@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 
 import Navbar from "~/components/Navbar"
 
-import "./globals.css"
+import "./styles.css"
 import { getUser } from "~/services/auth"
 
 type Props = {

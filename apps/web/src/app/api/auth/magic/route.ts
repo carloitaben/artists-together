@@ -11,7 +11,7 @@ const schema = userSchema.pick({ email: true }).extend({
 })
 
 export async function POST(request: Request) {
-  const data = schema.parse(Object.fromEntries((await request.formData()).entries()))
+  const data = schema.parse(await request.json())
 
   const authRequest = auth.handleRequest({
     request,
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     await otpToken.validate(data.otp, key.userId)
     const session = await auth.createSession(key.userId)
     authRequest.setSession(session)
-    return NextResponse.json({ ok: true })
+    return NextResponse.json(null, { status: 200 })
   } catch (e) {
     if (e instanceof LuciaTokenError && e.message === "EXPIRED_TOKEN") {
       // expired password

@@ -52,6 +52,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.1.1
+        version: 3.1.1(react-hook-form@7.45.0)
       '@lucia-auth/adapter-mysql':
         specifier: ^1.1.1
         version: 1.1.1(lucia-auth@1.7.1)
@@ -94,6 +97,9 @@ importers:
       react-email:
         specifier: ^1.9.4
         version: 1.9.4
+      react-hook-form:
+        specifier: ^7.45.0
+        version: 7.45.0(react@18.2.0)
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -736,6 +742,14 @@ packages:
       '@remix-run/web-fetch': 4.3.4
       '@remix-run/web-file': 3.0.2
       '@remix-run/web-stream': 1.0.3
+    dev: false
+
+  /@hookform/resolvers@3.1.1(react-hook-form@7.45.0):
+    resolution: {integrity: sha512-tS16bAUkqjITNSvbJuO1x7MXbn7Oe8ZziDTJdA9mMvsoYthnOOiznOTGBYwbdlYBgU+tgpI/BtTU3paRbCuSlg==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.45.0(react@18.2.0)
     dev: false
 
   /@humanwhocodes/config-array@0.11.10:
@@ -5083,6 +5097,15 @@ packages:
       tree-node-cli: 1.6.0
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /react-hook-form@7.45.0(react@18.2.0):
+    resolution: {integrity: sha512-AbHeZ4ad+0dEIknSW9dBgIwcvRDfZ1O97sgj75WaMdOX0eg8TBiUf9wxzVkIjZbk76BBIE9lmFOzyD4PN80ZQg==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:

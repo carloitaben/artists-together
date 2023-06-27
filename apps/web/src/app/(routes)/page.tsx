@@ -1,4 +1,5 @@
 import Link from "next/link"
+import OtpTestForm from "~/components/OtpTestForm"
 
 import { getUser } from "~/services/auth"
 
@@ -16,21 +17,29 @@ export default async function Home() {
         </h1>
       )}
       <Link href="/protected">Try to go to protected page</Link>
-      <form method="post" action="/auth/login" className="p-12 m-12 bg-gunpla-white-400">
+      <form
+        method="post"
+        action="/api/auth/login"
+        className="m-12 bg-gunpla-white-400 p-12"
+      >
         <input type="email" name="email" placeholder="enter email..." />
         <button type="submit">log in</button>
       </form>
-      <form method="post" action="/auth/magic" className="p-12 m-12 bg-gunpla-white-400">
-        <input type="email" name="email" placeholder="enter email..." />
-        <input type="text" name="otp" placeholder="enter otp..." />
-        <button type="submit">submit otp</button>
-      </form>
-      <form method="post" action="/auth/signup" className="p-12 m-12 bg-gunpla-white-400">
+      <OtpTestForm />
+      <form
+        method="post"
+        action="/api/auth/signup"
+        className="m-12 bg-gunpla-white-400 p-12"
+      >
         <input type="text" name="username" placeholder="@username" />
         <input type="email" name="email" placeholder="enter email..." />
         <button type="submit">sign up</button>
       </form>
-      <form method="post" action="/auth/logout" className="p-12 m-12 bg-gunpla-white-400">
+      <form
+        method="post"
+        action="/api/auth/logout"
+        className="m-12 bg-gunpla-white-400 p-12"
+      >
         <button type="submit">log out</button>
       </form>
     </main>
