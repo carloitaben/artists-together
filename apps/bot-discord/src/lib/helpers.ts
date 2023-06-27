@@ -1,5 +1,6 @@
 import { MessageReaction, PartialMessageReaction, Client, GuildMemberManager, RoleManager } from "discord.js"
 import { validate, schedule } from "node-cron"
+import { readFileSync } from "node:fs"
 
 import { ROLES, SERVER_ID } from "~/lib/constants"
 
@@ -12,8 +13,8 @@ export function getRandomArrayItem<T>(arr: T[]) {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
-export function staticUrl(name: `/${string}.${string}`) {
-  return `https://raw.githubusercontent.com/Carloitaben/artists-together/main/apps/bot-discord/static${name}`
+export function getPublicFile(name: `/${string}.${string}`) {
+  return readFileSync(`./public${name}`)
 }
 
 export async function getReactionFromPartial(reaction: MessageReaction | PartialMessageReaction) {
