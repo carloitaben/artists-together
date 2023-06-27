@@ -1,8 +1,8 @@
 import { ReactNode } from "react"
 
-import Navbar from "~/components/Navbar"
+import "~/styles/index.css"
 
-import "./styles.css"
+import Navbar from "~/components/Navbar"
 import { getUser } from "~/services/auth"
 
 type Props = {
