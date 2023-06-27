@@ -1,8 +1,10 @@
-import { userSchema } from "db"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
+import { userSchema } from "db"
 
 import { auth, getOtp } from "~/services/auth"
+import { sendEmail } from "~/services/email"
+import { OtpEmail } from "~/emails/auth"
 
 const schema = userSchema.pick({ username: true, email: true })
 
@@ -38,7 +40,12 @@ export async function POST(request: Request) {
 
     const otp = await getOtp(user.id)
 
-    console.log(`Send to email ${data.email} otp code: ${otp.toString()}`)
+    await sendEmail({
+      to: data.email,
+      subject: "Your login code",
+      react: <OtpEmail otp={otp.toString()} />,
+    })
+
     return NextResponse.json({ ok: true })
   } catch (error) {
     console.error(error)
