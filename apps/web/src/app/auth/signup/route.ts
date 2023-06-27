@@ -29,10 +29,14 @@ export async function POST(request: Request) {
         providerUserId: data.email,
         password: null,
       },
-      attributes: data,
+      attributes: {
+        bio: null,
+        email: data.email,
+        username: data.username,
+      },
     })
 
-    const otp = await getOtp(user.userId)
+    const otp = await getOtp(user.id)
 
     console.log(`Send to email ${data.email} otp code: ${otp.toString()}`)
     return NextResponse.json({ ok: true })

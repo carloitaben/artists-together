@@ -13,13 +13,14 @@ const connection = createConnection()
 export const auth = lucia({
   adapter: planetscale(connection),
   middleware: nextjs(),
+  transformDatabaseUser: (user) => user,
   env: process.env.NODE_ENV === "production" ? "PROD" : "DEV",
 })
 
 export type Auth = typeof auth
 
 export const otpToken = passwordToken(auth, "otp", {
-  expiresIn: 5, // 5 minutes
+  expiresIn: 5 * 60, // 5 minutes
   generate: () =>
     generateRandomString(6, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
 })
@@ -41,3 +42,5 @@ export async function getUser() {
   const auth = await getAuth()
   return auth.user
 }
+
+export type User = Awaited<ReturnType<typeof getUser>>
