@@ -39,7 +39,9 @@ export default function OtpTestForm() {
         form.reset()
         router.refresh()
       } catch (error) {
-        console.error(error)
+        form.setError("root", {
+          message: error instanceof Error ? error.message : "Unknown error",
+        })
       }
     })
   }
