@@ -20,8 +20,12 @@ export async function POST(request: Request) {
   try {
     await auth.invalidateSession(session.sessionId)
     authRequest.setSession(null)
-    return NextResponse.json(null, { status: 200 })
+    return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
-    return NextResponse.json(null, { status: 500 })
+    console.error(error)
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    )
   }
 }

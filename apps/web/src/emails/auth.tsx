@@ -10,6 +10,7 @@ import {
   Section,
   Text,
 } from "@react-email/components"
+
 import tailwindConfig from "../../tailwind.config"
 
 type OtpEmailProps = {

@@ -3,9 +3,6 @@ import OtpTestForm from "~/components/OtpTestForm"
 
 import { getUser } from "~/services/auth"
 
-export const runtime = "edge"
-export const dynamic = "force-dynamic"
-
 export default async function Home() {
   const user = await getUser()
 

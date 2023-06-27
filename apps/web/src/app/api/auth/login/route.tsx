@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       react: <OtpEmail otp={otp.toString()} />,
     })
 
-    return NextResponse.json(null, { status: 200 })
+    return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
     if (
       error instanceof LuciaError &&
@@ -61,6 +61,10 @@ export async function POST(request: Request) {
       )
     }
 
-    return NextResponse.json(null, { status: 500 })
+    console.error(error)
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    )
   }
 }

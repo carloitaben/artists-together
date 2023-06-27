@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     await otpToken.validate(data.otp, key.userId)
     const session = await auth.createSession(key.userId)
     authRequest.setSession(session)
-    return NextResponse.json(null, { status: 200 })
+    return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
     if (error instanceof LuciaTokenError && error.message === "EXPIRED_TOKEN") {
       return NextResponse.json({ error: "Expired token" }, { status: 401 })
@@ -45,6 +45,10 @@ export async function POST(request: Request) {
       )
     }
 
-    return NextResponse.json(null, { status: 500 })
+    console.error(error)
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    )
   }
 }

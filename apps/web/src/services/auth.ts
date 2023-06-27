@@ -1,5 +1,3 @@
-import "server-only"
-
 import lucia from "lucia-auth"
 import { cookies } from "next/headers"
 import { generateRandomString } from "lucia-auth"

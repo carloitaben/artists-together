@@ -10,6 +10,8 @@ type Props = {
   children: ReactNode
 }
 
+export const runtime = "edge"
+
 export default async function Layout({ children }: Props) {
   const user = await getUser()
   const theme = getTheme(Theme["anamorphic-teal"])
