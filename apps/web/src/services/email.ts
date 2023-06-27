@@ -50,7 +50,8 @@ export async function sendEmail({
   }
 
   if (!process.env.EMAIL_API_KEY || process.env.NODE_ENV === "development") {
-    console.log(`Would have sent the following email:`, JSON.stringify(email))
+    console.log("Would have sent the following email:")
+    console.log(email)
     return {
       status: "success",
       data: { id: "mocked" },
@@ -65,6 +66,7 @@ export async function sendEmail({
       "Content-Type": "application/json",
     },
   })
+
   const data = await response.json()
   const parsedData = resendSuccessSchema.safeParse(data)
 

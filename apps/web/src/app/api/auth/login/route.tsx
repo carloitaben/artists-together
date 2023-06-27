@@ -10,7 +10,7 @@ import { OtpEmail } from "~/emails/auth"
 
 const schema = userSchema.pick({ email: true })
 
-export const runtime = "edge"
+export const runtime = "nodejs"
 export const preferredRegion = "iad1"
 
 export async function POST(request: Request) {
