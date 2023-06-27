@@ -1,3 +1,5 @@
+import "server-only"
+
 import lucia from "lucia-auth"
 import { cookies } from "next/headers"
 import { generateRandomString } from "lucia-auth"
@@ -17,14 +19,17 @@ export const auth = lucia({
 export type Auth = typeof auth
 
 export const otpToken = passwordToken(auth, "otp", {
-  expiresIn: 15 * 60, // 15 minutes
-  generate: () => generateRandomString(6, "0123456789"),
+  expiresIn: 5, // 5 minutes
+  generate: () =>
+    generateRandomString(6, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
 })
 
-export async function getOrCreateValidOtp(id: string) {
-  const existingOtp = await otpToken.getUserTokens(id).then((tokens) => tokens.find((token) => !token.expired))
-  if (existingOtp) return existingOtp
-  return otpToken.issue(id)
+export async function getOtp(id: string) {
+  const existingOtp = await otpToken
+    .getUserTokens(id)
+    .then((tokens) => tokens.find((token) => !token.expired))
+
+  return existingOtp || otpToken.issue(id)
 }
 
 export async function getAuth() {
