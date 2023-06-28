@@ -3,62 +3,63 @@
 import * as Dialog from "@radix-ui/react-dialog"
 import * as Tabs from "@radix-ui/react-tabs"
 import { useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 
 export default function Auth() {
+  const [open, setOpen] = useState(false)
   const [emailToVerify, setEmailToVerify] = useState<string>()
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger></Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-arpeggio-black/25 backdrop-blur-[24px]" />
-        <div className="fixed inset-0">
-          {emailToVerify ? (
-            <Dialog.Content className="bg-gunpla-white-50">
-              <Dialog.Title>A verification code has been sent to your email account</Dialog.Title>
-              <form method="post" action="/auth/magic">
-                <input type="hidden" name="email" value={emailToVerify} />
-                <input type="number" name="otp" />
-                <button type="button">Not received? Resend it</button>
-                <button type="submit">Confirm</button>
-              </form>
-            </Dialog.Content>
-          ) : (
-            <Dialog.Content className="bg-gunpla-white-50">
-              <Tabs.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger>:)</Dialog.Trigger>
+      <AnimatePresence initial={false}>
+        {open ? (
+          <Dialog.Portal forceMount>
+            <Dialog.Overlay forceMount asChild>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]"
+              />
+            </Dialog.Overlay>
+            <Dialog.Content
+              forceMount
+              className="fixed inset-0 flex items-center justify-center"
+            >
+              <Tabs.Root orientation="vertical" defaultValue="login">
                 <Tabs.List>
-                  <Tabs.Trigger value="login">Log-in</Tabs.Trigger>
-                  <Tabs.Trigger value="signup">Register</Tabs.Trigger>
+                  <Tabs.Trigger
+                    className="h-12 rounded-full bg-white"
+                    value="login"
+                  >
+                    Log-in
+                  </Tabs.Trigger>
+                  <Tabs.Trigger
+                    className="h-12 rounded-full bg-white"
+                    value="register"
+                  >
+                    Register
+                  </Tabs.Trigger>
                 </Tabs.List>
-                <Tabs.Content value="login">
-                  <Dialog.Title>Login</Dialog.Title>
-                  <form method="post" action="/auth/login">
-                    <label>
-                      <span>Email account</span>
-                      <input type="email" name="email" />
-                    </label>
-                    <button type="submit">Log-in</button>
-                  </form>
-                </Tabs.Content>
-                <Tabs.Content value="signup">
-                  <Dialog.Title>Register</Dialog.Title>
-                  <form method="post" action="/auth/login">
-                    <label>
-                      <span>Email account</span>
-                      <input type="email" name="email" />
-                    </label>
-                    <label>
-                      <span>Username</span>
-                      <input type="text" name="username" />
-                    </label>
-                    <button type="submit">Register</button>
-                  </form>
-                </Tabs.Content>
+                <motion.div
+                  initial={{ scale: 0.95 }}
+                  animate={{ scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="rounded-3xl bg-white"
+                >
+                  <Tabs.Content value="login">
+                    <Dialog.Title>Log-in</Dialog.Title>
+                  </Tabs.Content>
+                  <Tabs.Content value="register">
+                    <Dialog.Title>Register</Dialog.Title>
+                  </Tabs.Content>
+                </motion.div>
               </Tabs.Root>
             </Dialog.Content>
-          )}
-        </div>
-      </Dialog.Portal>
+          </Dialog.Portal>
+        ) : null}
+      </AnimatePresence>
     </Dialog.Root>
   )
 }
