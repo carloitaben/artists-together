@@ -16,24 +16,6 @@ export default async function Home() {
       <Link href="/protected">Try to go to protected page</Link>
       <form
         method="post"
-        action="/api/auth/login"
-        className="m-12 bg-gunpla-white-400 p-12"
-      >
-        <input type="email" name="email" placeholder="enter email..." />
-        <button type="submit">log in</button>
-      </form>
-      <OtpTestForm />
-      <form
-        method="post"
-        action="/api/auth/signup"
-        className="m-12 bg-gunpla-white-400 p-12"
-      >
-        <input type="text" name="username" placeholder="@username" />
-        <input type="email" name="email" placeholder="enter email..." />
-        <button type="submit">sign up</button>
-      </form>
-      <form
-        method="post"
         action="/api/auth/logout"
         className="m-12 bg-gunpla-white-400 p-12"
       >
