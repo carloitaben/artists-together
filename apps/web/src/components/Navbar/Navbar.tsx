@@ -21,7 +21,15 @@ export default function Navbar({ user }: Props) {
         className="fixed inset-y-0 left-0 flex w-16 items-center justify-center overflow-y-auto bg-theme-900 text-theme-50"
       >
         <NavigationMenu.List className="my-4 flex flex-col gap-6">
-          {user ? <div>user profile modal</div> : <Auth />}
+          {user ? (
+            <div>
+              <form method="post" action="/api/auth/logout">
+                <button type="submit">log out</button>
+              </form>
+            </div>
+          ) : (
+            <Auth />
+          )}
           <NavbarItem
             href="/profile"
             tooltip={user ? user.username : "log in!"}
