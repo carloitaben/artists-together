@@ -29,7 +29,7 @@ export default function Auth({ children }: Props) {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger>{children}</Dialog.Trigger>
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} mode="wait">
         {open ? (
           <Dialog.Portal forceMount>
             <Dialog.Overlay forceMount asChild>
