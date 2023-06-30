@@ -12,6 +12,7 @@ import { cx } from "class-variance-authority"
 import { Title } from "@radix-ui/react-dialog"
 
 import * as Form from "~/components/Form"
+import { useToast } from "~/components/Toast"
 
 const schema = z.object({
   otp: z.string().length(6),
@@ -88,8 +89,9 @@ function OtpDigit({ position }: { position: number }) {
 }
 
 export default function Verify({ email }: { email: string }) {
-  const router = useRouter()
   const buttonRef = useRef<HTMLButtonElement>(null)
+  const router = useRouter()
+  const { emit } = useToast()
 
   return (
     <Form.Root
@@ -110,6 +112,9 @@ export default function Verify({ email }: { email: string }) {
 
         if (response.ok) {
           router.refresh()
+          emit({
+            title: "Logged in succesfully",
+          })
         } else {
           alert("oh no")
           helpers.resetForm()

@@ -5,6 +5,7 @@ import "~/styles/index.css"
 import { getUser } from "~/services/auth"
 import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
 import Navbar from "~/components/Navbar"
+import Toast from "~/components/Toast"
 
 type Props = {
   children: ReactNode
@@ -24,8 +25,10 @@ export default async function Layout({ children }: Props) {
       style={style}
     >
       <body className="h-full min-h-full pl-16">
-        <Navbar user={user} />
-        {children}
+        <Toast>
+          <Navbar user={user} />
+          {children}
+        </Toast>
       </body>
     </html>
   )
