@@ -1,7 +1,3 @@
-"use client"
-
-import { useToast } from "~/components/Toast"
-
 function Social() {
   const discordHref = "https://discord.gg/9Ayh9dvhHe"
   const instagramHref = "https://www.instagram.com/artiststogether.online/"
@@ -57,8 +53,6 @@ function Social() {
 }
 
 export default function Home() {
-  const { emit } = useToast()
-
   return (
     <div className="flex h-full flex-col">
       <header className="mt-16">
@@ -68,7 +62,6 @@ export default function Home() {
           fill="none"
           className="w-full max-w-[16.25rem] sm:max-w-[26.5rem]"
           viewBox="0 0 424 203"
-          onClick={() => emit({ title: "hello" })}
         >
           <path
             fill="currentColor"
