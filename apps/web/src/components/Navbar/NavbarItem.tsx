@@ -6,13 +6,15 @@ import Link from "next/link"
 import { ReactNode } from "react"
 import { usePathname } from "next/navigation"
 
+import Icon from "~/components/Icon"
+
 type Props = {
   href: string
-  tooltip: string
+  label: string
   children: ReactNode
 }
 
-export default function NavbarItem({ href, tooltip, children }: Props) {
+export default function NavbarItem({ href, label, children }: Props) {
   const pathname = usePathname()
   const isActive = pathname === href
 
@@ -25,16 +27,15 @@ export default function NavbarItem({ href, tooltip, children }: Props) {
             asChild
             className={isActive ? "text-theme-300" : ""}
           >
-            <Link
-              href={href}
-              className="flex h-8 w-8 items-center justify-center"
-            >
-              {children}
+            <Link href={href}>
+              <Icon label={label} className="h-8 w-8">
+                {children}
+              </Icon>
               <Tooltip.Portal>
                 <Tooltip.Content sideOffset={5} side="right">
                   <Tooltip.Arrow className=" fill-theme-300" />
                   <div className="rounded bg-theme-300 px-4 py-2 text-center text-theme-700">
-                    {tooltip}
+                    {label}
                   </div>
                 </Tooltip.Content>
               </Tooltip.Portal>

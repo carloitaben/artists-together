@@ -5,7 +5,14 @@ import * as Tooltip from "@radix-ui/react-tooltip"
 
 import type { User } from "~/services/auth"
 
-import { artists, calendar, help, home, profile, train } from "./icons"
+import {
+  artists,
+  calendar,
+  help,
+  home,
+  profile,
+  train,
+} from "~/components/Icons"
 import NavbarItem from "./NavbarItem"
 import Auth from "../Auth"
 
@@ -30,25 +37,22 @@ export default function Navbar({ user }: Props) {
           ) : (
             <Auth />
           )}
-          <NavbarItem
-            href="/profile"
-            tooltip={user ? user.username : "log in!"}
-          >
+          <NavbarItem href="/profile" label={user ? user.username : "log in!"}>
             {profile}
           </NavbarItem>
-          <NavbarItem href="/" tooltip="Home">
+          <NavbarItem href="/" label="Home">
             {home}
           </NavbarItem>
-          <NavbarItem href="/about" tooltip="Coming soon!">
+          <NavbarItem href="/about" label="Coming soon!">
             {help}
           </NavbarItem>
-          <NavbarItem href="/lounge" tooltip="Coming soon!">
+          <NavbarItem href="/lounge" label="Coming soon!">
             {artists}
           </NavbarItem>
-          <NavbarItem href="/art" tooltip="Coming soon!">
+          <NavbarItem href="/art" label="Coming soon!">
             {train}
           </NavbarItem>
-          <NavbarItem href="/schedule" tooltip="Coming soon!">
+          <NavbarItem href="/schedule" label="Coming soon!">
             {calendar}
           </NavbarItem>
         </NavigationMenu.List>
