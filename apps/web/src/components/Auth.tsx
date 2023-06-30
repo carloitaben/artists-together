@@ -2,9 +2,8 @@
 
 import * as Dialog from "@radix-ui/react-dialog"
 import * as Tabs from "@radix-ui/react-tabs"
-import { ReactNode, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { useRouter } from "next/navigation"
 import { z } from "zod"
 
 import { loginSchema, signupSchema } from "~/lib/schemas"
@@ -12,6 +11,7 @@ import { loginSchema, signupSchema } from "~/lib/schemas"
 import * as Form from "./Form"
 import { profile, register } from "./Icons"
 import Icon from "./Icon"
+import Verify from "./Auth/forms/Verify"
 
 type Props = {
   children: ReactNode
@@ -24,7 +24,6 @@ const otpSchema = z.object({
 export default function Auth({ children }: Props) {
   const [open, setOpen] = useState(false)
   const [emailToVerify, setEmailToVerify] = useState<string>()
-  const router = useRouter()
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -33,53 +32,15 @@ export default function Auth({ children }: Props) {
         {open ? (
           <Dialog.Portal forceMount>
             <Dialog.Overlay forceMount asChild>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]"
-              />
+              <motion.div className="fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]" />
             </Dialog.Overlay>
             <Dialog.Content
               forceMount
               className="fixed inset-0 flex items-start justify-center overflow-y-auto px-4 pb-4 pt-[33.333vh]"
             >
               {emailToVerify ? (
-                <motion.div
-                  initial={{ scale: 0.95 }}
-                  animate={{ scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="rounded-3xl bg-white"
-                >
-                  <Form.Root
-                    schema={otpSchema}
-                    initialValues={{ otp: "" }}
-                    onSubmit={async (data, helpers) => {
-                      const response = await fetch("/api/auth/magic", {
-                        method: "POST",
-                        headers: {
-                          Accept: "application/json",
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          email: emailToVerify,
-                          otp: data.otp,
-                        }),
-                      })
-
-                      if (response.ok) {
-                        router.refresh()
-                        helpers.resetForm()
-                      }
-                    }}
-                  >
-                    <Form.Field name="otp">
-                      <Form.Label>OTP code</Form.Label>
-                      <Form.Input />
-                      <Form.Error />
-                    </Form.Field>
-                    <Form.Submit>Submit</Form.Submit>
-                  </Form.Root>
+                <motion.div>
+                  <Verify email={emailToVerify} />
                 </motion.div>
               ) : (
                 <Tabs.Root
@@ -107,17 +68,13 @@ export default function Auth({ children }: Props) {
                       <span>Register</span>
                     </Tabs.Trigger>
                   </Tabs.List>
-                  <motion.div
-                    initial={{ scale: 0.95 }}
-                    animate={{ scale: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
+                  <motion.div>
                     <Tabs.Content value="login" asChild>
                       <Form.Root
                         schema={loginSchema}
                         initialValues={{ email: "" }}
                         onSubmit={async (data) => {
-                          const response = await fetch("/api/auth/magic", {
+                          const response = await fetch("/api/auth/login", {
                             method: "POST",
                             headers: {
                               Accept: "application/json",
@@ -129,27 +86,31 @@ export default function Auth({ children }: Props) {
                           if (response.ok) setEmailToVerify(data.email)
                         }}
                       >
-                        <div className="w-[36rem] rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
-                          <Dialog.Title className="px-[3.75rem] pb-5 font-serif text-[2rem] font-light text-gunpla-white-500">
+                        <Form.Form>
+                          <div className="w-[36rem] rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
+                            <Dialog.Title className="px-[3.75rem] pb-5 font-serif text-[2rem] font-light text-gunpla-white-500">
+                              Log-in
+                            </Dialog.Title>
+                            <Form.Field name="email" className="px-12">
+                              <Form.Label>Email address</Form.Label>
+                              <Form.Input
+                                type="email"
+                                placeholder="johndoe@email.com"
+                              />
+                              <Form.Error />
+                            </Form.Field>
+                          </div>
+                          <Form.Submit className="mt-4 flex justify-end">
                             Log-in
-                          </Dialog.Title>
-                          <Form.Field name="email" className="px-12">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Input
-                              type="email"
-                              placeholder="johndoe@email.com"
-                            />
-                            <Form.Error />
-                          </Form.Field>
-                        </div>
-                        <Form.Submit className="mt-4">Log-in</Form.Submit>
+                          </Form.Submit>
+                        </Form.Form>
                       </Form.Root>
                     </Tabs.Content>
                     <Tabs.Content value="register" asChild>
                       <Form.Root
                         schema={signupSchema}
                         initialValues={{ email: "", username: "" }}
-                        onSubmit={async (data) => {
+                        onSubmit={async (data, helpers) => {
                           const response = await fetch("/api/auth/register", {
                             method: "POST",
                             headers: {
@@ -159,40 +120,53 @@ export default function Auth({ children }: Props) {
                             body: JSON.stringify(data),
                           })
 
-                          if (response.ok) setEmailToVerify(data.email)
+                          if (response.ok) {
+                            setEmailToVerify(data.email)
+                          } else if (response.status === 403) {
+                            helpers.setFieldError(
+                              "username",
+                              "Username already exists"
+                            )
+                          }
                         }}
                       >
-                        <div className="w-[36rem] rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
-                          <Dialog.Title className="px-[3.75rem] pb-5 font-serif text-[2rem] font-light text-gunpla-white-500">
+                        <Form.Form>
+                          <div className="w-[36rem] rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
+                            <Dialog.Title className="px-[3.75rem] pb-5 font-serif text-[2rem] font-light text-gunpla-white-500">
+                              Register
+                            </Dialog.Title>
+                            <Form.Field name="email" className="mb-4 px-12">
+                              <Form.Label>Email address</Form.Label>
+                              <Form.Input
+                                type="email"
+                                placeholder="johndoe@email.com"
+                              />
+                              <Form.Error />
+                            </Form.Field>
+                            <Form.Field name="username" className="px-12">
+                              <Form.Label
+                                caption={({ value }) =>
+                                  `${30 - value.length}/30`
+                                }
+                              >
+                                Username
+                              </Form.Label>
+                              <Form.Input
+                                placeholder="johndoe"
+                                icon={
+                                  <Form.Tooltip>
+                                    We recommend using the same username you
+                                    have in other platforms.
+                                  </Form.Tooltip>
+                                }
+                              />
+                              <Form.Error />
+                            </Form.Field>
+                          </div>
+                          <Form.Submit className="mt-4 flex justify-end">
                             Register
-                          </Dialog.Title>
-                          <Form.Field name="email" className="mb-4 px-12">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Input
-                              type="email"
-                              placeholder="johndoe@email.com"
-                            />
-                            <Form.Error />
-                          </Form.Field>
-                          <Form.Field name="username" className="px-12">
-                            <Form.Label
-                              caption={({ value }) => `${30 - value.length}/30`}
-                            >
-                              Username
-                            </Form.Label>
-                            <Form.Input
-                              placeholder="johndoe"
-                              icon={
-                                <Form.Tooltip>
-                                  We recommend using the same username you have
-                                  in other platforms.
-                                </Form.Tooltip>
-                              }
-                            />
-                            <Form.Error />
-                          </Form.Field>
-                        </div>
-                        <Form.Submit className="mt-4">Register</Form.Submit>
+                          </Form.Submit>
+                        </Form.Form>
                       </Form.Root>
                     </Tabs.Content>
                   </motion.div>

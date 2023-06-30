@@ -1,7 +1,7 @@
 "use client"
 
 import { ForwardedRef, ReactNode, forwardRef } from "react"
-import { Formik, FormikConfig, Form } from "formik"
+import { Formik, FormikConfig } from "formik"
 import { AnyZodObject, TypeOf } from "zod"
 import { toFormikValidationSchema } from "zod-formik-adapter"
 
@@ -21,7 +21,7 @@ function Root<T extends AnyZodObject>(
       onSubmit={onSubmit}
       validationSchema={toFormikValidationSchema(schema)}
     >
-      <Form>{children}</Form>
+      {children}
     </Formik>
   )
 }

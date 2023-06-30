@@ -12,9 +12,7 @@ export const runtime = "nodejs"
 export const preferredRegion = "iad1"
 
 export async function POST(request: Request) {
-  const data = loginSchema.parse(
-    Object.fromEntries((await request.formData()).entries())
-  )
+  const data = loginSchema.parse(await request.json())
 
   const authRequest = auth.handleRequest({
     request,

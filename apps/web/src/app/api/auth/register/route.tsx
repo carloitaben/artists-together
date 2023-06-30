@@ -1,5 +1,6 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
+import { connect, eq, user } from "db"
 
 import { signupSchema } from "~/lib/schemas"
 import { auth, getOtp } from "~/services/auth"
@@ -10,9 +11,7 @@ export const runtime = "nodejs"
 export const preferredRegion = "iad1"
 
 export async function POST(request: Request) {
-  const data = signupSchema.parse(
-    Object.fromEntries((await request.formData()).entries())
-  )
+  const data = signupSchema.parse(await request.json())
 
   const authRequest = auth.handleRequest({
     request,
@@ -23,6 +22,20 @@ export async function POST(request: Request) {
 
   if (session) {
     return NextResponse.json({ error: "Already logged in" }, { status: 400 })
+  }
+
+  const db = connect()
+  const usersWithUsername = await db
+    .select()
+    .from(user)
+    .where(eq(user.username, data.username))
+    .limit(1)
+
+  if (usersWithUsername.length) {
+    return NextResponse.json(
+      { error: "Username already exists" },
+      { status: 403 }
+    )
   }
 
   try {

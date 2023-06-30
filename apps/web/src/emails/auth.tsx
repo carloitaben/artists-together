@@ -23,7 +23,7 @@ export function OtpEmail({ otp }: OtpEmailProps) {
       <Html>
         <Head />
         <Preview>Your login code</Preview>
-        <Body className="bg-white font-sans">
+        <Body className="bg-not-so-white font-sans">
           <Container className="mx-auto my-0 w-[560px] px-0 pb-12 pt-5">
             <Heading className="text-[24px] text-black">
               Your login code
