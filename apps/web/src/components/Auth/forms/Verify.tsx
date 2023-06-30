@@ -13,6 +13,7 @@ import { Title } from "@radix-ui/react-dialog"
 
 import * as Form from "~/components/Form"
 import { useToast } from "~/components/Toast"
+import { useRootModalContext } from "~/components/Modal"
 
 const schema = z.object({
   otp: z.string().length(6),
@@ -91,6 +92,7 @@ function OtpDigit({ position }: { position: number }) {
 export default function Verify({ email }: { email: string }) {
   const buttonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
+  const modal = useRootModalContext()
   const { emit } = useToast()
 
   return (
@@ -112,9 +114,8 @@ export default function Verify({ email }: { email: string }) {
 
         if (response.ok) {
           router.refresh()
-          emit({
-            title: "Logged in succesfully",
-          })
+          modal.setOpen(false)
+          emit({ title: "Logged in succesfully" })
         } else {
           alert("oh no")
           helpers.resetForm()
