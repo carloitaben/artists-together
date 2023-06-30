@@ -1,12 +1,12 @@
 "use client"
 
 import { ForwardedRef, ReactNode, forwardRef } from "react"
-import { AnyZodObject, infer as Infer } from "zod"
 import { Formik, FormikConfig, Form } from "formik"
+import { AnyZodObject, TypeOf } from "zod"
 import { toFormikValidationSchema } from "zod-formik-adapter"
 
-type Props<T extends AnyZodObject> = FormikConfig<Infer<T>> & {
-  schema: AnyZodObject
+type Props<T extends AnyZodObject> = FormikConfig<TypeOf<T>> & {
+  schema: T
   children: ReactNode
 }
 
