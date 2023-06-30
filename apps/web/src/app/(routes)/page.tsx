@@ -55,7 +55,7 @@ function Social() {
 export default function Home() {
   return (
     <div className="flex h-full flex-col">
-      <header>
+      <header className="mt-16">
         <h1 className="sr-only">Artists Together</h1>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +73,7 @@ export default function Home() {
           />
         </svg>
       </header>
-      <main className="flex flex-1 flex-col justify-end gap-16 overflow-hidden pb-3 font-serif leading-none sm:pb-16 sm:text-8xl">
+      <main className="flex flex-1 flex-col justify-end gap-16 overflow-hidden pb-3 pr-5 font-serif leading-none sm:pb-16 sm:text-8xl">
         <div className="flex flex-1 items-center justify-center sm:block sm:flex-none sm:text-right">
           <h2>
             An inclusive community
