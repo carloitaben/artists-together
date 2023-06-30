@@ -4,21 +4,27 @@ import * as Dialog from "@radix-ui/react-dialog"
 import * as Tabs from "@radix-ui/react-tabs"
 import { ReactNode, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { useRouter } from "next/navigation"
+import { z } from "zod"
 
 import { loginSchema, signupSchema } from "~/lib/schemas"
 
 import * as Form from "./Form"
 import { profile, register } from "./Icons"
 import Icon from "./Icon"
-import OtpTestForm from "./OtpTestForm"
 
 type Props = {
   children: ReactNode
 }
 
+const otpSchema = z.object({
+  otp: z.string().length(6),
+})
+
 export default function Auth({ children }: Props) {
   const [open, setOpen] = useState(false)
   const [emailToVerify, setEmailToVerify] = useState<string>()
+  const router = useRouter()
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -45,7 +51,35 @@ export default function Auth({ children }: Props) {
                   exit={{ opacity: 0 }}
                   className="rounded-3xl bg-white"
                 >
-                  <OtpTestForm />
+                  <Form.Root
+                    schema={otpSchema}
+                    initialValues={{ otp: "" }}
+                    onSubmit={async (data, helpers) => {
+                      const response = await fetch("/api/auth/magic", {
+                        method: "POST",
+                        headers: {
+                          Accept: "application/json",
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          email: emailToVerify,
+                          otp: data.otp,
+                        }),
+                      })
+
+                      if (response.ok) {
+                        router.refresh()
+                        helpers.resetForm()
+                      }
+                    }}
+                  >
+                    <Form.Field name="otp">
+                      <Form.Label>OTP code</Form.Label>
+                      <Form.Input />
+                      <Form.Error />
+                    </Form.Field>
+                    <Form.Submit>Submit</Form.Submit>
+                  </Form.Root>
                 </motion.div>
               ) : (
                 <Tabs.Root
