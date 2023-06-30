@@ -2,20 +2,27 @@
 
 import * as Dialog from "@radix-ui/react-dialog"
 import * as Tabs from "@radix-ui/react-tabs"
-import { useState } from "react"
+import { ReactNode, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 
+import { loginSchema, signupSchema } from "~/lib/schemas"
+
+import * as Form from "./Form"
 import { profile, register } from "./Icons"
 import Icon from "./Icon"
 import OtpTestForm from "./OtpTestForm"
 
-export default function Auth() {
+type Props = {
+  children: ReactNode
+}
+
+export default function Auth({ children }: Props) {
   const [open, setOpen] = useState(false)
   const [emailToVerify, setEmailToVerify] = useState<string>()
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger>:)</Dialog.Trigger>
+      <Dialog.Trigger>{children}</Dialog.Trigger>
       <AnimatePresence initial={false}>
         {open ? (
           <Dialog.Portal forceMount>
@@ -29,7 +36,7 @@ export default function Auth() {
             </Dialog.Overlay>
             <Dialog.Content
               forceMount
-              className="fixed inset-0 flex items-center justify-center"
+              className="fixed inset-0 flex items-start justify-center overflow-y-auto px-4 pb-4 pt-[33.333vh]"
             >
               {emailToVerify ? (
                 <motion.div
@@ -71,70 +78,88 @@ export default function Auth() {
                     animate={{ scale: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <Tabs.Content value="login">
-                      <form
-                        method="post"
-                        action="/api/auth/login"
-                        className="flex flex-col gap-4"
-                        onSubmit={async (event) => {
-                          event.preventDefault()
-
-                          await fetch("/api/auth/magic", {
+                    <Tabs.Content value="login" asChild>
+                      <Form.Root
+                        schema={loginSchema}
+                        initialValues={{ email: "" }}
+                        onSubmit={async (data) => {
+                          const response = await fetch("/api/auth/magic", {
                             method: "POST",
                             headers: {
                               Accept: "application/json",
                               "Content-Type": "application/json",
                             },
-                            body: JSON.stringify({
-                              email: "hola.carlodominguez@gmail.com",
-                            }),
+                            body: JSON.stringify(data),
                           })
 
-                          setEmailToVerify("hola.carlodominguez@gmail.com")
+                          if (response.ok) setEmailToVerify(data.email)
                         }}
                       >
-                        <div className="w-[36rem] rounded-3xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
-                          <div className="px-[3.75rem] pb-5">
-                            <Dialog.Title className="font-serif text-[2rem] font-light text-gunpla-white-500">
-                              Log-in
-                            </Dialog.Title>
-                          </div>
-                          <div className="px-12">
-                            <label className="flex flex-col">
-                              <span className="mb-1 px-3 font-sans text-sm text-gunpla-white-500">
-                                Email address
-                              </span>
-                              <input
-                                type="email"
-                                name="email"
-                                placeholder="Enter your email address"
-                                className="rounded-[1rem] bg-white px-3.5 py-3 font-sans text-sm text-gunpla-white-700 placeholder:text-gunpla-white-300"
-                              />
-                            </label>
-                          </div>
-                        </div>
-                        <div className="flex justify-end">
-                          <button className="rounded-full bg-gunpla-white-50 px-10 py-3 text-center font-sans text-sm text-gunpla-white-500 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)] disabled:text-gunpla-white-300">
+                        <div className="w-[36rem] rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
+                          <Dialog.Title className="px-[3.75rem] pb-5 font-serif text-[2rem] font-light text-gunpla-white-500">
                             Log-in
-                          </button>
+                          </Dialog.Title>
+                          <Form.Field name="email" className="px-12">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Input
+                              type="email"
+                              placeholder="johndoe@email.com"
+                            />
+                            <Form.Error />
+                          </Form.Field>
                         </div>
-                      </form>
+                        <Form.Submit className="mt-4">Log-in</Form.Submit>
+                      </Form.Root>
                     </Tabs.Content>
-                    <Tabs.Content value="register">
-                      <Dialog.Title>Register</Dialog.Title>
-                      <form method="post" action="/api/auth/signup">
-                        <input
-                          type="text"
-                          name="username"
-                          placeholder="@username"
-                        />
-                        <input
-                          type="email"
-                          name="email"
-                          placeholder="Enter your email account"
-                        />
-                        <button type="submit">sign up</button>
-                      </form>
+                    <Tabs.Content value="register" asChild>
+                      <Form.Root
+                        schema={signupSchema}
+                        initialValues={{ email: "", username: "" }}
+                        onSubmit={async (data) => {
+                          const response = await fetch("/api/auth/register", {
+                            method: "POST",
+                            headers: {
+                              Accept: "application/json",
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(data),
+                          })
+
+                          if (response.ok) setEmailToVerify(data.email)
+                        }}
+                      >
+                        <div className="w-[36rem] rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
+                          <Dialog.Title className="px-[3.75rem] pb-5 font-serif text-[2rem] font-light text-gunpla-white-500">
+                            Register
+                          </Dialog.Title>
+                          <Form.Field name="email" className="mb-4 px-12">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Input
+                              type="email"
+                              placeholder="johndoe@email.com"
+                            />
+                            <Form.Error />
+                          </Form.Field>
+                          <Form.Field name="username" className="px-12">
+                            <Form.Label
+                              caption={({ value }) => `${30 - value.length}/30`}
+                            >
+                              Username
+                            </Form.Label>
+                            <Form.Input
+                              placeholder="johndoe"
+                              icon={
+                                <Form.Tooltip>
+                                  We recommend using the same username you have
+                                  in other platforms.
+                                </Form.Tooltip>
+                              }
+                            />
+                            <Form.Error />
+                          </Form.Field>
+                        </div>
+                        <Form.Submit className="mt-4">Register</Form.Submit>
+                      </Form.Root>
                     </Tabs.Content>
                   </motion.div>
                 </Tabs.Root>

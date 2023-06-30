@@ -1,7 +1,7 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
-import { userSchema } from "db"
 
+import { signupSchema } from "~/lib/schemas"
 import { auth, getOtp } from "~/services/auth"
 import { sendEmail } from "~/services/email"
 import { OtpEmail } from "~/emails/auth"
@@ -9,10 +9,8 @@ import { OtpEmail } from "~/emails/auth"
 export const runtime = "nodejs"
 export const preferredRegion = "iad1"
 
-const schema = userSchema.pick({ username: true, email: true })
-
 export async function POST(request: Request) {
-  const data = schema.parse(
+  const data = signupSchema.parse(
     Object.fromEntries((await request.formData()).entries())
   )
 

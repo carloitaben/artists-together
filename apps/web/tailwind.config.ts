@@ -219,7 +219,11 @@ export default {
         800: "#1E2333",
         900: "#0B0E1E",
       },
-      extends: {},
+    },
+    extend: {
+      borderRadius: {
+        "4xl": "32px",
+      },
     },
   },
   plugins: [radixPlugin],

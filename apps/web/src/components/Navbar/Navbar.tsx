@@ -35,7 +35,7 @@ export default function Navbar({ user }: Props) {
               </form>
             </div>
           ) : (
-            <Auth />
+            <Auth>{profile}</Auth>
           )}
           <NavbarItem href="/profile" label={user ? user.username : "log in!"}>
             {profile}

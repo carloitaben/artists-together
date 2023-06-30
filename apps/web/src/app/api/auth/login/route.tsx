@@ -2,19 +2,17 @@ import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import { LuciaTokenError } from "@lucia-auth/tokens"
 import { LuciaError } from "lucia-auth"
-import { userSchema } from "db"
 
+import { loginSchema } from "~/lib/schemas"
 import { auth, getOtp } from "~/services/auth"
 import { sendEmail } from "~/services/email"
 import { OtpEmail } from "~/emails/auth"
-
-const schema = userSchema.pick({ email: true })
 
 export const runtime = "nodejs"
 export const preferredRegion = "iad1"
 
 export async function POST(request: Request) {
-  const data = schema.parse(
+  const data = loginSchema.parse(
     Object.fromEntries((await request.formData()).entries())
   )
 
