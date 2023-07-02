@@ -2,9 +2,9 @@
 
 import type { ReactNode } from "react"
 import { cx } from "class-variance-authority"
+import { FieldHookConfig } from "formik"
 
 import { useFieldContext } from "./Field"
-import { FieldHookConfig } from "formik"
 
 type Props = Omit<FieldHookConfig<any>, "name"> & {
   icon?: ReactNode
@@ -15,6 +15,7 @@ export default function Input({ icon, ...props }: Props) {
 
   return (
     <div className="relative">
+      {/* @ts-expect-error I don't really know why this happens */}
       <input
         {...props}
         {...field}
