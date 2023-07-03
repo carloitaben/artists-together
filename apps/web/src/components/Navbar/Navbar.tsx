@@ -13,8 +13,9 @@ import {
   profile,
   train,
 } from "~/components/Icons"
+import Auth from "~/components//Auth"
+
 import NavbarItem from "./NavbarItem"
-import Auth from "../Auth"
 
 type Props = {
   user: User
