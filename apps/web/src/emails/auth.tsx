@@ -1,7 +1,6 @@
 import {
   Tailwind,
   Body,
-  Button,
   Container,
   Head,
   Heading,
@@ -29,23 +28,13 @@ export function OtpEmail({ otp }: OtpEmailProps) {
               Your login code
             </Heading>
             <Section className="py-7">
-              <Button
-                pY={11}
-                pX={23}
-                className="block rounded bg-[#5e6ad2] text-center font-semibold text-white"
-                href="https://linear.app"
-              >
-                Login
-              </Button>
+              <Text className="text-[14px] leading-[24px] text-black">
+                This code will only be valid for the next 5 minutes.
+              </Text>
+              <code className="font-mono rounded-md bg-[#dfe1e4] px-px py-1 text-[21px] font-bold text-[#3c4149]">
+                {otp}
+              </code>
             </Section>
-            <Text className="text-[14px] leading-[24px] text-black">
-              This link and code will only be valid for the next 5 minutes. If
-              the link does not work, you can use the login verification code
-              directly:
-            </Text>
-            <code className="font-mono rounded-md bg-[#dfe1e4] px-px py-1 text-[21px] font-bold text-[#3c4149]">
-              {otp}
-            </code>
           </Container>
         </Body>
       </Html>
