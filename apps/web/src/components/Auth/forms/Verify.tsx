@@ -123,7 +123,7 @@ export default function Verify({ email }: { email: string }) {
       }}
     >
       <div className="flex flex-col items-center gap-4">
-        <div className="flex w-[36rem] flex-col items-center justify-center rounded-4xl bg-gunpla-white-50 pb-12 pt-10 text-gunpla-white-500 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
+        <div className="relative flex w-[36rem] flex-col items-center justify-center overflow-hidden rounded-4xl bg-gunpla-white-50 pb-12 pt-10 text-gunpla-white-500 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
           <Title className="mb-6 text-center text-2xl">
             A verification code
             <br />
@@ -146,6 +146,7 @@ export default function Verify({ email }: { email: string }) {
             </div>
           </Form.Form>
           <Resend email={email} />
+          <Form.Loading />
         </div>
         <Form.Submit ref={buttonRef}>Confirm</Form.Submit>
       </div>

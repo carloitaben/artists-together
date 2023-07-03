@@ -76,7 +76,7 @@ export default function Auth({ children }: Props) {
                   }}
                 >
                   <Form.Form>
-                    <div className="w-[36rem] rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
+                    <div className="relative w-[36rem] overflow-hidden rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
                       <Dialog.Title className="px-[3.75rem] pb-5 font-serif text-[2rem] font-light text-gunpla-white-500">
                         Log-in
                       </Dialog.Title>
@@ -88,6 +88,7 @@ export default function Auth({ children }: Props) {
                         />
                         <Form.Error />
                       </Form.Field>
+                      <Form.Loading />
                     </div>
                     <Form.Submit className="mt-4 flex justify-end">
                       Log-in
@@ -120,7 +121,7 @@ export default function Auth({ children }: Props) {
                   }}
                 >
                   <Form.Form>
-                    <div className="w-[36rem] rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
+                    <div className="relative w-[36rem] overflow-hidden rounded-4xl bg-gunpla-white-50 pb-12 pt-10 shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]">
                       <Dialog.Title className="px-[3.75rem] pb-5 font-serif text-[2rem] font-light text-gunpla-white-500">
                         Register
                       </Dialog.Title>
@@ -149,6 +150,7 @@ export default function Auth({ children }: Props) {
                         />
                         <Form.Error />
                       </Form.Field>
+                      <Form.Loading />
                     </div>
                     <Form.Submit className="mt-4 flex justify-end">
                       Register
