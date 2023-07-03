@@ -1,5 +1,14 @@
 import { Metadata } from "next"
 
+export const metadata: Metadata = {
+  title: "Artists Together – Website soon!",
+  description: "An inclusive community for all kinds of artists.",
+  keywords: ["Art", "Artist Community"],
+  twitter: {
+    card: "summary_large_image",
+  },
+}
+
 function Social() {
   const discordHref = "https://discord.gg/9Ayh9dvhHe"
   const instagramHref = "https://www.instagram.com/artiststogether.online/"
@@ -52,16 +61,6 @@ function Social() {
       </ul>
     </>
   )
-}
-
-export const metadata: Metadata = {
-  metadataBase: new URL("https://artiststogether.online"),
-  title: "Artists Together – Website soon!",
-  description: "An inclusive community for all kinds of artists.",
-  keywords: ["Art", "Artist Community"],
-  twitter: {
-    card: "summary_large_image",
-  },
 }
 
 export default function Home() {

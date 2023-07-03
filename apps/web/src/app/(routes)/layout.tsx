@@ -4,6 +4,7 @@ import "~/styles/index.css"
 
 import { getUser } from "~/services/auth"
 import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
+import { oneOf } from "~/lib/utils"
 import Navbar from "~/components/Navbar"
 import Toast from "~/components/Toast"
 
@@ -13,9 +14,16 @@ type Props = {
 
 export const runtime = "edge"
 
+const themes = [
+  Theme["anamorphic-teal"],
+  Theme["arpeggio-black"],
+  Theme["outsider-violet"],
+  Theme["tuxedo-crimson"],
+]
+
 export default async function Layout({ children }: Props) {
   const user = await getUser()
-  const theme = getTheme(Theme["anamorphic-teal"])
+  const theme = getTheme(oneOf(themes))
   const style = makeThemeStyle(theme)
 
   return (
