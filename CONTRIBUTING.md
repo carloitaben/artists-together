@@ -8,8 +8,8 @@
 ### Prerequisites
 
 ```shell
-node: "^>=16.12.0"
-pnpm: "^8.2.0"
+node: "^>=18"
+pnpm: "^8.3.0"
 ```
 
 ### Setting up your local repository
