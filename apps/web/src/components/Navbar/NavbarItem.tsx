@@ -30,7 +30,7 @@ export default function NavbarItem({ href, label, children }: Props) {
 
   return (
     <NavigationMenu.Item>
-      <Tooltip.Root open={hover} onOpenChange={onOpenChange}>
+      <Tooltip.Root open={hover} onOpenChange={onOpenChange} delayDuration={0}>
         <Tooltip.Trigger asChild>
           <NavigationMenu.Link
             active={isActive}
@@ -41,33 +41,33 @@ export default function NavbarItem({ href, label, children }: Props) {
               <Icon label={label} className="h-8 w-8">
                 {children}
               </Icon>
-              <Tooltip.Portal>
-                <Tooltip.Content
-                  className="flex origin-left transform items-center drop-shadow-[0px_4px_8px_0px_rgba(11,14,30,0.08)]"
-                  side="right"
-                  sideOffset={5}
-                  style={style}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    width="16"
-                    height="13"
-                    className="text-theme-300"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M16 0 1.37 4.64a1.95 1.95 0 0 0 0 3.72L16 13V0Z"
-                    />
-                  </svg>
-                  <div className="rounded bg-theme-300 px-3 py-2.5 text-center text-sm font-semibold text-theme-900">
-                    {label}
-                  </div>
-                </Tooltip.Content>
-              </Tooltip.Portal>
             </Link>
           </NavigationMenu.Link>
         </Tooltip.Trigger>
+        <Tooltip.Portal>
+          <Tooltip.Content
+            className="flex origin-left transform items-center drop-shadow-[0px_4px_8px_0px_rgba(11,14,30,0.08)]"
+            side="right"
+            sideOffset={5}
+            style={style}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              width="16"
+              height="13"
+              className="-mr-px text-theme-300"
+            >
+              <path
+                fill="currentColor"
+                d="M16 0 1.37 4.64a1.95 1.95 0 0 0 0 3.72L16 13V0Z"
+              />
+            </svg>
+            <div className="rounded bg-theme-300 px-3 py-2.5 text-center text-sm font-semibold text-theme-900">
+              {label}
+            </div>
+          </Tooltip.Content>
+        </Tooltip.Portal>
       </Tooltip.Root>
     </NavigationMenu.Item>
   )
