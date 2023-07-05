@@ -13,6 +13,7 @@ Artists Together is an online, worldwide inclusive community for all kinds of ar
 | App     | [`web`](apps/web/)                 |
 | App     | [`wss`](apps/wss/)                 |
 | Package | [`db`](packages/db/)               |
+| Package | [`ws-types`](packages/ws-types/)   |
 
 ## Contributing
 
