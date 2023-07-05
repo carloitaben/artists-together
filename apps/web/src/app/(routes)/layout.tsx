@@ -7,7 +7,6 @@ import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
 import { oneOf } from "~/lib/utils"
 import Navbar from "~/components/Navbar"
 import Toast from "~/components/Toast"
-import NavbarMobile from "~/components/NavbarMobile"
 
 type Props = {
   children: ReactNode
@@ -35,9 +34,7 @@ export default async function Layout({ children }: Props) {
     >
       <body className="h-full min-h-full pl-16">
         <Toast>
-          {/* <Navbar user={user} /> */}
-          {children}
-          <NavbarMobile user={user} />
+          <Navbar user={user}>{children}</Navbar>
         </Toast>
       </body>
     </html>

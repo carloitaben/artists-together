@@ -19,8 +19,8 @@ import {
   options,
   profile,
   train,
-} from "./Icons"
-import Icon from "./Icon"
+} from "~/components/Icons"
+import Icon from "~/components/Icon"
 
 function Link({
   href,

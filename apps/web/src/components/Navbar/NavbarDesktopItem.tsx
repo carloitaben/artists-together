@@ -3,7 +3,7 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import Link from "next/link"
-import { CSSProperties, ReactNode, useState } from "react"
+import { CSSProperties, ComponentProps, ReactElement, useState } from "react"
 import { usePathname } from "next/navigation"
 
 import Icon from "~/components/Icon"
@@ -12,10 +12,10 @@ import { between } from "~/lib/utils"
 type Props = {
   href: string
   label: string
-  children: ReactNode
+  children: ReactElement<ComponentProps<"svg">>
 }
 
-export default function NavbarItem({ href, label, children }: Props) {
+export default function NavbarDesktopItem({ href, label, children }: Props) {
   const [hover, setHover] = useState(false)
   const [rotation, setRotation] = useState(between(-5, 5))
   const pathname = usePathname()
