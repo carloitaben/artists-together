@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { logo } from "~/components/Icons"
 
 export const metadata: Metadata = {
   title: "Artists Together – Website soon!",
