@@ -5,6 +5,7 @@ import { Cursor } from "ws-types"
 import { useEffect, useState } from "react"
 import { AnimatePresence } from "framer-motion"
 
+import { User } from "~/services/auth"
 import { useMatchesMedia } from "~/hooks/media"
 import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
 
@@ -16,7 +17,11 @@ function limit(number: number) {
   return number
 }
 
-export default function CursorsCanvas() {
+type Props = {
+  user: User
+}
+
+export default function CursorsCanvas({ user }: Props) {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
   const hasCursor = useMatchesMedia("(pointer: fine)")
 
@@ -51,6 +56,8 @@ export default function CursorsCanvas() {
   const updateCursor = useWebSocketEmitter("cursor")
 
   useEffect(() => {
+    console.log("TODO: handle sending cursor position only w/ auth here")
+
     if (!hasCursor) return updateCursor(null)
 
     let pressing = false
@@ -86,7 +93,7 @@ export default function CursorsCanvas() {
       window.removeEventListener("mouseup", onMouseUp, true)
       window.removeEventListener("mousemove", onMouseMove, true)
     }
-  }, [cursors.size, hasCursor, updateCursor])
+  }, [cursors.size, hasCursor, updateCursor, user])
 
   return (
     <div
