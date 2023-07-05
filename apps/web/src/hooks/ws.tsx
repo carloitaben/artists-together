@@ -1,12 +1,34 @@
 "use client"
 
-import { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
-import { ClientEvent, ClientEventDataMap, ServerEvent, ServerEventDataMap } from "ws-types"
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
+import {
+  ClientEvent,
+  ClientEventDataMap,
+  ServerEvent,
+  ServerEventDataMap,
+} from "ws-types"
 import { usePathname } from "next/navigation"
+
+import type { User } from "~/services/auth"
 
 const eventBuffer = new Map<string, any>()
 const listeners = new Map<string, Set<Function>>()
 const context = createContext<WebSocket | undefined>(undefined)
+
+const WSS_URL = process.env.NEXT_PUBLIC_WSS_URL
+
+export const url =
+  WSS_URL || process.env.NODE_ENV === "production"
+    ? WSS_URL
+    : "ws://localhost:8080"
 
 function useWebSocket() {
   return useContext(context)
@@ -24,7 +46,10 @@ export function useWebSocketEmitter<T extends ClientEvent>(event: T) {
   )
 }
 
-export function useWebSocketEvent<T extends ServerEvent>(event: T, callback: (data: ServerEventDataMap[T]) => void) {
+export function useWebSocketEvent<T extends ServerEvent>(
+  event: T,
+  callback: (data: ServerEventDataMap[T]) => void
+) {
   const calledBuffer = useRef(false)
 
   useEffect(() => {
@@ -46,12 +71,22 @@ export function useWebSocketEvent<T extends ServerEvent>(event: T, callback: (da
   }, [callback, event])
 }
 
-export function WebSocketProvider({ children }: { children: ReactNode }) {
+export function WebSocketProvider({
+  children,
+  user,
+}: {
+  user: User
+  children: ReactNode
+}) {
   const [ws, setWs] = useState<WebSocket>()
   const pathname = usePathname()
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080")
+    if (!url) return
+
+    console.log("TODO: authenticate w/ wss using...", { user })
+
+    const ws = new WebSocket(url)
 
     function onOpen() {
       setWs(ws)
@@ -71,7 +106,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       ws.removeEventListener("message", onMessage)
       ws.close()
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
     ws?.send(JSON.stringify(["navigate", pathname]))

@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html.js.cursor * {
+    @apply cursor-none;
+  }
+
   @font-face {
     font-family: "Fraunces";
     font-display: block;

@@ -1,6 +1,12 @@
 "use client"
 
-import { AnimatePresence, Variants, motion, useMotionTemplate, useSpring } from "framer-motion"
+import {
+  AnimatePresence,
+  Variants,
+  motion,
+  useMotionTemplate,
+  useSpring,
+} from "framer-motion"
 import { useEffect, useState } from "react"
 import { CursorState } from "ws-types"
 
@@ -13,8 +19,17 @@ function limit(number: number) {
 }
 
 const idle = (
-  <svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12.3667 28.6667L7.53333 18.2667L2 26V2L20.6667 16.6667H11.2L16 26.9667L12.3667 28.6667Z" fill="#FAFAFA" />
+  <svg
+    width="24"
+    height="32"
+    viewBox="0 0 24 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M12.3667 28.6667L7.53333 18.2667L2 26V2L20.6667 16.6667H11.2L16 26.9667L12.3667 28.6667Z"
+      fill="#FAFAFA"
+    />
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -94,7 +109,7 @@ export default function Cursor() {
       const x = limit((event.clientX * 100) / window.innerWidth)
       const y = limit((event.clientY * 100) / window.innerHeight)
 
-      if (typeof state === "undefined") {
+      if (!state) {
         motionValueX.jump(x)
         motionValueY.jump(y)
         return setState("idle")
@@ -125,7 +140,10 @@ export default function Cursor() {
   }, [coarse, state, motionValueScale, motionValueX, motionValueY])
 
   return (
-    <div aria-hidden className="fixed inset-0 overflow-hidden pointer-events-none hidden js:block">
+    <div
+      aria-hidden
+      className="pointer-events-none fixed inset-0 z-50 hidden overflow-hidden js:block"
+    >
       <motion.div
         className="absolute inset-0"
         style={{
@@ -135,8 +153,17 @@ export default function Cursor() {
       >
         <AnimatePresence initial={false}>
           {!coarse && state && (
-            <motion.div className="inline-block" initial="hide" animate="show" exit="hide" variants={variants}>
-              <motion.div className="inline-block" style={{ scale: motionValueScale }}>
+            <motion.div
+              className="inline-block"
+              initial="hide"
+              animate="show"
+              exit="hide"
+              variants={variants}
+            >
+              <motion.div
+                className="inline-block"
+                style={{ scale: motionValueScale }}
+              >
                 {cursorStateSvg[state]}
               </motion.div>
             </motion.div>

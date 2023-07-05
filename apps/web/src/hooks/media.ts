@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react"
 
-import { screens, Screen } from "../../tailwind.config"
+import { tailwind, Screen } from "~/lib/tailwind"
 
-export function useOnMatchMedia(query: string, callback: (matches: boolean) => void) {
+export function useOnMatchMedia(
+  query: string,
+  callback: (matches: boolean) => void
+) {
   useEffect(() => {
     const mediaQuery = window.matchMedia(query)
 
@@ -24,8 +27,14 @@ export function useOnMatchMedia(query: string, callback: (matches: boolean) => v
   }, [query, callback])
 }
 
-export function useOnMatchScreen(screen: Screen, callback: (matches: boolean) => void) {
-  return useOnMatchMedia(`(min-width: ${screens[screen]})`, callback)
+export function useOnMatchScreen(
+  screen: Screen,
+  callback: (matches: boolean) => void
+) {
+  return useOnMatchMedia(
+    `(min-width: ${tailwind.theme.screens[screen]})`,
+    callback
+  )
 }
 
 export function useMatchesMedia(query: string) {
@@ -35,5 +44,5 @@ export function useMatchesMedia(query: string) {
 }
 
 export function useMatchesScreen(screen: Screen) {
-  return useMatchesMedia(`(min-width: ${screens[screen]})`)
+  return useMatchesMedia(`(min-width: ${tailwind.theme.screens[screen]})`)
 }

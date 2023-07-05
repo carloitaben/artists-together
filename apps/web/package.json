@@ -21,8 +21,10 @@
     "db": "workspace:*",
     "formik": "^2.4.2",
     "framer-motion": "^10.12.18",
+    "just-throttle": "^4.2.0",
     "lucia-auth": "^1.8.0",
     "next": "13.4.7",
+    "perfect-cursors": "^1.0.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-email": "^1.9.4",
@@ -41,8 +43,10 @@
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "tailwindcss": "3.3.2",
+    "tailwindcss-noscript": "^2.0.1",
     "tailwindcss-radix": "^2.8.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "ws-types": "workspace:*"
   },
   "eslintConfig": {
     "extends": [
