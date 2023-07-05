@@ -91,7 +91,7 @@ export default function CursorsCanvas() {
   return (
     <div
       aria-hidden
-      className="absolute overflow-hidden inset-0 pointer-events-none ring-4 ring-red-500 ring-inset hidden md:js:block"
+      className="pointer-events-none absolute inset-0 hidden overflow-hidden md:js:block"
     >
       <AnimatePresence>
         {Array.from(cursors.entries()).map(([id, cursor]) => (

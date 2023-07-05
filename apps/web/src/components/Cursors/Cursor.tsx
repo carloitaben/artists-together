@@ -37,7 +37,10 @@ export default function Cursor({ cursor, id }: Props) {
   const [pc] = useState(
     () =>
       new PerfectCursor((point) => {
-        containerRef.current?.style.setProperty("transform", `translate(${point[0]}%, ${point[1]}%)`)
+        containerRef.current?.style.setProperty(
+          "transform",
+          `translate(${point[0]}%, ${point[1]}%)`
+        )
       })
   )
 
@@ -61,7 +64,11 @@ export default function Cursor({ cursor, id }: Props) {
   }
 
   return (
-    <motion.div ref={containerRef} style={containerStyle} className="absolute inset-0">
+    <motion.div
+      ref={containerRef}
+      style={containerStyle}
+      className="absolute inset-0"
+    >
       <motion.div className="relative inline-flex" style={wrapperStyle}>
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +89,9 @@ export default function Cursor({ cursor, id }: Props) {
             d="M17.46 29.756a1 1 0 0 0 1.33.484l3.634-1.7a1 1 0 0 0 .482-1.328l-4.137-8.877h7.898a1 1 0 0 0 .617-1.787L8.619 1.882A1 1 0 0 0 7 2.668v24a1 1 0 0 0 1.813.582l4.536-6.34 4.11 8.846Z"
           />
         </motion.svg>
-        <CursorLabel className="-translate-y-3 -translate-x-1">{id}</CursorLabel>
+        <CursorLabel className="-translate-x-1 -translate-y-3">
+          {id}
+        </CursorLabel>
       </motion.div>
     </motion.div>
   )

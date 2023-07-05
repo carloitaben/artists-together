@@ -11,7 +11,7 @@ export default function CursorLabel({ className, children, ...props }: Props) {
       {...props}
       className={cx(
         className,
-        "bg-white rounded-full inline-flex h-6 px-2 items-center justify-center text-center text-sm whitespace-nowrap shadow-[0px_4px_8px_rgba(0,0,0,0.12)]"
+        "inline-flex h-6 items-center justify-center whitespace-nowrap rounded-full bg-white px-2 text-center text-sm shadow-[0px_4px_8px_rgba(0,0,0,0.12)]"
       )}
     >
       {children}
