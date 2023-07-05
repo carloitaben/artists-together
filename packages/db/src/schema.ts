@@ -1,4 +1,15 @@
-import { mysqlTable, int, serial, timestamp, char, tinyint, varchar } from "drizzle-orm/mysql-core"
+import { createInsertSchema } from "drizzle-zod"
+import { InferModel } from "drizzle-orm"
+import { mysqlTable, serial, timestamp, char, tinyint, varchar, bigint, boolean } from "drizzle-orm/mysql-core"
+
+/**
+ * PlanetScale deactivates databases without activity.
+ * In the Discord bot deployment we write daily to this table
+ * to prevent deactivation
+ */
+export const keepAliveDummies = mysqlTable("keep_alive_dummies", {
+  id: serial("id").primaryKey(),
+})
 
 export const discordPolls = mysqlTable("discord_polls", {
   id: char("id", { length: 21 }).notNull().primaryKey(),
@@ -18,4 +29,33 @@ export const discordPollVotes = mysqlTable("discord_poll_votes", {
    * The index of the answer in the options array.
    */
   answer: tinyint("answer").notNull(),
+})
+
+export const user = mysqlTable("auth_user", {
+  id: varchar("id", { length: 15 }).notNull().primaryKey(),
+  username: varchar("username", { length: 30 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  bio: varchar("bio", { length: 128 }),
+})
+
+export type User = InferModel<typeof user>
+
+export const userSchema = createInsertSchema(user, {
+  username: (schema) => schema.username.regex(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/gim),
+  email: (schema) => schema.email.email(),
+})
+
+export const session = mysqlTable("auth_session", {
+  id: varchar("id", { length: 128 }).notNull().primaryKey(),
+  userId: varchar("user_id", { length: 15 }).notNull(),
+  activeExpires: bigint("active_expires", { mode: "number" }).notNull(),
+  idleExpires: bigint("idle_expires", { mode: "number" }).notNull(),
+})
+
+export const key = mysqlTable("auth_key", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  userId: varchar("user_id", { length: 15 }).notNull(),
+  primaryKey: boolean("primary_key").notNull(),
+  hashedPassword: varchar("hashed_password", { length: 255 }),
+  expires: bigint("expires", { mode: "number" }),
 })
