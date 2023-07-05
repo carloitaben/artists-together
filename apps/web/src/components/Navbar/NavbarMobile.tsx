@@ -103,7 +103,7 @@ export default function NavbarMobile(_: Props) {
             <Dialog.Portal forceMount>
               <Dialog.Overlay forceMount asChild>
                 <motion.div
-                  className="fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]"
+                  className="fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px] sm:hidden"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -112,7 +112,7 @@ export default function NavbarMobile(_: Props) {
               </Dialog.Overlay>
               <Dialog.Content forceMount asChild>
                 <motion.div
-                  className="fixed inset-y-0 left-0 w-full max-w-[19.5rem] pr-4 focus:outline-none"
+                  className="fixed inset-y-0 left-0 w-full max-w-[19.5rem] pr-4 focus:outline-none sm:hidden"
                   initial={{ x: "-100%" }}
                   animate={{ x: "0%" }}
                   exit={{ x: "-100%" }}
