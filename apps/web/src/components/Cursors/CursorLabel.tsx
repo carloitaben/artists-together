@@ -1,4 +1,4 @@
-import { ComponentProps, ReactNode } from "react"
+import { ComponentProps } from "react"
 import { cx } from "class-variance-authority"
 
 type Props = ComponentProps<"div">

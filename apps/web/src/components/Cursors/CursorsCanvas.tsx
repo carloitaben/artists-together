@@ -56,10 +56,6 @@ export default function CursorsCanvas({ user }: Props) {
   const updateCursor = useWebSocketEmitter("cursor")
 
   useEffect(() => {
-    console.log("TODO: handle sending cursor position only w/ auth here")
-
-    if (!hasCursor) return updateCursor(null)
-
     let pressing = false
 
     const interval = cursors.size === 0 ? 3000 : 80
@@ -69,6 +65,11 @@ export default function CursorsCanvas({ user }: Props) {
       const yPercent = limit((y * 100) / document.documentElement.scrollHeight)
       updateCursor([xPercent, yPercent, pressing ? "press" : "idle"])
     }, interval)
+
+    if (!hasCursor || !user) {
+      update.cancel()
+      return updateCursor(null)
+    }
 
     function onMouseDown(event: MouseEvent) {
       pressing = true
