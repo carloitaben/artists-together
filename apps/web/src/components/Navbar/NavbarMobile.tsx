@@ -2,7 +2,8 @@
 
 import * as Dialog from "@radix-ui/react-dialog"
 import NextLink from "next/link"
-import { ComponentProps, ReactElement, useState } from "react"
+import { ComponentProps, ReactElement, useEffect, useState } from "react"
+import { AnimatePresence, Transition, motion } from "framer-motion"
 import { usePathname } from "next/navigation"
 import { cx } from "class-variance-authority"
 
@@ -21,6 +22,11 @@ import {
   train,
 } from "~/components/Icons"
 import Icon from "~/components/Icon"
+
+const transition: Transition = {
+  type: "spring",
+  mass: 0.05,
+}
 
 function Link({
   href,
@@ -74,10 +80,15 @@ type Props = {
 
 export default function NavbarMobile(_: Props) {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
 
   useOnMatchScreen("sm", (matches) => {
     if (matches && open) setOpen(false)
   })
+
+  useEffect(() => {
+    if (pathname && open) setOpen(false)
+  }, [pathname])
 
   return (
     <nav className="fixed inset-x-0 bottom-0 flex h-14 items-center justify-between bg-theme-900 text-gunpla-white-50 sm:hidden">
@@ -87,58 +98,78 @@ export default function NavbarMobile(_: Props) {
             {burger}
           </Icon>
         </Dialog.Trigger>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]" />
-          <Dialog.Content className="fixed inset-y-0 left-0 w-full max-w-[19.5rem] pr-4">
-            <ul className="flex h-full w-full flex-col rounded-r-3xl bg-theme-900 py-3 text-gunpla-white-50">
-              <li className="flex-1 p-16">
-                <Link href="/">
-                  <Icon className="h-full w-full" label="Artist Together">
-                    {logo}
-                  </Icon>
-                </Link>
-              </li>
-              <li>
-                <Item disabled icon={profile}>
-                  Coming soon!
-                </Item>
-              </li>
-              <li>
-                <Link href="/">
-                  <Item icon={home}>Home</Item>
-                </Link>
-              </li>
-              <li aria-disabled>
-                {/* <Link href="/about"> */}
-                <Item disabled icon={help}>
-                  Coming soon!
-                </Item>
-                {/* </Link> */}
-              </li>
-              <li aria-disabled>
-                {/* <Link href="/lounge"> */}
-                <Item disabled icon={artists}>
-                  Coming soon!
-                </Item>
-                {/* </Link> */}
-              </li>
-              <li aria-disabled>
-                {/* <Link href="/art"> */}
-                <Item disabled icon={train}>
-                  Coming soon!
-                </Item>
-                {/* </Link> */}
-              </li>
-              <li aria-disabled>
-                {/* <Link href="/schedule"> */}
-                <Item disabled icon={calendar}>
-                  Coming soon!
-                </Item>
-                {/* </Link> */}
-              </li>
-            </ul>
-          </Dialog.Content>
-        </Dialog.Portal>
+        <AnimatePresence initial={false} mode="wait">
+          {open ? (
+            <Dialog.Portal forceMount>
+              <Dialog.Overlay forceMount asChild>
+                <motion.div
+                  className="fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={transition}
+                />
+              </Dialog.Overlay>
+              <Dialog.Content forceMount asChild>
+                <motion.div
+                  className="fixed inset-y-0 left-0 w-full max-w-[19.5rem] pr-4 focus:outline-none"
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "0%" }}
+                  exit={{ x: "-100%" }}
+                  transition={transition}
+                >
+                  <ul className="flex h-full w-full flex-col rounded-r-3xl bg-theme-900 py-3 text-gunpla-white-50">
+                    <li className="flex-1 p-16">
+                      <Link href="/">
+                        <Icon className="h-full w-full" label="Artist Together">
+                          {logo}
+                        </Icon>
+                      </Link>
+                    </li>
+                    <li>
+                      <Item disabled icon={profile}>
+                        Coming soon!
+                      </Item>
+                    </li>
+                    <li>
+                      <Link href="/">
+                        <Item icon={home}>Home</Item>
+                      </Link>
+                    </li>
+                    <li aria-disabled>
+                      {/* <Link href="/about"> */}
+                      <Item disabled icon={help}>
+                        Coming soon!
+                      </Item>
+                      {/* </Link> */}
+                    </li>
+                    <li aria-disabled>
+                      {/* <Link href="/lounge"> */}
+                      <Item disabled icon={artists}>
+                        Coming soon!
+                      </Item>
+                      {/* </Link> */}
+                    </li>
+                    <li aria-disabled>
+                      {/* <Link href="/art"> */}
+                      <Item disabled icon={train}>
+                        Coming soon!
+                      </Item>
+                      {/* </Link> */}
+                    </li>
+                    <li aria-disabled>
+                      {/* <Link href="/schedule"> */}
+                      <Item disabled icon={calendar}>
+                        Coming soon!
+                      </Item>
+                      {/* </Link> */}
+                    </li>
+                  </ul>
+                </motion.div>
+              </Dialog.Content>
+            </Dialog.Portal>
+          ) : null}
+        </AnimatePresence>
       </Dialog.Root>
       <div aria-disabled className="m-1 h-12 w-12 p-3">
         <Icon label="Options" className="h-6 w-6 text-theme-700">
