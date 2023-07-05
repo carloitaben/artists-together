@@ -90,7 +90,7 @@ export default function Cursor({ cursor, id }: Props) {
           />
         </motion.svg>
         <CursorLabel className="-translate-x-1 -translate-y-3">
-          {id}
+          {cursor[3]}
         </CursorLabel>
       </motion.div>
     </motion.div>

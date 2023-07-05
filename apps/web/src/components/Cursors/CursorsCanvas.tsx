@@ -61,9 +61,17 @@ export default function CursorsCanvas({ user }: Props) {
     const interval = cursors.size === 0 ? 3000 : 80
 
     const update = throttle((x: number, y: number) => {
+      if (!user) return
+
       const xPercent = limit((x * 100) / document.documentElement.scrollWidth)
       const yPercent = limit((y * 100) / document.documentElement.scrollHeight)
-      updateCursor([xPercent, yPercent, pressing ? "press" : "idle"])
+
+      updateCursor([
+        xPercent,
+        yPercent,
+        pressing ? "press" : "idle",
+        user.username,
+      ])
     }, interval)
 
     if (!hasCursor || !user) {
@@ -88,6 +96,7 @@ export default function CursorsCanvas({ user }: Props) {
     window.addEventListener("mousedown", onMouseDown, true)
     window.addEventListener("mouseup", onMouseUp, true)
     window.addEventListener("mousemove", onMouseMove, true)
+
     return () => {
       update.cancel()
       window.removeEventListener("mousedown", onMouseDown, true)
