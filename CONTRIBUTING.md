@@ -8,8 +8,8 @@
 ### Prerequisites
 
 ```shell
-node: "^>=16.12.0"
-pnpm: "^8.2.0"
+node: "^>=18"
+pnpm: "^8.3.0"
 ```
 
 ### Setting up your local repository
@@ -42,7 +42,7 @@ An app is a _launchable_ project and live in the `/apps` folder.
 
 #### Interacting with packages and apps
 
-Both packages and apps are directories that host a `package.json` file. As a rule of thumb, the `package.json` `name` field corresponds with the directory name. You can interact with any `package.json` using the [`--filter`](https://pnpm.io/filtering) flag of `pnpm`. Usually you will use it followed by the `name` of that `package.json`.
+Both packages and apps are directories that host a `package.json` file. As a rule of thumb, the `package.json` `name` field corresponds with the directory name. You can interact with any `package.json` using the [`--filter`](https://pnpm.io/filtering) flag of `pnpm`. Usually you will use it followed by the `name` of that `package.json`. Here are some examples:
 
 Install a dependency in `/apps/web`:
 
