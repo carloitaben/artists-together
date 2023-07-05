@@ -2,11 +2,12 @@
 
 import * as Dialog from "@radix-ui/react-dialog"
 import NextLink from "next/link"
-import { ComponentProps, ReactElement } from "react"
+import { ComponentProps, ReactElement, useState } from "react"
 import { usePathname } from "next/navigation"
 import { cx } from "class-variance-authority"
 
 import { User } from "~/services/auth"
+import { useOnMatchScreen } from "~/hooks/media"
 
 import {
   artists,
@@ -72,9 +73,15 @@ type Props = {
 }
 
 export default function NavbarMobile(_: Props) {
+  const [open, setOpen] = useState(false)
+
+  useOnMatchScreen("sm", (matches) => {
+    if (matches && open) setOpen(false)
+  })
+
   return (
-    <nav className="fixed inset-x-0 bottom-0 flex h-14 items-center justify-between bg-theme-900 text-gunpla-white-50">
-      <Dialog.Root>
+    <nav className="fixed inset-x-0 bottom-0 flex h-14 items-center justify-between bg-theme-900 text-gunpla-white-50 sm:hidden">
+      <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger className="m-1 h-12 w-12 p-3">
           <Icon label="Menu" className="h-6 w-6">
             {burger}
