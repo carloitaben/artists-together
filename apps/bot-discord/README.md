@@ -2,7 +2,22 @@
 
 The source code of the Discord integration of Pal (Programmable Artistic Life-form), the assistant bot for the Artist Together community.
 
+## Stack
+
+- `node`
+- `discord.js`
+- `typescript`
+
 ## Development
+
+> **Note**
+> Before continuing, ensure you have set up the `db` package following the instructions in its [`README.md` file](../../packages/db/).
+
+Install workspace dependencies in the root directory:
+
+```shell
+pnpm install
+```
 
 It is highly recommended that you set up your own test bot and server for local development if you plan on working extensively with the codebase, since automated testing of Discord bots is very challenging and not worth the effort.
 
