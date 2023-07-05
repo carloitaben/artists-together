@@ -1,6 +1,6 @@
 {
   "conventionalCommits.scopes": ["bot-discord", "bot-twitch", "web", "db"],
-  "typescript.tsdk": "./node_modules/.pnpm/typescript@5.0.4/node_modules/typescript/lib",
+  "typescript.tsdk": "apps/web/node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]]
 }
