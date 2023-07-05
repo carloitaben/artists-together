@@ -14,20 +14,18 @@ import { profile, register } from "./Icons"
 import Icon from "./Icon"
 import Verify from "./Auth/forms/Verify"
 
-type Props = {
-  children: ReactNode
-}
+type Props = Dialog.DialogTriggerProps
 
 const otpSchema = z.object({
   otp: z.string().length(6),
 })
 
-export default function Auth({ children }: Props) {
+export default function Auth({ children, ...props }: Props) {
   const [emailToVerify, setEmailToVerify] = useState<string>()
 
   return (
     <Modal.Root>
-      <Modal.Trigger>{children}</Modal.Trigger>
+      <Modal.Trigger {...props}>{children}</Modal.Trigger>
       <Modal.Content>
         {emailToVerify ? (
           <Verify email={emailToVerify} />
