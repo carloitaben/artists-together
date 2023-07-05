@@ -7,12 +7,15 @@ The source code of the official website for the Artist Together community.
 - `next`
 - `typescript`
 - `tailwindcss`
-- `radix-ui`
 
 ## Development
 
-Create a `.env` file in the repository root directory with the contents of the `.env.example` file and put in values for every variable prefixed with `DATABASE`:
+Install workspace dependencies in the root directory:
 
 ```shell
-touch .env
+pnpm install
 ```
+
+TODO: ask user to setup db following the instructions in the packages/db README.md
+
+TODO: ask user to optionally start wss in order to run the realtime code following the instructions in the packages/wss README.md
