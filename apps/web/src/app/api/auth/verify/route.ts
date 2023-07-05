@@ -1,20 +1,15 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import { LuciaTokenError } from "@lucia-auth/tokens"
-import { userSchema } from "db"
-import { z } from "zod"
 
+import { verifySchema } from "~/lib/schemas"
 import { auth, otpToken } from "~/services/auth"
 
 export const runtime = "edge"
 export const preferredRegion = "iad1"
 
-const schema = userSchema.pick({ email: true }).extend({
-  otp: z.string().length(6),
-})
-
 export async function POST(request: Request) {
-  const data = schema.parse(await request.json())
+  const data = verifySchema.parse(await request.json())
 
   const authRequest = auth.handleRequest({
     request,

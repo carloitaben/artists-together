@@ -10,15 +10,11 @@ import {
   Text,
 } from "@react-email/components"
 
-import tailwindConfig from "../../tailwind.config"
+import { tailwind } from "~/lib/tailwind"
 
-type OtpEmailProps = {
-  otp: string
-}
-
-export function OtpEmail({ otp }: OtpEmailProps) {
+export function OtpEmail({ otp }: { otp: string }) {
   return (
-    <Tailwind config={tailwindConfig}>
+    <Tailwind config={tailwind}>
       <Html>
         <Head />
         <Preview>Your login code</Preview>
