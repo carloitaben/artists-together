@@ -49,7 +49,7 @@ export default function Login({ onSuccess }: Props) {
         </Form.Field>
         <Form.Loading />
       </Modal.Container>
-      <Form.Submit>Log-in</Form.Submit>
+      <Form.Submit className="mt-4 flex justify-end">Log-in</Form.Submit>
     </Form.Root>
   )
 }

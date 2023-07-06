@@ -197,7 +197,7 @@ export default function Verify({ email, onSuccess }: Props) {
         <Resend email={email} />
         <Form.Loading />
       </Modal.Container>
-      <Form.Submit>Confirm</Form.Submit>
+      <Form.Submit className="mt-4 flex justify-center">Confirm</Form.Submit>
     </Form.Root>
   )
 }

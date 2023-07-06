@@ -58,7 +58,7 @@ export default function Register({ onSuccess }: Props) {
         </Form.Field>
         <Form.Loading />
       </Modal.Container>
-      <Form.Submit>Register</Form.Submit>
+      <Form.Submit className="mt-4 flex justify-end">Register</Form.Submit>
     </Form.Root>
   )
 }
