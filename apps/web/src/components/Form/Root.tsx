@@ -19,6 +19,7 @@ function Root<T extends AnyZodObject>(
       {...props}
       initialValues={initialValues}
       onSubmit={onSubmit}
+      ref={ref}
       validationSchema={toFormikValidationSchema(schema)}
     >
       {children}

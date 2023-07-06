@@ -1,3 +1,5 @@
+"use client"
+
 import { ComponentProps, ForwardedRef, forwardRef } from "react"
 import { TargetAndTransition, motion } from "framer-motion"
 import { useFormikContext } from "formik"

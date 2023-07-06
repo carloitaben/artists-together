@@ -1,3 +1,5 @@
+"use client"
+
 import { Form as FormikForm } from "formik"
 import { ComponentProps } from "react"
 
