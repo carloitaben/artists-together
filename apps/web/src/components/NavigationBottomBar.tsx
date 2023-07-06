@@ -2,9 +2,9 @@
 
 import * as Dialog from "@radix-ui/react-dialog"
 import NextLink from "next/link"
+import { usePathname } from "next/navigation"
 import { ComponentProps, ReactElement, useEffect, useState } from "react"
 import { AnimatePresence, Transition, motion } from "framer-motion"
-import { usePathname } from "next/navigation"
 import { cx } from "class-variance-authority"
 
 import { User } from "~/services/auth"
@@ -20,8 +20,8 @@ import {
   options,
   profile,
   train,
-} from "~/components/Icons"
-import Icon from "~/components/Icon"
+} from "./Icons"
+import Icon from "./Icon"
 
 const transition: Transition = {
   type: "spring",
@@ -50,12 +50,12 @@ function Link({
 }
 
 function Item({
-  icon,
+  label,
   children,
   disabled,
 }: {
-  icon: ReactElement<ComponentProps<"svg">>
-  children: string
+  label: string
+  children: ReactElement<ComponentProps<"svg">>
   disabled?: boolean
 }) {
   return (
@@ -66,10 +66,10 @@ function Item({
         disabled && "text-theme-700"
       )}
     >
-      <Icon label={children} className="h-6 w-6 flex-none">
-        {icon}
+      <Icon label={label} className="h-6 w-6 flex-none">
+        {children}
       </Icon>
-      <span className="truncate">{children}</span>
+      <span className="truncate">{label}</span>
     </div>
   )
 }
@@ -78,7 +78,7 @@ type Props = {
   user: User
 }
 
-export default function NavbarMobile(_: Props) {
+export default function NavigationBottomBar(_: Props) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
@@ -130,42 +130,34 @@ export default function NavbarMobile(_: Props) {
                       </Link>
                     </li>
                     <li>
-                      <Item disabled icon={profile}>
-                        Coming soon!
+                      <Item disabled label="Coming soon!">
+                        {profile}
                       </Item>
                     </li>
                     <li>
                       <Link href="/">
-                        <Item icon={home}>Home</Item>
+                        <Item label="Home">{home}</Item>
                       </Link>
                     </li>
-                    <li aria-disabled>
-                      {/* <Link href="/about"> */}
-                      <Item disabled icon={help}>
-                        Coming soon!
+                    <li>
+                      <Item disabled label="Coming soon!">
+                        {help}
                       </Item>
-                      {/* </Link> */}
                     </li>
-                    <li aria-disabled>
-                      {/* <Link href="/lounge"> */}
-                      <Item disabled icon={artists}>
-                        Coming soon!
+                    <li>
+                      <Item disabled label="Coming soon!">
+                        {artists}
                       </Item>
-                      {/* </Link> */}
                     </li>
-                    <li aria-disabled>
-                      {/* <Link href="/art"> */}
-                      <Item disabled icon={train}>
-                        Coming soon!
+                    <li>
+                      <Item disabled label="Coming soon!">
+                        {train}
                       </Item>
-                      {/* </Link> */}
                     </li>
-                    <li aria-disabled>
-                      {/* <Link href="/schedule"> */}
-                      <Item disabled icon={calendar}>
-                        Coming soon!
+                    <li>
+                      <Item disabled label="Coming soon!">
+                        {calendar}
                       </Item>
-                      {/* </Link> */}
                     </li>
                   </ul>
                 </motion.div>

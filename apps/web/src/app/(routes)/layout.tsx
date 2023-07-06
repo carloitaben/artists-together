@@ -5,7 +5,9 @@ import "~/styles/index.css"
 import { getUser } from "~/services/auth"
 import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
 import { oneOf } from "~/lib/utils"
-import Navbar from "~/components/Navbar"
+
+import NavigationSideBar from "~/components/NavigationSideBar"
+import NavigationBottomBar from "~/components/NavigationBottomBar"
 import Toast from "~/components/Toast"
 
 type Props = {
@@ -34,7 +36,9 @@ export default async function Layout({ children }: Props) {
     >
       <body className="h-full min-h-full pl-16">
         <Toast>
-          <Navbar user={user}>{children}</Navbar>
+          <NavigationSideBar user={user} />
+          {children}
+          <NavigationBottomBar user={user} />
         </Toast>
       </body>
     </html>
