@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import { Metadata } from "next"
 
 import "~/styles/index.css"
 
@@ -15,6 +16,15 @@ type Props = {
 }
 
 export const runtime = "edge"
+
+export const metadata: Metadata = {
+  title: "Artists Together – Website soon!",
+  description: "An inclusive community for all kinds of artists.",
+  keywords: ["Art", "Artist Community"],
+  twitter: {
+    card: "summary_large_image",
+  },
+}
 
 const themes = [
   Theme["anamorphic-teal"],

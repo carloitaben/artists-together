@@ -1,3 +1,5 @@
+"use client"
+
 import * as AccesibleIcon from "@radix-ui/react-accessible-icon"
 import type { ComponentProps, ForwardedRef, ReactElement } from "react"
 import { cloneElement, forwardRef } from "react"
