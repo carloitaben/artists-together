@@ -1,5 +1,6 @@
 "use client"
 
+import * as RadixTooltip from "@radix-ui/react-tooltip"
 import { ForwardedRef, ReactNode, forwardRef, useCallback } from "react"
 import { Form, Formik, FormikConfig } from "formik"
 import { AnyZodObject, TypeOf } from "zod"
@@ -61,7 +62,9 @@ function Root<T extends AnyZodObject>(
       ref={ref}
       validationSchema={toFormikValidationSchema(schema)}
     >
-      <Form>{children}</Form>
+      <Form>
+        <RadixTooltip.Provider>{children}</RadixTooltip.Provider>
+      </Form>
     </Formik>
   )
 }

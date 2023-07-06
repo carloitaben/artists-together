@@ -12,7 +12,10 @@ function Tabs(
     <TabsPrimitive.List
       {...props}
       ref={ref}
-      className={cx(className, "grid w-56 gap-2")}
+      className={cx(
+        className,
+        "absolute -left-4 top-0 grid w-56 -translate-x-full gap-2"
+      )}
     />
   )
 }

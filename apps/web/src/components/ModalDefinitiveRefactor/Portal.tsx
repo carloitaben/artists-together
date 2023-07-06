@@ -2,6 +2,7 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
+import { VariantProps, cva, cx } from "class-variance-authority"
 import {
   Children,
   ForwardedRef,
@@ -36,8 +37,25 @@ function getTabsOrientation(
   return getTabsOrientation(node.props.children.find(getTabsOrientation))
 }
 
+const wrapper = cva("fixed inset-0 flex justify-center", {
+  variants: {
+    align: {
+      start: "items-start pt-[33.333vh]",
+      center: "items-center",
+    },
+  },
+  defaultVariants: {
+    align: "start",
+  },
+})
+
 function Portal(
-  { children, ...props }: DialogPrimitive.DialogContentProps,
+  {
+    children,
+    className,
+    align,
+    ...props
+  }: DialogPrimitive.DialogContentProps & VariantProps<typeof wrapper>,
   ref: ForwardedRef<HTMLDivElement>
 ) {
   const orientation = getTabsOrientation(
@@ -47,8 +65,12 @@ function Portal(
   return (
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]" />
-      <div className="fixed inset-0 flex items-center justify-center">
-        <DialogPrimitive.Content {...props} ref={ref}>
+      <div className={wrapper({ align })}>
+        <DialogPrimitive.Content
+          {...props}
+          ref={ref}
+          className={cx(className, "relative")}
+        >
           {orientation ? (
             <TabsPrimitive.Root orientation={orientation}>
               {children}

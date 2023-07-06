@@ -15,7 +15,7 @@ export default function Tooltip({ children }: Props) {
     <RadixTooltip.Root delayDuration={0}>
       <RadixTooltip.Trigger
         type="button"
-        className="absolute inset-y-0 right-0 h-10 w-10 p-2 text-gunpla-white-500"
+        className="absolute inset-y-0 right-0 h-10 w-10 rounded-[1rem] p-2 text-gunpla-white-500"
       >
         <Icon label="Info">{info}</Icon>
       </RadixTooltip.Trigger>

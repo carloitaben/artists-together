@@ -4,6 +4,7 @@ import { z } from "zod"
 import { home, help } from "~/components/Icons"
 import * as Modal from "~/components/ModalDefinitiveRefactor"
 import * as Form from "~/components/Form"
+import Auth from "~/components/Auth"
 
 const testEmailSchema = z.object({
   email: z.string().email(),
@@ -28,6 +29,8 @@ export default function Page() {
   return (
     <main className="grid">
       <h1>Modal tests</h1>
+
+      <Auth>Auth modal</Auth>
 
       <Modal.Root>
         <Modal.Trigger>Barebones</Modal.Trigger>

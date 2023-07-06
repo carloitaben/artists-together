@@ -33,7 +33,7 @@ export default function Label({
       {...props}
       className={cx(
         className,
-        "mb-1 flex items-center justify-between px-3 font-sans text-sm text-gunpla-white-500"
+        "mb-1 flex items-center justify-between px-3.5 font-sans text-sm text-gunpla-white-500"
       )}
     >
       <label htmlFor={field.name} onClick={onClick}>

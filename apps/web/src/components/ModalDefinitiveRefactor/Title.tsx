@@ -2,19 +2,33 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { ForwardedRef, forwardRef } from "react"
-import { cx } from "class-variance-authority"
+import { VariantProps, cva } from "class-variance-authority"
+
+const title = cva("", {
+  variants: {
+    inset: {
+      true: "px-3.5",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    inset: false,
+  },
+})
 
 function Title(
-  { className, ...props }: DialogPrimitive.DialogTitleProps,
+  {
+    className = "font-serif text-[2rem] font-light text-gunpla-white-500",
+    inset,
+    ...props
+  }: DialogPrimitive.DialogTitleProps & VariantProps<typeof title>,
   ref: ForwardedRef<HTMLHeadingElement>
 ) {
   return (
     <DialogPrimitive.Title
       {...props}
       ref={ref}
-      className={cx(
-        className || "font-serif text-[2rem] font-light text-gunpla-white-500"
-      )}
+      className={title({ inset, className })}
     />
   )
 }
