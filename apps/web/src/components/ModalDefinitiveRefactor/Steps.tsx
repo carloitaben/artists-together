@@ -12,7 +12,10 @@ function Steps(
     <TabsPrimitve.List
       {...props}
       ref={ref}
-      className={cx(className, "flex h-56 gap-2")}
+      className={cx(
+        className,
+        "inline-flex rounded-full bg-gunpla-white-50 p-2 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)]"
+      )}
     />
   )
 }

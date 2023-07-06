@@ -19,11 +19,15 @@ function Step(
       value={String(value)}
       className={cx(
         className,
-        "flex items-center gap-x-2 rounded-full bg-gunpla-white-50 p-3 text-sm text-gunpla-white-300 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] radix-state-active:text-gunpla-white-500"
+        "group flex items-center gap-2 rounded-full p-2 text-sm"
       )}
     >
-      <span className="block rounded-full">{value}</span>
-      <span>{children}</span>
+      <div className="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-gunpla-white-300 text-center text-[0.9375rem] font-bold text-gunpla-white-50 group-radix-state-active:bg-gunpla-white-500">
+        {value}
+      </div>
+      <span className="text-sm text-gunpla-white-300 group-radix-state-active:text-gunpla-white-500">
+        {children}
+      </span>
     </TabsPrimitve.Trigger>
   )
 }
