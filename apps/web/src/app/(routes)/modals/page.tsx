@@ -1,4 +1,4 @@
-"use client" // Forms require "use client" directive
+"use client"
 
 import { z } from "zod"
 import { home, help } from "~/components/Icons"
@@ -13,14 +13,6 @@ const testUserPassSchema = z.object({
   username: z.string(),
   password: z.string(),
 })
-
-console.warn(
-  "TODO: Merge Form.Root with Form.Form. Form.Root should also render the Form"
-)
-
-console.warn(
-  "TODO: Add 'delay': boolean | number prop that adds fake delay on forms (true adds a default amount, number configures a custom value)"
-)
 
 console.warn("TODO: Integrate forms w/ server actions or trpc or whatever")
 
@@ -80,17 +72,15 @@ export default function Page() {
               onSubmit={async (values) => console.log(values)}
               initialValues={{ email: "hello@carlo.works" }}
             >
-              <Form.Form>
-                <Modal.Container>
-                  <Form.Field name="email">
-                    <Form.Label>Email plz</Form.Label>
-                    <Form.Input type="email" />
-                    <Form.Error />
-                  </Form.Field>
-                  <Form.Loading />
-                </Modal.Container>
-                <Form.Submit>Submit</Form.Submit>
-              </Form.Form>
+              <Modal.Container>
+                <Form.Field name="email">
+                  <Form.Label>Email plz</Form.Label>
+                  <Form.Input type="email" />
+                  <Form.Error />
+                </Form.Field>
+                <Form.Loading />
+              </Modal.Container>
+              <Form.Submit>Submit</Form.Submit>
             </Form.Root>
           </Modal.Content>
         </Modal.Portal>
@@ -149,18 +139,16 @@ export default function Page() {
               onSubmit={async (values) => console.log(values)}
               initialValues={{ email: "hello@carlo.works" }}
             >
-              <Form.Form>
-                <Modal.Container>
-                  <Modal.Title>Foo form</Modal.Title>
-                  <Form.Field name="email">
-                    <Form.Label>Email plz</Form.Label>
-                    <Form.Input type="email" />
-                    <Form.Error />
-                  </Form.Field>
-                  <Form.Loading />
-                </Modal.Container>
-                <Form.Submit>Submit</Form.Submit>
-              </Form.Form>
+              <Modal.Container>
+                <Modal.Title>Foo form</Modal.Title>
+                <Form.Field name="email">
+                  <Form.Label>Email plz</Form.Label>
+                  <Form.Input type="email" />
+                  <Form.Error />
+                </Form.Field>
+                <Form.Loading />
+              </Modal.Container>
+              <Form.Submit>Submit</Form.Submit>
             </Form.Root>
           </Modal.Content>
           <Modal.Content value="bar">
@@ -169,21 +157,21 @@ export default function Page() {
               onSubmit={async (values) => console.log(values)}
               initialValues={{ username: "carlo", password: "password" }}
             >
-              <Form.Form>
-                <Modal.Container>
-                  <Modal.Title>Bar form</Modal.Title>
-                  <Form.Field name="username">
-                    <Form.Input />
-                    <Form.Error />
-                  </Form.Field>
-                  <Form.Field name="password">
-                    <Form.Input type="password" />
-                    <Form.Error />
-                  </Form.Field>
-                  <Form.Loading />
-                </Modal.Container>
-                <Form.Submit>Submit</Form.Submit>
-              </Form.Form>
+              <Modal.Container>
+                <Modal.Title>Bar form</Modal.Title>
+                <Form.Field name="username">
+                  <Form.Label>Username plz</Form.Label>
+                  <Form.Input />
+                  <Form.Error />
+                </Form.Field>
+                <Form.Field name="password">
+                  <Form.Label>Password plz</Form.Label>
+                  <Form.Input type="password" />
+                  <Form.Error />
+                </Form.Field>
+                <Form.Loading />
+              </Modal.Container>
+              <Form.Submit>Submit</Form.Submit>
             </Form.Root>
           </Modal.Content>
         </Modal.Portal>

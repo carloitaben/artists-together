@@ -5,3 +5,7 @@ export function oneOf<T>(array: T[]) {
 export function between(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
+
+export async function wait(ms: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms))
+}
