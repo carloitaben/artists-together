@@ -1,7 +1,7 @@
 "use client"
 
 import { z } from "zod"
-import { home, help } from "~/components/Icons"
+import { help } from "~/components/Icons"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 import Auth from "~/components/Auth"
@@ -93,11 +93,14 @@ export default function Page() {
         <Modal.Trigger>With tabs</Modal.Trigger>
         <Modal.Portal>
           <Modal.Tabs>
-            <Modal.Tab icon={home} value="foo">
+            <Modal.Tab icon={help} value="foo">
               Foo
             </Modal.Tab>
             <Modal.Tab icon={help} value="bar">
               Bar
+            </Modal.Tab>
+            <Modal.Tab icon={help} value="baz">
+              Baz
             </Modal.Tab>
           </Modal.Tabs>
           <Modal.Content value="foo">
@@ -105,6 +108,9 @@ export default function Page() {
           </Modal.Content>
           <Modal.Content value="bar">
             <Modal.Container>Bar content</Modal.Container>
+          </Modal.Content>
+          <Modal.Content value="baz">
+            <Modal.Container>Baz content</Modal.Container>
           </Modal.Content>
         </Modal.Portal>
       </Modal.Root>
@@ -129,7 +135,7 @@ export default function Page() {
         <Modal.Trigger>With form tabs</Modal.Trigger>
         <Modal.Portal>
           <Modal.Tabs>
-            <Modal.Tab icon={home} value="foo">
+            <Modal.Tab icon={help} value="foo">
               Foo
             </Modal.Tab>
             <Modal.Tab icon={help} value="bar">
