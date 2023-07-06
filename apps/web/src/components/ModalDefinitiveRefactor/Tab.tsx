@@ -1,12 +1,12 @@
 "use client"
 
-import * as TabsPrimitve from "@radix-ui/react-tabs"
+import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { ComponentProps, ForwardedRef, ReactElement, forwardRef } from "react"
 import { cx } from "class-variance-authority"
 
 import Icon from "~/components/Icon"
 
-type Props = Omit<TabsPrimitve.TabsTriggerProps, "asChild"> & {
+type Props = Omit<TabsPrimitive.TabsTriggerProps, "asChild"> & {
   icon?: ReactElement<ComponentProps<"svg">>
 }
 
@@ -15,7 +15,7 @@ function Tab(
   ref: ForwardedRef<HTMLButtonElement>
 ) {
   return (
-    <TabsPrimitve.Trigger
+    <TabsPrimitive.Trigger
       {...props}
       ref={ref}
       className={cx(
@@ -29,7 +29,7 @@ function Tab(
         </Icon>
       ) : null}
       <span>{children}</span>
-    </TabsPrimitve.Trigger>
+    </TabsPrimitive.Trigger>
   )
 }
 

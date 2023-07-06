@@ -1,11 +1,11 @@
 "use client"
 
-import * as Dialog from "@radix-ui/react-dialog"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
 
-export const Root = Dialog.Root
-export const Trigger = Dialog.Trigger
-export const Title = Dialog.Title
-export const Description = Dialog.Description
+export const Root = DialogPrimitive.Root
+export const Trigger = DialogPrimitive.Trigger
+export const Title = DialogPrimitive.Title
+export const Description = DialogPrimitive.Description
 export { default as Portal } from "./Portal"
 export { default as Container } from "./Container"
 export { default as Content } from "./Content"

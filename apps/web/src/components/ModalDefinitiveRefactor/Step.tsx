@@ -1,10 +1,10 @@
 "use client"
 
-import * as TabsPrimitve from "@radix-ui/react-tabs"
+import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { ForwardedRef, forwardRef } from "react"
 import { cx } from "class-variance-authority"
 
-type Props = Omit<TabsPrimitve.TabsTriggerProps, "asChild" | "value"> & {
+type Props = Omit<TabsPrimitive.TabsTriggerProps, "asChild" | "value"> & {
   value: number
 }
 
@@ -13,7 +13,7 @@ function Step(
   ref: ForwardedRef<HTMLButtonElement>
 ) {
   return (
-    <TabsPrimitve.Trigger
+    <TabsPrimitive.Trigger
       {...props}
       ref={ref}
       value={String(value)}
@@ -28,7 +28,7 @@ function Step(
       <span className="text-sm text-gunpla-white-300 group-radix-state-active:text-gunpla-white-500">
         {children}
       </span>
-    </TabsPrimitve.Trigger>
+    </TabsPrimitive.Trigger>
   )
 }
 

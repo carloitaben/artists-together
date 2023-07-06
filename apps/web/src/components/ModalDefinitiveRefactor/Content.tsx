@@ -1,6 +1,6 @@
 "use client"
 
-import * as TabsPrimitve from "@radix-ui/react-tabs"
+import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { ComponentProps, ForwardedRef, forwardRef } from "react"
 
 type Props = {
@@ -13,9 +13,9 @@ function Content(
 ) {
   if (typeof value !== "undefined") {
     return (
-      <TabsPrimitve.Content {...props} value={String(value)} ref={ref}>
+      <TabsPrimitive.Content {...props} value={String(value)} ref={ref}>
         {children}
-      </TabsPrimitve.Content>
+      </TabsPrimitive.Content>
     )
   }
 
