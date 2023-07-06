@@ -2,7 +2,7 @@ import { TypeOf } from "zod"
 
 import { loginSchema } from "~/lib/schemas"
 
-import * as Modal from "~/components/ModalDefinitiveRefactor"
+import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 
 type Props = {

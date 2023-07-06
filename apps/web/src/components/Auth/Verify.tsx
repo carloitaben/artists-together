@@ -1,18 +1,17 @@
 import {
-  ChangeEventHandler,
-  KeyboardEventHandler,
-  RefObject,
+  // ChangeEventHandler,
+  // KeyboardEventHandler,
+  // RefObject,
   useTransition,
 } from "react"
 import { z, TypeOf } from "zod"
-import { useField, useFormikContext } from "formik"
+// import { useField, useFormikContext } from "formik"
 import { useRouter } from "next/navigation"
-import { cx } from "class-variance-authority"
+// import { cx } from "class-variance-authority"
 
-import * as Modal from "~/components/ModalDefinitiveRefactor"
+import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 import { useToast } from "~/components/Toast"
-import { useRootModalContext } from "~/components/Modal"
 
 const schema = z.object({
   otp: z.string().length(6),
@@ -44,50 +43,50 @@ function Resend({ email }: { email: string }) {
   )
 }
 
-function OtpInput({ buttonRef }: { buttonRef: RefObject<HTMLButtonElement> }) {
-  const [field, _, helpers] = useField({ name: "otp" })
+// function OtpInput({ buttonRef }: { buttonRef: RefObject<HTMLButtonElement> }) {
+//   const [field, _, helpers] = useField({ name: "otp" })
 
-  const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    if (event.target.value.length >= 6) {
-      helpers.setValue(event.target.value.toUpperCase().slice(0, 6))
-      buttonRef.current?.focus()
-    } else {
-      helpers.setValue(event.target.value.toUpperCase())
-    }
-  }
+//   const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+//     if (event.target.value.length >= 6) {
+//       helpers.setValue(event.target.value.toUpperCase().slice(0, 6))
+//       buttonRef.current?.focus()
+//     } else {
+//       helpers.setValue(event.target.value.toUpperCase())
+//     }
+//   }
 
-  const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
-    if (event.code.startsWith("Arrow")) {
-      event.preventDefault()
-    }
-  }
+//   const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+//     if (event.code.startsWith("Arrow")) {
+//       event.preventDefault()
+//     }
+//   }
 
-  return (
-    <input
-      {...field}
-      onKeyDown={onKeyDown}
-      onChange={onChange}
-      className="absolute inset-0 text-transparent opacity-0"
-    />
-  )
-}
+//   return (
+//     <input
+//       {...field}
+//       onKeyDown={onKeyDown}
+//       onChange={onChange}
+//       className="absolute inset-0 text-transparent opacity-0"
+//     />
+//   )
+// }
 
-function OtpDigit({ position }: { position: number }) {
-  const context = useFormikContext<TypeOf<typeof schema>>()
-  const value = context.values.otp.charAt(position)
-  const focus = context.values.otp.length === position
+// function OtpDigit({ position }: { position: number }) {
+//   const context = useFormikContext<TypeOf<typeof schema>>()
+//   const value = context.values.otp.charAt(position)
+//   const focus = context.values.otp.length === position
 
-  return (
-    <div
-      className={cx(
-        "flex h-14 w-10 items-center justify-center rounded-4xl bg-not-so-white text-center font-serif text-[2rem] uppercase text-gunpla-white-700",
-        focus ? "outline" : ""
-      )}
-    >
-      {value}
-    </div>
-  )
-}
+//   return (
+//     <div
+//       className={cx(
+//         "flex h-14 w-10 items-center justify-center rounded-4xl bg-not-so-white text-center font-serif text-[2rem] uppercase text-gunpla-white-700",
+//         focus ? "outline" : ""
+//       )}
+//     >
+//       {value}
+//     </div>
+//   )
+// }
 
 type Props = {
   email: string
@@ -97,7 +96,6 @@ type Props = {
 export default function Verify({ email, onSuccess }: Props) {
   // const buttonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
-  const modal = useRootModalContext()
   const { emit } = useToast()
 
   // return (

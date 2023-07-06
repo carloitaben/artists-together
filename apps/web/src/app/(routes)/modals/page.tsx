@@ -2,7 +2,7 @@
 
 import { z } from "zod"
 import { home, help } from "~/components/Icons"
-import * as Modal from "~/components/ModalDefinitiveRefactor"
+import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 import Auth from "~/components/Auth"
 
