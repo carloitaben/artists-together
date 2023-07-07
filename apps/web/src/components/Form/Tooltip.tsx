@@ -19,11 +19,13 @@ export default function Tooltip({ children }: Props) {
       >
         <Icon label="Info">{info}</Icon>
       </RadixTooltip.Trigger>
-      <RadixTooltip.Content align="start" side="bottom" className="ml-10">
-        <div className="w-56 rounded-b-2xl rounded-tl-sm rounded-tr-2xl bg-gunpla-white-500 px-4 py-3 font-sans text-sm text-gunpla-white-50 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)]">
-          {children}
-        </div>
-      </RadixTooltip.Content>
+      <RadixTooltip.Portal>
+        <RadixTooltip.Content align="start" side="bottom" className="ml-10">
+          <div className="w-56 rounded-b-2xl rounded-tl-sm rounded-tr-2xl bg-gunpla-white-500 px-4 py-3 font-sans text-sm text-gunpla-white-50 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)]">
+            {children}
+          </div>
+        </RadixTooltip.Content>
+      </RadixTooltip.Portal>
     </RadixTooltip.Root>
   )
 }
