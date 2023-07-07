@@ -15,16 +15,6 @@ const testUserPassSchema = z.object({
   password: z.string(),
 })
 
-console.warn("TODO: Integrate forms w/ server actions or trpc or whatever")
-
-console.warn("TODO: Style modal tabs")
-
-console.warn("TODO: Style modal steps")
-
-console.warn("TODO: Style modal title")
-
-console.warn("TODO: Animate modal")
-
 export default function Page() {
   return (
     <main className="grid">
