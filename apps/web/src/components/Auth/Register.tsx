@@ -25,14 +25,17 @@ export default function Register({ onSuccess }: Props) {
           body: JSON.stringify(data),
         })
 
-        if (response.ok) {
-          // @ts-expect-error i need to fix this :)
-          onSuccess(data)
-        } else if (response.status === 403) {
-          helpers.setFieldError("username", "Username already exists")
-        } else {
-          throw Error("Unknown error")
+        if (response.status === 403) {
+          return helpers.setFieldError("username", "Username already exists")
         }
+
+        if (!response.ok) {
+          const json = await response.json()
+          throw Error("error" in json ? json.error : "Unknown error")
+        }
+
+        // @ts-expect-error i need to fix this :)
+        onSuccess(data)
       }}
     >
       <Modal.Container>

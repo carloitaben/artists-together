@@ -174,14 +174,15 @@ export default function Verify({ email, onSuccess }: Props) {
           }),
         })
 
-        if (response.ok) {
-          // @ts-expect-error i need to fix this :)
-          onSuccess(data)
-          emit({ title: "Logged in succesfully" })
-          router.refresh()
-        } else {
-          throw Error("Unknown error")
+        if (!response.ok) {
+          const json = await response.json()
+          throw Error("error" in json ? json.error : "Unknown error")
         }
+
+        // @ts-expect-error i need to fix this :)
+        onSuccess(data)
+        emit({ title: "Logged in succesfully" })
+        return router.refresh()
       }}
     >
       <Modal.Container className="text-center">

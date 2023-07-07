@@ -44,8 +44,17 @@ function Root<T extends AnyZodObject>(
 
         helpers.setSubmitting(false)
       } catch (error) {
-        emit({ title: "Oops! That didn't work" })
         if (process.env.NODE_ENV !== "production") console.error(error)
+
+        let title = "Oops! That didn't work"
+
+        if (error instanceof Error) {
+          title = error.message
+        } else if (typeof error === "string") {
+          title = error
+        }
+
+        emit({ title })
       }
     },
     [delay, emit, onSubmit]

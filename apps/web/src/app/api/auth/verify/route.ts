@@ -30,14 +30,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
     if (error instanceof LuciaTokenError && error.message === "EXPIRED_TOKEN") {
-      return NextResponse.json({ error: "Expired token" }, { status: 401 })
+      return NextResponse.json({ error: "Expired code" }, { status: 401 })
     }
 
     if (error instanceof LuciaTokenError && error.message === "INVALID_TOKEN") {
-      return NextResponse.json(
-        { error: "Invalid username or code" },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: "Invalid code" }, { status: 400 })
     }
 
     console.error(error)
