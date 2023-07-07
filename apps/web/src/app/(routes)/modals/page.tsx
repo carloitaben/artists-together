@@ -3,6 +3,7 @@
 import { redirect, useRouter } from "next/navigation"
 import { z } from "zod"
 
+import { demo } from "~/lib/actions"
 import { help } from "~/components/Icons"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
@@ -29,6 +30,17 @@ export default function Page() {
   return (
     <main className="flex flex-col items-start justify-start gap-2">
       <h1>Modal tests</h1>
+
+      <Form.Root
+        delay
+        schema={emptySchema}
+        initialValues={{}}
+        onSubmit={async () => {
+          await demo({ some: "random data" })
+        }}
+      >
+        <Form.Submit>Invoke server action</Form.Submit>
+      </Form.Root>
 
       <Form.Root
         schema={emptySchema}
