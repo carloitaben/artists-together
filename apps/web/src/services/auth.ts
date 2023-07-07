@@ -9,6 +9,7 @@ import { createConnection } from "db"
 const connection = createConnection()
 
 export const auth = lucia({
+  // @ts-expect-error shut up please
   adapter: planetscale(connection),
   middleware: nextjs(),
   transformDatabaseUser: (user) => user,

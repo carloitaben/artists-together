@@ -51,7 +51,7 @@ function Root<T extends AnyZodObject>(
         }
       }
     },
-    [onSubmit]
+    [delay, emit, onSubmit]
   )
 
   return (
