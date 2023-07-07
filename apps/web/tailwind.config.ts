@@ -24,16 +24,16 @@ export default {
       black: "#000000",
       "not-so-black": "#0D0D0D",
       theme: {
-        50: "rgba(var(--theme-color-50), <alpha-value>)",
-        100: "rgba(var(--theme-color-100), <alpha-value>)",
-        200: "rgba(var(--theme-color-200), <alpha-value>)",
-        300: "rgba(var(--theme-color-300), <alpha-value>)",
-        400: "rgba(var(--theme-color-400), <alpha-value>)",
-        500: "rgba(var(--theme-color-500), <alpha-value>)",
-        600: "rgba(var(--theme-color-600), <alpha-value>)",
-        700: "rgba(var(--theme-color-700), <alpha-value>)",
-        800: "rgba(var(--theme-color-800), <alpha-value>)",
-        900: "rgba(var(--theme-color-900), <alpha-value>)",
+        50: "rgba(var(--theme-50), <alpha-value>)",
+        100: "rgba(var(--theme-100), <alpha-value>)",
+        200: "rgba(var(--theme-200), <alpha-value>)",
+        300: "rgba(var(--theme-300), <alpha-value>)",
+        400: "rgba(var(--theme-400), <alpha-value>)",
+        500: "rgba(var(--theme-500), <alpha-value>)",
+        600: "rgba(var(--theme-600), <alpha-value>)",
+        700: "rgba(var(--theme-700), <alpha-value>)",
+        800: "rgba(var(--theme-800), <alpha-value>)",
+        900: "rgba(var(--theme-900), <alpha-value>)",
       },
       "gunpla-white": {
         50: "#F4F4F4",
@@ -231,6 +231,9 @@ export default {
     extend: {
       borderRadius: {
         "4xl": "32px",
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
     },
   },

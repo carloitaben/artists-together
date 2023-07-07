@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-before-interactive-script-outside-document */
 
 import { ReactNode } from "react"
+import { Metadata } from "next"
 import Script from "next/script"
 
 import "~/styles/index.css"
@@ -9,9 +10,11 @@ import { getUser } from "~/services/auth"
 import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
 import { oneOf } from "~/lib/utils"
 import { WebSocketProvider } from "~/hooks/ws"
+
 import Cursors from "~/components/Cursors"
 import Cursor from "~/components/Cursor"
-import Navbar from "~/components/Navbar"
+import NavigationSideBar from "~/components/NavigationSideBar"
+import NavigationBottomBar from "~/components/NavigationBottomBar"
 import Toast from "~/components/Toast"
 
 type Props = {
@@ -19,6 +22,15 @@ type Props = {
 }
 
 export const runtime = "edge"
+
+export const metadata: Metadata = {
+  title: "Artists Together – Website soon!",
+  description: "An inclusive community for all kinds of artists.",
+  keywords: ["Art", "Artist Community"],
+  twitter: {
+    card: "summary_large_image",
+  },
+}
 
 const themes = [
   Theme["anamorphic-teal"],
@@ -42,10 +54,9 @@ export default async function Layout({ children }: Props) {
       <body className="h-full min-h-full pl-16">
         <Toast>
           <WebSocketProvider user={user}>
-            <Navbar user={user} />
-            {children}
-            <Cursors />
-            <Cursor />
+            <NavigationSideBar user={user} />
+              {children}
+            <NavigationBottomBar user={user} />
           </WebSocketProvider>
         </Toast>
         <Script id="tailwindcss-noscript" strategy="beforeInteractive">
