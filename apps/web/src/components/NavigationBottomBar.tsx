@@ -3,7 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
-import { ComponentProps, ReactElement, useEffect, useState } from "react"
+import { ComponentProps, ReactElement, useCallback, useState } from "react"
 import { AnimatePresence, Transition, motion } from "framer-motion"
 import { cx } from "class-variance-authority"
 
@@ -22,6 +22,7 @@ import {
   train,
 } from "./Icons"
 import Icon from "./Icon"
+import Shiny from "./Shiny"
 
 const transition: Transition = {
   type: "spring",
@@ -59,18 +60,20 @@ function Item({
   disabled?: boolean
 }) {
   return (
-    <div
-      className={cx(
-        "my-1 ml-4 mr-7 flex items-center gap-5 rounded-full p-3 text-sm",
-        "group-focus-visible:ring-4 group-[[aria-current='page']]:bg-theme-300 group-[[aria-current='page']]:text-theme-900",
-        disabled && "text-theme-700"
-      )}
-    >
-      <Icon label={label} className="h-6 w-6 flex-none">
-        {children}
-      </Icon>
-      <span className="truncate">{label}</span>
-    </div>
+    <Shiny enabled={!disabled}>
+      <div
+        className={cx(
+          "my-1 ml-4 mr-7 flex items-center gap-5 rounded-full p-3 text-sm",
+          "group-focus-visible:ring-4 group-[[aria-current='page']]:bg-theme-300 group-[[aria-current='page']]:text-theme-900",
+          disabled && "text-theme-700"
+        )}
+      >
+        <Icon label={label} className="h-6 w-6 flex-none">
+          {children}
+        </Icon>
+        <span className="truncate">{label}</span>
+      </div>
+    </Shiny>
   )
 }
 
@@ -80,15 +83,14 @@ type Props = {
 
 export default function NavigationBottomBar(_: Props) {
   const [open, setOpen] = useState(false)
-  const pathname = usePathname()
+
+  const close = useCallback(() => {
+    setOpen(false)
+  }, [])
 
   useOnMatchScreen("sm", (matches) => {
     if (matches && open) setOpen(false)
   })
-
-  useEffect(() => {
-    if (pathname && open) setOpen(false)
-  }, [open, pathname])
 
   return (
     <nav className="fixed inset-x-0 bottom-0 flex h-14 items-center justify-between bg-theme-900 text-gunpla-white-50 sm:hidden">
@@ -120,7 +122,7 @@ export default function NavigationBottomBar(_: Props) {
                 >
                   <ul className="flex h-full w-full flex-col rounded-r-3xl bg-theme-900 py-3 text-gunpla-white-50">
                     <li className="flex-1 p-14">
-                      <Link href="/">
+                      <Link href="/" onClick={close}>
                         <Icon
                           className="h-full w-full rounded-3xl p-2 group-focus-visible:ring-4"
                           label="Artist Together"
@@ -135,7 +137,7 @@ export default function NavigationBottomBar(_: Props) {
                       </Item>
                     </li>
                     <li>
-                      <Link href="/">
+                      <Link href="/" onClick={close}>
                         <Item label="Home">{home}</Item>
                       </Link>
                     </li>

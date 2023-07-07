@@ -4,12 +4,14 @@ import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { ForwardedRef, forwardRef } from "react"
 import { cx } from "class-variance-authority"
 
+import Shiny from "~/components/Shiny"
+
 function Steps(
   { className, ...props }: TabsPrimitive.TabsListProps,
   ref: ForwardedRef<HTMLDivElement>
 ) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="mb-4 flex items-center justify-between">
       <TabsPrimitive.List
         {...props}
         ref={ref}
@@ -18,13 +20,17 @@ function Steps(
           "flex rounded-full bg-gunpla-white-50 p-2 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)]"
         )}
       />
-      <div className="flex">
-        <button className="h-12 w-12 rounded-full bg-gunpla-white-50">
-          prev
-        </button>
-        <button className="h-12 w-12 rounded-full bg-gunpla-white-50">
-          next
-        </button>
+      <div className="flex gap-2">
+        <Shiny>
+          <button className="h-12 w-12 rounded-full bg-gunpla-white-50 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)]">
+            prev
+          </button>
+        </Shiny>
+        <Shiny>
+          <button className="h-12 w-12 rounded-full bg-gunpla-white-50 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)]">
+            next
+          </button>
+        </Shiny>
       </div>
     </div>
   )

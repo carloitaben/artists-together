@@ -14,14 +14,14 @@ function makeTheme(color: keyof (typeof tailwind)["theme"]["colors"]) {
   return Object.fromEntries(
     Object.entries(tailwind.theme.colors[color]).map(([k, v]) => {
       const [r, g, b] = parseToRgba(v)
-      return [k, `${r}, ${g}, ${b}`]
+      return [k, `${r},${g},${b}`]
     })
   )
 }
 
 export function makeThemeStyle(theme: ReturnType<typeof makeTheme>) {
   return Object.fromEntries(
-    Object.entries(theme).map(([k, v]) => [`--theme-color-${k}`, v])
+    Object.entries(theme).map(([k, v]) => [`--theme-${k}`, v])
   ) as CSSProperties
 }
 

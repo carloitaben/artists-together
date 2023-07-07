@@ -111,12 +111,16 @@ export default function Page() {
           <Modal.Steps>
             <Modal.Step value={0}>Foo</Modal.Step>
             <Modal.Step value={1}>Bar</Modal.Step>
+            <Modal.Step value={2}>Baz</Modal.Step>
           </Modal.Steps>
           <Modal.Content value={0}>
             <Modal.Container>Foo content</Modal.Container>
           </Modal.Content>
           <Modal.Content value={1}>
             <Modal.Container>Bar content</Modal.Container>
+          </Modal.Content>
+          <Modal.Content value={2}>
+            <Modal.Container>Baz content</Modal.Container>
           </Modal.Content>
         </Modal.Portal>
       </Modal.Root>
