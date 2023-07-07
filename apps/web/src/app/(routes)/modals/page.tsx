@@ -23,10 +23,8 @@ export default function Page() {
   const router = useRouter()
 
   return (
-    <main className="grid">
+    <main className="flex flex-col items-start justify-start gap-2">
       <h1>Modal tests</h1>
-
-      <Auth>Auth modal</Auth>
 
       <Form.Root
         schema={emptySchema}
@@ -46,8 +44,14 @@ export default function Page() {
         <Form.Submit>Log out</Form.Submit>
       </Form.Root>
 
+      <Auth className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
+        Auth modal
+      </Auth>
+
       <Modal.Root>
-        <Modal.Trigger>Barebones</Modal.Trigger>
+        <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
+          Barebones
+        </Modal.Trigger>
         <Modal.Portal>
           <Modal.Content>
             <Modal.Container>Hi</Modal.Container>
@@ -56,7 +60,9 @@ export default function Page() {
       </Modal.Root>
 
       <Modal.Root>
-        <Modal.Trigger>Style props</Modal.Trigger>
+        <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
+          Style props
+        </Modal.Trigger>
         <Modal.Portal>
           <Modal.Content>
             <Modal.Container fill={false} padding={false} className="p-8">
@@ -67,7 +73,9 @@ export default function Page() {
       </Modal.Root>
 
       <Modal.Root>
-        <Modal.Trigger>With title and description</Modal.Trigger>
+        <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
+          With title and description
+        </Modal.Trigger>
         <Modal.Portal>
           <Modal.Content>
             <Modal.Container>
@@ -79,7 +87,7 @@ export default function Page() {
       </Modal.Root>
 
       <Modal.Root>
-        <Modal.Trigger>
+        <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
           With form cta floating outside of container
         </Modal.Trigger>
         <Modal.Portal>
@@ -106,7 +114,9 @@ export default function Page() {
       </Modal.Root>
 
       <Modal.Root>
-        <Modal.Trigger>With tabs</Modal.Trigger>
+        <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
+          With tabs
+        </Modal.Trigger>
         <Modal.Portal>
           <Modal.Tabs>
             <Modal.Tab icon={help} value="foo">
@@ -132,7 +142,9 @@ export default function Page() {
       </Modal.Root>
 
       <Modal.Root>
-        <Modal.Trigger>With steps</Modal.Trigger>
+        <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
+          With steps
+        </Modal.Trigger>
         <Modal.Portal>
           <Modal.Steps>
             <Modal.Step value={0}>Foo</Modal.Step>
@@ -152,7 +164,9 @@ export default function Page() {
       </Modal.Root>
 
       <Modal.Root>
-        <Modal.Trigger>With form tabs</Modal.Trigger>
+        <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
+          With form tabs
+        </Modal.Trigger>
         <Modal.Portal>
           <Modal.Tabs>
             <Modal.Tab icon={help} value="foo">
