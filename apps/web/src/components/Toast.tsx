@@ -56,7 +56,7 @@ export default function Toast({ children }: Props) {
   return (
     <toastContext.Provider value={value}>
       {children}
-      <div className="fixed inset-x-4 bottom-4 flex justify-center">
+      <div className="fixed inset-x-4 bottom-4 z-50 flex justify-center">
         <AnimatePresence mode="wait">
           {toast ? (
             <motion.div
