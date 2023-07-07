@@ -61,7 +61,7 @@ export default function Toast({ children }: Props) {
           {toast ? (
             <motion.div
               key={toast.id}
-              className="flex items-center rounded-full bg-not-so-white pl-6 text-sm text-gunpla-white-700 shadow-[0px_4px_8px_0px_rgba(11,14,30,0.08)]"
+              className="rounded-full bg-not-so-white text-sm text-gunpla-white-700 shadow-[0px_4px_8px_0px_rgba(11,14,30,0.08)]"
               initial={{ y: "150%" }}
               animate={{ y: "0%" }}
               exit={{ y: "150%" }}
@@ -69,12 +69,20 @@ export default function Toast({ children }: Props) {
               onHoverStart={() => setHover(true)}
               onHoverEnd={() => setHover(false)}
             >
-              <p className="-translate-y-px">{toast.title}</p>
-              <button onClick={() => setToast(undefined)}>
-                <Icon label="Close" className="h-12 w-12 p-4">
-                  {close}
-                </Icon>
-              </button>
+              <motion.div
+                className="flex items-center pl-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+              >
+                <p className="-translate-y-px">{toast.title}</p>
+                <button onClick={() => setToast(undefined)}>
+                  <Icon label="Close" className="h-12 w-12 p-4">
+                    {close}
+                  </Icon>
+                </button>
+              </motion.div>
             </motion.div>
           ) : null}
         </AnimatePresence>
