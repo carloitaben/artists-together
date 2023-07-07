@@ -1,6 +1,8 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { z } from "zod"
+
 import { help } from "~/components/Icons"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
@@ -15,12 +17,34 @@ const testUserPassSchema = z.object({
   password: z.string(),
 })
 
+const emptySchema = z.object({})
+
 export default function Page() {
+  const router = useRouter()
+
   return (
     <main className="grid">
       <h1>Modal tests</h1>
 
       <Auth>Auth modal</Auth>
+
+      <Form.Root
+        schema={emptySchema}
+        initialValues={{}}
+        onSubmit={async () => {
+          const response = await fetch("/api/auth/logout", {
+            method: "POST",
+          })
+
+          if (response.ok) {
+            router.refresh()
+          } else {
+            throw Error("Unknown error")
+          }
+        }}
+      >
+        <Form.Submit>Log out</Form.Submit>
+      </Form.Root>
 
       <Modal.Root>
         <Modal.Trigger>Barebones</Modal.Trigger>
