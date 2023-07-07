@@ -32,17 +32,6 @@ export default function Page() {
       <h1>Modal tests</h1>
 
       <Form.Root
-        delay
-        schema={emptySchema}
-        initialValues={{}}
-        onSubmit={async () => {
-          await demo({ some: "random data" })
-        }}
-      >
-        <Form.Submit>Invoke server action</Form.Submit>
-      </Form.Root>
-
-      <Form.Root
         schema={emptySchema}
         initialValues={{}}
         onSubmit={async () => {
@@ -109,8 +98,9 @@ export default function Page() {
         <Modal.Portal>
           <Modal.Content>
             <Form.Root
+              delay
               schema={testEmailSchema}
-              onSubmit={async (values) => console.log(values)}
+              onSubmit={async (values) => await demo(values)}
               initialValues={{ email: "hello@carlo.works" }}
             >
               <Modal.Container>
@@ -194,8 +184,9 @@ export default function Page() {
           </Modal.Tabs>
           <Modal.Content value="foo">
             <Form.Root
+              delay
               schema={testEmailSchema}
-              onSubmit={async (values) => console.log(values)}
+              onSubmit={async (values) => await demo(values)}
               initialValues={{ email: "hello@carlo.works" }}
             >
               <Modal.Container>
@@ -214,8 +205,9 @@ export default function Page() {
           </Modal.Content>
           <Modal.Content value="bar">
             <Form.Root
+              delay
               schema={testUserPassSchema}
-              onSubmit={async (values) => console.log(values)}
+              onSubmit={async (values) => await demo(values)}
               initialValues={{ username: "carlo", password: "password" }}
             >
               <Modal.Container>
