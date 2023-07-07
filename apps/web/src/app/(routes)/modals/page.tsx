@@ -73,7 +73,9 @@ export default function Page() {
                 </Form.Field>
                 <Form.Loading />
               </Modal.Container>
-              <Form.Submit>Submit</Form.Submit>
+              <Form.Submit className="mt-4 flex justify-end">
+                Submit
+              </Form.Submit>
             </Form.Root>
           </Modal.Content>
         </Modal.Portal>
@@ -151,7 +153,9 @@ export default function Page() {
                 </Form.Field>
                 <Form.Loading />
               </Modal.Container>
-              <Form.Submit>Submit</Form.Submit>
+              <Form.Submit className="mt-4 flex justify-end">
+                Submit
+              </Form.Submit>
             </Form.Root>
           </Modal.Content>
           <Modal.Content value="bar">
@@ -174,7 +178,9 @@ export default function Page() {
                 </Form.Field>
                 <Form.Loading />
               </Modal.Container>
-              <Form.Submit>Submit</Form.Submit>
+              <Form.Submit className="mt-4 flex justify-end">
+                Submit
+              </Form.Submit>
             </Form.Root>
           </Modal.Content>
         </Modal.Portal>
