@@ -12,6 +12,7 @@ type Props = {
 export default function Register({ onSuccess }: Props) {
   return (
     <Form.Root
+      delay
       schema={signupSchema}
       initialValues={{ email: "", username: "" }}
       onSubmit={async (data, helpers) => {

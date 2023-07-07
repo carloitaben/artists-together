@@ -158,6 +158,7 @@ export default function Verify({ email, onSuccess }: Props) {
 
   return (
     <Form.Root
+      delay
       schema={schema}
       initialValues={{ otp: "" }}
       onSubmit={async (data) => {
@@ -183,7 +184,7 @@ export default function Verify({ email, onSuccess }: Props) {
         }
       }}
     >
-      <Modal.Container>
+      <Modal.Container className="text-center">
         <Modal.Title className="mb-6 text-center text-2xl">
           A verification code
           <br />

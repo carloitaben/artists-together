@@ -12,6 +12,7 @@ type Props = {
 export default function Login({ onSuccess }: Props) {
   return (
     <Form.Root
+      delay
       schema={loginSchema}
       initialValues={{ email: "" }}
       onSubmit={async (data) => {
