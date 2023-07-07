@@ -18,7 +18,7 @@ const title = cva("", {
 
 function Title(
   {
-    className = "font-serif text-[2rem] font-light text-gunpla-white-500",
+    className = "font-serif text-[2rem] font-light text-gunpla-white-500 mb-5",
     inset,
     ...props
   }: DialogPrimitive.DialogTitleProps & VariantProps<typeof title>,

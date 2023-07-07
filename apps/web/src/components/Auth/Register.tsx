@@ -42,7 +42,13 @@ export default function Register({ onSuccess }: Props) {
           <Form.Error />
         </Form.Field>
         <Form.Field name="username">
-          <Form.Label caption={({ value }) => `${30 - value.length}/30`}>
+          <Form.Label
+            caption={({ value }) => (
+              <span className={value.length > 30 ? "text-acrylic-red-500" : ""}>
+                {30 - value.length}/30
+              </span>
+            )}
+          >
             Username
           </Form.Label>
           <Form.Input

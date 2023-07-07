@@ -4,11 +4,12 @@ import type { ComponentProps, ReactNode } from "react"
 import { cx } from "class-variance-authority"
 
 import { useFieldContext } from "./Field"
+import { FieldMetaProps } from "formik"
 
 type Props = ComponentProps<"div"> & {
   children: ReactNode
   icon?: ReactNode
-  caption?: string | ((props: { value: string }) => string)
+  caption?: ReactNode | ((props: FieldMetaProps<any>) => ReactNode)
 }
 
 export default function Label({
@@ -18,7 +19,7 @@ export default function Label({
   className,
   ...props
 }: Props) {
-  const [field] = useFieldContext()
+  const [field, meta] = useFieldContext()
 
   function onClick() {
     const input = document.querySelector<HTMLInputElement>(
@@ -39,11 +40,7 @@ export default function Label({
       <label htmlFor={field.name} onClick={onClick}>
         {children}
       </label>
-      <span>
-        {typeof caption === "function"
-          ? caption({ value: field.value })
-          : caption}
-      </span>
+      <span>{typeof caption === "function" ? caption(meta) : caption}</span>
     </div>
   )
 }
