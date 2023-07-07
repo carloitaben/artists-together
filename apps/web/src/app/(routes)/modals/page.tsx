@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { z } from "zod"
 
 import { help } from "~/components/Icons"
@@ -20,6 +20,10 @@ const testUserPassSchema = z.object({
 const emptySchema = z.object({})
 
 export default function Page() {
+  if (process.env.NODE_ENV === "production") {
+    redirect("/")
+  }
+
   const router = useRouter()
 
   return (

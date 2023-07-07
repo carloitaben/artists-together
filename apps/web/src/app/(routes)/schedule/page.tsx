@@ -1,5 +1,9 @@
 import { redirect } from "next/navigation"
 
 export default function Page() {
-  return redirect("/")
+  if (process.env.NODE_ENV === "production") {
+    redirect("/")
+  }
+
+  return <main>Schedule</main>
 }
