@@ -37,6 +37,7 @@ export default function Shiny({ children, enabled = true }: Props) {
     className: cx(
       children.props?.className,
       enabled &&
+        !coarse &&
         "relative overflow-hidden after:pointer-events-none after:absolute after:left-[calc(var(--x,0)*1px-6rem)] after:top-[calc(var(--y,0)*1px-6rem)] after:h-48 after:w-48 after:bg-gradient-radial after:from-white after:via-gunpla-white-50/0 after:to-gunpla-white-50/0 after:opacity-0 after:transition-opacity after:duration-100 hover:after:opacity-50"
     ),
   })
