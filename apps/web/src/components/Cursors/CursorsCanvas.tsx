@@ -62,10 +62,19 @@ export default function CursorsCanvas({ user, emoji }: Props) {
     const interval = cursors.size === 0 ? 3000 : 80
 
     const update = throttle((x: number, y: number) => {
-      const xPercent = limit((x * 100) / document.documentElement.scrollWidth)
-      const yPercent = limit((y * 100) / document.documentElement.scrollHeight)
+      const scrollWidth = document.documentElement.scrollWidth
+      const scrollHeight = document.documentElement.scrollHeight
+      const xPercent = limit((x * 100) / scrollWidth)
+      const yPercent = limit((y * 100) / scrollHeight)
 
-      updateCursor([xPercent, yPercent, pressing ? "press" : "idle", emoji])
+      updateCursor([
+        xPercent,
+        yPercent,
+        scrollWidth,
+        scrollHeight,
+        pressing ? "press" : "idle",
+        emoji,
+      ])
     }, interval)
 
     if (!hasCursor) {
