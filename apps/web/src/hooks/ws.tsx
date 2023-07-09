@@ -84,7 +84,7 @@ export function WebSocketProvider({
   useEffect(() => {
     if (!url) return
 
-    console.log("TODO: authenticate w/ wss using...", { user })
+    // console.log("TODO: authenticate w/ wss using...", { user })
 
     const ws = new WebSocket(url)
 

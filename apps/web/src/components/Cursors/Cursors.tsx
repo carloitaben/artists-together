@@ -10,14 +10,17 @@ const CursorsCanvas = lazy(() => import("./CursorsCanvas"))
 
 type Props = {
   user: User
+  emoji: string
 }
 
-export default function Cursors({ user }: Props) {
+export default function Cursors({ user, emoji }: Props) {
   const [mount, setMount] = useState(false)
 
   useOnMatchScreen("md", (matches) => {
     startTransition(() => setMount(matches && !!url))
   })
 
-  return <Suspense>{mount && <CursorsCanvas user={user} />}</Suspense>
+  return (
+    <Suspense>{mount && <CursorsCanvas user={user} emoji={emoji} />}</Suspense>
+  )
 }

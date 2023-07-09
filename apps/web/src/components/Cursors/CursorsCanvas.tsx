@@ -19,9 +19,10 @@ function limit(number: number) {
 
 type Props = {
   user: User
+  emoji: string
 }
 
-export default function CursorsCanvas({ user }: Props) {
+export default function CursorsCanvas({ user, emoji }: Props) {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
   const hasCursor = useMatchesMedia("(pointer: fine)")
 
@@ -61,20 +62,13 @@ export default function CursorsCanvas({ user }: Props) {
     const interval = cursors.size === 0 ? 3000 : 80
 
     const update = throttle((x: number, y: number) => {
-      if (!user) return
-
       const xPercent = limit((x * 100) / document.documentElement.scrollWidth)
       const yPercent = limit((y * 100) / document.documentElement.scrollHeight)
 
-      updateCursor([
-        xPercent,
-        yPercent,
-        pressing ? "press" : "idle",
-        user.username,
-      ])
+      updateCursor([xPercent, yPercent, pressing ? "press" : "idle", emoji])
     }, interval)
 
-    if (!hasCursor || !user) {
+    if (!hasCursor) {
       update.cancel()
       return updateCursor(null)
     }
@@ -103,12 +97,12 @@ export default function CursorsCanvas({ user }: Props) {
       window.removeEventListener("mouseup", onMouseUp, true)
       window.removeEventListener("mousemove", onMouseMove, true)
     }
-  }, [cursors.size, hasCursor, updateCursor, user])
+  }, [cursors.size, emoji, hasCursor, updateCursor, user])
 
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 hidden overflow-hidden md:js:block"
+      className="pointer-events-none absolute inset-0 hidden overflow-hidden ring-4 ring-inset ring-print-blue-500 md:js:block"
     >
       <AnimatePresence>
         {Array.from(cursors.entries()).map(([id, cursor]) => (
