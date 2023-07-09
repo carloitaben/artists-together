@@ -102,7 +102,7 @@ export default function CursorsCanvas({ user, emoji }: Props) {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 hidden overflow-hidden ring-4 ring-inset ring-print-blue-500 md:js:block"
+      className="pointer-events-none absolute inset-0 hidden overflow-hidden md:js:block"
     >
       <AnimatePresence>
         {Array.from(cursors.entries()).map(([id, cursor]) => (
