@@ -17,10 +17,11 @@ import {
 } from "react"
 
 import type { User } from "~/services/auth"
-import { between } from "~/lib/utils"
+import { between, oneOf } from "~/lib/utils"
 
 import { artists, calendar, help, home, profile, train } from "./Icons"
 import Icon from "./Icon"
+import { AnimatePresence, motion } from "framer-motion"
 
 const labelContext = createContext<string>("")
 
@@ -44,10 +45,12 @@ const Link = forwardRef(function Link(
 
 function Tooltip({ label, children }: { label: string; children: ReactNode }) {
   const [hover, setHover] = useState(false)
-  const [rotation, setRotation] = useState(between(-5, 5))
+  const [rotation, setRotation] = useState(
+    oneOf([between(-15, -5), between(5, 15)])
+  )
 
   function onOpenChange(open: boolean) {
-    if (open) setRotation(between(-5, 5))
+    if (open) setRotation(oneOf([between(-15, -5), between(5, 15)]))
     setHover(open)
   }
 
@@ -61,30 +64,41 @@ function Tooltip({ label, children }: { label: string; children: ReactNode }) {
         delayDuration={0}
       >
         <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
-        <RadixTooltip.Portal>
-          <RadixTooltip.Content
-            className="flex origin-left transform items-center drop-shadow-[0px_4px_8px_0px_rgba(11,14,30,0.08)]"
-            side="right"
-            sideOffset={5}
-            style={style}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              width="16"
-              height="13"
-              className="-mr-px text-theme-300"
-            >
-              <path
-                fill="currentColor"
-                d="M16 0 1.37 4.64a1.95 1.95 0 0 0 0 3.72L16 13V0Z"
-              />
-            </svg>
-            <div className="rounded bg-theme-300 px-3 py-2.5 text-center text-sm font-semibold text-theme-900">
-              {label}
-            </div>
-          </RadixTooltip.Content>
-        </RadixTooltip.Portal>
+        <AnimatePresence>
+          {hover ? (
+            <RadixTooltip.Portal forceMount>
+              <RadixTooltip.Content side="right" sideOffset={5} asChild>
+                <motion.div
+                  initial={{ rotate: 0 }}
+                  animate={{ rotate: rotation }}
+                  transition={{
+                    type: "spring",
+                    mass: 0.75,
+                    damping: 15,
+                    stiffness: 1500,
+                  }}
+                  className="flex origin-left transform items-center drop-shadow-[0px_4px_8px_0px_rgba(11,14,30,0.08)]"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    width="16"
+                    height="13"
+                    className="-mr-px text-theme-300"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M16 0 1.37 4.64a1.95 1.95 0 0 0 0 3.72L16 13V0Z"
+                    />
+                  </svg>
+                  <div className="rounded bg-theme-300 px-3 py-2.5 text-center text-sm font-semibold text-theme-900">
+                    {label}
+                  </div>
+                </motion.div>
+              </RadixTooltip.Content>
+            </RadixTooltip.Portal>
+          ) : null}
+        </AnimatePresence>
       </RadixTooltip.Root>
     </labelContext.Provider>
   )
