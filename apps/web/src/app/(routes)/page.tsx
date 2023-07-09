@@ -29,7 +29,7 @@ function Social() {
         </a>{" "}
         server.
       </h3>
-      <ul className="js:invisible whitespace-nowrap text-center sm:hidden sm:pb-3">
+      <ul className="whitespace-nowrap text-center sm:hidden sm:pb-3">
         <li className="mx-2.5 inline-block">
           <a
             target="_blank"
