@@ -26,6 +26,7 @@
     "lucia-auth": "^1.8.0",
     "next": "13.4.9",
     "perfect-cursors": "^1.0.5",
+    "perfect-freehand": "^1.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-email": "^1.9.4",

@@ -1,13 +1,52 @@
-"use client"
-
 import { Cursor, CursorState } from "ws-types"
 import { PerfectCursor } from "perfect-cursors"
-import { useRef, useState } from "react"
+import { Dispatch, SetStateAction, useRef, useState } from "react"
 import { motion, MotionStyle, Variants } from "framer-motion"
 
 import { useWebSocketEvent } from "~/hooks/ws"
 
 import CursorLabel from "./CursorLabel"
+
+function average(a: number, b: number) {
+  return (a + b) / 2
+}
+
+function unwrapCursor(cursor: NonNullable<Cursor>) {
+  const x = (cursor[0] / 100) * cursor[2]
+  const y = (cursor[1] / 100) * cursor[3]
+  return [x, y] as const
+}
+
+function getSvgPathFromStroke(points: number[][], closed = true) {
+  const len = points.length
+
+  if (len < 4) return ""
+
+  let a = points[0]
+  let b = points[1]
+  const c = points[2]
+
+  let result = `M${a[0].toFixed(2)},${a[1].toFixed(2)} Q${b[0].toFixed(
+    2
+  )},${b[1].toFixed(2)} ${average(b[0], c[0]).toFixed(2)},${average(
+    b[1],
+    c[1]
+  ).toFixed(2)} T`
+
+  for (let i = 2, max = len - 1; i < max; i++) {
+    a = points[i]
+    b = points[i + 1]
+    result += `${average(a[0], b[0]).toFixed(2)},${average(a[1], b[1]).toFixed(
+      2
+    )} `
+  }
+
+  if (closed) {
+    result += "Z"
+  }
+
+  return result
+}
 
 const variants: Variants = {
   hide: {
@@ -24,11 +63,17 @@ const variants: Variants = {
 type Props = {
   cursor: Cursor | null
   id: string
+  setPaths: Dispatch<SetStateAction<string[]>>
+  render: (points: Point[]) => void
 }
 
-export default function Cursor({ cursor, id }: Props) {
+type Point = [x: number, y: number]
+
+export default function Cursor({ cursor, id, render, setPaths }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const pointsRef = useRef<Point[]>([])
+  const pressingRef = useRef(false)
 
   const [state, setState] = useState<CursorState>(() => {
     if (!cursor) return "idle"
@@ -51,6 +96,22 @@ export default function Cursor({ cursor, id }: Props) {
     wrapperRef.current.style.height = `${cursor[3]}px`
     pc.addPoint([cursor[0], cursor[1]])
     setState(cursor[4])
+
+    if (cursor[4] !== "press") {
+      pressingRef.current = false
+      return
+    }
+
+    if (!pressingRef.current) {
+      setPaths((current) => [...current, ""])
+      pointsRef.current = []
+      pressingRef.current = true
+      return
+    }
+
+    const [x, y] = unwrapCursor(cursor)
+    pointsRef.current = [...pointsRef.current, [x, y]]
+    render(pointsRef.current)
   })
 
   if (!cursor) return null
