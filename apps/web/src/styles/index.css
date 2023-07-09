@@ -18,4 +18,8 @@
     font-weight: 100 900;
     src: url("/fonts/inter.ttf") format("truetype");
   }
+
+  .font-serif {
+    font-variation-settings: "SOFT" 100, "WONK" 0;
+  }
 }

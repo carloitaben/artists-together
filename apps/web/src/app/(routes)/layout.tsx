@@ -44,7 +44,7 @@ export default async function Layout({ children }: Props) {
       className="h-full bg-theme-900 text-gunpla-white-50"
       style={style}
     >
-      <body className="h-full min-h-full pl-16">
+      <body className="grid min-h-full pb-14 selection:bg-theme-300 selection:text-theme-900 sm:pb-0 sm:pl-16">
         <Toast>
           <NavigationSideBar user={user} />
           {children}
