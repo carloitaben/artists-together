@@ -23,7 +23,7 @@ export default function Input({ icon, ...props }: Props) {
           {...props}
           {...field}
           className={cx(
-            "w-full rounded-[1rem] bg-not-so-white py-2.5 pl-3.5 font-sans text-sm text-gunpla-white-700 placeholder:text-gunpla-white-300",
+            "w-full rounded-[1rem] bg-not-so-white py-2.5 pl-3.5 font-sans text-sm text-gunpla-white-700 caret-gunpla-white-700 placeholder:text-gunpla-white-300",
             icon ? "pr-10" : "pr-3.5"
           )}
         />

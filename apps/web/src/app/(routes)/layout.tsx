@@ -9,13 +9,12 @@ import "~/styles/index.css"
 import { getUser } from "~/services/auth"
 import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
 import { oneOf } from "~/lib/utils"
-import { WebSocketProvider } from "~/hooks/ws"
-
-import Cursors from "~/components/Cursors"
-import Cursor from "~/components/Cursor"
 import NavigationSideBar from "~/components/NavigationSideBar"
 import NavigationBottomBar from "~/components/NavigationBottomBar"
 import Toast from "~/components/Toast"
+import { WebSocketProvider } from "~/hooks/ws"
+import Cursors from "~/components/Cursors/Cursors"
+import Cursor from "~/components/Cursor"
 
 type Props = {
   children: ReactNode
@@ -51,11 +50,13 @@ export default async function Layout({ children }: Props) {
       style={style}
       suppressHydrationWarning
     >
-      <body className="h-full min-h-full pl-16">
+      <body className="grid min-h-full pb-14 selection:bg-theme-300 selection:text-theme-900 sm:pb-0 sm:pl-16">
         <Toast>
           <WebSocketProvider user={user}>
             <NavigationSideBar user={user} />
-              {children}
+            {children}
+            <Cursors user={user} />
+            <Cursor />
             <NavigationBottomBar user={user} />
           </WebSocketProvider>
         </Toast>

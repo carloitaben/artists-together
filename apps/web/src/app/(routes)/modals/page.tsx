@@ -3,6 +3,7 @@
 import { redirect, useRouter } from "next/navigation"
 import { z } from "zod"
 
+import { demo } from "~/lib/actions"
 import { help } from "~/components/Icons"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
@@ -97,8 +98,9 @@ export default function Page() {
         <Modal.Portal>
           <Modal.Content>
             <Form.Root
+              delay
               schema={testEmailSchema}
-              onSubmit={async (values) => console.log(values)}
+              onSubmit={async (values) => await demo(values)}
               initialValues={{ email: "hello@carlo.works" }}
             >
               <Modal.Container>
@@ -182,8 +184,9 @@ export default function Page() {
           </Modal.Tabs>
           <Modal.Content value="foo">
             <Form.Root
+              delay
               schema={testEmailSchema}
-              onSubmit={async (values) => console.log(values)}
+              onSubmit={async (values) => await demo(values)}
               initialValues={{ email: "hello@carlo.works" }}
             >
               <Modal.Container>
@@ -202,8 +205,9 @@ export default function Page() {
           </Modal.Content>
           <Modal.Content value="bar">
             <Form.Root
+              delay
               schema={testUserPassSchema}
-              onSubmit={async (values) => console.log(values)}
+              onSubmit={async (values) => await demo(values)}
               initialValues={{ username: "carlo", password: "password" }}
             >
               <Modal.Container>

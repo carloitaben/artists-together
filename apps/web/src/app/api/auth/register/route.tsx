@@ -6,6 +6,7 @@ import { signupSchema } from "~/lib/schemas"
 import { auth, getOtp } from "~/services/auth"
 import { sendEmail } from "~/services/email"
 import { OtpEmail } from "~/emails/auth"
+import { LuciaError } from "lucia-auth"
 
 export const runtime = "nodejs"
 export const preferredRegion = "iad1"
@@ -62,6 +63,26 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
+    if (
+      error instanceof LuciaError &&
+      error.message === "AUTH_DUPLICATE_KEY_ID"
+    ) {
+      return NextResponse.json(
+        { error: "An account with that email already exists" },
+        { status: 400 }
+      )
+    }
+
+    if (
+      error instanceof LuciaError &&
+      error.message === "AUTH_DUPLICATE_KEY_ID"
+    ) {
+      return NextResponse.json(
+        { error: "An account with that email already exists" },
+        { status: 400 }
+      )
+    }
+
     console.error(error)
     return NextResponse.json(
       { error: "Internal Server Error" },
