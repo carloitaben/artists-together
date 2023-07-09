@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "Fraunces";
+    font-display: block;
+    font-style: normal;
+    font-weight: 100 900;
+    src: url("/fonts/fraunces.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Inter";
+    font-display: block;
+    font-style: normal;
+    font-weight: 100 900;
+    src: url("/fonts/inter.ttf") format("truetype");
+  }
+
+  .font-serif {
+    font-variation-settings: "SOFT" 100, "WONK" 0;
+  }
+}
