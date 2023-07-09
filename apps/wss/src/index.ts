@@ -1,6 +1,10 @@
 import { WebSocket, WebSocketServer } from "ws"
 import { ClientEvent, ClientEventDataMap, Cursor, ServerEvent, ServerEventDataMap } from "ws-types"
 import { nanoid } from "nanoid"
+import express from "express"
+import helmet from "helmet"
+import http from "http"
+import cors from "cors"
 
 type ExtendedWebSocket = WebSocket & {
   id: string
@@ -14,7 +18,7 @@ function send<T extends ServerEvent>(ws: ExtendedWebSocket, event: T, data: Serv
 }
 
 const rooms = new Map<string, Set<ExtendedWebSocket>>()
-const wss = new WebSocketServer<ExtendedWebSocket>({ port: 8080 })
+const wss = new WebSocketServer<ExtendedWebSocket>({ noServer: true })
 
 const pingInterval = setInterval(() => {
   wss.clients.forEach((ws) => {
@@ -106,4 +110,29 @@ wss.on("connection", (ws) => {
 
 wss.on("close", () => {
   clearInterval(pingInterval)
+})
+
+const app = express()
+
+app.use(helmet())
+
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? ["https://artists-together-web.vercel.app/", "https://artiststogether.online/"]
+        : "*",
+  })
+)
+
+const server = http.createServer(app)
+
+server.on("upgrade", (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit("connection", ws, request)
+  })
+})
+
+server.listen(process.env.PORT ? Number(process.env.PORT) : 8080, () => {
+  console.log("🚀")
 })
