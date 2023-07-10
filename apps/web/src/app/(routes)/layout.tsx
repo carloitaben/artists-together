@@ -38,35 +38,10 @@ const themes = [
   Theme["tuxedo-crimson"],
 ]
 
-const emojis = [
-  "🐶",
-  "🐵",
-  "🐯",
-  "🐮",
-  "🐴",
-  "🦊",
-  "🐷",
-  "🐨",
-  "🐭",
-  "🐹",
-  "🐰",
-  "🐼",
-  "🐻",
-  "🐸",
-  "🐲",
-  "🦁",
-  "🐱",
-  "🐦",
-  "🐤",
-  "🐔",
-  "🐧",
-]
-
 export default async function Layout({ children }: Props) {
   const user = await getUser()
   const theme = getTheme(oneOf(themes))
   const style = makeThemeStyle(theme)
-  const emoji = oneOf(emojis)
 
   return (
     <html
@@ -80,9 +55,9 @@ export default async function Layout({ children }: Props) {
           <WebSocketProvider user={user}>
             <NavigationSideBar user={user} />
             {children}
-            <Cursors user={user} emoji={emoji} />
-            <Cursor />
             <NavigationBottomBar user={user} />
+            <Cursors user={user} />
+            <Cursor />
           </WebSocketProvider>
         </Toast>
         <Script id="tailwindcss-noscript" strategy="beforeInteractive">

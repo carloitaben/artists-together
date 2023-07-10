@@ -3,7 +3,7 @@ export type CursorStates = ["idle", "press", "hover", "drag"]
 export type CursorState = CursorStates[number]
 
 export type Cursor =
-  | [x: number, y: number, scrollWidth: number, scrollHeight: number, state: CursorState, username: string]
+  | [x: number, y: number, state: CursorState, username: string]
   | null
 
 export type ClientEventDataMap = {
