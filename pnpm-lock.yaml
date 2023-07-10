@@ -80,6 +80,9 @@ importers:
       color2k:
         specifier: ^2.0.2
         version: 2.0.2
+      dayjs:
+        specifier: ^1.11.9
+        version: 1.11.9
       db:
         specifier: workspace:*
         version: link:../../packages/db
