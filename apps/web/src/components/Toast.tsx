@@ -61,7 +61,7 @@ export default function Toast({ children }: Props) {
           {toast ? (
             <motion.div
               key={toast.id}
-              className="rounded-full bg-not-so-white text-sm text-gunpla-white-700 shadow-[0px_4px_8px_0px_rgba(11,14,30,0.08)]"
+              className="rounded-full bg-not-so-white text-sm text-gunpla-white-700 shadow-button"
               initial={{ y: "150%" }}
               animate={{ y: "0%" }}
               exit={{ y: "150%" }}

@@ -232,9 +232,18 @@ export default {
     extend: {
       borderRadius: {
         "4xl": "32px",
+        "5xl": "64px",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      },
+      boxShadow: {
+        button: "0px 4px 8px 0px rgba(11, 14, 30, 0.08)",
+        card: "0px 8px 16px 0px rgba(11, 14, 30, 0.04)",
+      },
+      dropShadow: {
+        button: "0px 4px 8px 0px rgba(11, 14, 30, 0.08)",
+        card: "0px 8px 16px 0px rgba(11, 14, 30, 0.04)",
       },
     },
   },

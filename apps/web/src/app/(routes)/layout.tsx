@@ -50,7 +50,7 @@ export default async function Layout({ children }: Props) {
       style={style}
       suppressHydrationWarning
     >
-      <body className="grid min-h-full pb-14 selection:bg-theme-300 selection:text-theme-900 sm:pb-0 sm:pl-16">
+      <body className="min-h-full pb-14 selection:bg-theme-300 selection:text-theme-900 sm:pb-0 sm:pl-16">
         <Toast>
           <WebSocketProvider user={user}>
             <NavigationSideBar user={user} />

@@ -77,7 +77,7 @@ function Tooltip({ label, children }: { label: string; children: ReactNode }) {
                     damping: 15,
                     stiffness: 1500,
                   }}
-                  className="flex origin-left transform items-center drop-shadow-[0px_4px_8px_0px_rgba(11,14,30,0.08)]"
+                  className="drop-shadow-button flex origin-left transform items-center"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
