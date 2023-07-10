@@ -2,13 +2,14 @@
 
 import { ReactNode } from "react"
 import { Metadata } from "next"
+import { cookies } from "next/headers"
 import Script from "next/script"
 
 import "~/styles/index.css"
 
 import { getUser } from "~/services/auth"
 
-import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
+import { cookie, getTheme, makeThemeStyle, Theme } from "~/lib/themes"
 import { oneOf } from "~/lib/utils"
 
 import { WebSocketProvider } from "~/hooks/ws"
@@ -42,8 +43,11 @@ const themes = [
 ]
 
 export default async function Layout({ children }: Props) {
+  const themeCookie =
+    (cookies().get(cookie)?.value as Theme) || Theme["anamorphic-teal"]
+
   const user = await getUser()
-  const theme = getTheme(oneOf(themes))
+  const theme = getTheme(themeCookie)
   const style = makeThemeStyle(theme)
 
   return (

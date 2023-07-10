@@ -3,11 +3,13 @@ import { parseToRgba } from "color2k"
 
 import { tailwind } from "./tailwind"
 
+export const cookie = "theme"
+
 export const enum Theme {
-  "anamorphic-teal",
-  "arpeggio-black",
-  "outsider-violet",
-  "tuxedo-crimson",
+  "anamorphic-teal" = "0",
+  "arpeggio-black" = "1",
+  "outsider-violet" = "2",
+  "tuxedo-crimson" = "3",
 }
 
 function makeTheme(color: keyof (typeof tailwind)["theme"]["colors"]) {

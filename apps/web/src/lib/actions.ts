@@ -1,11 +1,13 @@
 "use server"
 
-import { Theme } from "./themes"
+import { cookies } from "next/headers"
+
+import { Theme, cookie } from "./themes"
 
 export async function demo(...args: any[]) {
   console.log("server action:", ...args)
 }
 
 export async function swapTheme(theme: Theme) {
-  console.log("swap theme cookie and reload router", { theme })
+  cookies().set(cookie, theme)
 }
