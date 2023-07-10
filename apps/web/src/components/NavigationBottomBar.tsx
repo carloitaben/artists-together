@@ -142,9 +142,9 @@ export default function NavigationBottomBar(_: Props) {
                       </Link>
                     </li>
                     <li>
-                      <Item disabled label="Coming soon!">
-                        {help}
-                      </Item>
+                      <Link href="/about" onClick={close}>
+                        <Item label="About">{help}</Item>
+                      </Link>
                     </li>
                     <li>
                       <Item disabled label="Coming soon!">

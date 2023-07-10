@@ -146,10 +146,10 @@ export default function NavigationSideBar(_: Props) {
               <Item>{home}</Item>
             </Link>
           </Tooltip>
-          <Tooltip label="Coming soon!">
-            <li>
-              <Item disabled>{help}</Item>
-            </li>
+          <Tooltip label="About">
+            <Link href="/about">
+              <Item>{help}</Item>
+            </Link>
           </Tooltip>
           <Tooltip label="Coming soon!">
             <li>
