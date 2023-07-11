@@ -1,33 +1,29 @@
+import { NextRequest, NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
-import { LuciaTokenError } from "@lucia-auth/tokens"
-import { LuciaError } from "lucia-auth"
 
 import { loginSchema } from "~/lib/schemas"
-import { auth, getOtp } from "~/services/auth"
+import { auth, generateOneTimePassword } from "~/services/auth"
 import { sendEmail } from "~/services/email"
 import { OtpEmail } from "~/emails/auth"
+import { LuciaError } from "lucia"
 
 export const runtime = "nodejs"
 export const preferredRegion = "iad1"
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const data = loginSchema.parse(await request.json())
-
-  const authRequest = auth.handleRequest({
-    request,
-    cookies,
-  })
-
-  const { session } = await authRequest.validateUser()
+  const session = await auth.handleRequest({ request, cookies }).validate()
 
   if (session) {
-    return NextResponse.json({ error: "Already logged in" }, { status: 400 })
+    return NextResponse.json(
+      { error: "You are already logged in" },
+      { status: 400 }
+    )
   }
 
   try {
     const key = await auth.getKey("email", data.email)
-    const otp = await getOtp(key.userId)
+    const otp = await generateOneTimePassword(key.userId)
 
     await sendEmail({
       to: data.email,
@@ -40,16 +36,6 @@ export async function POST(request: Request) {
     if (
       error instanceof LuciaError &&
       error.message === "AUTH_INVALID_KEY_ID"
-    ) {
-      return NextResponse.json(
-        { error: "User does not exist" },
-        { status: 400 }
-      )
-    }
-
-    if (
-      error instanceof LuciaTokenError &&
-      error.message === "INVALID_USER_ID"
     ) {
       return NextResponse.json(
         { error: "User does not exist" },

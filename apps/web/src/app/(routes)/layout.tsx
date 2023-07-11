@@ -7,7 +7,7 @@ import Script from "next/script"
 
 import "~/styles/index.css"
 
-import { getUser } from "~/services/auth"
+import { getSession } from "~/services/auth"
 
 import { cookie, getTheme, makeThemeStyle, Theme } from "~/lib/themes"
 import { oneOf } from "~/lib/utils"
@@ -46,7 +46,7 @@ export default async function Layout({ children }: Props) {
   const themeCookie =
     (cookies().get(cookie)?.value as Theme) || Theme["anamorphic-teal"]
 
-  const user = await getUser()
+  const session = await getSession()
   const theme = getTheme(themeCookie)
   const style = makeThemeStyle(theme)
 
@@ -59,11 +59,11 @@ export default async function Layout({ children }: Props) {
     >
       <body className="min-h-full pb-14 selection:bg-theme-300 selection:text-theme-900 sm:pb-0 sm:pl-16">
         <Toast>
-          <WebSocketProvider user={user}>
-            <NavigationSideBar user={user} />
+          <WebSocketProvider user={session?.user}>
+            <NavigationSideBar user={session?.user} />
             {children}
-            <NavigationBottomBar user={user} />
-            <Cursors user={user} />
+            <NavigationBottomBar user={session?.user} />
+            <Cursors user={session?.user} />
           </WebSocketProvider>
         </Toast>
         <Cursor />
