@@ -32,7 +32,7 @@ export const discordPollVotes = mysqlTable("discord_poll_votes", {
 })
 
 export const user = mysqlTable("auth_user", {
-  id: varchar("id", { length: 15 }).notNull().primaryKey(),
+  id: varchar("id", { length: 31 }).notNull().primaryKey(),
   username: varchar("username", { length: 30 }).notNull(),
   email: varchar("email", { length: 255 }).notNull(),
   bio: varchar("bio", { length: 128 }),
@@ -40,13 +40,20 @@ export const user = mysqlTable("auth_user", {
 
 export type User = InferModel<typeof user>
 
+export const otp = mysqlTable("auth_otp", {
+  id: serial("id").primaryKey(),
+  expires: bigint("expires", { mode: "number" }).notNull(),
+  password: char("password", { length: 6 }).notNull(),
+  userId: varchar("user_id", { length: 15 }).notNull(),
+})
+
 export const userSchema = createInsertSchema(user, {
   username: (schema) => schema.username.regex(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/gim),
   email: (schema) => schema.email.email(),
 })
 
 export const session = mysqlTable("auth_session", {
-  id: varchar("id", { length: 128 }).notNull().primaryKey(),
+  id: varchar("id", { length: 127 }).notNull().primaryKey(),
   userId: varchar("user_id", { length: 15 }).notNull(),
   activeExpires: bigint("active_expires", { mode: "number" }).notNull(),
   idleExpires: bigint("idle_expires", { mode: "number" }).notNull(),
@@ -55,7 +62,4 @@ export const session = mysqlTable("auth_session", {
 export const key = mysqlTable("auth_key", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   userId: varchar("user_id", { length: 15 }).notNull(),
-  primaryKey: boolean("primary_key").notNull(),
-  hashedPassword: varchar("hashed_password", { length: 255 }),
-  expires: bigint("expires", { mode: "number" }),
 })

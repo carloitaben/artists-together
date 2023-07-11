@@ -1,38 +1,36 @@
+import { NextRequest, NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
 import { connect, eq, user } from "db"
+import { LuciaError } from "lucia"
 
 import { signupSchema } from "~/lib/schemas"
-import { auth, getOtp } from "~/services/auth"
+import { auth, generateOneTimePassword } from "~/services/auth"
 import { sendEmail } from "~/services/email"
 import { OtpEmail } from "~/emails/auth"
-import { LuciaError } from "lucia-auth"
 
 export const runtime = "nodejs"
 export const preferredRegion = "iad1"
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const data = signupSchema.parse(await request.json())
-
-  const authRequest = auth.handleRequest({
-    request,
-    cookies,
-  })
-
-  const { session } = await authRequest.validateUser()
+  const session = await auth.handleRequest({ request, cookies }).validate()
 
   if (session) {
-    return NextResponse.json({ error: "Already logged in" }, { status: 400 })
+    return NextResponse.json(
+      { error: "You are already logged in" },
+      { status: 400 }
+    )
   }
 
   const db = connect()
-  const usersWithUsername = await db
-    .select()
+
+  const [userWithUsername] = await db
+    .select({ id: user.id })
     .from(user)
     .where(eq(user.username, data.username))
     .limit(1)
 
-  if (usersWithUsername.length) {
+  if (userWithUsername) {
     return NextResponse.json(
       { error: "Username already exists" },
       { status: 403 }
@@ -41,7 +39,7 @@ export async function POST(request: Request) {
 
   try {
     const user = await auth.createUser({
-      primaryKey: {
+      key: {
         providerId: "email",
         providerUserId: data.email,
         password: null,
@@ -53,7 +51,7 @@ export async function POST(request: Request) {
       },
     })
 
-    const otp = await getOtp(user.id)
+    const otp = await generateOneTimePassword(user.userId)
 
     await sendEmail({
       to: data.email,
@@ -61,18 +59,8 @@ export async function POST(request: Request) {
       react: <OtpEmail otp={otp.toString()} />,
     })
 
-    return NextResponse.json({ success: true }, { status: 200 })
+    return NextResponse.json(null, { status: 200 })
   } catch (error) {
-    if (
-      error instanceof LuciaError &&
-      error.message === "AUTH_DUPLICATE_KEY_ID"
-    ) {
-      return NextResponse.json(
-        { error: "An account with that email already exists" },
-        { status: 400 }
-      )
-    }
-
     if (
       error instanceof LuciaError &&
       error.message === "AUTH_DUPLICATE_KEY_ID"

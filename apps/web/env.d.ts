@@ -1,6 +1,7 @@
-/// <reference types="lucia-auth" />
+/// <reference types="lucia" />
 
 declare namespace Lucia {
   type Auth = import("./src/services/auth").Auth
-  type UserAttributes = Omit<import("db").User, "id">
-}  
+  type DatabaseUserAttributes = Omit<import("db").User, "id">
+  type DatabaseSessionAttributes = {}
+}
