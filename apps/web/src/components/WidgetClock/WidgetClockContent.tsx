@@ -1,9 +1,16 @@
 "use client"
 
-import { SpringOptions, motion, useSpring } from "framer-motion"
+import { useEffect, useState } from "react"
+import {
+  SpringOptions,
+  motion,
+  transform,
+  useMotionValueEvent,
+  useSpring,
+  useTime,
+} from "framer-motion"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import { useEffect } from "react"
 
 dayjs.extend(advancedFormat)
 
@@ -13,50 +20,64 @@ const spring: SpringOptions = {
   stiffness: 1500,
 }
 
-export default function WidgetClockContent() {
-  const now = dayjs()
+const transformSeconds = transform([0, 60], [0, 360], {
+  clamp: false,
+})
 
-  const seconds = useSpring(now.second(), spring)
-  const minutes = useSpring(now.minute(), spring)
-  const hours = useSpring(now.hour(), spring)
+const transformMinutes = transform([0, 60], [0, 360], {
+  clamp: false,
+})
+
+const transformHours = transform([0, 24], [0, 360], {
+  clamp: false,
+})
+
+const now = dayjs()
+
+export default function WidgetClockContent() {
+  const [timestamp, setTimestamp] = useState(now)
+
+  const seconds = useSpring(transformSeconds(now.second()), spring)
+  const minutes = useSpring(transformMinutes(now.minute()), spring)
+  const hours = useSpring(transformHours(now.hour()), spring)
 
   useEffect(() => {
-    let s = now.second()
-    let m = now.minute()
-    let h = now.hour()
+    let second = now.second()
+    let minute = now.minute()
+    let hour = now.hour()
 
-    const secondInterval = setInterval(() => {
-      s = s + 1
-      seconds.set(s)
+    const interval = setInterval(() => {
+      second = second + 1
+      seconds.set(transformSeconds(second))
+
+      if (second % 60 === 0) {
+        minute = minute + 1
+        minutes.set(transformMinutes(minute))
+      }
+
+      if ((minute * 60) % 3600 === 0 && second % 60 === 0) {
+        hour = hour + 1
+        hours.set(transformHours(hour))
+      }
+
+      setTimestamp(dayjs())
     }, 1_000)
 
-    const minuteInterval = setInterval(() => {
-      m = m + 1
-      minutes.set(m)
-    }, 60_000)
-
-    const hourInterval = setInterval(() => {
-      h = h + 1
-      hours.set(h)
-    }, 3_600_000)
-
     return () => {
-      clearInterval(secondInterval)
-      clearInterval(minuteInterval)
-      clearInterval(hourInterval)
+      clearInterval(interval)
     }
-  }, [hours, minutes, now, seconds])
+  }, [hours, minutes, seconds])
 
   return (
     <>
       <div className="absolute inset-0 bg-theme-50 px-[6.667vw] py-[5vw] font-serif font-light text-theme-900">
         <div>
           <div className="flex items-center justify-between text-[1.667vw]">
-            <div>{now.format("MMM")}.</div>
-            <div>{now.format("Do")}</div>
+            <div>{timestamp.format("MMM")}.</div>
+            <div>{timestamp.format("Do")}</div>
           </div>
           <div className="text-center text-[3.333vw]">
-            {now.format("HH:mm:ss")}
+            {timestamp.format("HH:mm:ss")}
           </div>
         </div>
         <div className="text-center text-[1.667vw]">Lisbon, Portugal</div>
