@@ -1,17 +1,17 @@
 import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
 import { auth } from "~/services/auth"
 
 export const runtime = "edge"
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const authRequest = auth.handleRequest({
     request,
     cookies,
   })
 
-  const { session } = await authRequest.validateUser()
+  const session = await authRequest.validate()
 
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })

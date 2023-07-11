@@ -6,7 +6,7 @@ import Script from "next/script"
 
 import "~/styles/index.css"
 
-import { getUser } from "~/services/auth"
+import { getSession } from "~/services/auth"
 import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
 import { oneOf } from "~/lib/utils"
 import NavigationSideBar from "~/components/NavigationSideBar"
@@ -63,10 +63,12 @@ const emojis = [
 ]
 
 export default async function Layout({ children }: Props) {
-  const user = await getUser()
+  const session = await getSession()
   const theme = getTheme(oneOf(themes))
   const style = makeThemeStyle(theme)
   const emoji = oneOf(emojis)
+
+  const user = session?.user
 
   return (
     <html
