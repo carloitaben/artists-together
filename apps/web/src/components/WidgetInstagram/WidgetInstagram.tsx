@@ -2,6 +2,8 @@ import { Suspense } from "react"
 
 import { wait } from "~/lib/utils"
 
+import Pill from "~/components/Pill"
+
 const IG_HANDLE = "artiststogether.online"
 
 async function Content() {
@@ -20,11 +22,7 @@ async function Content() {
         src="https://images.unsplash.com/photo-1600804340584-c7db2eacf0bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
         alt=""
       />
-      <div className="absolute bottom-4 right-4">
-        <span className="rounded-full bg-theme-50 px-5 py-2 text-sm text-theme-900 shadow-button">
-          @{IG_HANDLE}
-        </span>
-      </div>
+      <Pill className="absolute bottom-4 right-4">@{IG_HANDLE}</Pill>
     </a>
   )
 }

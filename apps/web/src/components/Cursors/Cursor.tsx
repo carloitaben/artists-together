@@ -7,7 +7,7 @@ import { motion, MotionStyle, Variants } from "framer-motion"
 
 import { useWebSocketEvent } from "~/hooks/ws"
 
-import CursorLabel from "./CursorLabel"
+import Pill from "~/components/Pill"
 
 const variants: Variants = {
   hide: {
@@ -89,9 +89,13 @@ export default function Cursor({ cursor, id }: Props) {
             d="M17.46 29.756a1 1 0 0 0 1.33.484l3.634-1.7a1 1 0 0 0 .482-1.328l-4.137-8.877h7.898a1 1 0 0 0 .617-1.787L8.619 1.882A1 1 0 0 0 7 2.668v24a1 1 0 0 0 1.813.582l4.536-6.34 4.11 8.846Z"
           />
         </motion.svg>
-        <CursorLabel className="-translate-x-1 -translate-y-3">
+        <Pill
+          themed={false}
+          size="sm"
+          className="-translate-x-1 -translate-y-3"
+        >
           {cursor[3]}
-        </CursorLabel>
+        </Pill>
       </motion.div>
     </motion.div>
   )
