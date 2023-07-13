@@ -80,9 +80,9 @@ export const weatherResponseSchema = z.object({
 })
 
 async function Content() {
-  const latitude = "40.43" // TODO: get these from somewhere
-  const longitude = "-3.84" // TODO: get these from somewhere
-  const city = "Madrid"
+  const latitude = "59.32" // TODO: get these from somewhere
+  const longitude = "17.81" // TODO: get these from somewhere
+  const city = "Stockholm, Sweden"
 
   const url = new URL("https://api.open-meteo.com/v1/forecast")
   url.searchParams.set("latitude", latitude)
@@ -96,10 +96,7 @@ async function Content() {
   )
 
   const weather = await fetch(url.toString()).then((response) =>
-    response.json().then((data) => {
-      console.log(JSON.stringify(data))
-      return weatherResponseSchema.parse(data)
-    })
+    response.json().then((data) => weatherResponseSchema.parse(data))
   )
 
   return (
