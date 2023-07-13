@@ -1,11 +1,17 @@
 "use client"
 
 import "client-only"
-import { useEffect, useState } from "react"
-import { SpringOptions, motion, transform, useSpring } from "framer-motion"
 import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
 import advancedFormat from "dayjs/plugin/advancedFormat"
+import { useEffect, useMemo, useState } from "react"
+import { SpringOptions, motion, transform, useSpring } from "framer-motion"
 
+import type { Timezone } from "./WidgetClock"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
 
 const spring: SpringOptions = {
@@ -26,9 +32,15 @@ const transformHours = transform([0, 12], [0, 360], {
   clamp: false,
 })
 
-const now = dayjs()
+export default function WidgetClockContent({
+  timezone,
+}: {
+  timezone: Timezone
+}) {
+  const now = useMemo(() => {
+    return dayjs().tz(timezone.code)
+  }, [timezone])
 
-export default function WidgetClockContent() {
   const [timestamp, setTimestamp] = useState(now)
 
   const seconds = useSpring(transformSeconds(now.second()), spring)
@@ -60,7 +72,7 @@ export default function WidgetClockContent() {
     return () => {
       clearInterval(interval)
     }
-  }, [hours, minutes, seconds])
+  }, [now, hours, minutes, seconds])
 
   return (
     <>
@@ -80,7 +92,7 @@ export default function WidgetClockContent() {
           </div>
         </div>
         <div className="text-center text-[1.667vw]/[1.771vw]">
-          Lisbon, Portugal
+          {timezone.name}
         </div>
       </div>
       <div aria-hidden className="pointer-events-none">
