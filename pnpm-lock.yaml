@@ -74,6 +74,9 @@ importers:
       class-variance-authority:
         specifier: ^0.6.1
         version: 0.6.1
+      client-only:
+        specifier: ^0.0.1
+        version: 0.0.1
       color2k:
         specifier: ^2.0.2
         version: 2.0.2
