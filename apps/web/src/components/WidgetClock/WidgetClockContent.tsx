@@ -76,9 +76,9 @@ export default function WidgetClockContent({
 
   return (
     <>
-      <div className="absolute inset-0 flex flex-col items-stretch justify-between bg-theme-50 p-[5vw] font-serif font-light text-theme-900">
+      <div className="absolute inset-0 flex flex-col items-stretch justify-between bg-theme-50 font-serif font-light text-theme-900 fluid:p-24">
         <div>
-          <div className="flex items-center justify-between text-[1.667vw]">
+          <div className="flex items-center justify-between fluid:text-[2rem]">
             <div className="text-start">{timestamp.format("MMM")}.</div>
             <div className="text-end">
               {timestamp.format("D")}
@@ -87,11 +87,11 @@ export default function WidgetClockContent({
               </span>
             </div>
           </div>
-          <div className=" whitespace-nowrap text-center text-[3.333vw] leading-none">
+          <div className="whitespace-nowrap text-center leading-none fluid:text-[4rem]">
             {timestamp.format("HH:mm:ss")}
           </div>
         </div>
-        <div className="text-center text-[1.667vw]/[1.771vw]">
+        <div className="text-center fluid:text-[2rem]/[2.125rem]">
           {timezone.name}
         </div>
       </div>
@@ -100,19 +100,19 @@ export default function WidgetClockContent({
           className="absolute inset-0 flex items-center justify-center"
           style={{ rotate: seconds }}
         >
-          <div className="mt-[0.208vw] h-[9.375vw] w-[0.208vw] -translate-y-1/2 rounded-full bg-acrylic-red-500 shadow-button" />
+          <div className="-translate-y-1/2 rounded-full bg-acrylic-red-500 shadow-button fluid:mt-1 fluid:h-[11rem] fluid:w-1" />
         </motion.div>
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
           style={{ rotate: minutes }}
         >
-          <div className="mt-[0.573vw] h-[8.594vw] w-[0.573vw] -translate-y-1/2 rounded-full bg-ruler-cyan-400 shadow-button" />
+          <div className="-translate-y-1/2 rounded-full bg-ruler-cyan-400 shadow-button fluid:mt-2.5 fluid:h-40 fluid:w-2.5" />
         </motion.div>
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
           style={{ rotate: hours }}
         >
-          <div className="mt-[0.573vw] h-[5vw] w-[0.573vw] -translate-y-1/2 rounded-full bg-smiley-yellow-400 shadow-button" />
+          <div className="-translate-y-1/2 rounded-full bg-smiley-yellow-400 shadow-button fluid:mt-2.5 fluid:h-24 fluid:w-2.5" />
         </motion.div>
       </div>
     </>

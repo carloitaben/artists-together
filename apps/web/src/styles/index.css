@@ -7,6 +7,16 @@
     @apply cursor-none;
   }
 
+  :root {
+    --fluid-viewport: 360;
+  }
+
+  @screen sm {
+    :root {
+      --fluid-viewport: 1920;
+    }
+  }
+
   @font-face {
     font-family: "Fraunces";
     font-display: block;

@@ -1,6 +1,35 @@
 import type { Config } from "tailwindcss"
+import plugin from "tailwindcss/plugin"
 import radixPlugin from "tailwindcss-radix"
 import noscriptPlugin from "tailwindcss-noscript"
+
+function getFluidValue(value: string) {
+  if (value.endsWith("rem")) {
+    return parseFloat(value.replace("rem", "")) * 16
+  }
+
+  if (value.endsWith("px")) {
+    return parseFloat(value.replace("rem", ""))
+  }
+}
+
+const fluidPlugin = plugin(({ addVariant }) => {
+  // @ts-expect-error This definitely exists but it's missing in Tailwind types
+  addVariant("fluid", ({ container }) => {
+    // @ts-expect-error This definitely exists but it's missing in Tailwind types
+    container.walkRules((rule) => {
+      rule.selector = `.fluid\\:${rule.selector.slice(1)}`
+
+      // @ts-expect-error This definitely exists but it's missing in Tailwind types
+      rule.walkDecls((decl) => {
+        const value = getFluidValue(decl.value)
+        if (typeof value === "number") {
+          decl.value = `calc(${value * 100}vw / var(--fluid-viewport))`
+        }
+      })
+    })
+  })
+})
 
 export default {
   content: ["./src/**/*.{ts,tsx}"],
@@ -229,11 +258,20 @@ export default {
         900: "#0B0E1E",
       },
     },
+    borderRadius: {
+      none: "0px",
+      sm: "0.125rem",
+      DEFAULT: "0.25rem",
+      md: "0.375rem",
+      lg: "0.5rem",
+      xl: "0.75rem",
+      "2xl": "1rem",
+      "3xl": "1.5rem",
+      "4xl": "2rem",
+      "5xl": "4rem",
+      full: "9999px",
+    },
     extend: {
-      borderRadius: {
-        "4xl": "32px",
-        "5xl": "64px",
-      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
@@ -247,5 +285,5 @@ export default {
       },
     },
   },
-  plugins: [radixPlugin, noscriptPlugin],
+  plugins: [radixPlugin, noscriptPlugin, fluidPlugin],
 } satisfies Config
