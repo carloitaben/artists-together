@@ -31,6 +31,12 @@ export const discordPollVotes = mysqlTable("discord_poll_votes", {
   answer: tinyint("answer").notNull(),
 })
 
+export const discordLiveUsers = mysqlTable("discord_live_users", {
+  id: serial("id").primaryKey(),
+  url: varchar("url", { length: 255 }).notNull(),
+  userId: char("user_id", { length: 18 }).notNull(),
+})
+
 export const user = mysqlTable("auth_user", {
   id: varchar("id", { length: 31 }).notNull().primaryKey(),
   username: varchar("username", { length: 30 }).notNull(),
