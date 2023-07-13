@@ -6,7 +6,7 @@ import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { useEffect, useMemo, useState } from "react"
-import { SpringOptions, motion, transform, useSpring } from "framer-motion"
+import { motion, useSpring, SpringOptions } from "framer-motion"
 
 import type { Timezone } from "./WidgetClock"
 
@@ -17,20 +17,20 @@ dayjs.extend(advancedFormat)
 const spring: SpringOptions = {
   mass: 0.75,
   damping: 15,
-  stiffness: 1500,
+  stiffness: 1_500,
 }
 
-const transformSeconds = transform([0, 60], [0, 360], {
-  clamp: false,
-})
+function transformSeconds(seconds: number) {
+  return (360 / 60) * seconds
+}
 
-const transformMinutes = transform([0, 60], [0, 360], {
-  clamp: false,
-})
+function transformMinutes(minutes: number) {
+  return (360 / 60) * minutes
+}
 
-const transformHours = transform([0, 12], [0, 360], {
-  clamp: false,
-})
+function transformHours(hours: number) {
+  return (360 / 12) * hours
+}
 
 export default function WidgetClockContent({
   timezone,
@@ -39,7 +39,7 @@ export default function WidgetClockContent({
 }) {
   const now = useMemo(() => {
     return dayjs().tz(timezone.code)
-  }, [timezone])
+  }, [timezone.code])
 
   const [timestamp, setTimestamp] = useState(now)
 
@@ -66,13 +66,13 @@ export default function WidgetClockContent({
         hours.set(transformHours(hour))
       }
 
-      setTimestamp(dayjs())
+      setTimestamp(dayjs().tz(timezone.code))
     }, 1_000)
 
     return () => {
       clearInterval(interval)
     }
-  }, [now, hours, minutes, seconds])
+  }, [now, hours, minutes, seconds, timezone.code])
 
   return (
     <>

@@ -18,14 +18,28 @@ function Fallback() {
 }
 
 export type Timezone = {
-  code: string
   name: string
+  code: string
 }
 
 // https://github.com/omsrivastava/timezones-list/blob/master/src/timezones.json
 const timezones: Timezone[] = [
-  { code: "America/Toronto", name: "Toronto, Canada" },
-  { code: "Europe/Lisbon", name: "Lisbon, Portugal" },
+  {
+    name: "Toronto, Canada",
+    code: "America/Toronto",
+  },
+  {
+    name: "Lisbon, Portugal",
+    code: "Europe/Lisbon",
+  },
+  {
+    name: "Canberra, Australia",
+    code: "Australia/Sydney",
+  },
+  {
+    name: "Sapporo, Japan",
+    code: "Asia/Tokyo",
+  },
 ]
 
 export default function WidgetClock() {
