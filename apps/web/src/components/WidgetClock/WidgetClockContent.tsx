@@ -1,14 +1,8 @@
 "use client"
 
+import "client-only"
 import { useEffect, useState } from "react"
-import {
-  SpringOptions,
-  motion,
-  transform,
-  useMotionValueEvent,
-  useSpring,
-  useTime,
-} from "framer-motion"
+import { SpringOptions, motion, transform, useSpring } from "framer-motion"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 
@@ -28,7 +22,7 @@ const transformMinutes = transform([0, 60], [0, 360], {
   clamp: false,
 })
 
-const transformHours = transform([0, 24], [0, 360], {
+const transformHours = transform([0, 12], [0, 360], {
   clamp: false,
 })
 
@@ -70,37 +64,45 @@ export default function WidgetClockContent() {
 
   return (
     <>
-      <div className="absolute inset-0 bg-theme-50 px-[6.667vw] py-[5vw] font-serif font-light text-theme-900">
+      <div className="absolute inset-0 flex flex-col items-stretch justify-between bg-theme-50 p-[5vw] font-serif font-light text-theme-900">
         <div>
           <div className="flex items-center justify-between text-[1.667vw]">
-            <div>{timestamp.format("MMM")}.</div>
-            <div>{timestamp.format("Do")}</div>
+            <div className="text-start">{timestamp.format("MMM")}.</div>
+            <div className="text-end">
+              {timestamp.format("D")}
+              <span className="uppercase">
+                {timestamp.format("Do").replace(timestamp.format("D"), "")}
+              </span>
+            </div>
           </div>
-          <div className="text-center text-[3.333vw]">
+          <div className=" whitespace-nowrap text-center text-[3.333vw] leading-none">
             {timestamp.format("HH:mm:ss")}
           </div>
         </div>
-        <div className="text-center text-[1.667vw]">Lisbon, Portugal</div>
+        <div className="text-center text-[1.667vw]/[1.771vw]">
+          Lisbon, Portugal
+        </div>
       </div>
-
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{ rotate: seconds }}
-      >
-        <div className="h-[9.375vw] w-[0.208vw] -translate-y-1/2 rounded-full bg-acrylic-red-500 shadow-button" />
-      </motion.div>
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{ rotate: minutes }}
-      >
-        <div className="h-[8.594vw] w-[0.573vw] -translate-y-1/2 rounded-full bg-ruler-cyan-400 shadow-button" />
-      </motion.div>
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{ rotate: hours }}
-      >
-        <div className="h-[5vw] w-[0.573vw] -translate-y-1/2 rounded-full bg-smiley-yellow-400 shadow-button" />
-      </motion.div>
+      <div aria-hidden className="pointer-events-none">
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ rotate: seconds }}
+        >
+          <div className="mt-[0.208vw] h-[9.375vw] w-[0.208vw] -translate-y-1/2 rounded-full bg-acrylic-red-500 shadow-button" />
+        </motion.div>
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ rotate: minutes }}
+        >
+          <div className="mt-[0.573vw] h-[8.594vw] w-[0.573vw] -translate-y-1/2 rounded-full bg-ruler-cyan-400 shadow-button" />
+        </motion.div>
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ rotate: hours }}
+        >
+          <div className="mt-[0.573vw] h-[5vw] w-[0.573vw] -translate-y-1/2 rounded-full bg-smiley-yellow-400 shadow-button" />
+        </motion.div>
+      </div>
     </>
   )
 }
