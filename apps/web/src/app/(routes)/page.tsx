@@ -5,7 +5,7 @@ import Icon from "~/components/Icon"
 import Container from "~/components/Container"
 import WidgetInstagram from "~/components/WidgetInstagram"
 import WidgetSpinner from "~/components/WidgetSpinner"
-import WidgetTwitch from "~/components/WidgetTwitch"
+import WidgetLive from "~/components/WidgetLive"
 import WidgetClock from "~/components/WidgetClock"
 import WidgetWeather from "~/components/WidgetWeather"
 import WidgetTheme from "~/components/WidgetTheme"
@@ -27,7 +27,7 @@ export default function Page() {
           <SuspenseList revealOrder="forwards">
             <WidgetInstagram />
             <WidgetSpinner />
-            <WidgetTwitch />
+            <WidgetLive />
             <WidgetClock />
             <WidgetSchedule />
             <WidgetWeather />
