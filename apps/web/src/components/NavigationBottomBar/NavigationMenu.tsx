@@ -1,7 +1,8 @@
 "use client"
 
-import * as Dialog from "@radix-ui/react-dialog"
 import { AnimatePresence, Transition, motion } from "framer-motion"
+
+import { useOnMatchScreen } from "~/hooks/media"
 
 import {
   artists,
@@ -13,8 +14,8 @@ import {
   train,
 } from "~/components/Icons"
 import { useControlledDialog } from "~/components/Dialog"
+import * as Dialog from "~/components/Dialog"
 import Icon from "~/components/Icon"
-import { useOnMatchScreen } from "~/hooks/media"
 
 import NavigationLink from "./NavigationLink"
 import NavigationItem from "./NavigationItem"

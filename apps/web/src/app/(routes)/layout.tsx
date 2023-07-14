@@ -10,12 +10,11 @@ import "~/styles/index.css"
 import { getSession } from "~/services/auth"
 
 import { cookie, getTheme, makeThemeStyle, Theme } from "~/lib/themes"
-import { oneOf } from "~/lib/utils"
 
 import { WebSocketProvider } from "~/hooks/ws"
 
 import NavigationSideBar from "~/components/NavigationSideBar"
-import NavigationBottomBar from "~/components/NavigationBottomBar/NavigationBottomBar"
+import NavigationBottomBar from "~/components/NavigationBottomBar"
 import Toast from "~/components/Toast"
 import Cursors from "~/components/Cursors"
 import Cursor from "~/components/Cursor"
@@ -59,12 +58,12 @@ export default async function Layout({ children }: Props) {
     >
       <body className="min-h-full pb-14 selection:bg-theme-300 selection:text-theme-900 sm:pb-0 sm:pl-16">
         <Toast>
+          <NavigationSideBar />
           <WebSocketProvider user={session?.user}>
-            <NavigationSideBar user={session?.user} />
             {children}
-            <NavigationBottomBar />
             <Cursors user={session?.user} />
           </WebSocketProvider>
+          <NavigationBottomBar />
         </Toast>
         <Cursor />
         <Script id="tailwindcss-noscript" strategy="beforeInteractive">
