@@ -8,7 +8,7 @@ import advancedFormat from "dayjs/plugin/advancedFormat"
 import { useEffect, useMemo, useState } from "react"
 import { motion, useSpring, SpringOptions } from "framer-motion"
 
-import type { Timezone } from "./WidgetClock"
+import { Location } from "~/data/locations"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -32,14 +32,10 @@ function transformHours(hours: number) {
   return (360 / 12) * hours
 }
 
-export default function WidgetClockContent({
-  timezone,
-}: {
-  timezone: Timezone
-}) {
+export default function WidgetClockContent({ location }: { location: Location }) {
   const now = useMemo(() => {
-    return dayjs().tz(timezone.code)
-  }, [timezone.code])
+    return dayjs().tz(location.timezone)
+  }, [location.timezone])
 
   const [timestamp, setTimestamp] = useState(now)
 
@@ -66,13 +62,13 @@ export default function WidgetClockContent({
         hours.set(transformHours(hour))
       }
 
-      setTimestamp(dayjs().tz(timezone.code))
+      setTimestamp(dayjs().tz(location.timezone))
     }, 1_000)
 
     return () => {
       clearInterval(interval)
     }
-  }, [now, hours, minutes, seconds, timezone.code])
+  }, [now, hours, minutes, seconds, location.timezone])
 
   return (
     <>

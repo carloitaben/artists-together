@@ -1,6 +1,9 @@
 import { Suspense } from "react"
 import { z } from "zod"
 
+import { locations } from "~/data/locations"
+import { oneOf } from "~/lib/utils"
+
 function handleWeatherCode(code: number) {
   switch (code) {
     case 0:
@@ -80,13 +83,11 @@ export const weatherResponseSchema = z.object({
 })
 
 async function Content() {
-  const latitude = "59.32" // TODO: get these from somewhere
-  const longitude = "17.81" // TODO: get these from somewhere
-  const city = "Stockholm, Sweden"
-
+  const location = oneOf(locations)
   const url = new URL("https://api.open-meteo.com/v1/forecast")
-  url.searchParams.set("latitude", latitude)
-  url.searchParams.set("longitude", longitude)
+
+  url.searchParams.set("latitude", location.coordinates[0])
+  url.searchParams.set("longitude", location.coordinates[1])
   url.searchParams.set("current_weather", "true") // If we end up not using weather.current_weather.weathercode, delete this
   url.searchParams.set("timezone", "auto")
   url.searchParams.set("forecast_days", "2")
@@ -101,7 +102,7 @@ async function Content() {
 
   return (
     <div className="h-full w-full bg-theme-50 text-theme-700">
-      {city}
+      {location.name}
       {/* or if we want the average weathercode for the day {handleWeatherCode(weather.daily.weathercode[0])} */}
       {handleWeatherCode(weather.current_weather.weathercode)}
 
