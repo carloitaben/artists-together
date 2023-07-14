@@ -8,9 +8,7 @@ import Script from "next/script"
 import "~/styles/index.css"
 
 import { getSession } from "~/services/auth"
-
-import { cookie, getTheme, makeThemeStyle, Theme } from "~/lib/themes"
-
+import { getThemeCSS, getThemeCookie } from "~/lib/themes"
 import { WebSocketProvider } from "~/hooks/ws"
 
 import NavigationSideBar from "~/components/NavigationSideBar"
@@ -34,20 +32,10 @@ export const metadata: Metadata = {
   },
 }
 
-const themes = [
-  Theme["anamorphic-teal"],
-  Theme["arpeggio-black"],
-  Theme["outsider-violet"],
-  Theme["tuxedo-crimson"],
-]
-
 export default async function Layout({ children }: Props) {
-  const themeCookie =
-    (cookies().get(cookie)?.value as Theme) || Theme["anamorphic-teal"]
-
   const session = await getSession()
-  const theme = getTheme(themeCookie)
-  const style = makeThemeStyle(theme)
+  const theme = getThemeCookie(cookies())
+  const style = getThemeCSS(theme)
 
   return (
     <html

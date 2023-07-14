@@ -1,8 +1,9 @@
 import { Suspense } from "react"
+import { cookies } from "next/headers"
 
-import { Theme } from "~/lib/themes"
+import { getThemeCookie } from "~/lib/themes"
 
-import WidgetThemeButton from "./WidgetThemeButton"
+import WidgetThemeContent from "./WidgetThemeContent"
 
 const bg = (
   <svg
@@ -10,6 +11,7 @@ const bg = (
     fill="none"
     viewBox="0 0 448 448"
     className="shadow-card"
+    aria-hidden
   >
     <path
       fill="currentColor"
@@ -18,29 +20,20 @@ const bg = (
   </svg>
 )
 
-function Content() {
-  return (
-    <div className="relative text-theme-50">
-      {bg}
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <WidgetThemeButton theme={Theme["anamorphic-teal"]} />
-        <WidgetThemeButton theme={Theme["arpeggio-black"]} />
-        <WidgetThemeButton theme={Theme["outsider-violet"]} />
-        <WidgetThemeButton theme={Theme["tuxedo-crimson"]} />
-      </div>
-    </div>
-  )
-}
-
 function Fallback() {
   return <div className="text-theme-700">{bg}</div>
 }
 
 export default function WidgetTheme() {
+  const theme = getThemeCookie(cookies())
+
   return (
     <div className="col-span-2">
       <Suspense fallback={<Fallback />}>
-        <Content />
+        <div className="relative text-theme-50">
+          {bg}
+          <WidgetThemeContent theme={theme} />
+        </div>
       </Suspense>
     </div>
   )

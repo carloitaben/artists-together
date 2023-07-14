@@ -132,7 +132,8 @@ export default function WidgetWeather() {
       <div className="relative overflow-hidden rounded-l-5xl rounded-r-[14rem] pb-[43.6764705882%] shadow-card">
         <div className="absolute inset-0">
           <Suspense fallback={<Fallback />}>
-            <Content />
+            {/* <Content /> */}
+            <Fallback />
           </Suspense>
         </div>
       </div>

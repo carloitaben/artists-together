@@ -2,6 +2,7 @@ import type { CSSProperties } from "react"
 import { parseToRgba } from "color2k"
 
 import { tailwind } from "./tailwind"
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 
 export const cookie = "theme"
 
@@ -21,12 +22,6 @@ function makeTheme(color: keyof (typeof tailwind)["theme"]["colors"]) {
   )
 }
 
-export function makeThemeStyle(theme: ReturnType<typeof makeTheme>) {
-  return Object.fromEntries(
-    Object.entries(theme).map(([k, v]) => [`--theme-${k}`, v])
-  ) as CSSProperties
-}
-
 const themes = {
   [Theme["anamorphic-teal"]]: makeTheme("anamorphic-teal"),
   [Theme["arpeggio-black"]]: makeTheme("arpeggio-black"),
@@ -34,6 +29,12 @@ const themes = {
   [Theme["tuxedo-crimson"]]: makeTheme("tuxedo-crimson"),
 }
 
-export function getTheme(theme: Theme) {
-  return themes[theme]
+export function getThemeCookie(cookies: ReadonlyRequestCookies) {
+  return (cookies.get(cookie)?.value as Theme) || Theme["anamorphic-teal"]
+}
+
+export function getThemeCSS(theme: Theme) {
+  return Object.fromEntries(
+    Object.entries(themes[theme]).map(([k, v]) => [`--theme-${k}`, v])
+  ) as CSSProperties
 }
