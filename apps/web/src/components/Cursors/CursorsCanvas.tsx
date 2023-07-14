@@ -1,11 +1,11 @@
 "use client"
 
 import throttle from "just-throttle"
+import { User } from "lucia"
 import { useEffect, useState } from "react"
 import { AnimatePresence } from "framer-motion"
 import { Cursor } from "ws-types"
 
-import { User } from "~/services/auth"
 import { useMatchesMedia } from "~/hooks/media"
 import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
 
@@ -18,7 +18,7 @@ function limit(number: number) {
 }
 
 type Props = {
-  user: User
+  user: User | undefined
 }
 
 export default function CursorsCanvas({ user }: Props) {

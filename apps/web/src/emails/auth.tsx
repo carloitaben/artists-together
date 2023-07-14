@@ -8,13 +8,14 @@ import {
   Preview,
   Section,
   Text,
+  TailwindProps,
 } from "@react-email/components"
 
 import config from "../../tailwind.config"
 
 export function OtpEmail({ otp }: { otp: string }) {
   return (
-    <Tailwind config={config}>
+    <Tailwind config={config as TailwindProps["config"]}>
       <Html>
         <Head />
         <Preview>Your login code</Preview>

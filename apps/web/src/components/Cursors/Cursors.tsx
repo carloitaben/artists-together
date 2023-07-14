@@ -1,15 +1,15 @@
 "use client"
 
+import { User } from "lucia"
 import { lazy, startTransition, useState, Suspense } from "react"
 
-import { User } from "~/services/auth"
 import { useOnMatchScreen } from "~/hooks/media"
 import { url } from "~/hooks/ws"
 
 const CursorsCanvas = lazy(() => import("./CursorsCanvas"))
 
 type Props = {
-  user: User
+  user: User | undefined
 }
 
 export default function Cursors({ user }: Props) {

@@ -15,9 +15,8 @@ import {
   ServerEvent,
   ServerEventDataMap,
 } from "ws-types"
+import { User } from "lucia"
 import { usePathname } from "next/navigation"
-
-import type { User } from "~/services/auth"
 
 const eventBuffer = new Map<string, any>()
 const listeners = new Map<string, Set<Function>>()
@@ -75,7 +74,7 @@ export function WebSocketProvider({
   children,
   user,
 }: {
-  user: User
+  user: User | undefined
   children: ReactNode
 }) {
   const [ws, setWs] = useState<WebSocket>()
