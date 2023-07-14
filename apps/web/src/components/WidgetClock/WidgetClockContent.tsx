@@ -88,7 +88,7 @@ export default function WidgetClockContent({ location }: { location: Location })
           </div>
         </div>
         <div className="text-center fluid:text-[2rem]/[2.125rem]">
-          {timezone.name}
+          {location.name}
         </div>
       </div>
       <div aria-hidden className="pointer-events-none">
