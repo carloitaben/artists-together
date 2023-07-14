@@ -5,16 +5,18 @@ import {
   ComponentProps,
   ForwardedRef,
   forwardRef,
+  startTransition,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from "react"
 import { cx } from "class-variance-authority"
+import { transform } from "framer-motion"
 
-type Props = ComponentProps<"div"> & {
-  children: string
-}
+const duration = transform([0, 100], ["0s", "30s"], {
+  clamp: false,
+})
 
 function computeShadows(width: number, iterations: number) {
   const shadows = []
@@ -26,6 +28,10 @@ function computeShadows(width: number, iterations: number) {
   return shadows.join(",")
 }
 
+type Props = ComponentProps<"div"> & {
+  children: string
+}
+
 function Marquee(
   { children, className, ...props }: Props,
   forwardedRef: ForwardedRef<HTMLDivElement>
@@ -34,23 +40,27 @@ function Marquee(
   const ref = useRef<HTMLSpanElement>(null)
 
   const recalculate = useCallback(() => {
-    if (!ref.current) return
-    const width = ref.current.offsetWidth
-    const iterations = Math.ceil(window.innerWidth / width)
-    const newShadows = computeShadows(width, iterations)
-    setShadows(newShadows)
+    startTransition(() => {
+      if (!ref.current) return
+      const width = ref.current.offsetWidth
+      const iterations = Math.ceil(window.innerWidth / width)
+      const newShadows = computeShadows(width, iterations)
+      setShadows(newShadows)
+    })
   }, [])
 
   useEffect(() => {
-    window.addEventListener("resize", recalculate, true)
-    return () => {
-      window.removeEventListener("resize", recalculate, true)
-    }
+    if (!ref.current) return
+
+    recalculate()
+    const observer = new ResizeObserver(recalculate)
+    observer.observe(ref.current)
+    return () => observer.disconnect()
   }, [recalculate])
 
   const style: CSSProperties = {
     textShadow: shadows,
-    animationDuration: `${((children.length + 1) * 30) / 100}s`, // 100 characters = 30s,
+    animationDuration: duration(children.length + 1),
   }
 
   return (
