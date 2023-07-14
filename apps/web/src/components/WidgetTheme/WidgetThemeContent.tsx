@@ -51,25 +51,25 @@ export default function WidgetThemeContent({ theme }: { theme: Theme }) {
       <div className="pointer-events-auto absolute grid grid-cols-2 grid-rows-2 overflow-hidden rounded-full fluid:inset-16">
         <WidgetThemeButton
           className="bg-anamorphic-teal-100 aria-checked:bg-anamorphic-teal-300"
-          selected={theme}
+          selected={selected}
           change={change}
           theme={Theme["anamorphic-teal"]}
         />
         <WidgetThemeButton
           className="bg-arpeggio-black-100 aria-checked:bg-arpeggio-black-300"
-          selected={theme}
+          selected={selected}
           change={change}
           theme={Theme["arpeggio-black"]}
         />
         <WidgetThemeButton
           className="bg-outsider-violet-100 aria-checked:bg-outsider-violet-300"
-          selected={theme}
+          selected={selected}
           change={change}
           theme={Theme["outsider-violet"]}
         />
         <WidgetThemeButton
           className="bg-tuxedo-crimson-100 aria-checked:bg-tuxedo-crimson-300"
-          selected={theme}
+          selected={selected}
           change={change}
           theme={Theme["tuxedo-crimson"]}
         />
