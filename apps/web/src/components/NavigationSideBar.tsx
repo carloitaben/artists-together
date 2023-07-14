@@ -1,7 +1,6 @@
 "use client"
 
 import * as NavigationMenu from "@radix-ui/react-navigation-menu"
-import * as RadixTooltip from "@radix-ui/react-tooltip"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -18,6 +17,7 @@ import {
 
 import type { User } from "~/services/auth"
 import { between, oneOf } from "~/lib/utils"
+import * as RadixTooltip from "~/components/Tooltip"
 
 import { artists, calendar, help, home, profile, train } from "./Icons"
 import Icon from "./Icon"

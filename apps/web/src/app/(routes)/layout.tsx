@@ -15,7 +15,7 @@ import { oneOf } from "~/lib/utils"
 import { WebSocketProvider } from "~/hooks/ws"
 
 import NavigationSideBar from "~/components/NavigationSideBar"
-import NavigationBottomBar from "~/components/NavigationBottomBar"
+import NavigationBottomBar from "~/components/NavigationBottomBar/NavigationBottomBar"
 import Toast from "~/components/Toast"
 import Cursors from "~/components/Cursors"
 import Cursor from "~/components/Cursor"
@@ -62,7 +62,7 @@ export default async function Layout({ children }: Props) {
           <WebSocketProvider user={session?.user}>
             <NavigationSideBar user={session?.user} />
             {children}
-            <NavigationBottomBar user={session?.user} />
+            <NavigationBottomBar />
             <Cursors user={session?.user} />
           </WebSocketProvider>
         </Toast>
