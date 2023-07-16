@@ -42,7 +42,7 @@ function Fallback() {
 
 export default function WidgetLive() {
   return (
-    <div className="col-span-4">
+    <div className="col-span-4 select-none">
       <div className="relative overflow-hidden rounded-3xl pb-[56.25%] shadow-card">
         <div className="absolute inset-0">
           <Suspense fallback={<Fallback />}>

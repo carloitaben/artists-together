@@ -30,9 +30,19 @@ function WidgetThemeButton({
 
 const rotate = {
   [Theme["anamorphic-teal"]]: 0,
-  [Theme["arpeggio-black"]]: 90,
+  [Theme["arpeggio-black"]]: 270,
   [Theme["tuxedo-crimson"]]: 180,
-  [Theme["outsider-violet"]]: 270,
+  [Theme["outsider-violet"]]: 90,
+}
+
+function Overlay() {
+  return (
+    <div className="absolute flex items-center justify-center overflow-hidden rounded-full fluid:inset-16">
+      <div className="absolute left-0 top-[50%] bg-theme-50 shadow-button fluid:-mt-2 fluid:h-4 fluid:w-40" />
+      <div className="absolute left-[50%] top-0 bg-theme-50 shadow-button fluid:-ml-2 fluid:h-40 fluid:w-4" />
+      <div className="relative rounded-full bg-theme-50 shadow-button fluid:h-28 fluid:w-28" />
+    </div>
+  )
 }
 
 export default function WidgetThemeContent({ theme }: { theme: Theme }) {
@@ -48,7 +58,11 @@ export default function WidgetThemeContent({ theme }: { theme: Theme }) {
 
   return (
     <div className="pointer-events-none absolute inset-0 rotate-45">
-      <div className="pointer-events-auto absolute grid grid-cols-2 grid-rows-2 overflow-hidden rounded-full fluid:inset-16">
+      <motion.div
+        className="pointer-events-auto absolute grid grid-cols-2 grid-rows-2 overflow-hidden rounded-full fluid:inset-16"
+        initial={false}
+        animate={{ rotate: rotate[selected] }}
+      >
         <WidgetThemeButton
           className="bg-anamorphic-teal-100 aria-checked:bg-anamorphic-teal-300"
           selected={selected}
@@ -73,17 +87,8 @@ export default function WidgetThemeContent({ theme }: { theme: Theme }) {
           change={change}
           theme={Theme["tuxedo-crimson"]}
         />
-      </div>
-      <motion.div
-        aria-hidden
-        className="absolute flex items-center justify-center overflow-hidden rounded-full fluid:inset-16"
-        initial={false}
-        animate={{ rotate: rotate[selected] }}
-      >
-        <div className="absolute left-0 top-[50%] bg-theme-50 shadow-button fluid:-mt-2 fluid:h-4 fluid:w-40" />
-        <div className="absolute left-[50%] top-0 bg-theme-50 shadow-button fluid:-ml-2 fluid:h-40 fluid:w-4" />
-        <div className="relative rounded-full bg-theme-50 shadow-button fluid:h-28 fluid:w-28" />
       </motion.div>
+      <Overlay />
     </div>
   )
 }

@@ -13,17 +13,17 @@ export default function Page() {
   return (
     <>
       <header>
-        <Container className="flex justify-center py-16">
+        <Container className="flex min-h-screen items-center justify-center py-16">
           <h1 className="sr-only">Artists Together</h1>
           <Icon className="max-w-[37.5rem]" label="">
             {logo}
           </Icon>
         </Container>
       </header>
-      <main className="font-serif font-light leading-tight fluid:text-[4rem]">
+      <main className="select-auto font-serif font-light leading-tight fluid:text-[4rem]">
         <Container grid className="min-h-screen items-center">
           <h2 className="col-span-5 col-start-2">
-            Artists Together is an online, worlwide
+            Artists Together is an online, worldwide
             <br />
             inclusive community for all kinds of artists
             <br />
@@ -41,8 +41,8 @@ export default function Page() {
         </Container>
         <div className="relative grid min-h-screen items-center">
           <Marquee>
-            Drawing, modelling, refurbishing, sculpting, composing, filming,
-            writing, singing, building...
+            drawing, modelling, refurbishing, sculpting, composing, filming,
+            writing, singing, building,
           </Marquee>
           <Container
             aria-hidden

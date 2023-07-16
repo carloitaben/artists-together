@@ -74,17 +74,42 @@ export default function WidgetClockContent({ location }: { location: Location })
     <>
       <div className="absolute inset-0 flex flex-col items-stretch justify-between bg-theme-50 font-serif font-light text-theme-900 fluid:p-24">
         <div>
-          <div className="flex items-center justify-between fluid:text-[2rem]">
+          <div
+            aria-hidden
+            className="flex items-center justify-between fluid:text-[2rem]"
+          >
             <div className="text-start">{timestamp.format("MMM")}.</div>
-            <div className="text-end">
+            <div className="text-end uppercase">
               {timestamp.format("D")}
-              <span className="uppercase">
+              <sup>
                 {timestamp.format("Do").replace(timestamp.format("D"), "")}
-              </span>
+              </sup>
             </div>
           </div>
-          <div className="whitespace-nowrap text-center leading-none fluid:text-[4rem]">
-            {timestamp.format("HH:mm:ss")}
+          <div
+            aria-hidden
+            className="flex items-center justify-center whitespace-nowrap leading-none fluid:text-[4rem]"
+          >
+            <div className="relative">
+              <span className="invisible">00</span>
+              <div className="absolute inset-0 flex items-center justify-center">
+                {timestamp.format("HH")}
+              </div>
+            </div>
+            <span>:</span>
+            <div className="relative">
+              <span className="invisible">00</span>
+              <div className="absolute inset-0 flex items-center justify-center">
+                {timestamp.format("mm")}
+              </div>
+            </div>
+            <span>:</span>
+            <div className="relative">
+              <span className="invisible">00</span>
+              <div className="absolute inset-0 flex items-center justify-center">
+                {timestamp.format("ss")}
+              </div>
+            </div>
           </div>
         </div>
         <div className="text-center fluid:text-[2rem]/[2.125rem]">

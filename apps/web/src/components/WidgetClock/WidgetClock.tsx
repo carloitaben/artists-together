@@ -21,7 +21,7 @@ export default function WidgetClock() {
   const location = oneOf(locations)
 
   return (
-    <div className="col-span-2">
+    <div className="col-span-2 select-none">
       <article className="relative overflow-hidden rounded-full pb-[100%] shadow-card">
         <WidgetClockContent location={location} />
       </article>

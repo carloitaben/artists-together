@@ -21,6 +21,7 @@ async function Content() {
         className="h-full w-full object-cover"
         src="https://images.unsplash.com/photo-1600804340584-c7db2eacf0bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
         alt=""
+        draggable={false}
       />
       <Pill className="absolute bottom-4 right-4">@{IG_HANDLE}</Pill>
     </a>
@@ -33,7 +34,7 @@ function Fallback() {
 
 export default function WidgetInstagram() {
   return (
-    <div className="col-span-3">
+    <div className="col-span-3 select-none">
       <div className="relative overflow-hidden rounded-3xl pb-[100%] shadow-card">
         <div className="absolute inset-0">
           <Suspense fallback={<Fallback />}>

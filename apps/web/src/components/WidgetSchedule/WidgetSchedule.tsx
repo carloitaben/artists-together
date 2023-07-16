@@ -11,7 +11,7 @@ function Fallback() {
 
 export default function WidgetSchedule() {
   return (
-    <div className="col-span-2">
+    <div className="col-span-2 select-none">
       <div className="relative overflow-hidden pb-[100%] shadow-card fluid:rounded-5xl">
         <div className="absolute inset-0">
           <WidgetScheduleContent />
