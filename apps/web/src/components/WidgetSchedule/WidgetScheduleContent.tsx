@@ -95,8 +95,8 @@ export default function WidgetScheduleContent() {
   })
 
   return (
-    <div className="h-full w-full bg-theme-50 text-center text-theme-900 fluid:px-10 fluid:pb-14 fluid:pt-12 fluid:text-2xl">
-      <div className="font-serif fluid:text-[2rem]">
+    <div className="h-full w-full bg-theme-50 text-center text-theme-900 fluid:px-10 fluid:py-12 fluid:text-2xl">
+      <div className="font-serif fluid:mb-3 fluid:text-[2rem]">
         {now.format("MMMM, YYYY")}
       </div>
       <div className="grid grid-cols-7 font-serif font-semibold">{days}</div>
