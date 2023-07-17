@@ -34,7 +34,7 @@ function Fallback() {
 
 export default function WidgetInstagram() {
   return (
-    <div className="col-span-3 select-none">
+    <div className="col-span-4 select-none sm:col-span-3">
       <div className="relative overflow-hidden rounded-3xl pb-[100%] shadow-card">
         <div className="absolute inset-0">
           <Suspense fallback={<Fallback />}>

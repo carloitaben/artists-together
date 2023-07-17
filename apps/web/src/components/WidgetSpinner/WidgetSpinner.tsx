@@ -22,7 +22,7 @@ function Fallback() {
 
 export default function WidgetTheme() {
   return (
-    <div className="col-span-1">
+    <div className="col-span-2 sm:col-span-1">
       <Suspense fallback={<Fallback />}>
         <WidgetSpinnerContent />
       </Suspense>
