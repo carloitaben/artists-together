@@ -6,16 +6,12 @@ import { useEffect, useState } from "react"
 import { AnimatePresence } from "framer-motion"
 import { Cursor } from "ws-types"
 
+import { clamp } from "~/lib/utils"
 import { useMatchesMedia } from "~/hooks/media"
 import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
 
+import { $elements } from "./store"
 import CursorComponent from "./Cursor"
-
-function limit(number: number) {
-  if (number < 0) return 0
-  if (number > 100) return 100
-  return number
-}
 
 type Props = {
   user: User | undefined
@@ -58,39 +54,83 @@ export default function CursorsCanvas({ user }: Props) {
   useEffect(() => {
     let pressing = false
 
-    const interval = cursors.size === 0 ? 3000 : 80
+    // const interval = cursors.size === 0 ? 3000 : 80
+    const interval = 80
 
     const update = throttle((x: number, y: number) => {
-      if (!user) return
+      // if (!user) return
 
-      const xPercent = limit((x * 100) / document.documentElement.scrollWidth)
-      const yPercent = limit((y * 100) / document.documentElement.scrollHeight)
+      const elements = $elements.get()
+
+      const element = elements.length
+        ? elements[elements.length - 1]
+        : document.documentElement
+
+      const elementRect = element.getBoundingClientRect()
+
+      const cursor = {
+        x: x - elementRect.x,
+        y: y - elementRect.y,
+      }
+
+      const percent = {
+        x: clamp((cursor.x * 100) / elementRect.width, 0, 100),
+        y: clamp((cursor.y * 100) / elementRect.height, 0, 100),
+      }
+
+      console.log(element.id, JSON.stringify(percent, null, 2))
+
+      // const cursor = {
+      //   x: x - elementRect.x - document.documentElement.scrollLeft,
+      //   y: y - elementRect.y - document.documentElement.scrollTop,
+      // }
+
+      // const percent = {
+      //   x: clamp(
+      //     (cursor.x * 100) /
+      //       (elementRect.x +
+      //         element.scrollWidth +
+      //         document.documentElement.scrollLeft),
+      //     0,
+      //     100
+      //   ),
+      //   y: clamp(
+      //     (cursor.y * 100) /
+      //       (elementRect.y +
+      //         element.scrollHeight +
+      //         document.documentElement.scrollTop),
+      //     0,
+      //     100
+      //   ),
+      // }
 
       updateCursor([
-        xPercent,
-        yPercent,
+        element.id,
+        percent.x,
+        percent.y,
         pressing ? "press" : "idle",
         user.username,
       ])
     }, interval)
 
-    if (!hasCursor || !user) {
+    // if (!hasCursor || !user) {
+    if (!hasCursor) {
       update.cancel()
       return updateCursor(null)
     }
 
     function onMouseDown(event: MouseEvent) {
       pressing = true
-      update(event.pageX, event.pageY)
+      update(event.clientX, event.clientY)
     }
 
     function onMouseUp(event: MouseEvent) {
       pressing = false
-      update(event.pageX, event.pageY)
+      update(event.clientX, event.clientY)
     }
 
     function onMouseMove(event: MouseEvent) {
-      update(event.pageX, event.pageY)
+      update(event.clientX, event.clientY)
     }
 
     window.addEventListener("mousedown", onMouseDown, true)

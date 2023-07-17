@@ -3,6 +3,7 @@ import { Suspense } from "react"
 import { wait } from "~/lib/utils"
 
 import Pill from "~/components/Pill"
+import CursorPrecisionArea from "../Cursors/CursorPrecisionArea"
 
 const IG_HANDLE = "artiststogether.online"
 
@@ -23,7 +24,9 @@ async function Content() {
         alt=""
         draggable={false}
       />
-      <Pill className="absolute bottom-4 right-4">@{IG_HANDLE}</Pill>
+      <CursorPrecisionArea>
+        <Pill className="absolute bottom-4 right-4">@{IG_HANDLE}</Pill>
+      </CursorPrecisionArea>
     </a>
   )
 }
@@ -34,14 +37,16 @@ function Fallback() {
 
 export default function WidgetInstagram() {
   return (
-    <div className="col-span-3 select-none">
-      <div className="relative overflow-hidden rounded-3xl pb-[100%] shadow-card">
-        <div className="absolute inset-0">
-          <Suspense fallback={<Fallback />}>
-            <Content />
-          </Suspense>
+    <CursorPrecisionArea>
+      <div className="col-span-3 select-none">
+        <div className="relative overflow-hidden rounded-3xl pb-[100%] shadow-card">
+          <div className="absolute inset-0">
+            <Suspense fallback={<Fallback />}>
+              <Content />
+            </Suspense>
+          </div>
         </div>
       </div>
-    </div>
+    </CursorPrecisionArea>
   )
 }

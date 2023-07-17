@@ -31,7 +31,7 @@ export default function Cursor({ cursor, id }: Props) {
 
   const [state, setState] = useState<CursorState>(() => {
     if (!cursor) return "idle"
-    return cursor[2]
+    return cursor[3]
   })
 
   const [pc] = useState(
@@ -46,8 +46,24 @@ export default function Cursor({ cursor, id }: Props) {
 
   useWebSocketEvent("cursor:update", ([_id, cursor]) => {
     if (_id !== id || !cursor) return
-    pc.addPoint([cursor[0], cursor[1]])
-    setState(cursor[2])
+
+    setState(cursor[3])
+
+    if (!cursor[0]) {
+      return pc.addPoint([cursor[1], cursor[2]])
+    }
+
+    const element = document.querySelector(`#${cursor[0]}`)
+
+    if (!element) {
+      return pc.addPoint([cursor[1], cursor[2]])
+    }
+
+    const elementRect = element.getBoundingClientRect()
+
+    const x = (cursor[1] / 100) * elementRect.width
+    const y = (cursor[2] / 100) * elementRect.height
+    return pc.addPoint([x, y])
   })
 
   if (!cursor) return null
@@ -94,7 +110,7 @@ export default function Cursor({ cursor, id }: Props) {
           size="sm"
           className="-translate-x-1 -translate-y-3"
         >
-          {cursor[3]}
+          {cursor[4]}
         </Pill>
       </motion.div>
     </motion.div>
