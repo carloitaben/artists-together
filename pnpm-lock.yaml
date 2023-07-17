@@ -34,6 +34,9 @@ importers:
       node-cron:
         specifier: ^3.0.2
         version: 3.0.2
+      ws:
+        specifier: ^8.13.0
+        version: 8.13.0
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -41,12 +44,18 @@ importers:
       '@types/node-cron':
         specifier: ^3.0.8
         version: 3.0.8
+      '@types/ws':
+        specifier: ^8.5.5
+        version: 8.5.5
       tsx:
         specifier: ^3.12.7
         version: 3.12.7
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
+      ws-types:
+        specifier: workspace:*
+        version: link:../../packages/ws-types
 
   apps/web:
     dependencies:
