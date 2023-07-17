@@ -24,6 +24,7 @@
   "dependencies": {
     "@planetscale/database": "^1.8.0",
     "drizzle-orm": "^0.27.0",
-    "drizzle-zod": "^0.4.4"
+    "drizzle-zod": "^0.4.4",
+    "zod": "^3.21.4"
   }
 }
