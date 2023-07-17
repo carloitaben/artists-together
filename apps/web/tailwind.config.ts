@@ -280,8 +280,8 @@ export default {
         card: "0px 8px 16px 0px rgba(11, 14, 30, 0.04)",
       },
       dropShadow: {
-        button: "0px 4px 8px 0px rgba(11, 14, 30, 0.08)",
-        card: "0px 8px 16px 0px rgba(11, 14, 30, 0.04)",
+        button: "0px 4px 8px rgba(11, 14, 30, 0.08)",
+        card: "0px 8px 16px rgba(11, 14, 30, 0.04)",
       },
     },
   },

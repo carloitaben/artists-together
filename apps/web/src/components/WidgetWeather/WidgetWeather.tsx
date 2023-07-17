@@ -1,53 +1,96 @@
+/* eslint-disable @next/next/no-img-element */
+
 import { Suspense } from "react"
 import { z } from "zod"
 
 import { locations } from "~/data/locations"
 import { oneOf } from "~/lib/utils"
-import Icon from "../Icon"
 
-function handleWeatherCode(code: number) {
+function handleWeatherCode(code: number): {
+  label: string
+  src: string
+} {
   switch (code) {
     case 0:
-      return "Clear sky"
+      return {
+        label: "Clear sky",
+        src: "/icons/weather/sun.svg",
+      }
     case 1:
     case 2:
     case 3:
-      return "Mainly clear, partly cloudy, and overcast"
+      return {
+        label: "Mainly clear, partly cloudy, and overcast",
+        src: "/icons/weather/cloud.svg",
+      }
     case 45:
     case 48:
-      return "Fog and depositing rime fog"
+      return {
+        label: "Fog and depositing rime fog",
+        src: "/icons/weather/fog.svg",
+      }
     case 51:
     case 53:
     case 55:
-      return "Drizzle: Light, moderate, and dense intensity"
+      return {
+        label: "Drizzle: Light, moderate, and dense intensity",
+        src: "/icons/weather/rain.svg",
+      }
     case 56:
     case 57:
-      return "Freezing Drizzle: Light and dense intensity"
+      return {
+        label: "Freezing Drizzle: Light and dense intensity",
+        src: "/icons/weather/rain.svg",
+      }
     case 61:
     case 63:
     case 65:
-      return "Rain: Slight, moderate and heavy intensity"
+      return {
+        label: "Rain: Slight, moderate and heavy intensity",
+        src: "/icons/weather/rain.svg",
+      }
     case 66:
     case 67:
-      return "Freezing Rain: Light and heavy intensity"
+      return {
+        label: "Freezing Rain: Light and heavy intensity",
+        src: "/icons/weather/rain.svg",
+      }
     case 71:
     case 73:
     case 75:
-      return "Snow fall: Slight, moderate, and heavy intensity"
+      return {
+        label: "Snow fall: Slight, moderate, and heavy intensity",
+        src: "/icons/weather/snow.svg",
+      }
     case 77:
-      return "Snow grains"
+      return {
+        label: "Snow grains",
+        src: "/icons/weather/snow.svg",
+      }
     case 80:
     case 81:
     case 82:
-      return "Rain showers: Slight, moderate, and violent"
+      return {
+        label: "Rain showers: Slight, moderate, and violent",
+        src: "/icons/weather/rain.svg",
+      }
     case 85:
     case 86:
-      return "Snow showers slight and heavy"
+      return {
+        label: "Snow showers slight and heavy",
+        src: "/icons/weather/snow.svg",
+      }
     case 95:
-      return "Thunderstorm: Slight or moderate"
+      return {
+        label: "Thunderstorm: Slight or moderate",
+        src: "/icons/weather/storm.svg",
+      }
     case 96:
     case 99:
-      return "Thunderstorm with slight and heavy hail"
+      return {
+        label: "Thunderstorm with slight and heavy hail",
+        src: "/icons/weather/storm.svg",
+      }
     default:
       throw Error(`Unexpected weather code: ${code}`)
   }
@@ -113,39 +156,34 @@ async function Content() {
           {Math.round(weather.daily.temperature_2m_max[0])}ºC
         </div>
         <div className="flex items-center fluid:gap-5 fluid:text-[4rem]/[4rem]">
-          <Icon
-            label={handleWeatherCode(weather.daily.weathercode[1])}
-            className="fluid:mt-1 fluid:h-10 fluid:w-10"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 40 40"
-              fill="none"
-            >
-              <path
-                fill="#FAFAFA"
-                d="M10.833 33.333c-2.527 0-4.687-.875-6.479-2.625-1.792-1.75-2.687-3.888-2.687-6.416 0-2.167.652-4.098 1.958-5.792s3.014-2.778 5.125-3.25c.694-2.556 2.083-4.625 4.167-6.208C15 7.458 17.36 6.667 20 6.667c3.25 0 6.007 1.132 8.27 3.396 2.265 2.263 3.397 5.02 3.397 8.27 1.916.223 3.507 1.049 4.77 2.48 1.264 1.43 1.896 3.104 1.896 5.02 0 2.084-.729 3.855-2.187 5.313-1.459 1.458-3.23 2.187-5.313 2.187h-20Z"
-              />
-            </svg>
-          </Icon>
+          <img
+            src={handleWeatherCode(weather.daily.weathercode[1]).src}
+            alt={handleWeatherCode(weather.daily.weathercode[1]).label}
+            width={201}
+            height={201}
+            loading="lazy"
+            decoding="async"
+            className="object-contain drop-shadow-card fluid:mt-1 fluid:h-10 fluid:w-10"
+            draggable={false}
+          />
           <span>
             {Math.round(weather.daily.temperature_2m_min[1])}/
             {Math.round(weather.daily.temperature_2m_max[1])}ºC
           </span>
         </div>
       </div>
-      <Icon
-        className="fluid:p-12"
-        label={handleWeatherCode(weather.daily.weathercode[1])}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 206 206"
-        >
-          <circle cx="103" cy="103" r="103" fill="#F7BE02" />
-        </svg>
-      </Icon>
+      <div className="fluid:p-12">
+        <img
+          src={handleWeatherCode(weather.current_weather.weathercode).src}
+          alt={handleWeatherCode(weather.current_weather.weathercode).label}
+          width={201}
+          height={201}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-contain drop-shadow-card"
+          draggable={false}
+        />
+      </div>
     </div>
   )
 }
