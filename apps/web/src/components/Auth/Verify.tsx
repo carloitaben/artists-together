@@ -24,7 +24,7 @@ function ResendComponent({
   email,
 }: PropsWithAction<typeof login, { email: string }>) {
   const [isPending, startTransition] = useTransition()
-  const { emit } = useToast()
+  const emit = useToast()
 
   return (
     <button
@@ -63,7 +63,8 @@ const Resend = withAction(ResendComponent, login)
 
 function VerifyForm({ action, email, onSuccess }: Props) {
   const router = useRouter()
-  const { emit } = useToast()
+  const emit = useToast()
+
   const { root, field, setError } = useForm({
     defaultValues: { email },
     action,

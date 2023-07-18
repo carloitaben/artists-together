@@ -13,7 +13,7 @@ type Props = PropsWithAction<typeof logout>
 function Logout({ action }: Props) {
   const [isPending, startTransition] = useTransition()
   const { refresh } = useRouter()
-  const { emit } = useToast()
+  const emit = useToast()
 
   return (
     <button

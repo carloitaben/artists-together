@@ -98,5 +98,5 @@ export function useToast() {
     throw Error("Used useToast outside of toastContext")
   }
 
-  return context
+  return context.emit
 }

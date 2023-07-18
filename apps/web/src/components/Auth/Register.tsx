@@ -12,7 +12,8 @@ type Props = PropsWithAction<typeof register> & {
 }
 
 function RegisterForm({ action, onSuccess }: Props) {
-  const { emit } = useToast()
+  const emit = useToast()
+
   const { root, field, setError } = useForm({
     action,
     schema: registerSchema,
