@@ -2,10 +2,10 @@
 
 import { login } from "~/actions/auth"
 import { loginSchema } from "~/actions/schemas"
+import { useForm, withAction, PropsWithAction } from "~/hooks/form"
 import { useToast } from "~/components/Toast"
-import { useForm, withAction, PropsWithAction } from "~/components/Form2"
 import * as Modal from "~/components/Modal"
-import * as Field from "~/components/Form2/Field"
+import * as Form from "~/components/Form2"
 
 type Props = PropsWithAction<typeof login> & {
   onSuccess: (email: string) => void
@@ -13,7 +13,7 @@ type Props = PropsWithAction<typeof login> & {
 
 function LoginForm({ action, onSuccess }: Props) {
   const { emit } = useToast()
-  const { Form, field, setError } = useForm({
+  const { root, field, formState, setError } = useForm({
     action,
     schema: loginSchema,
     onError: () => {
@@ -41,17 +41,17 @@ function LoginForm({ action, onSuccess }: Props) {
   })
 
   return (
-    <Form>
+    <Form.Root {...root()}>
       <Modal.Container>
         <Modal.Title inset>Log-in</Modal.Title>
-        <Field.Root name={field("email")}>
-          <Field.Label>Email address</Field.Label>
-          <Field.Input type="email" placeholder="johndoe@email.com" />
-          <Field.Error />
-        </Field.Root>
+        <Form.Field {...field("email")}>
+          <Form.Label>Email address</Form.Label>
+          <Form.Input type="email" placeholder="johndoe@email.com" />
+          <Form.Error />
+        </Form.Field>
       </Modal.Container>
       <button>submit</button>
-    </Form>
+    </Form.Root>
   )
 }
 

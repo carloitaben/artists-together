@@ -4,12 +4,11 @@ import { useRouter } from "next/navigation"
 
 import { verify } from "~/actions/auth"
 import { verifySchema } from "~/actions/schemas"
-
-import { useForm, withAction, PropsWithAction } from "~/components/Form2"
+import { useForm, withAction, PropsWithAction } from "~/hooks/form"
 import { assertUnreachable } from "~/lib/utils"
 import { useToast } from "~/components/Toast"
 import * as Modal from "~/components/Modal"
-import * as Field from "~/components/Form2/Field"
+import * as Form from "~/components/Form2"
 
 type Props = PropsWithAction<typeof verify> & {
   email: string
@@ -19,7 +18,7 @@ type Props = PropsWithAction<typeof verify> & {
 function VerifyForm({ action, email, onSuccess }: Props) {
   const router = useRouter()
   const { emit } = useToast()
-  const { Form, field } = useForm({
+  const { root, field } = useForm({
     defaultValues: { email },
     action,
     schema: verifySchema,
@@ -44,22 +43,22 @@ function VerifyForm({ action, email, onSuccess }: Props) {
   })
 
   return (
-    <Form>
+    <Form.Root {...root()}>
       <Modal.Container className="text-center">
         <Modal.Title className="mb-6 text-center text-2xl">
           A verification code
           <br />
           has been sent to your email account
         </Modal.Title>
-        <Field.Root name={field("otp")}>
-          <Field.Label>Otp plz</Field.Label>
-          <Field.Input />
-          <Field.Error />
-        </Field.Root>
+        <Form.Field {...field("otp")}>
+          <Form.Label>Otp plz</Form.Label>
+          <Form.Input />
+          <Form.Error />
+        </Form.Field>
         {/* <Resend email={email} /> */}
       </Modal.Container>
       <button>Confirm</button>
-    </Form>
+    </Form.Root>
   )
 }
 

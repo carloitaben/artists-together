@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { useWatch } from "react-hook-form"
 
-import { useFieldContext } from "./Root"
+import { useFieldContext } from "./Field"
 
 type Props = {
   children: (value: any) => ReactNode

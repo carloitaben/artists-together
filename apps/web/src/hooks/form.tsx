@@ -1,8 +1,8 @@
 import type { ClientCaller } from "next-safe-action"
 import type { ZodTypeAny, AnyZodObject, TypeOf } from "zod"
-import type { FunctionComponent, ReactNode } from "react"
+import type { FunctionComponent } from "react"
 import type { Path, SubmitHandler, UseFormProps } from "react-hook-form"
-import { FormProvider, useForm as useHookForm } from "react-hook-form"
+import { useForm as useHookForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 export type PropsWithAction<T> = { action: T }
@@ -64,20 +64,19 @@ export function useForm<T extends AnyZodObject, D>({
   }
 
   function field(name: keyof Schema) {
-    return name
+    return { name }
   }
 
-  function Form({ children }: { children: ReactNode }) {
-    return (
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(submit)}>{children}</form>
-      </FormProvider>
-    )
+  function root() {
+    return {
+      ...form,
+      onSubmit: form.handleSubmit(submit),
+    }
   }
 
   return {
     ...form,
-    Form,
+    root,
     field,
   }
 }

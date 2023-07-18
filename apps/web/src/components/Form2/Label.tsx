@@ -10,7 +10,7 @@ import {
 } from "react"
 import { cx } from "class-variance-authority"
 
-import { useFieldContext } from "./Root"
+import { useFieldContext } from "./Field"
 
 type Props = Omit<ComponentProps<"label">, "htmlFor"> & {
   children: ReactNode

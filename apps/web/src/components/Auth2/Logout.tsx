@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 
 import { logout } from "~/actions/auth"
 import { assertUnreachable } from "~/lib/utils"
-import { withAction, PropsWithAction } from "~/components/Form2"
+import { withAction, PropsWithAction } from "~/hooks/form"
 import { useToast } from "~/components/Toast"
 
 type Props = PropsWithAction<typeof logout>

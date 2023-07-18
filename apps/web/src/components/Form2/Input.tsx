@@ -6,7 +6,7 @@ import { cx } from "class-variance-authority"
 
 import Shiny from "~/components/Shiny"
 
-import { useFieldContext } from "./Root"
+import { useFieldContext } from "./Field"
 
 type Props = Omit<ComponentProps<"input">, "name" | "id"> & {
   icon?: ReactNode

@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form"
 import { motion, AnimatePresence } from "framer-motion"
 import { cx } from "class-variance-authority"
 
-import { useFieldContext } from "./Root"
+import { useFieldContext } from "./Field"
 
 type Props = Pick<ComponentProps<"div">, "className">
 

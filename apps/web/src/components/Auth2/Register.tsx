@@ -2,11 +2,10 @@
 
 import { register } from "~/actions/auth"
 import { registerSchema } from "~/actions/schemas"
+import { useForm, withAction, PropsWithAction } from "~/hooks/form"
 import { useToast } from "~/components/Toast"
-import { useForm, withAction, PropsWithAction } from "~/components/Form2"
 import * as Modal from "~/components/Modal"
-import * as Field from "~/components/Form2/Field"
-import { assertUnreachable } from "~/lib/utils"
+import * as Form from "~/components/Form2"
 
 type Props = PropsWithAction<typeof register> & {
   onSuccess: (email: string) => void
@@ -14,7 +13,7 @@ type Props = PropsWithAction<typeof register> & {
 
 function RegisterForm({ action, onSuccess }: Props) {
   const { emit } = useToast()
-  const { Form, field, setError } = useForm({
+  const { root, field, setError } = useForm({
     action,
     schema: registerSchema,
     onError: () => {
@@ -48,18 +47,18 @@ function RegisterForm({ action, onSuccess }: Props) {
   })
 
   return (
-    <Form>
+    <Form.Root {...root()}>
       <Modal.Container>
         <Modal.Title inset>Register</Modal.Title>
-        <Field.Root name={field("email")} className="mb-4">
-          <Field.Label>Email address</Field.Label>
-          <Field.Input type="email" placeholder="johndoe@email.com" />
-          <Field.Error />
-        </Field.Root>
-        <Field.Root name={field("username")} className="mb-4">
-          <Field.Label className="flex items-center justify-between">
+        <Form.Field {...field("email")} className="mb-4">
+          <Form.Label>Email address</Form.Label>
+          <Form.Input type="email" placeholder="johndoe@email.com" />
+          <Form.Error />
+        </Form.Field>
+        <Form.Field {...field("username")} className="mb-4">
+          <Form.Label className="flex items-center justify-between">
             <span>Username</span>
-            <Field.Value>
+            <Form.Value>
               {(value = "") => (
                 <span
                   className={value.length > 30 ? "text-acrylic-red-500" : ""}
@@ -67,14 +66,14 @@ function RegisterForm({ action, onSuccess }: Props) {
                   {30 - value.length}/30
                 </span>
               )}
-            </Field.Value>
-          </Field.Label>
-          <Field.Input placeholder="johndoe" />
-          <Field.Error />
-        </Field.Root>
+            </Form.Value>
+          </Form.Label>
+          <Form.Input placeholder="johndoe" />
+          <Form.Error />
+        </Form.Field>
       </Modal.Container>
       <button>submit</button>
-    </Form>
+    </Form.Root>
   )
 }
 
