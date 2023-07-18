@@ -29,7 +29,7 @@ function Root<T extends AnyZodObject>(
   { children, schema, initialValues, onSubmit, delay = 0, ...props }: Props<T>,
   ref: ForwardedRef<HTMLFormElement>
 ) {
-  const { emit } = useToast()
+  const emit = useToast()
 
   const submit = useCallback<Props<T>["onSubmit"]>(
     async (values, helpers) => {
@@ -54,7 +54,7 @@ function Root<T extends AnyZodObject>(
           title = error
         }
 
-        emit({ title })
+        emit(title)
       }
     },
     [delay, emit, onSubmit]

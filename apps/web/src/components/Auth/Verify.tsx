@@ -96,7 +96,7 @@ type Props = {
 export default function Verify({ email, onSuccess }: Props) {
   // const buttonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
-  const { emit } = useToast()
+  const emit = useToast()
 
   // return (
   //   <Form.Root
