@@ -4,7 +4,7 @@ import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 
 import { logout } from "~/actions/auth"
-import { assertUnreachable } from "~/lib/utils"
+import { unreachable } from "~/lib/utils"
 import { withAction, PropsWithAction } from "~/hooks/form"
 import { useToast } from "~/components/Toast"
 
@@ -32,7 +32,7 @@ function Logout({ action }: Props) {
                 emit("Oops! You cannot do that")
                 break
               default:
-                assertUnreachable(data.error)
+                unreachable(data.error)
             }
           } else {
             emit("Logged out succesfully")

@@ -1,5 +1,5 @@
-export function assertUnreachable(value: never): never {
-  throw new Error("Didn't expect to get here")
+export function unreachable(value: never): never {
+  throw new Error(`Unreachable: ${value}`)
 }
 
 export function oneOf<T>(array: T[]) {

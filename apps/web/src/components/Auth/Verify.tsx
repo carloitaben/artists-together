@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { login, verify } from "~/actions/auth"
 import { verifySchema } from "~/actions/schemas"
 import { useForm, withAction, PropsWithAction } from "~/hooks/form"
-import { assertUnreachable } from "~/lib/utils"
+import { unreachable } from "~/lib/utils"
 import { useToast } from "~/components/Toast"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
@@ -82,7 +82,7 @@ function VerifyForm({ action, email, onSuccess }: Props) {
             emit("You are already logged in!")
             break
           default:
-            assertUnreachable(data.error)
+            unreachable(data.error)
         }
       } else {
         onSuccess()
