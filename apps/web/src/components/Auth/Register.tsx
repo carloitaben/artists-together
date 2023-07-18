@@ -1,19 +1,19 @@
 import { TypeOf } from "zod"
 
-import { signupSchema } from "~/lib/schemas"
+import { registerSchema } from "~/lib/schemas"
 
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 
 type Props = {
-  onSuccess: (data: TypeOf<typeof signupSchema>) => void
+  onSuccess: (data: TypeOf<typeof registerSchema>) => void
 }
 
 export default function Register({ onSuccess }: Props) {
   return (
     <Form.Root
       delay
-      schema={signupSchema}
+      schema={registerSchema}
       initialValues={{ email: "", username: "" }}
       onSubmit={async (data, helpers) => {
         const response = await fetch("/api/auth/register", {

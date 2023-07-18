@@ -1,3 +1,7 @@
+export function assertUnreachable(value: never): never {
+  throw new Error("Didn't expect to get here")
+}
+
 export function oneOf<T>(array: T[]) {
   return array[Math.floor(Math.random() * array.length)]
 }

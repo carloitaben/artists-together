@@ -59,6 +59,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.1.1
+        version: 3.1.1(react-hook-form@7.45.1)
       '@lucia-auth/adapter-mysql':
         specifier: 2.0.0-beta.6
         version: 2.0.0-beta.6(lucia@2.0.0-beta.5)
@@ -113,6 +116,9 @@ importers:
       next:
         specifier: 13.4.9
         version: 13.4.9(react-dom@18.2.0)(react@18.2.0)
+      next-safe-action:
+        specifier: ^3.0.0
+        version: 3.0.0(next@13.4.9)(react@18.2.0)(zod@3.21.4)
       perfect-cursors:
         specifier: ^1.0.5
         version: 1.0.5
@@ -128,6 +134,9 @@ importers:
       react-email:
         specifier: ^1.9.4
         version: 1.9.4
+      react-hook-form:
+        specifier: ^7.45.1
+        version: 7.45.1(react@18.2.0)
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -1042,6 +1051,14 @@ packages:
       '@floating-ui/dom': 1.4.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@hookform/resolvers@3.1.1(react-hook-form@7.45.1):
+    resolution: {integrity: sha512-tS16bAUkqjITNSvbJuO1x7MXbn7Oe8ZziDTJdA9mMvsoYthnOOiznOTGBYwbdlYBgU+tgpI/BtTU3paRbCuSlg==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.45.1(react@18.2.0)
     dev: false
 
   /@humanwhocodes/config-array@0.11.10:
@@ -5055,6 +5072,19 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /next-safe-action@3.0.0(next@13.4.9)(react@18.2.0)(zod@3.21.4):
+    resolution: {integrity: sha512-ny9WV3FqlsnHjDC5A/dxQS8SqbRBXNVZwt6OK5kOuaZIO7aVMOuYlF/7Sz6j32+7egOwv2B33r4Ds++N2uov2g==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      next: '>= 13.4.2'
+      react: '>= 18.2.0'
+      zod: '>= 3.0.0'
+    dependencies:
+      next: 13.4.9(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      zod: 3.21.4
+    dev: false
+
   /next-tick@1.1.0:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
     dev: true
@@ -5747,6 +5777,15 @@ packages:
 
   /react-fast-compare@2.0.4:
     resolution: {integrity: sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==}
+    dev: false
+
+  /react-hook-form@7.45.1(react@18.2.0):
+    resolution: {integrity: sha512-6dWoFJwycbuFfw/iKMcl+RdAOAOHDiF11KWYhNDRN/OkUt+Di5qsZHwA0OwsVnu9y135gkHpTw9DJA+WzCeR9w==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:

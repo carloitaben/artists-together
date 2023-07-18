@@ -8,6 +8,7 @@ import { help } from "~/components/Icons"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 import Auth from "~/components/Auth"
+import Logout from "~/components/Auth2/Logout"
 
 const testEmailSchema = z.object({
   email: z.string().email(),
@@ -31,23 +32,7 @@ export default function Page() {
     <main className="flex flex-col items-start justify-start gap-2">
       <h1>Modal tests</h1>
 
-      <Form.Root
-        schema={emptySchema}
-        initialValues={{}}
-        onSubmit={async () => {
-          const response = await fetch("/api/auth/logout", {
-            method: "POST",
-          })
-
-          if (response.ok) {
-            router.refresh()
-          } else {
-            throw Error("Unknown error")
-          }
-        }}
-      >
-        <Form.Submit>Log out</Form.Submit>
-      </Form.Root>
+      <Logout />
 
       <Auth className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
         Auth modal

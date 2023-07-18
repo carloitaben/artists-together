@@ -6,9 +6,9 @@ import { useState } from "react"
 import * as Modal from "~/components/Modal"
 import { profile, register } from "~/components/Icons"
 
-import Login from "./Login"
-import Register from "./Register"
-import Verify from "./Verify"
+import Login from "../Auth2/Login"
+import Register from "../Auth2/Register"
+import Verify from "../Auth2/Verify"
 
 type Props = DialogTriggerProps
 
@@ -35,10 +35,10 @@ export default function Auth({ children, ...props }: Props) {
               </Modal.Tab>
             </Modal.Tabs>
             <Modal.Content value="login">
-              <Login onSuccess={(data) => setEmailToVerify(data.email)} />
+              <Login onSuccess={(email) => setEmailToVerify(email)} />
             </Modal.Content>
             <Modal.Content value="register">
-              <Register onSuccess={(data) => setEmailToVerify(data.email)} />
+              <Register onSuccess={(email) => setEmailToVerify(email)} />
             </Modal.Content>
           </>
         )}
