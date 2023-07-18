@@ -57,7 +57,7 @@ function VerifyForm({ action, email, onSuccess }: Props) {
         </Form.Field>
         {/* <Resend email={email} /> */}
       </Modal.Container>
-      <button>Confirm</button>
+      <Form.Submit className="mt-4 flex justify-center">Confirm</Form.Submit>
     </Form.Root>
   )
 }

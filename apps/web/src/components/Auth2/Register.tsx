@@ -72,7 +72,7 @@ function RegisterForm({ action, onSuccess }: Props) {
           <Form.Error />
         </Form.Field>
       </Modal.Container>
-      <button>submit</button>
+      <Form.Submit className="mt-4 flex justify-end">Register</Form.Submit>
     </Form.Root>
   )
 }

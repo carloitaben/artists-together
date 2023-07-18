@@ -50,7 +50,7 @@ function LoginForm({ action, onSuccess }: Props) {
           <Form.Error />
         </Form.Field>
       </Modal.Container>
-      <button>submit</button>
+      <Form.Submit className="mt-4 flex justify-end">Log-in</Form.Submit>
     </Form.Root>
   )
 }
