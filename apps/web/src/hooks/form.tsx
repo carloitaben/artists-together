@@ -5,7 +5,7 @@ import type { Path, SubmitHandler, UseFormProps } from "react-hook-form"
 import { useForm as useHookForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
-export type PropsWithAction<T> = { action: T }
+export type PropsWithAction<T, P = {}> = P & { action: T }
 
 export function withAction<P extends { action: any }, Z extends ZodTypeAny, D>(
   Component: FunctionComponent<P>,

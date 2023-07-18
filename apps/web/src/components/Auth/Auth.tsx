@@ -1,20 +1,26 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { DialogTriggerProps } from "@radix-ui/react-dialog"
-import { useState } from "react"
 
 import * as Modal from "~/components/Modal"
 import { profile, register } from "~/components/Icons"
 
-import Login from "../Auth2/Login"
-import Register from "../Auth2/Register"
-import Verify from "../Auth2/Verify"
+import Login from "./Login"
+import Register from "./Register"
+import Verify from "./Verify"
 
 type Props = DialogTriggerProps
 
 export default function Auth({ children, ...props }: Props) {
   const [open, setOpen] = useState(false)
   const [emailToVerify, setEmailToVerify] = useState<string>()
+
+  useEffect(() => {
+    if (!open && emailToVerify) {
+      setEmailToVerify(undefined)
+    }
+  }, [emailToVerify, open])
 
   return (
     <Modal.Root open={open} onOpenChange={setOpen}>

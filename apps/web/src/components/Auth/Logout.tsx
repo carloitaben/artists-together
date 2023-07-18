@@ -23,19 +23,19 @@ function Logout({ action }: Props) {
           const { data, serverError, validationError } = await action({})
 
           if (serverError || validationError) {
-            return emit({ title: "Oops! Something went wrong" })
+            return emit("Oops! Something went wrong")
           }
 
           if (data && "error" in data) {
             switch (data.error) {
               case "UNAUTHORIZED":
-                emit({ title: "Oops! You cannot do that" })
+                emit("Oops! You cannot do that")
                 break
               default:
                 assertUnreachable(data.error)
             }
           } else {
-            emit({ title: "Logged out succesfully" })
+            emit("Logged out succesfully")
             refresh()
           }
         })

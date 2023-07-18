@@ -3,8 +3,9 @@
 import { useCallback, useState, useTransition } from "react"
 import { motion } from "framer-motion"
 
-import { swapTheme } from "~/lib/actions"
-import { Theme } from "~/lib/themes"
+import { theme, Theme } from "~/lib/themes"
+import { changeTheme } from "~/actions/public"
+import { withAction, PropsWithAction } from "~/hooks/form"
 
 function WidgetThemeButton({
   change,
@@ -29,10 +30,10 @@ function WidgetThemeButton({
 }
 
 const rotate = {
-  [Theme["anamorphic-teal"]]: 0,
-  [Theme["arpeggio-black"]]: 270,
-  [Theme["tuxedo-crimson"]]: 180,
-  [Theme["outsider-violet"]]: 90,
+  [theme["anamorphic-teal"]]: 0,
+  [theme["arpeggio-black"]]: 270,
+  [theme["tuxedo-crimson"]]: 180,
+  [theme["outsider-violet"]]: 90,
 }
 
 function Overlay() {
@@ -45,16 +46,22 @@ function Overlay() {
   )
 }
 
-export default function WidgetThemeContent({ theme }: { theme: Theme }) {
-  const [selected, setSelected] = useState(theme)
+function WidgetThemeContent({
+  action,
+  selectedTheme,
+}: PropsWithAction<typeof changeTheme, { selectedTheme: Theme }>) {
+  const [selected, setSelected] = useState(selectedTheme)
   const [_, startTransition] = useTransition()
 
-  const change = useCallback((theme: Theme) => {
-    setSelected(theme)
-    startTransition(async () => {
-      await swapTheme(theme)
-    })
-  }, [])
+  const change = useCallback(
+    (theme: Theme) => {
+      setSelected(theme)
+      startTransition(async () => {
+        await action(theme)
+      })
+    },
+    [action]
+  )
 
   return (
     <div className="pointer-events-none absolute inset-0 rotate-45">
@@ -67,28 +74,30 @@ export default function WidgetThemeContent({ theme }: { theme: Theme }) {
           className="bg-anamorphic-teal-100 aria-checked:bg-anamorphic-teal-300"
           selected={selected}
           change={change}
-          theme={Theme["anamorphic-teal"]}
+          theme={theme["anamorphic-teal"]}
         />
         <WidgetThemeButton
           className="bg-arpeggio-black-100 aria-checked:bg-arpeggio-black-300"
           selected={selected}
           change={change}
-          theme={Theme["arpeggio-black"]}
+          theme={theme["arpeggio-black"]}
         />
         <WidgetThemeButton
           className="bg-outsider-violet-100 aria-checked:bg-outsider-violet-300"
           selected={selected}
           change={change}
-          theme={Theme["outsider-violet"]}
+          theme={theme["outsider-violet"]}
         />
         <WidgetThemeButton
           className="bg-tuxedo-crimson-100 aria-checked:bg-tuxedo-crimson-300"
           selected={selected}
           change={change}
-          theme={Theme["tuxedo-crimson"]}
+          theme={theme["tuxedo-crimson"]}
         />
       </motion.div>
       <Overlay />
     </div>
   )
 }
+
+export default withAction(WidgetThemeContent, changeTheme)

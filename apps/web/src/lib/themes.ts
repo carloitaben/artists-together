@@ -6,12 +6,14 @@ import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adap
 
 export const cookie = "theme"
 
-export const enum Theme {
-  "anamorphic-teal" = "0",
-  "arpeggio-black" = "1",
-  "outsider-violet" = "2",
-  "tuxedo-crimson" = "3",
-}
+export const theme = {
+  "anamorphic-teal": "0",
+  "arpeggio-black": "1",
+  "outsider-violet": "2",
+  "tuxedo-crimson": "3",
+} as const
+
+export type Theme = (typeof theme)[keyof typeof theme]
 
 function makeTheme(color: keyof (typeof tailwind)["theme"]["colors"]) {
   return Object.fromEntries(
@@ -22,19 +24,19 @@ function makeTheme(color: keyof (typeof tailwind)["theme"]["colors"]) {
   )
 }
 
-const themes = {
-  [Theme["anamorphic-teal"]]: makeTheme("anamorphic-teal"),
-  [Theme["arpeggio-black"]]: makeTheme("arpeggio-black"),
-  [Theme["outsider-violet"]]: makeTheme("outsider-violet"),
-  [Theme["tuxedo-crimson"]]: makeTheme("tuxedo-crimson"),
+const themeVariables = {
+  [theme["anamorphic-teal"]]: makeTheme("anamorphic-teal"),
+  [theme["arpeggio-black"]]: makeTheme("arpeggio-black"),
+  [theme["outsider-violet"]]: makeTheme("outsider-violet"),
+  [theme["tuxedo-crimson"]]: makeTheme("tuxedo-crimson"),
 }
 
 export function getThemeCookie(cookies: ReadonlyRequestCookies) {
-  return (cookies.get(cookie)?.value as Theme) || Theme["anamorphic-teal"]
+  return (cookies.get(cookie)?.value as Theme) || theme["anamorphic-teal"]
 }
 
 export function getThemeCSS(theme: Theme) {
   return Object.fromEntries(
-    Object.entries(themes[theme]).map(([k, v]) => [`--theme-${k}`, v])
+    Object.entries(themeVariables[theme]).map(([k, v]) => [`--theme-${k}`, v])
   ) as CSSProperties
 }

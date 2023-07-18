@@ -19,12 +19,12 @@ type Props = {
 
 type ToastData = {
   id: string
-  title: string
+  content: ReactNode
   duration?: number
 }
 
 type ToastContext = {
-  emit: (toast: Omit<ToastData, "id">) => void
+  emit: (content: ReactNode, duration?: number) => void
 }
 
 const toastContext = createContext<ToastContext | null>(null)
@@ -44,9 +44,9 @@ export default function Toast({ children }: Props) {
     return () => clearTimeout(timeout)
   }, [hover, toast])
 
-  const emit = useCallback((toast: Parameters<ToastContext["emit"]>[0]) => {
+  const emit = useCallback<ToastContext["emit"]>((content, duration) => {
     const id = Math.random().toString()
-    setToast({ id, ...toast })
+    setToast({ id, content, duration })
   }, [])
 
   const value: ToastContext = {
@@ -76,7 +76,7 @@ export default function Toast({ children }: Props) {
                 exit={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
               >
-                <p className="-translate-y-px">{toast.title}</p>
+                <p className="-translate-y-px">{toast.content}</p>
                 <button onClick={() => setToast(undefined)}>
                   <Icon label="Close" className="h-12 w-12 p-4">
                     {close}

@@ -1,46 +1,49 @@
 "use client"
 
-import type { ComponentProps, ReactNode } from "react"
+import {
+  ComponentProps,
+  ForwardedRef,
+  MouseEventHandler,
+  ReactNode,
+  forwardRef,
+  useCallback,
+} from "react"
 import { cx } from "class-variance-authority"
 
 import { useFieldContext } from "./Field"
-import { FieldMetaProps } from "formik"
 
-type Props = ComponentProps<"div"> & {
+type Props = Omit<ComponentProps<"label">, "htmlFor"> & {
   children: ReactNode
-  icon?: ReactNode
-  caption?: ReactNode | ((props: FieldMetaProps<any>) => ReactNode)
 }
 
-export default function Label({
-  children,
-  icon,
-  caption,
-  className,
-  ...props
-}: Props) {
-  const [field, meta] = useFieldContext()
+function Label(
+  { children, className, onClick, ...props }: Props,
+  ref: ForwardedRef<HTMLLabelElement>
+) {
+  const { name } = useFieldContext()
 
-  function onClick() {
-    const input = document.querySelector<HTMLInputElement>(
-      `input[name="${field.name}"]`
-    )
-
-    if (input) input.focus()
-  }
+  const click = useCallback<MouseEventHandler<HTMLLabelElement>>(
+    (event) => {
+      document.querySelector<HTMLInputElement>(`input[name="${name}"]`)?.focus()
+      onClick?.(event)
+    },
+    [name, onClick]
+  )
 
   return (
-    <div
+    <label
       {...props}
+      ref={ref}
+      htmlFor={name}
+      onClick={click}
       className={cx(
         className,
         "mb-1 flex items-center justify-between px-3.5 font-sans text-sm text-gunpla-white-500"
       )}
     >
-      <label htmlFor={field.name} onClick={onClick}>
-        {children}
-      </label>
-      <span>{typeof caption === "function" ? caption(meta) : caption}</span>
-    </div>
+      {children}
+    </label>
   )
 }
+
+export default forwardRef(Label)
