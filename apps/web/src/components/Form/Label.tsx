@@ -8,16 +8,39 @@ import {
   forwardRef,
   useCallback,
 } from "react"
-import { cx } from "class-variance-authority"
+import { cva, VariantProps } from "class-variance-authority"
 
 import { useFieldContext } from "./Field"
 
-type Props = Omit<ComponentProps<"label">, "htmlFor"> & {
-  children: ReactNode
-}
+const label = cva("font-sans text-sm text-gunpla-white-500", {
+  variants: {
+    flex: {
+      true: "flex items-center justify-between",
+      false: "",
+    },
+    padding: {
+      true: "px-3.5",
+      false: "",
+    },
+    margin: {
+      true: "mb-1",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    flex: true,
+    margin: true,
+    padding: true,
+  },
+})
+
+type Props = Omit<ComponentProps<"label">, "htmlFor"> &
+  VariantProps<typeof label> & {
+    children: ReactNode
+  }
 
 function Label(
-  { children, className, onClick, ...props }: Props,
+  { children, className, onClick, margin, padding, flex, ...props }: Props,
   ref: ForwardedRef<HTMLLabelElement>
 ) {
   const { name } = useFieldContext()
@@ -36,10 +59,7 @@ function Label(
       ref={ref}
       htmlFor={name}
       onClick={click}
-      className={cx(
-        className,
-        "mb-1 flex items-center justify-between px-3.5 font-sans text-sm text-gunpla-white-500"
-      )}
+      className={label({ margin, padding, flex, className })}
     >
       {children}
     </label>

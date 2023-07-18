@@ -276,6 +276,8 @@ export default {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
       boxShadow: {
+        DEFAULT: "0px 4px 8px rgba(0, 0, 0, 0.08)",
+        inner: "inset 0px 4px 8px rgba(0, 0, 0, 0.08)",
         button: "0px 4px 8px 0px rgba(11, 14, 30, 0.08)",
         card: "0px 8px 16px 0px rgba(11, 14, 30, 0.04)",
       },
