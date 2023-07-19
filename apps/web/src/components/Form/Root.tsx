@@ -1,77 +1,26 @@
 "use client"
 
-import * as RadixTooltip from "@radix-ui/react-tooltip"
-import { ForwardedRef, ReactNode, forwardRef, useCallback } from "react"
-import { Form, Formik, FormikConfig } from "formik"
-import { AnyZodObject, TypeOf } from "zod"
-import { toFormikValidationSchema } from "zod-formik-adapter"
+import { Provider as TooltipProvider } from "@radix-ui/react-tooltip"
+import { BaseSyntheticEvent, ForwardedRef, ReactNode, forwardRef } from "react"
+import { FormProvider, UseFormReturn } from "react-hook-form"
 
-import { useToast } from "../Toast"
-import { wait } from "~/lib/utils"
-
-const DEFAULT_DELAY_VALUE_MS = 750
-
-type Props<T extends AnyZodObject> = FormikConfig<TypeOf<T>> & {
-  schema: T
+type Props = UseFormReturn<any> & {
+  onSubmit: (
+    e?: BaseSyntheticEvent<object, any, any> | undefined
+  ) => Promise<void>
   children: ReactNode
-  /**
-   * Adds an artificial minimum duration to the `obSubmit` call
-   *
-   * ```tsx
-   * <Root delay /> // Default duration
-   * <Root delay={0.5} /> // 500ms
-   * ```
-   */
-  delay?: number | true
 }
 
-function Root<T extends AnyZodObject>(
-  { children, schema, initialValues, onSubmit, delay = 0, ...props }: Props<T>,
+function Root(
+  { onSubmit, children, ...props }: Props,
   ref: ForwardedRef<HTMLFormElement>
 ) {
-  const emit = useToast()
-
-  const submit = useCallback<Props<T>["onSubmit"]>(
-    async (values, helpers) => {
-      try {
-        await Promise.all([
-          onSubmit(values, helpers),
-          delay &&
-            wait(
-              typeof delay === "number" ? delay * 1000 : DEFAULT_DELAY_VALUE_MS
-            ),
-        ])
-
-        helpers.setSubmitting(false)
-      } catch (error) {
-        if (process.env.NODE_ENV !== "production") console.error(error)
-
-        let title = "Oops! That didn't work"
-
-        if (error instanceof Error) {
-          title = error.message
-        } else if (typeof error === "string") {
-          title = error
-        }
-
-        emit(title)
-      }
-    },
-    [delay, emit, onSubmit]
-  )
-
   return (
-    <Formik
-      {...props}
-      initialValues={initialValues}
-      onSubmit={submit}
-      ref={ref}
-      validationSchema={toFormikValidationSchema(schema)}
-    >
-      <Form>
-        <RadixTooltip.Provider>{children}</RadixTooltip.Provider>
-      </Form>
-    </Formik>
+    <FormProvider {...props}>
+      <form ref={ref} onSubmit={onSubmit}>
+        <TooltipProvider>{children}</TooltipProvider>
+      </form>
+    </FormProvider>
   )
 }
 

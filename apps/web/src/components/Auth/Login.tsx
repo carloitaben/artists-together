@@ -1,42 +1,51 @@
-import { TypeOf } from "zod"
+"use client"
 
-import { loginSchema } from "~/lib/schemas"
-
+import { login } from "~/actions/auth"
+import { loginSchema } from "~/actions/schemas"
+import { useForm, withAction, PropsWithAction } from "~/hooks/form"
+import { useToast } from "~/components/Toast"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 
-type Props = {
-  onSuccess: (data: TypeOf<typeof loginSchema>) => void
+type Props = PropsWithAction<typeof login> & {
+  onSuccess: (email: string) => void
 }
 
-export default function Login({ onSuccess }: Props) {
-  return (
-    <Form.Root
-      delay
-      schema={loginSchema}
-      initialValues={{ email: "" }}
-      onSubmit={async (data) => {
-        const response = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        })
+function LoginForm({ action, onSuccess }: Props) {
+  const emit = useToast()
 
-        if (!response.ok) {
-          const json = await response.json()
-          throw Error("error" in json ? json.error : "Unknown error")
+  const { root, field, setError } = useForm({
+    action,
+    schema: loginSchema,
+    onError: () => {
+      emit("Oops! Something went wrong")
+    },
+    onSubmit: (data, input) => {
+      if ("error" in data) {
+        switch (data.error) {
+          case "ALREADY_LOGGED_IN":
+            emit("You are already logged in!")
+            break
+          case "USER_DOES_NOT_EXIST":
+            setError("email", {
+              type: "custom",
+              message: "No account with that email exists",
+            })
+            break
+          default:
+            emit("Oops! Something went wrong")
         }
+      } else {
+        onSuccess(input.email)
+      }
+    },
+  })
 
-        // @ts-expect-error i need to fix this :)
-        onSuccess(data)
-      }}
-    >
+  return (
+    <Form.Root {...root()}>
       <Modal.Container>
         <Modal.Title inset>Log-in</Modal.Title>
-        <Form.Field name="email">
+        <Form.Field {...field("email")}>
           <Form.Label>Email address</Form.Label>
           <Form.Input
             type="email"
@@ -55,3 +64,5 @@ export default function Login({ onSuccess }: Props) {
     </Form.Root>
   )
 }
+
+export default withAction(LoginForm, login)

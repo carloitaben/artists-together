@@ -1,3 +1,7 @@
+export function unreachable(value: never): never {
+  throw new Error(`Unreachable: ${value}`)
+}
+
 export function oneOf<T>(array: T[]) {
   return array[Math.floor(Math.random() * array.length)]
 }

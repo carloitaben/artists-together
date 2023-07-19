@@ -1,28 +1,31 @@
 "use client"
 
-import type { ReactNode } from "react"
+import { ComponentProps, ReactNode } from "react"
+import { useFormContext } from "react-hook-form"
 import { cx } from "class-variance-authority"
-import { FieldHookConfig } from "formik"
 
 import Shiny from "~/components/Shiny"
 
 import { useFieldContext } from "./Field"
 
-type Props = Omit<FieldHookConfig<any>, "name"> & {
+type Props = Omit<ComponentProps<"input">, "name" | "id"> & {
   icon?: ReactNode
 }
 
-export default function Input({ icon, ...props }: Props) {
-  const [field] = useFieldContext(props)
+export default function Input({ className, icon, ...props }: Props) {
+  const { name } = useFieldContext()
+  const { formState, register } = useFormContext()
 
   return (
     <Shiny>
       <div className="relative rounded-[1rem]">
-        {/* @ts-expect-error I don't really know why this happens */}
         <input
           {...props}
-          {...field}
+          {...register(name)}
+          id={name}
+          aria-invalid={name in formState.errors ? "true" : "false"}
           className={cx(
+            className,
             "w-full rounded-[1rem] bg-not-so-white py-2.5 pl-3.5 font-sans text-sm text-gunpla-white-700 caret-gunpla-white-700 placeholder:text-gunpla-white-300",
             icon ? "pr-10" : "pr-3.5"
           )}

@@ -1,46 +1,69 @@
 "use client"
 
-import type { ComponentProps, ReactNode } from "react"
-import { cx } from "class-variance-authority"
+import {
+  ComponentProps,
+  ForwardedRef,
+  MouseEventHandler,
+  ReactNode,
+  forwardRef,
+  useCallback,
+} from "react"
+import { cva, VariantProps } from "class-variance-authority"
 
 import { useFieldContext } from "./Field"
-import { FieldMetaProps } from "formik"
 
-type Props = ComponentProps<"div"> & {
-  children: ReactNode
-  icon?: ReactNode
-  caption?: ReactNode | ((props: FieldMetaProps<any>) => ReactNode)
-}
+const label = cva("font-sans text-sm text-gunpla-white-500", {
+  variants: {
+    flex: {
+      true: "flex items-center justify-between",
+      false: "",
+    },
+    padding: {
+      true: "px-3.5",
+      false: "",
+    },
+    margin: {
+      true: "mb-1",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    flex: true,
+    margin: true,
+    padding: true,
+  },
+})
 
-export default function Label({
-  children,
-  icon,
-  caption,
-  className,
-  ...props
-}: Props) {
-  const [field, meta] = useFieldContext()
-
-  function onClick() {
-    const input = document.querySelector<HTMLInputElement>(
-      `input[name="${field.name}"]`
-    )
-
-    if (input) input.focus()
+type Props = Omit<ComponentProps<"label">, "htmlFor"> &
+  VariantProps<typeof label> & {
+    children: ReactNode
   }
 
+function Label(
+  { children, className, onClick, margin, padding, flex, ...props }: Props,
+  ref: ForwardedRef<HTMLLabelElement>
+) {
+  const { name } = useFieldContext()
+
+  const click = useCallback<MouseEventHandler<HTMLLabelElement>>(
+    (event) => {
+      document.querySelector<HTMLInputElement>(`input[name="${name}"]`)?.focus()
+      onClick?.(event)
+    },
+    [name, onClick]
+  )
+
   return (
-    <div
+    <label
       {...props}
-      className={cx(
-        className,
-        "mb-1 flex items-center justify-between px-3.5 font-sans text-sm text-gunpla-white-500"
-      )}
+      ref={ref}
+      htmlFor={name}
+      onClick={click}
+      className={label({ margin, padding, flex, className })}
     >
-      <label htmlFor={field.name} onClick={onClick}>
-        {children}
-      </label>
-      <span>{typeof caption === "function" ? caption(meta) : caption}</span>
-    </div>
+      {children}
+    </label>
   )
 }
+
+export default forwardRef(Label)

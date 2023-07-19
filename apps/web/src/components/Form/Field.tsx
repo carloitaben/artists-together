@@ -1,26 +1,21 @@
 "use client"
 
-import { FieldHookConfig, useField } from "formik"
-import { ComponentProps, ReactNode, createContext, useContext } from "react"
+import { ComponentProps, ForwardedRef, ReactNode, createContext, forwardRef, useContext } from "react"
 
-type FieldContext = {
+type Context = {
   name: string
 }
 
-export const fieldContext = createContext<FieldContext | null>(null)
+const context = createContext<Context | null>(null)
 
-export function useFieldContext<T = any>(
-  props?: Omit<FieldHookConfig<T>, "name">
-) {
-  const value = useContext(fieldContext)
+export function useFieldContext() {
+  const value = useContext(context)
 
   if (!value) {
-    throw Error("Called useFieldContext outside of Field component")
+    throw Error("Called useFieldContext() outside Field component")
   }
 
-  return useField(
-    props ? ({ ...props, name: value.name } as FieldHookConfig<T>) : value.name
-  )
+  return value
 }
 
 type Props = ComponentProps<"div"> & {
@@ -28,14 +23,16 @@ type Props = ComponentProps<"div"> & {
   name: string
 }
 
-export default function Field({ name, children, ...props }: Props) {
-  const value: FieldContext = {
+function Root({ children, name, ...props }: Props, ref: ForwardedRef<HTMLDivElement>) {
+  const value: Context = {
     name,
   }
 
   return (
-    <div {...props}>
-      <fieldContext.Provider value={value}>{children}</fieldContext.Provider>
+    <div {...props} ref={ref}>
+      <context.Provider value={value}>{children}</context.Provider>
     </div>
   )
 }
+
+export default forwardRef(Root)

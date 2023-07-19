@@ -32,7 +32,7 @@ export default function WidgetTheme() {
       <Suspense fallback={<Fallback />}>
         <div className="relative text-theme-50">
           {bg}
-          <WidgetThemeContent theme={theme} />
+          <WidgetThemeContent selectedTheme={theme} />
         </div>
       </Suspense>
     </div>
