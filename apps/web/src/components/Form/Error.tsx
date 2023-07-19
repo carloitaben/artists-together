@@ -18,9 +18,11 @@ export default function Error({ className }: Props) {
       ? formState.errors[name]?.message?.toString() || "Unknown error"
       : null
 
+  const render = formState.touchedFields[name] && formState.errors[name]
+
   return (
     <AnimatePresence initial={false}>
-      {name in formState.errors ? (
+      {render ? (
         <motion.div
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
