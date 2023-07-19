@@ -15,7 +15,6 @@ function Root(
   { onSubmit, children, ...props }: Props,
   ref: ForwardedRef<HTMLFormElement>
 ) {
-
   return (
     <FormProvider {...props}>
       <form ref={ref} onSubmit={onSubmit}>
