@@ -27,5 +27,9 @@
     "node-cron": "^3.0.2",
     "ws": "^8.13.0",
     "zod": "^3.21.4"
+  },
+  "prettier": {
+    "semi": false,
+    "trailingComma": "all"
   }
 }

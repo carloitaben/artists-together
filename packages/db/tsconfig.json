@@ -3,11 +3,6 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
-    "rootDir": "./",
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["./src/*"]
-    },
     "noEmit": true,
     "isolatedModules": true,
     "esModuleInterop": true,

@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
+import { DiscordPolls } from "db"
 import { Client, EmbedBuilder } from "discord.js"
-import { InferModel, connect, discordPollVotes, discordPolls, eq } from "db"
 
 import { registerEventHandler } from "~/lib/core"
 import { getTextBasedChannel } from "~/lib/helpers"
@@ -10,29 +10,21 @@ import { formatVotes } from "./utils"
 
 dayjs.extend(isSameOrAfter)
 
-type DiscordPoll = InferModel<typeof discordPolls>
+export const polls = new Map<string, DiscordPolls.PollsSchema>()
 
-export const polls = new Map<string, DiscordPoll>()
-
-export async function deletePoll(poll: DiscordPoll) {
-  const db = connect()
-  const deletePollPromise = db.delete(discordPolls).where(eq(discordPolls.id, poll.id))
-  const deleteVotesPromise = db.delete(discordPollVotes).where(eq(discordPollVotes.pollId, poll.id))
-
-  await Promise.all([deletePollPromise, deleteVotesPromise])
-
-  return polls.delete(poll.id)
+export async function deletePoll(id: DiscordPolls.PollsSchema["id"]) {
+  return DiscordPolls.remove(id).then(() => polls.delete(id))
 }
 
-export async function countPoll(client: Client, poll: DiscordPoll) {
+export async function countPoll(
+  client: Client,
+  poll: DiscordPolls.PollsSchema,
+) {
   const channel = await getTextBasedChannel(client, poll.channelId)
   const message = await channel.messages.fetch(poll.messageId)
-
   const options = message.components[0].components
 
-  const db = connect()
-  const votes = await db.select().from(discordPollVotes).where(eq(discordPollVotes.pollId, poll.id))
-
+  const votes = await DiscordPolls.votesFromId(poll.id)
   const votesCountMap = new Map<string, number>()
 
   options.forEach((option) => {
@@ -65,15 +57,21 @@ export async function countPoll(client: Client, poll: DiscordPoll) {
   return Array.from(votesCount)
 }
 
-export async function closePoll(client: Client, poll: DiscordPoll) {
+export async function closePoll(
+  client: Client,
+  poll: DiscordPolls.PollsSchema,
+) {
   const channel = await getTextBasedChannel(client, poll.channelId)
   const message = await channel.messages.fetch(poll.messageId)
 
   // If the message no longer exists, delete the poll
-  if (!message) return deletePoll(poll)
+  if (!message) return deletePoll(poll.id)
 
   const count = await countPoll(client, poll)
-  const total = count.reduce((accumulator, [_, value]) => accumulator + value, 0)
+  const total = count.reduce(
+    (accumulator, [_, value]) => accumulator + value,
+    0,
+  )
   const embed = new EmbedBuilder({
     title: `${poll.name}`,
     footer: {
@@ -101,22 +99,21 @@ export async function closePoll(client: Client, poll: DiscordPoll) {
     ])
   }
 
-  return deletePoll(poll)
+  return deletePoll(poll.id)
 }
 
-export async function addPoll(client: Client, poll: InferModel<typeof discordPolls, "insert">) {
-  const db = connect()
-  await db.insert(discordPolls).values(poll)
-  const [dbPoll] = await db.select().from(discordPolls).where(eq(discordPolls.name, poll.name)).limit(1)
+export async function addPoll(poll: DiscordPolls.PollsSchema) {
+  await DiscordPolls.create(poll)
+  const dbPoll = await DiscordPolls.fromName(poll.name)
   polls.set(dbPoll.id, dbPoll)
   return dbPoll
 }
 
 // Populate cache on initialization and track poll deadlines
 registerEventHandler("ready", async (client) => {
-  const db = connect()
-  const dbPolls = await db.select().from(discordPolls)
-  dbPolls.forEach((poll) => polls.set(poll.id, poll))
+  await DiscordPolls.list().then((dbPolls) =>
+    dbPolls.forEach((dbPoll) => polls.set(dbPoll.id, dbPoll)),
+  )
 
   // Track polls
   setInterval(() => {
@@ -133,6 +130,6 @@ registerEventHandler("messageDelete", async (message) => {
   polls.forEach(async (poll) => {
     if (poll.messageId !== message.id) return
     if (poll.channelId !== message.channel.id) return
-    return deletePoll(poll)
+    return deletePoll(poll.id)
   })
 })
