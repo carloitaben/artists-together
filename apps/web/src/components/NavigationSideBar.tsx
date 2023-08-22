@@ -4,6 +4,7 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu"
 import * as RadixTooltip from "@radix-ui/react-tooltip"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
+import { AnimatePresence, motion } from "framer-motion"
 import {
   CSSProperties,
   ComponentProps,
@@ -16,12 +17,10 @@ import {
   useState,
 } from "react"
 
-import type { User } from "~/services/auth"
 import { between, oneOf } from "~/lib/utils"
 
 import { artists, calendar, help, home, profile, train } from "./Icons"
 import Icon from "./Icon"
-import { AnimatePresence, motion } from "framer-motion"
 
 const labelContext = createContext<string>("")
 
@@ -53,8 +52,6 @@ function Tooltip({ label, children }: { label: string; children: ReactNode }) {
     if (open) setRotation(oneOf([between(-15, -5), between(5, 15)]))
     setHover(open)
   }
-
-  const style = { "--tw-rotate": `${rotation}deg` } as CSSProperties
 
   return (
     <labelContext.Provider value={label}>
@@ -124,11 +121,7 @@ function Item({
   )
 }
 
-type Props = {
-  user: User
-}
-
-export default function NavigationSideBar(_: Props) {
+export default function NavigationSideBar() {
   return (
     <RadixTooltip.Provider>
       <NavigationMenu.Root

@@ -6,7 +6,6 @@ import { getStroke } from "perfect-freehand"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { AnimatePresence } from "framer-motion"
 
-import { User } from "~/services/auth"
 import { useMatchesMedia } from "~/hooks/media"
 import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
 
@@ -56,11 +55,10 @@ function getSvgPathFromStroke(points: number[][], closed = true) {
 }
 
 type Props = {
-  user: User
   emoji: string
 }
 
-export default function CursorsCanvas({ user, emoji }: Props) {
+export default function CursorsCanvas({ emoji }: Props) {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
   const [paths, setPaths] = useState<string[]>([])
   const svgRef = useRef<SVGSVGElement>(null)
@@ -190,7 +188,7 @@ export default function CursorsCanvas({ user, emoji }: Props) {
       window.removeEventListener("mouseup", onMouseUp, true)
       window.removeEventListener("mousemove", onMouseMove, true)
     }
-  }, [cursors.size, emoji, hasCursor, render, updateCursor, user])
+  }, [cursors.size, emoji, hasCursor, render, updateCursor])
 
   return (
     <>
@@ -218,7 +216,13 @@ export default function CursorsCanvas({ user, emoji }: Props) {
       >
         <AnimatePresence>
           {Array.from(cursors.entries()).map(([id, cursor]) => (
-            <CursorComponent key={id} id={id} cursor={cursor} render={render} setPaths={setPaths} />
+            <CursorComponent
+              key={id}
+              id={id}
+              cursor={cursor}
+              render={render}
+              setPaths={setPaths}
+            />
           ))}
         </AnimatePresence>
       </div>
