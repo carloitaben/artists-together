@@ -15,9 +15,12 @@ import Toast from "~/components/Toast"
 import Cursors from "~/components/Cursors/Cursors"
 import Cursor from "~/components/Cursor"
 
-export const runtime = "edge"
+const metadataBase = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : `http://localhost:${process.env.PORT || 3000}`
 
 export const metadata: Metadata = {
+  metadataBase: new URL(metadataBase),
   title: "Artists Together – Website soon!",
   description: "An inclusive community for all kinds of artists.",
   keywords: ["Art", "Artist Community"],
@@ -25,6 +28,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
 }
+
+export const runtime = "edge"
 
 const themes = [
   Theme["anamorphic-teal"],
