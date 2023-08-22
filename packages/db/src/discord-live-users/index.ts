@@ -17,14 +17,16 @@ export const list = async () =>
     .from(discordLiveUsers)
     .then((value) => value)
 
-export const create = zod(
-  schema.pick({ userId: true, url: true }),
-  async (input) =>
-    void db.insert(discordLiveUsers).values({
-      userId: input.userId,
-      url: input.url,
-    })
-)
+export const create = zod(schema.pick({ userId: true, url: true }), async (input) => {
+  console.log("[discord-live-users] adding", input)
+
+  await db.insert(discordLiveUsers).values({
+    userId: input.userId,
+    url: input.url,
+  })
+
+  console.log("[discord-live-users] added", input)
+})
 
 export const remove = zod(schema.shape.userId, async (userId) =>
   db
