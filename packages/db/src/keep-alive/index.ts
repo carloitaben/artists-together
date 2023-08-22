@@ -13,6 +13,8 @@ export type Schema = z.infer<typeof schema>
  * to prevent deactivation
  */
 export const poke = async () => {
+  console.log("[keep-alive] Poking db")
   await db.insert(keepAliveDummies).values({})
   await db.delete(keepAliveDummies)
+  console.log("[keep-alive] Poked successfully")
 }

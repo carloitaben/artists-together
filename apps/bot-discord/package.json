@@ -9,13 +9,6 @@
     "seed": "tsx ./src/scripts/seed.ts",
     "start": "tsx ./src/index.ts"
   },
-  "devDependencies": {
-    "@types/node-cron": "^3.0.8",
-    "@types/ws": "^8.5.5",
-    "tsx": "^3.12.7",
-    "typescript": "^5.1.6",
-    "ws-types": "workspace:*"
-  },
   "dependencies": {
     "chrono-node": "^2.6.3",
     "dayjs": "^1.11.9",
@@ -27,6 +20,13 @@
     "node-cron": "^3.0.2",
     "ws": "^8.13.0",
     "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/node-cron": "^3.0.8",
+    "@types/ws": "^8.5.5",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6",
+    "ws-types": "workspace:*"
   },
   "prettier": {
     "semi": false,
