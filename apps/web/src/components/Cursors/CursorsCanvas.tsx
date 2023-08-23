@@ -68,7 +68,7 @@ type Props = {
 
 export default function CursorsCanvas({ emoji }: Props) {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
-  const [paths, setPaths] = useState<string[]>([])
+  const [paths, setPaths] = useState(new Map<string, string[]>())
   const svgRef = useRef<SVGSVGElement>(null)
   const hasCursor = useMatchesMedia("(pointer: fine)")
 
@@ -92,10 +92,13 @@ export default function CursorsCanvas({ emoji }: Props) {
     }
   }, [])
 
-  const render = useCallback((points: Point[]) => {
+  const render = useCallback((points: Point[], id: string) => {
     if (!svgRef.current) return
 
-    const path = svgRef.current.querySelector<SVGPathElement>("path:last-child")
+    const path = svgRef.current.querySelector<SVGPathElement>(
+      `g[data-id="${id}"] path:last-child`,
+    )
+
     if (!path) return
 
     path.setAttribute(
@@ -174,7 +177,9 @@ export default function CursorsCanvas({ emoji }: Props) {
       const cursor = $cursor.get()
       update(cursor.x, cursor.y)
 
-      if (window.getSelection) window.getSelection()?.removeAllRanges()
+      if (window.getSelection) {
+        window.getSelection()?.removeAllRanges()
+      }
 
       document.body.classList.add(
         "select-none",
@@ -182,7 +187,11 @@ export default function CursorsCanvas({ emoji }: Props) {
         "overflow-hidden",
       )
 
-      setPaths((current) => [...current, ""])
+      setPaths((current) => {
+        const map = new Map(current)
+        return map.set("self", [...(map.get("self") || []), ""])
+      })
+
       points = []
     }
 
@@ -197,7 +206,7 @@ export default function CursorsCanvas({ emoji }: Props) {
         "overflow-hidden",
       )
 
-      render(points)
+      render(points, "self")
       update(cursor.x, cursor.y)
     }
 
@@ -207,7 +216,7 @@ export default function CursorsCanvas({ emoji }: Props) {
 
       if (event.buttons === 1) {
         points = [...points, [cursor.x, cursor.y]]
-        render(points)
+        render(points, "self")
       }
     }
 
@@ -233,14 +242,18 @@ export default function CursorsCanvas({ emoji }: Props) {
         width="100%"
         height="100%"
       >
-        {paths.map((path, index) => (
-          <path
-            key={index}
-            d={path}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="currentColor"
-          />
+        {Array.from(paths.entries()).map(([id, paths]) => (
+          <g key={id} data-id={id}>
+            {paths.map((path, index) => (
+              <path
+                key={index}
+                d={path}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="currentColor"
+              />
+            ))}
+          </g>
         ))}
       </svg>
       <div

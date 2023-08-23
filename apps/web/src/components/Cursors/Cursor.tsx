@@ -1,3 +1,5 @@
+"use client"
+
 import { Cursor, CursorState } from "ws-types"
 import { PerfectCursor } from "perfect-cursors"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
@@ -28,8 +30,8 @@ const variants: Variants = {
 type Props = {
   cursor: Cursor | null
   id: string
-  setPaths: Dispatch<SetStateAction<string[]>>
-  render: (points: Point[]) => void
+  setPaths: Dispatch<SetStateAction<Map<string, string[]>>>
+  render: (points: Point[], id: string) => void
 }
 
 type Point = [x: number, y: number]
@@ -40,43 +42,42 @@ export default function Cursor({ cursor, id, render, setPaths }: Props) {
   const pointsRef = useRef<Point[]>([])
   const pressingRef = useRef(false)
 
-  const [state, setState] = useState<CursorState>(() => {
-    if (!cursor) return "idle"
-    return cursor[4]
-  })
+  const [state, setState] = useState<CursorState>(cursor ? cursor[4] : "idle")
 
   const [pc] = useState(
     () =>
       new PerfectCursor((point) => {
         containerRef.current?.style.setProperty(
           "transform",
-          `translate(${point[0]}%, ${point[1]}%)`
+          `translate(${point[0]}%, ${point[1]}%)`,
         )
-      })
+      }),
   )
 
   useWebSocketEvent("cursor:update", ([_id, cursor]) => {
     if (_id !== id || !cursor || !wrapperRef.current) return
+
     wrapperRef.current.style.width = `${cursor[2]}px`
     wrapperRef.current.style.height = `${cursor[3]}px`
     pc.addPoint([cursor[0], cursor[1]])
     setState(cursor[4])
 
     if (cursor[4] !== "press") {
-      pressingRef.current = false
-      return
+      return (pressingRef.current = false)
     }
 
     if (!pressingRef.current) {
-      setPaths((current) => [...current, ""])
       pointsRef.current = []
       pressingRef.current = true
-      return
+      return setPaths((current) => {
+        const map = new Map(current)
+        return map.set(id, [...(map.get(id) || []), ""])
+      })
     }
 
     const [x, y] = unwrapCursor(cursor)
     pointsRef.current = [...pointsRef.current, [x, y]]
-    render(pointsRef.current)
+    render(pointsRef.current, id)
   })
 
   if (!cursor) return null
