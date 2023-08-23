@@ -1,19 +1,22 @@
 "use client"
 
+import useResizeObserver from "@react-hook/resize-observer"
 import {
   AnimatePresence,
   Variants,
   motion,
   useMotionTemplate,
+  useMotionValueEvent,
   useSpring,
 } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Cursor as CursorType } from "ws-types"
 import { CursorState } from "ws-types"
 
+import { $cursor } from "~/stores/cursor"
 import { useMatchesMedia } from "~/hooks/media"
-import CursorLabel from "./Cursors/CursorLabel"
 import { useWebSocketEvent } from "~/hooks/ws"
+import CursorLabel from "./Cursors/CursorLabel"
 
 function limit(number: number) {
   if (number < 0) return 0
@@ -91,6 +94,14 @@ const variants: Variants = {
 
 export default function Cursor() {
   const [cursors, setCursors] = useState(new Map<string, CursorType | null>())
+  const windowRect = useRef<Pick<Window, "innerWidth" | "innerHeight">>()
+
+  useResizeObserver(typeof document === "undefined" ? null : document.body, () => {
+    windowRect.current = {
+      innerWidth: window.innerWidth,
+      innerHeight: window.innerHeight,
+    }
+  })
 
   useWebSocketEvent("room:join", (room) => {
     setCursors(new Map(room))
@@ -109,12 +120,21 @@ export default function Cursor() {
 
   const [state, setState] = useState<keyof typeof cursorStateSvg>()
   const coarse = useMatchesMedia("(pointer: coarse)")
-
   const motionValueScale = useSpring(1, { mass: 0.05, stiffness: 200 })
   const motionValueX = useSpring(0, { mass: 0.05, stiffness: 175 })
   const motionValueY = useSpring(0, { mass: 0.05, stiffness: 175 })
   const percentX = useMotionTemplate`${motionValueX}%`
   const percentY = useMotionTemplate`${motionValueY}%`
+
+  useMotionValueEvent(motionValueX, "change", (value) => {
+    if (!windowRect.current) return
+    $cursor.setKey("x", value * windowRect.current.innerWidth / 100)
+  })
+
+  useMotionValueEvent(motionValueY, "change", (value) => {
+    if (!windowRect.current) return
+    $cursor.setKey("y", value * windowRect.current.innerHeight / 100)
+  })
 
   useEffect(() => {
     if (coarse) {
@@ -124,10 +144,14 @@ export default function Cursor() {
     document.documentElement.classList.add("cursor")
 
     function onMouseEnter(event: MouseEvent) {
-      const x = limit((event.clientX * 100) / window.innerWidth)
-      const y = limit((event.clientY * 100) / window.innerHeight)
+      if (!windowRect.current) return
+
+      const x = limit((event.clientX * 100) / windowRect.current.innerWidth)
+      const y = limit((event.clientY * 100) / windowRect.current.innerHeight)
+
       motionValueX.jump(x)
       motionValueY.jump(y)
+
       setState("idle")
     }
 
@@ -136,8 +160,10 @@ export default function Cursor() {
     }
 
     function onMouseMove(event: MouseEvent) {
-      const x = limit((event.clientX * 100) / window.innerWidth)
-      const y = limit((event.clientY * 100) / window.innerHeight)
+      if (!windowRect.current) return
+
+      const x = limit((event.clientX * 100) / windowRect.current.innerWidth)
+      const y = limit((event.clientY * 100) / windowRect.current.innerHeight)
 
       if (!state) {
         motionValueX.jump(x)
@@ -162,6 +188,7 @@ export default function Cursor() {
     window.addEventListener("mousemove", onMouseMove)
     window.addEventListener("mousedown", onMouseDown)
     window.addEventListener("mouseup", onMouseUp)
+
     return () => {
       window.removeEventListener("mousemove", onMouseMove)
       window.removeEventListener("mousedown", onMouseDown)
