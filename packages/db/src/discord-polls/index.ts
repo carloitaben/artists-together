@@ -11,7 +11,7 @@ export const pollVotesSchema = createSelectSchema(discordPollVotes)
 export type PollsSchema = z.infer<typeof pollsSchema>
 export type PollVotesSchema = z.infer<typeof pollVotesSchema>
 
-export const create = zod(pollsSchema, (poll) => void db.insert(discordPolls).values(poll))
+export const create = zod(pollsSchema, async (poll) => void db.insert(discordPolls).values(poll))
 
 export const remove = zod(
   pollsSchema.shape.id,
@@ -22,7 +22,7 @@ export const remove = zod(
     ])
 )
 
-export const list = async () => db.select().from(discordPolls)
+export const list = zod(z.void(), async () => db.select().from(discordPolls))
 
 export const listFromChannel = zod(pollsSchema.shape.channelId, async (channelId) =>
   db.select().from(discordPolls).where(eq(discordPolls.channelId, channelId))

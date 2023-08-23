@@ -11,11 +11,12 @@ export const schema = createSelectSchema(discordLiveUsers, {
 
 export type Schema = z.infer<typeof schema>
 
-export const list = async () =>
+export const list = zod(z.void(), async () =>
   db
     .select()
     .from(discordLiveUsers)
     .then((value) => value)
+)
 
 export const create = zod(schema.pick({ userId: true, url: true }), async (input) => {
   console.log("[discord-live-users] adding", input)

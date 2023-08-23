@@ -2,6 +2,7 @@ import { createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
 import { db } from "../db"
 import { keepAliveDummies } from "./sql"
+import { zod } from "../zod"
 
 export const schema = createSelectSchema(keepAliveDummies)
 
@@ -12,9 +13,9 @@ export type Schema = z.infer<typeof schema>
  * In the Discord bot deployment we write daily to this table
  * to prevent deactivation
  */
-export const poke = async () => {
+export const poke = zod(z.void(), async () => {
   console.log("[keep-alive] Poking db")
   await db.insert(keepAliveDummies).values({})
   await db.delete(keepAliveDummies)
   console.log("[keep-alive] Poked successfully")
-}
+})
