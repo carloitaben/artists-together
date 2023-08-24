@@ -9,12 +9,6 @@ import { useWebSocketEvent } from "~/hooks/ws"
 
 import CursorLabel from "./CursorLabel"
 
-function unwrapCursor(cursor: NonNullable<Cursor>) {
-  const x = (cursor[0] / 100) * cursor[2]
-  const y = (cursor[1] / 100) * cursor[3]
-  return [x, y] as const
-}
-
 const variants: Variants = {
   hide: {
     scale: 0,
@@ -75,7 +69,8 @@ export default function Cursor({ cursor, id, render, setPaths }: Props) {
       })
     }
 
-    const [x, y] = unwrapCursor(cursor)
+    const x = (cursor[0] / 100) * cursor[2]
+    const y = (cursor[1] / 100) * cursor[3]
     pointsRef.current = [...pointsRef.current, [x, y]]
     render(pointsRef.current, id)
   })
