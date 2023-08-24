@@ -21,12 +21,7 @@ const eventBuffer = new Map<string, any>()
 const listeners = new Map<string, Set<Function>>()
 const context = createContext<WebSocket | undefined>(undefined)
 
-const WSS_URL = process.env.NEXT_PUBLIC_WSS_URL
-
-export const url =
-  WSS_URL || process.env.NODE_ENV === "production"
-    ? WSS_URL
-    : "ws://localhost:8080"
+export const url = process.env.NEXT_PUBLIC_WSS_URL || "ws://localhost:8080"
 
 function useWebSocket() {
   return useContext(context)
