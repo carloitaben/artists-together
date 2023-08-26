@@ -105,8 +105,8 @@ export default function CursorsCanvas({ emoji }: Props) {
       "d",
       getSvgPathFromStroke(
         getStroke(points, {
-          size: 20,
-          thinning: 0.5,
+          size: 16,
+          thinning: 0,
           smoothing: 0.5,
           streamline: 0.5,
         }),
