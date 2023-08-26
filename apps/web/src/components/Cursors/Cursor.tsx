@@ -1,9 +1,15 @@
 "use client"
 
 import { Cursor, CursorState } from "ws-types"
-import { PerfectCursor } from "perfect-cursors"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
-import { motion, MotionStyle, Variants } from "framer-motion"
+import {
+  motion,
+  MotionStyle,
+  SpringOptions,
+  useMotionTemplate,
+  useSpring,
+  Variants,
+} from "framer-motion"
 
 import { useWebSocketEvent } from "~/hooks/ws"
 
@@ -30,6 +36,8 @@ type Props = {
 
 type Point = [x: number, y: number]
 
+const spring: SpringOptions = { mass: 0.05, stiffness: 175 }
+
 export default function Cursor({ cursor, id, render, setPaths }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -38,22 +46,18 @@ export default function Cursor({ cursor, id, render, setPaths }: Props) {
 
   const [state, setState] = useState<CursorState>(cursor ? cursor[4] : "idle")
 
-  const [pc] = useState(
-    () =>
-      new PerfectCursor((point) => {
-        containerRef.current?.style.setProperty(
-          "transform",
-          `translate(${point[0]}%, ${point[1]}%)`,
-        )
-      }),
-  )
+  const motionValueX = useSpring(cursor ? cursor[0] : 0, spring)
+  const motionValueY = useSpring(cursor ? cursor[1] : 1, spring)
+  const percentX = useMotionTemplate`${motionValueX}%`
+  const percentY = useMotionTemplate`${motionValueY}%`
 
   useWebSocketEvent("cursor:update", ([_id, cursor]) => {
     if (_id !== id || !cursor || !wrapperRef.current) return
 
     wrapperRef.current.style.width = `${cursor[2]}px`
     wrapperRef.current.style.height = `${cursor[3]}px`
-    pc.addPoint([cursor[0], cursor[1]])
+    motionValueX.set(cursor[0])
+    motionValueY.set(cursor[1])
     setState(cursor[4])
 
     if (cursor[4] !== "press" && pressingRef.current) {
@@ -77,11 +81,9 @@ export default function Cursor({ cursor, id, render, setPaths }: Props) {
 
   if (!cursor) return null
 
-  const [x, y] = cursor
-
   const containerStyle: MotionStyle = {
-    x: `${x}%`,
-    y: `${y}%`,
+    x: percentX,
+    y: percentY,
   }
 
   return (
