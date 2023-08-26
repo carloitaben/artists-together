@@ -56,8 +56,8 @@ export default function Cursor({ cursor, id, render, setPaths }: Props) {
     pc.addPoint([cursor[0], cursor[1]])
     setState(cursor[4])
 
-    if (cursor[4] !== "press") {
-      return (pressingRef.current = false)
+    if (cursor[4] !== "press" && pressingRef.current) {
+      pressingRef.current = false
     }
 
     if (!pressingRef.current) {
