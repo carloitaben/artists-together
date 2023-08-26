@@ -151,7 +151,7 @@ export default function CursorsCanvas({ emoji }: Props) {
 
     const interval = cursors.size === 0 ? 3000 : 80
 
-    const update = throttle((x: number, y: number) => {
+    function update(x: number, y: number) {
       if (!documentRect.current) return
 
       const xPercent = limit((x * 100) / documentRect.current.scrollWidth)
@@ -165,10 +165,12 @@ export default function CursorsCanvas({ emoji }: Props) {
         pressing ? "press" : "idle",
         emoji,
       ])
-    }, interval)
+    }
+
+    const queue = throttle<typeof update>(update, interval)
 
     if (!hasCursor) {
-      update.cancel()
+      queue.cancel()
       return updateCursor(null)
     }
 
@@ -212,7 +214,7 @@ export default function CursorsCanvas({ emoji }: Props) {
 
     function onMouseMove(event: MouseEvent) {
       const cursor = $cursor.get()
-      update(cursor.x, cursor.y)
+      queue(cursor.x, cursor.y)
 
       if (event.buttons === 1) {
         points = [...points, [cursor.x, cursor.y]]
@@ -225,7 +227,7 @@ export default function CursorsCanvas({ emoji }: Props) {
     window.addEventListener("mousemove", onMouseMove, true)
 
     return () => {
-      update.cancel()
+      queue.cancel()
       window.removeEventListener("mousedown", onMouseDown, true)
       window.removeEventListener("mouseup", onMouseUp, true)
       window.removeEventListener("mousemove", onMouseMove, true)
