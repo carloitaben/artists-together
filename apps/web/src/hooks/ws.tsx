@@ -17,18 +17,11 @@ import {
 } from "ws-types"
 import { usePathname } from "next/navigation"
 
-import type { User } from "~/services/auth"
-
 const eventBuffer = new Map<string, any>()
 const listeners = new Map<string, Set<Function>>()
 const context = createContext<WebSocket | undefined>(undefined)
 
-const WSS_URL = process.env.NEXT_PUBLIC_WSS_URL
-
-export const url =
-  WSS_URL || process.env.NODE_ENV === "production"
-    ? WSS_URL
-    : "ws://localhost:8080"
+export const url = process.env.NEXT_PUBLIC_WSS_URL || "ws://localhost:8080"
 
 function useWebSocket() {
   return useContext(context)
@@ -71,20 +64,12 @@ export function useWebSocketEvent<T extends ServerEvent>(
   }, [callback, event])
 }
 
-export function WebSocketProvider({
-  children,
-  user,
-}: {
-  user: User
-  children: ReactNode
-}) {
+export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [ws, setWs] = useState<WebSocket>()
   const pathname = usePathname()
 
   useEffect(() => {
     if (!url) return
-
-    // console.log("TODO: authenticate w/ wss using...", { user })
 
     const ws = new WebSocket(url)
 
@@ -106,7 +91,7 @@ export function WebSocketProvider({
       ws.removeEventListener("message", onMessage)
       ws.close()
     }
-  }, [user])
+  }, [])
 
   useEffect(() => {
     ws?.send(JSON.stringify(["navigate", pathname]))

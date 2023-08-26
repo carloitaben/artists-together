@@ -1,3 +1,5 @@
+"use client"
+
 import { Cursor, CursorState } from "ws-types"
 import { PerfectCursor } from "perfect-cursors"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
@@ -6,47 +8,6 @@ import { motion, MotionStyle, Variants } from "framer-motion"
 import { useWebSocketEvent } from "~/hooks/ws"
 
 import CursorLabel from "./CursorLabel"
-
-function average(a: number, b: number) {
-  return (a + b) / 2
-}
-
-function unwrapCursor(cursor: NonNullable<Cursor>) {
-  const x = (cursor[0] / 100) * cursor[2]
-  const y = (cursor[1] / 100) * cursor[3]
-  return [x, y] as const
-}
-
-function getSvgPathFromStroke(points: number[][], closed = true) {
-  const len = points.length
-
-  if (len < 4) return ""
-
-  let a = points[0]
-  let b = points[1]
-  const c = points[2]
-
-  let result = `M${a[0].toFixed(2)},${a[1].toFixed(2)} Q${b[0].toFixed(
-    2
-  )},${b[1].toFixed(2)} ${average(b[0], c[0]).toFixed(2)},${average(
-    b[1],
-    c[1]
-  ).toFixed(2)} T`
-
-  for (let i = 2, max = len - 1; i < max; i++) {
-    a = points[i]
-    b = points[i + 1]
-    result += `${average(a[0], b[0]).toFixed(2)},${average(a[1], b[1]).toFixed(
-      2
-    )} `
-  }
-
-  if (closed) {
-    result += "Z"
-  }
-
-  return result
-}
 
 const variants: Variants = {
   hide: {
@@ -63,8 +24,8 @@ const variants: Variants = {
 type Props = {
   cursor: Cursor | null
   id: string
-  setPaths: Dispatch<SetStateAction<string[]>>
-  render: (points: Point[]) => void
+  setPaths: Dispatch<SetStateAction<Map<string, string[]>>>
+  render: (points: Point[], id: string) => void
 }
 
 type Point = [x: number, y: number]
@@ -75,43 +36,43 @@ export default function Cursor({ cursor, id, render, setPaths }: Props) {
   const pointsRef = useRef<Point[]>([])
   const pressingRef = useRef(false)
 
-  const [state, setState] = useState<CursorState>(() => {
-    if (!cursor) return "idle"
-    return cursor[4]
-  })
+  const [state, setState] = useState<CursorState>(cursor ? cursor[4] : "idle")
 
   const [pc] = useState(
     () =>
       new PerfectCursor((point) => {
         containerRef.current?.style.setProperty(
           "transform",
-          `translate(${point[0]}%, ${point[1]}%)`
+          `translate(${point[0]}%, ${point[1]}%)`,
         )
-      })
+      }),
   )
 
   useWebSocketEvent("cursor:update", ([_id, cursor]) => {
     if (_id !== id || !cursor || !wrapperRef.current) return
+
     wrapperRef.current.style.width = `${cursor[2]}px`
     wrapperRef.current.style.height = `${cursor[3]}px`
     pc.addPoint([cursor[0], cursor[1]])
     setState(cursor[4])
 
     if (cursor[4] !== "press") {
-      pressingRef.current = false
-      return
+      return (pressingRef.current = false)
     }
 
     if (!pressingRef.current) {
-      setPaths((current) => [...current, ""])
       pointsRef.current = []
       pressingRef.current = true
-      return
+      return setPaths((current) => {
+        const map = new Map(current)
+        return map.set(id, [...(map.get(id) || []), ""])
+      })
     }
 
-    const [x, y] = unwrapCursor(cursor)
+    const x = (cursor[0] / 100) * cursor[2]
+    const y = (cursor[1] / 100) * cursor[3]
     pointsRef.current = [...pointsRef.current, [x, y]]
-    render(pointsRef.current)
+    render(pointsRef.current, id)
   })
 
   if (!cursor) return null

@@ -3,11 +3,10 @@
 import * as Dialog from "@radix-ui/react-dialog"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
-import { ComponentProps, ReactElement, useCallback, useState } from "react"
 import { AnimatePresence, Transition, motion } from "framer-motion"
+import { ComponentProps, ReactElement, useCallback, useState } from "react"
 import { cx } from "class-variance-authority"
 
-import { User } from "~/services/auth"
 import { useOnMatchScreen } from "~/hooks/media"
 
 import {
@@ -77,11 +76,7 @@ function Item({
   )
 }
 
-type Props = {
-  user: User
-}
-
-export default function NavigationBottomBar(_: Props) {
+export default function NavigationBottomBar() {
   const [open, setOpen] = useState(false)
 
   const close = useCallback(() => {

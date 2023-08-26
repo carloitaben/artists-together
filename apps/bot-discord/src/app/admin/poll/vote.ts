@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js"
-import { and, connect, discordPollVotes, eq } from "db"
+import { DiscordPolls } from "db"
 
 import { registerEventHandler } from "~/lib/core"
 
@@ -17,12 +17,10 @@ registerEventHandler("interactionCreate", async (interaction) => {
     throw Error(`Could not find cached poll with id ${pollId}`)
   }
 
-  const db = connect()
-  const [existingUserVote] = await db
-    .select()
-    .from(discordPollVotes)
-    .where(and(eq(discordPollVotes.pollId, poll.id), eq(discordPollVotes.userId, interaction.user.id)))
-    .limit(1)
+  const [existingUserVote] = await DiscordPolls.votesFromUser({
+    pollId: poll.id,
+    userId: interaction.user.id,
+  })
 
   if (existingUserVote) {
     if (existingUserVote.answer === optionIndex) {
@@ -32,7 +30,10 @@ registerEventHandler("interactionCreate", async (interaction) => {
       })
     }
 
-    await db.update(discordPollVotes).set({ answer: optionIndex }).where(eq(discordPollVotes.id, existingUserVote.id))
+    await DiscordPolls.updateVote({
+      id: existingUserVote.id,
+      answer: optionIndex,
+    })
 
     return interaction.reply({
       content: "Your vote has been casted! 🎉\nThank you for participating.",
@@ -40,7 +41,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
     })
   }
 
-  await db.insert(discordPollVotes).values({
+  await DiscordPolls.addVote({
     pollId: poll.id,
     userId: interaction.user.id,
     answer: optionIndex,

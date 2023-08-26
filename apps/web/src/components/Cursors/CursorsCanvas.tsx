@@ -1,14 +1,21 @@
 "use client"
 
 import throttle from "just-throttle"
+import useResizeObserver from "@react-hook/resize-observer"
 import { Cursor } from "ws-types"
 import { getStroke } from "perfect-freehand"
-import { useCallback, useEffect, useRef, useState } from "react"
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react"
 import { AnimatePresence } from "framer-motion"
 
-import { User } from "~/services/auth"
 import { useMatchesMedia } from "~/hooks/media"
 import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
+import { $cursor } from "~/stores/cursor"
 
 import CursorComponent from "./Cursor"
 
@@ -34,17 +41,17 @@ function getSvgPathFromStroke(points: number[][], closed = true) {
   const c = points[2]
 
   let result = `M${a[0].toFixed(2)},${a[1].toFixed(2)} Q${b[0].toFixed(
-    2
+    2,
   )},${b[1].toFixed(2)} ${average(b[0], c[0]).toFixed(2)},${average(
     b[1],
-    c[1]
+    c[1],
   ).toFixed(2)} T`
 
   for (let i = 2, max = len - 1; i < max; i++) {
     a = points[i]
     b = points[i + 1]
     result += `${average(a[0], b[0]).toFixed(2)},${average(a[1], b[1]).toFixed(
-      2
+      2,
     )} `
   }
 
@@ -56,20 +63,42 @@ function getSvgPathFromStroke(points: number[][], closed = true) {
 }
 
 type Props = {
-  user: User
   emoji: string
 }
 
-export default function CursorsCanvas({ user, emoji }: Props) {
+export default function CursorsCanvas({ emoji }: Props) {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
-  const [paths, setPaths] = useState<string[]>([])
+  const [paths, setPaths] = useState(new Map<string, string[]>())
   const svgRef = useRef<SVGSVGElement>(null)
   const hasCursor = useMatchesMedia("(pointer: fine)")
 
-  const render = useCallback((points: Point[]) => {
+  const documentRect =
+    useRef<Pick<HTMLElement, "scrollWidth" | "scrollHeight">>()
+
+  useResizeObserver(
+    typeof document === "undefined" ? null : document.body,
+    () => {
+      documentRect.current = {
+        scrollWidth: document.documentElement.scrollWidth,
+        scrollHeight: document.documentElement.scrollHeight,
+      }
+    },
+  )
+
+  useLayoutEffect(() => {
+    documentRect.current = {
+      scrollWidth: document.documentElement.scrollWidth,
+      scrollHeight: document.documentElement.scrollHeight,
+    }
+  }, [])
+
+  const render = useCallback((points: Point[], id: string) => {
     if (!svgRef.current) return
 
-    const path = svgRef.current.querySelector<SVGPathElement>("path:last-child")
+    const path = svgRef.current.querySelector<SVGPathElement>(
+      `g[data-id="${id}"] path:last-child`,
+    )
+
     if (!path) return
 
     path.setAttribute(
@@ -81,8 +110,8 @@ export default function CursorsCanvas({ user, emoji }: Props) {
           smoothing: 0.5,
           streamline: 0.5,
         }),
-        points.length > 1
-      )
+        points.length > 1,
+      ),
     )
   }, [])
 
@@ -123,16 +152,16 @@ export default function CursorsCanvas({ user, emoji }: Props) {
     const interval = cursors.size === 0 ? 3000 : 80
 
     const update = throttle((x: number, y: number) => {
-      const scrollWidth = document.documentElement.scrollWidth
-      const scrollHeight = document.documentElement.scrollHeight
-      const xPercent = limit((x * 100) / scrollWidth)
-      const yPercent = limit((y * 100) / scrollHeight)
+      if (!documentRect.current) return
+
+      const xPercent = limit((x * 100) / documentRect.current.scrollWidth)
+      const yPercent = limit((y * 100) / documentRect.current.scrollHeight)
 
       updateCursor([
         xPercent,
         yPercent,
-        scrollWidth,
-        scrollHeight,
+        documentRect.current.scrollWidth,
+        documentRect.current.scrollHeight,
         pressing ? "press" : "idle",
         emoji,
       ])
@@ -143,40 +172,51 @@ export default function CursorsCanvas({ user, emoji }: Props) {
       return updateCursor(null)
     }
 
-    function onMouseDown(event: MouseEvent) {
+    function onMouseDown() {
       pressing = true
-      update(event.pageX, event.pageY)
+      const cursor = $cursor.get()
+      update(cursor.x, cursor.y)
 
-      if (window.getSelection) window.getSelection()?.removeAllRanges()
+      if (window.getSelection) {
+        window.getSelection()?.removeAllRanges()
+      }
 
       document.body.classList.add(
         "select-none",
         "touch-none",
-        "overflow-hidden"
+        "overflow-hidden",
       )
 
-      setPaths((current) => [...current, ""])
+      setPaths((current) => {
+        const map = new Map(current)
+        return map.set("self", [...(map.get("self") || []), ""])
+      })
+
       points = []
     }
 
-    function onMouseUp(event: MouseEvent) {
+    function onMouseUp() {
+      const cursor = $cursor.get()
+
       pressing = false
-      points = [...points, [event.pageX, event.pageY]]
+      points = [...points, [cursor.x, cursor.y]]
       document.body.classList.remove(
         "select-none",
         "touch-none",
-        "overflow-hidden"
+        "overflow-hidden",
       )
-      render(points)
-      update(event.pageX, event.pageY)
+
+      render(points, "self")
+      update(cursor.x, cursor.y)
     }
 
     function onMouseMove(event: MouseEvent) {
-      update(event.pageX, event.pageY)
+      const cursor = $cursor.get()
+      update(cursor.x, cursor.y)
 
       if (event.buttons === 1) {
-        points = [...points, [event.pageX, event.pageY]]
-        render(points)
+        points = [...points, [cursor.x, cursor.y]]
+        render(points, "self")
       }
     }
 
@@ -190,7 +230,7 @@ export default function CursorsCanvas({ user, emoji }: Props) {
       window.removeEventListener("mouseup", onMouseUp, true)
       window.removeEventListener("mousemove", onMouseMove, true)
     }
-  }, [cursors.size, emoji, hasCursor, render, updateCursor, user])
+  }, [cursors.size, emoji, hasCursor, render, updateCursor])
 
   return (
     <>
@@ -202,14 +242,18 @@ export default function CursorsCanvas({ user, emoji }: Props) {
         width="100%"
         height="100%"
       >
-        {paths.map((path, index) => (
-          <path
-            key={index}
-            d={path}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="currentColor"
-          />
+        {Array.from(paths.entries()).map(([id, paths]) => (
+          <g key={id} data-id={id}>
+            {paths.map((path, index) => (
+              <path
+                key={index}
+                d={path}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="currentColor"
+              />
+            ))}
+          </g>
         ))}
       </svg>
       <div
@@ -218,7 +262,13 @@ export default function CursorsCanvas({ user, emoji }: Props) {
       >
         <AnimatePresence>
           {Array.from(cursors.entries()).map(([id, cursor]) => (
-            <CursorComponent key={id} id={id} cursor={cursor} render={render} setPaths={setPaths} />
+            <CursorComponent
+              key={id}
+              id={id}
+              cursor={cursor}
+              render={render}
+              setPaths={setPaths}
+            />
           ))}
         </AnimatePresence>
       </div>
