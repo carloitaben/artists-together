@@ -67,12 +67,12 @@ export default function Home() {
         <Icon
           label=""
           data-element="logo"
-          className="w-full max-w-[16.25rem] js:opacity-0 sm:max-w-[22vw]"
+          className="3xl:max-w-[27.5rem] w-full max-w-[16.25rem] js:opacity-0 sm:max-w-[22vw]"
         >
           {logo}
         </Icon>
       </header>
-      <main className="flex flex-1 flex-col justify-end gap-16 overflow-hidden px-3 pb-3 font-serif text-[8.333vw] font-light leading-none xs:text-3xl sm:gap-[4.167vw] sm:pb-[3.25rem] sm:pr-5 sm:text-[5vw]/[5vw]">
+      <main className="3xl:text-[6.25rem]/[6.25rem] flex flex-1 flex-col justify-end gap-16 overflow-hidden px-3 pb-3 font-serif text-[8.333vw] font-light leading-none xs:text-3xl sm:gap-[4.167vw] sm:pb-[3.25rem] sm:pr-5 sm:text-[5vw]/[5vw]">
         <div className="flex flex-1 items-center justify-center text-center sm:block sm:flex-none sm:text-right">
           <h2 data-animated-text className="js:invisible">
             An inclusive community
