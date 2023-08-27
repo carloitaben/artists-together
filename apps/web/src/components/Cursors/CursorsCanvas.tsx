@@ -149,7 +149,7 @@ export default function CursorsCanvas({ emoji }: Props) {
     let pressing = false
     let points: Point[] = []
 
-    const interval = cursors.size === 0 ? 3000 : 80
+    const interval = cursors.size === 0 ? 3000 : 40
 
     function update(x: number, y: number) {
       if (!documentRect.current) return
