@@ -14,7 +14,7 @@ import { Cursor as CursorType } from "ws-types"
 import { CursorState } from "ws-types"
 
 import { $cursor } from "~/stores/cursor"
-import { useMatchesMedia } from "~/hooks/media"
+import { useHasCursor, useMatchesMedia } from "~/hooks/media"
 import { useWebSocketEvent } from "~/hooks/ws"
 import CursorLabel from "./Cursors/CursorLabel"
 
@@ -96,12 +96,15 @@ export default function Cursor() {
   const [cursors, setCursors] = useState(new Map<string, CursorType | null>())
   const windowRect = useRef<Pick<Window, "innerWidth" | "innerHeight">>()
 
-  useResizeObserver(typeof document === "undefined" ? null : document.body, () => {
-    windowRect.current = {
-      innerWidth: window.innerWidth,
-      innerHeight: window.innerHeight,
-    }
-  })
+  useResizeObserver(
+    typeof document === "undefined" ? null : document.body,
+    () => {
+      windowRect.current = {
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight,
+      }
+    },
+  )
 
   useWebSocketEvent("room:join", (room) => {
     setCursors(new Map(room))
@@ -119,7 +122,7 @@ export default function Cursor() {
   })
 
   const [state, setState] = useState<keyof typeof cursorStateSvg>()
-  const coarse = useMatchesMedia("(pointer: coarse)")
+  const hasCursor = useHasCursor()
   const motionValueScale = useSpring(1, { mass: 0.05, stiffness: 200 })
   const motionValueX = useSpring(0, { mass: 0.05, stiffness: 175 })
   const motionValueY = useSpring(0, { mass: 0.05, stiffness: 175 })
@@ -128,16 +131,16 @@ export default function Cursor() {
 
   useMotionValueEvent(motionValueX, "change", (value) => {
     if (!windowRect.current) return
-    $cursor.setKey("x", value * windowRect.current.innerWidth / 100)
+    $cursor.setKey("x", (value * windowRect.current.innerWidth) / 100)
   })
 
   useMotionValueEvent(motionValueY, "change", (value) => {
     if (!windowRect.current) return
-    $cursor.setKey("y", value * windowRect.current.innerHeight / 100)
+    $cursor.setKey("y", (value * windowRect.current.innerHeight) / 100)
   })
 
   useEffect(() => {
-    if (coarse) {
+    if (!hasCursor) {
       return document.documentElement.classList.remove("cursor")
     }
 
@@ -194,7 +197,7 @@ export default function Cursor() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [coarse, state, motionValueScale, motionValueX, motionValueY])
+  }, [state, motionValueScale, motionValueX, motionValueY, hasCursor])
 
   return (
     <div
@@ -209,7 +212,7 @@ export default function Cursor() {
         }}
       >
         <AnimatePresence initial={false}>
-          {!coarse && state ? (
+          {hasCursor && state ? (
             <motion.div
               className="relative inline-flex items-start"
               initial="hide"

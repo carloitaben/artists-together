@@ -13,7 +13,7 @@ import {
 } from "react"
 import { AnimatePresence } from "framer-motion"
 
-import { useMatchesMedia } from "~/hooks/media"
+import { useHasCursor, useMatchesMedia } from "~/hooks/media"
 import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
 import { $cursor } from "~/stores/cursor"
 
@@ -70,7 +70,7 @@ export default function CursorsCanvas({ emoji }: Props) {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
   const [paths, setPaths] = useState(new Map<string, string[]>())
   const svgRef = useRef<SVGSVGElement>(null)
-  const hasCursor = useMatchesMedia("(pointer: fine)")
+  const hasCursor = useHasCursor()
 
   const documentRect =
     useRef<Pick<HTMLElement, "scrollWidth" | "scrollHeight">>()

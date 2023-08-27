@@ -46,3 +46,9 @@ export function useMatchesMedia(query: string) {
 export function useMatchesScreen(screen: Screen) {
   return useMatchesMedia(`(min-width: ${tailwind.theme.screens[screen]})`)
 }
+
+export function useHasCursor() {
+  const hover = useMatchesMedia("(hover: hover)")
+  const fine = useMatchesMedia("(pointer: fine)")
+  return hover && fine
+}
