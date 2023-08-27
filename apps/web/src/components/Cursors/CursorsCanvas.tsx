@@ -239,7 +239,7 @@ export default function CursorsCanvas({ emoji }: Props) {
       <svg
         aria-hidden
         ref={svgRef}
-        className="pointer-events-none absolute inset-0 hidden overflow-hidden md:js:block"
+        className="pointer-events-none absolute inset-0 hidden overflow-hidden text-theme-300 md:js:block"
         fill="none"
         width="100%"
         height="100%"
