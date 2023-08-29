@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { AnimatePresence } from "framer-motion"
 import { Cursor } from "ws-types"
 
-import { useMatchesMedia } from "~/hooks/media"
+import { useHasCursor } from "~/hooks/media"
 import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
 
 import CursorComponent from "./Cursor"
@@ -23,7 +23,7 @@ type Props = {
 
 export default function CursorsCanvas({ user }: Props) {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
-  const hasCursor = useMatchesMedia("(pointer: fine)")
+  const hasCursor = useHasCursor()
 
   useWebSocketEvent("room:join", (room) => {
     setCursors(new Map(room))
@@ -58,9 +58,9 @@ export default function CursorsCanvas({ user }: Props) {
   useEffect(() => {
     let pressing = false
 
-    const interval = cursors.size === 0 ? 3000 : 80
+    const interval = cursors.size === 0 ? 3000 : 30
 
-    const update = throttle((x: number, y: number) => {
+    function update(x: number, y: number) {
       if (!user) return
 
       const xPercent = limit((x * 100) / document.documentElement.scrollWidth)
@@ -72,25 +72,29 @@ export default function CursorsCanvas({ user }: Props) {
         pressing ? "press" : "idle",
         user.username,
       ])
-    }, interval)
+    }
+
+    const queue = throttle<typeof update>(update, interval)
 
     if (!hasCursor || !user) {
-      update.cancel()
+      queue.cancel()
       return updateCursor(null)
     }
 
     function onMouseDown(event: MouseEvent) {
+      queue.cancel()
       pressing = true
       update(event.pageX, event.pageY)
     }
 
     function onMouseUp(event: MouseEvent) {
+      queue.cancel()
       pressing = false
       update(event.pageX, event.pageY)
     }
 
     function onMouseMove(event: MouseEvent) {
-      update(event.pageX, event.pageY)
+      queue(event.pageX, event.pageY)
     }
 
     window.addEventListener("mousedown", onMouseDown, true)
@@ -98,7 +102,7 @@ export default function CursorsCanvas({ user }: Props) {
     window.addEventListener("mousemove", onMouseMove, true)
 
     return () => {
-      update.cancel()
+      queue.cancel()
       window.removeEventListener("mousedown", onMouseDown, true)
       window.removeEventListener("mouseup", onMouseUp, true)
       window.removeEventListener("mousemove", onMouseMove, true)

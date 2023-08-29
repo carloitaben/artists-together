@@ -10,7 +10,7 @@ import {
   useSpring,
 } from "framer-motion"
 
-import { useMatchesMedia } from "~/hooks/media"
+import { useHasCursor } from "~/hooks/media"
 
 function limit(number: number) {
   if (number < 0) return 0
@@ -78,7 +78,7 @@ const variants: Variants = {
 
 export default function Cursor() {
   const [state, setState] = useState<keyof typeof cursorStateSvg>()
-  const coarse = useMatchesMedia("(pointer: coarse)")
+  const hasCursor = useHasCursor()
 
   const motionValueScale = useSpring(1, { mass: 0.05, stiffness: 200 })
   const motionValueX = useSpring(0, { mass: 0.05, stiffness: 175 })
@@ -87,7 +87,7 @@ export default function Cursor() {
   const percentY = useMotionTemplate`${motionValueY}%`
 
   useEffect(() => {
-    if (coarse) {
+    if (!hasCursor) {
       return document.documentElement.classList.remove("cursor")
     }
 
@@ -137,7 +137,7 @@ export default function Cursor() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [coarse, state, motionValueScale, motionValueX, motionValueY])
+  }, [state, motionValueScale, motionValueX, motionValueY, hasCursor])
 
   return (
     <div
@@ -152,7 +152,7 @@ export default function Cursor() {
         }}
       >
         <AnimatePresence initial={false}>
-          {!coarse && state && (
+          {hasCursor && state && (
             <motion.div
               className="inline-block"
               initial="hide"
