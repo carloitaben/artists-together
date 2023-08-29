@@ -9,6 +9,8 @@ import SectionSocialMedia from "./SectionSocialMedia"
 // import SectionAdvancedSettings from "./SectionAdvancedSettings"
 import SectionContactSupport from "./SectionContactSupport"
 import Logout from "./Logout"
+import Icon from "../Icon"
+import { caution } from "../Icons"
 
 type Props = DialogTriggerProps
 
@@ -36,6 +38,19 @@ export default async function Profile({ children, ...props }: Props) {
           </Modal.Tab>
         </Modal.Tabs>
         <Modal.Content value="profile">
+          <Modal.Container
+            background={false}
+            py={false}
+            className="mb-2 flex items-center gap-4 rounded-4xl bg-gunpla-white-500 px-12 py-9 text-sm text-gunpla-white-50 shadow-card"
+          >
+            <Icon label="" className="h-4 flex-none">
+              {caution}
+            </Icon>
+            <p>
+              As a temporary monitoring measure, all Artists Together accounts
+              must have joined our Discord server to unlock all features.
+            </p>
+          </Modal.Container>
           <SectionProfile user={session.user} />
         </Modal.Content>
         <Modal.Content value="social-media">

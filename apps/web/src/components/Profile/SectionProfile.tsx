@@ -1,7 +1,8 @@
 import { User } from "lucia"
 
+import { discordSSO, twitchSSO } from "~/actions/auth"
 import { Container, Title } from "~/components/Modal"
-import ConnectWithTwitch from "./TEST_ConnectWithTwitch"
+import Connection from "./Connection"
 
 type Props = {
   user: User
@@ -13,14 +14,9 @@ export default function SectionProfile({ user }: Props) {
       <Title>{user.username}</Title>
       <section>
         <div>Connections</div>
-        <div>
-          Discord connection:{" "}
-          {user.discord_metadata ? "connected" : "Disconnected"}
-        </div>
-        <div>
-          Twitch connection:{" "}
-          {user.twitch_metadata ? "connected" : "Disconnected"}
-          <ConnectWithTwitch />
+        <div className="space-y-2">
+          <Connection user={user} provider="discord" action={discordSSO} />
+          <Connection user={user} provider="twitch" action={twitchSSO} />
         </div>
       </section>
     </Container>

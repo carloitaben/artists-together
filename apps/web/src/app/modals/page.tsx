@@ -31,7 +31,7 @@ export default function Page() {
         </Modal.Trigger>
         <Modal.Portal>
           <Modal.Content>
-            <Modal.Container fill={false} padding={false} className="p-8">
+            <Modal.Container fill={false} px={false} py={false} className="p-8">
               cva rules
             </Modal.Container>
           </Modal.Content>
