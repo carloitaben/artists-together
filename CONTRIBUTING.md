@@ -9,7 +9,7 @@
 
 ```shell
 node: ">=18"
-pnpm: ">=7"
+pnpm: ">=8"
 ```
 
 ### Setting up your local repository
