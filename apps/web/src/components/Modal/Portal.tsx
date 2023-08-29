@@ -3,38 +3,23 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { VariantProps, cva, cx } from "class-variance-authority"
-import {
-  Children,
-  ForwardedRef,
-  ReactNode,
-  forwardRef,
-  isValidElement,
-} from "react"
+import { ForwardedRef, forwardRef } from "react"
 
-import Tabs from "./Tabs"
-import Steps from "./Steps"
-
-function getTabsOrientation(
-  node?: ReactNode
-): TabsPrimitive.TabsProps["orientation"] {
-  // Bail out if node is falsy
-  if (!node) return
-
-  // Discard non-element nodes
-  if (!isValidElement(node)) return
-
-  // Early bail out if found
-  if (node.type === Tabs) return "vertical"
-  if (node.type === Steps) return "horizontal"
-
-  // Bail out if children is falsy
-  if (!node.props?.children) return
-
-  if (!Array.isArray(node.props.children)) {
-    return getTabsOrientation(node.props.children)
+type Props = DialogPrimitive.DialogContentProps &
+  VariantProps<typeof wrapper> & {
+    kind?: "tabs" | "steps" | "anchors"
   }
 
-  return getTabsOrientation(node.props.children.find(getTabsOrientation))
+function getOrientation(kind: Props["kind"]) {
+  switch (kind) {
+    case "tabs":
+    case "anchors":
+      return "vertical"
+    case "steps":
+      return "horizontal"
+    default:
+      return null
+  }
 }
 
 const wrapper = cva("fixed inset-0 flex justify-center", {
@@ -50,17 +35,10 @@ const wrapper = cva("fixed inset-0 flex justify-center", {
 })
 
 function Portal(
-  {
-    children,
-    className,
-    align,
-    ...props
-  }: DialogPrimitive.DialogContentProps & VariantProps<typeof wrapper>,
+  { children, className, align, kind, ...props }: Props,
   ref: ForwardedRef<HTMLDivElement>
 ) {
-  const orientation = getTabsOrientation(
-    Children.toArray(children).find(getTabsOrientation)
-  )
+  const orientation = getOrientation(kind)
 
   return (
     <DialogPrimitive.Portal>

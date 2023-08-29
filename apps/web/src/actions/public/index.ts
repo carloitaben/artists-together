@@ -1,19 +1,10 @@
 "use server"
 
 import { cookies } from "next/headers"
+import { z } from "zod"
+import { cookie, theme } from "~/lib/themes"
+import { createAction } from "~/actions/zod"
 
-import { action } from "~/actions/client"
-import { changeThemeSchema, loginSchema } from "~/actions/schemas"
-import { cookie } from "~/lib/themes"
-
-export const demo = action(loginSchema, async (data) => {
-  console.log(data)
-
-  return {
-    sucess: true,
-  }
-})
-
-export const changeTheme = action(changeThemeSchema, async (theme) => {
+export const changeTheme = createAction(z.nativeEnum(theme), async (theme) => {
   cookies().set(cookie, theme)
 })

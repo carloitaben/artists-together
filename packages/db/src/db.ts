@@ -1,16 +1,17 @@
-import { drizzle } from "drizzle-orm/planetscale-serverless"
-import { connect as pscaleConnect, Config } from "@planetscale/database"
+import { createClient as createLibSQLClient, Config } from "@libsql/client"
+import { drizzle } from "drizzle-orm/libsql"
+import { env } from "./env"
 
-export function createConnection(config?: Partial<Config>) {
-  return pscaleConnect({
-    host: process.env["DATABASE_HOST"],
-    username: process.env["DATABASE_USERNAME"],
-    password: process.env["DATABASE_PASSWORD"],
+export function createClient(config?: Omit<Config, "url" | "authToken">) {
+  return createLibSQLClient({
+    url: env.DATABASE_URL,
+    authToken: env.DATABASE_AUTH_TOKEN,
     ...config,
   })
 }
 
-export function connect(config?: Partial<Config>) {
-  const connection = createConnection(config)
-  return drizzle(connection)
+export function connect(config?: Omit<Config, "url" | "authToken">) {
+  return drizzle(createClient(config))
 }
+
+export const db = connect()

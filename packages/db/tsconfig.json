@@ -5,9 +5,6 @@
     "rootDir": "./",
     "moduleResolution": "node",
     "baseUrl": "./",
-    "paths": {
-      "~/*": ["./src/*"]
-    },
     "noEmit": true,
     "isolatedModules": true,
     "esModuleInterop": true,

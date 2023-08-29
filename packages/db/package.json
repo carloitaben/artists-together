@@ -5,7 +5,9 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "push": "drizzle-kit push:mysql"
+    "push": "drizzle-kit push:sqlite",
+    "studio": "drizzle-kit studio",
+    "dev": "turso dev"
   },
   "peerDependencies": {
     "zod": ">=3"
@@ -16,15 +18,16 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^20.4.1",
+    "@lucia-auth/oauth": "^3.0.0",
+    "@types/node": "^20.5.7",
     "dotenv-mono": "^1.3.10",
-    "drizzle-kit": "0.19.3",
-    "typescript": "^5.1.6"
+    "drizzle-kit": "0.19.13",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@planetscale/database": "^1.8.0",
-    "drizzle-orm": "^0.27.0",
-    "drizzle-zod": "^0.4.4",
-    "zod": "^3.21.4"
+    "@libsql/client": "^0.3.2",
+    "drizzle-orm": "^0.28.5",
+    "drizzle-zod": "^0.5.1",
+    "zod": "^3.22.2"
   }
 }

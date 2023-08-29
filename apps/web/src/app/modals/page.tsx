@@ -4,9 +4,6 @@ import { redirect } from "next/navigation"
 
 import { help } from "~/components/Icons"
 import * as Modal from "~/components/Modal"
-import * as Form from "~/components/Form"
-import Auth from "~/components/Auth"
-import Logout from "~/components/Auth/Logout"
 
 export default function Page() {
   if (process.env.NODE_ENV === "production") {
@@ -16,12 +13,6 @@ export default function Page() {
   return (
     <main className="flex flex-col items-start justify-start gap-2">
       <h1>Modal tests</h1>
-
-      <Logout />
-
-      <Auth className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
-        Auth modal
-      </Auth>
 
       <Modal.Root>
         <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">

@@ -8,8 +8,6 @@ import NavigationMenu from "./NavigationMenu"
 export default async function NavigationBottomBar() {
   const session = await getSession()
 
-  console.log("NavigationBottomBar session user", session?.user)
-
   return (
     <nav className="fixed inset-x-0 bottom-0 flex h-14 items-center justify-between bg-theme-900 text-gunpla-white-50 sm:hidden">
       <Dialog.ControlledRoot>

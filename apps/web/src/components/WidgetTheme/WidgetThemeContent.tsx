@@ -5,7 +5,6 @@ import { motion } from "framer-motion"
 
 import { theme, Theme } from "~/lib/themes"
 import { changeTheme } from "~/actions/public"
-import { withAction, PropsWithAction } from "~/hooks/form"
 
 function WidgetThemeButton({
   change,
@@ -46,22 +45,18 @@ function Overlay() {
   )
 }
 
-function WidgetThemeContent({
-  action,
+export default function WidgetThemeContent({
   selectedTheme,
-}: PropsWithAction<typeof changeTheme, { selectedTheme: Theme }>) {
+}: {
+  selectedTheme: Theme
+}) {
   const [selected, setSelected] = useState(selectedTheme)
   const [_, startTransition] = useTransition()
 
-  const change = useCallback(
-    (theme: Theme) => {
-      setSelected(theme)
-      startTransition(async () => {
-        await action(theme)
-      })
-    },
-    [action]
-  )
+  const change = useCallback((theme: Theme) => {
+    setSelected(theme)
+    startTransition(async () => void changeTheme(theme))
+  }, [])
 
   return (
     <div className="pointer-events-none absolute inset-0 rotate-45">
@@ -99,5 +94,3 @@ function WidgetThemeContent({
     </div>
   )
 }
-
-export default withAction(WidgetThemeContent, changeTheme)

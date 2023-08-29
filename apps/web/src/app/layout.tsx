@@ -7,7 +7,7 @@ import Script from "next/script"
 
 import "~/styles/index.css"
 
-import { getSession } from "~/services/auth"
+import { getSession } from "~/services/auth/utils"
 import { getThemeCSS, getThemeCookie } from "~/lib/themes"
 import { WebSocketProvider } from "~/hooks/ws"
 

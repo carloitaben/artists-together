@@ -1,66 +1,49 @@
-import type { ClientCaller } from "next-safe-action"
-import type { ZodTypeAny, AnyZodObject, TypeOf } from "zod"
-import type { FunctionComponent } from "react"
+import type { TypeOf, AnyZodObject } from "zod"
 import type { Path, SubmitHandler, UseFormProps } from "react-hook-form"
 import { useForm as useHookForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Action } from "~/actions/zod"
 
-export type PropsWithAction<T, P = {}> = P & { action: T }
-
-export function withAction<P extends { action: any }, Z extends ZodTypeAny, D>(
-  Component: FunctionComponent<P>,
-  action: ClientCaller<Z, D>
-) {
-  return function ComponentWithAction(props: Omit<P, "action">) {
-    const allProps = { ...props, action } as P
-    return <Component {...allProps} />
-  }
-}
-
-export function useForm<T extends AnyZodObject, D>({
+export function useForm<Schema extends AnyZodObject, Result>({
   action,
   schema,
   onError,
   onSubmit,
   ...props
-}: Omit<UseFormProps<TypeOf<T>>, "resolver"> & {
-  action: ClientCaller<T, D>
-  schema: T
+}: Omit<UseFormProps<TypeOf<Schema>>, "resolver"> & {
+  action: Action<any, any>
+  schema: Schema
   onError: () => void
-  onSubmit: (data: D, input: TypeOf<T>) => void
+  onSubmit: (data: Result, input: TypeOf<Schema>) => void
 }) {
-  type Schema = TypeOf<typeof schema>
-
-  const form = useHookForm<Schema>({
+  const form = useHookForm<TypeOf<Schema>>({
     ...props,
     resolver: zodResolver(schema),
   })
 
   const keys = schema.keyof()
 
-  const submit: SubmitHandler<Schema> = async (input) => {
-    const { data, serverError, validationError } = await action(input)
+  const submit: SubmitHandler<TypeOf<Schema>> = async (input) => {
+    const result = await action(input)
 
-    if (validationError) {
-      return Object.entries(validationError).forEach(([name, error]) => {
+    if (!("error" in result)) {
+      return onSubmit(result.data, input)
+    }
+
+    if (result.error.name === "VALIDATION_ERROR") {
+      return Object.entries(result.error).forEach(([name, error]) => {
         if (keys.safeParse(name).success && typeof name === "string") {
           const message = Array.isArray(error) ? error[0] : "Unknown error"
-          form.setError(name as Path<TypeOf<T>>, { message })
+          form.setError(name as Path<TypeOf<Schema>>, { message })
         } else {
           form.setError("root", { message: "Unhandled field error" })
         }
       })
     }
 
-    if (serverError) {
+    if (result.error.name === "SERVER_ERROR") {
       return onError()
     }
-
-    if (!data) {
-      return onError()
-    }
-
-    return onSubmit(data, input)
   }
 
   function field(name: keyof Schema) {

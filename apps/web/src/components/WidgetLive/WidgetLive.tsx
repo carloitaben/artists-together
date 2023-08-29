@@ -1,11 +1,11 @@
 import { Suspense } from "react"
-import { connect, discordLiveUsers } from "db"
+import { DiscordLiveUsers, connect } from "db"
 
 import { oneOf } from "~/lib/utils"
 
 async function Content() {
   const db = connect({
-    fetch: (input, init) =>
+    fetch: (input: string, init?: RequestInit) =>
       fetch(input, {
         ...init,
         cache: undefined,
@@ -13,9 +13,7 @@ async function Content() {
       }),
   })
 
-  const users = await db
-    .select({ url: discordLiveUsers.url })
-    .from(discordLiveUsers)
+  const users = await DiscordLiveUsers.list()
 
   if (!users.length) {
     return (
