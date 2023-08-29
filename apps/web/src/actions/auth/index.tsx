@@ -17,9 +17,6 @@ import {
   logoutSchema,
 } from "~/actions/schemas"
 
-// import { sendEmail } from "~/services/email"
-// import { OtpEmail } from "~/emails/auth"
-
 export const register = action(registerSchema, async (data) => {
   const request = auth.handleRequest({ request: null, cookies })
   const session = await request.validate()
@@ -57,11 +54,6 @@ export const register = action(registerSchema, async (data) => {
     const otp = await generateOneTimePassword(user.userId)
 
     console.log(otp)
-    // await sendEmail({
-    //   to: data.email,
-    //   subject: "Your login code",
-    //   react: <OtpEmail otp={otp} />,
-    // })
 
     return {
       success: true,
