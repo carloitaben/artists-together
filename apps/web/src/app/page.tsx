@@ -1,5 +1,3 @@
-import { SuspenseList } from "react"
-
 import { logo } from "~/components/Icons"
 import Icon from "~/components/Icon"
 import Container from "~/components/Container"
@@ -24,15 +22,13 @@ export default function Page() {
       </header>
       <main>
         <Container grid>
-          <SuspenseList revealOrder="forwards">
-            <WidgetInstagram />
-            <WidgetSpinner />
-            <WidgetLive />
-            <WidgetClock />
-            <WidgetSchedule />
-            <WidgetWeather />
-            <WidgetTheme />
-          </SuspenseList>
+          <WidgetInstagram />
+          <WidgetSpinner />
+          <WidgetLive />
+          <WidgetClock />
+          <WidgetSchedule />
+          <WidgetWeather />
+          <WidgetTheme />
         </Container>
       </main>
     </>
