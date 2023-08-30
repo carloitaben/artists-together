@@ -1,4 +1,3 @@
-import { logo } from "~/components/Icons"
 import Icon from "~/components/Icon"
 import Container from "~/components/Container"
 import WidgetInstagram from "~/components/WidgetInstagram"
@@ -15,9 +14,7 @@ export default function Page() {
       <header>
         <Container className="flex justify-center py-16">
           <h1 className="sr-only">Artists Together</h1>
-          <Icon className="max-w-[28rem]" label="">
-            {logo}
-          </Icon>
+          <Icon label="" icon="logo" className="max-w-[28rem]" />
         </Container>
       </header>
       <main>

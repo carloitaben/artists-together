@@ -1,21 +1,22 @@
-"use client"
-
-import * as AccesibleIcon from "@radix-ui/react-accessible-icon"
-import type { ComponentProps, ForwardedRef, ReactElement } from "react"
-import { cloneElement, forwardRef } from "react"
+import type { ComponentProps, ForwardedRef } from "react"
+import { forwardRef } from "react"
+import type { IconName } from "~/components/Icons"
+import * as AccesibleIcon from "~/components/AccesibleIcon"
 
 type Props = AccesibleIcon.AccessibleIconProps &
   ComponentProps<"svg"> & {
-    children: ReactElement<ComponentProps<"svg">>
+    icon: IconName
   }
 
 function Icon(
-  { label, children, ...props }: Props,
-  ref: ForwardedRef<SVGSVGElement>
+  { label, children, icon, ...props }: Props,
+  ref: ForwardedRef<SVGSVGElement>,
 ) {
   return (
     <AccesibleIcon.Root label={label}>
-      {cloneElement(children, { ...children.props, ...props, ref })}
+      <svg {...props} ref={ref}>
+        <use href={`#${icon}`} />
+      </svg>
     </AccesibleIcon.Root>
   )
 }

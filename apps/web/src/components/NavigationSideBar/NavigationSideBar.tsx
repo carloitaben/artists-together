@@ -7,14 +7,6 @@ import NavigationItem from "./NavigationItem"
 import Profile from "~/components/Profile"
 import Auth from "~/components/Auth"
 import Icon from "~/components/Icon"
-import {
-  artists,
-  calendar,
-  help,
-  home,
-  profile,
-  train,
-} from "~/components/Icons"
 
 export default async function NavigationSidebar() {
   const session = await getSession()
@@ -34,9 +26,8 @@ export default async function NavigationSidebar() {
                   <Icon
                     className="group-group-aria-disabled:text-theme-700 h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300"
                     label={hasSession ? "Your profile" : "Log-in"}
-                  >
-                    {profile}
-                  </Icon>
+                    icon="profile"
+                  />
                 </Modal.Trigger>
               </NavigationMenu.Trigger>
             </NavigationItem>
@@ -46,26 +37,23 @@ export default async function NavigationSidebar() {
             <Icon
               className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
               label="Home"
-            >
-              {home}
-            </Icon>
+              icon="home"
+            />
           </NavigationItem>
           <NavigationItem label="About" href="/about">
             <Icon
               className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
               label="About"
-            >
-              {help}
-            </Icon>
+              icon="help"
+            />
           </NavigationItem>
           <NavigationItem label="Coming soon!" disabled>
             <span aria-disabled className="group block h-12 w-12 p-2">
               <Icon
                 className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
                 label="Coming soon!"
-              >
-                {artists}
-              </Icon>
+                icon="artists"
+              />
             </span>
           </NavigationItem>
           <NavigationItem label="Coming soon!" disabled>
@@ -73,9 +61,8 @@ export default async function NavigationSidebar() {
               <Icon
                 className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
                 label="Coming soon!"
-              >
-                {train}
-              </Icon>
+                icon="train"
+              />
             </span>
           </NavigationItem>
           <NavigationItem label="Coming soon!" disabled>
@@ -83,9 +70,8 @@ export default async function NavigationSidebar() {
               <Icon
                 className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
                 label="Coming soon!"
-              >
-                {calendar}
-              </Icon>
+                icon="calendar"
+              />
             </span>
           </NavigationItem>
         </NavigationMenu.List>

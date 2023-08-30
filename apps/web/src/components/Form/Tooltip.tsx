@@ -4,7 +4,6 @@ import { ReactNode } from "react"
 import * as RadixTooltip from "@radix-ui/react-tooltip"
 
 import Icon from "~/components/Icon"
-import { info } from "~/components/Icons"
 
 type Props = {
   children: ReactNode
@@ -17,7 +16,7 @@ export default function Tooltip({ children }: Props) {
         type="button"
         className="absolute inset-y-0 right-0 h-10 w-10 rounded-[1rem] p-2 text-gunpla-white-500"
       >
-        <Icon label="Info">{info}</Icon>
+        <Icon icon="info" label="Info" />
       </RadixTooltip.Trigger>
       <RadixTooltip.Portal>
         <RadixTooltip.Content align="start" side="bottom" className="ml-10">

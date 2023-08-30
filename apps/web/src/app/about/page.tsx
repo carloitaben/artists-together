@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation"
 
-import { logo } from "~/components/Icons"
 import Container from "~/components/Container"
 import Marquee from "~/components/Marquee"
 import Icon from "~/components/Icon"
@@ -15,9 +14,11 @@ export default function Page() {
       <header>
         <Container className="flex min-h-screen items-center justify-center py-16">
           <h1 className="sr-only">Artists Together</h1>
-          <Icon className="max-w-[37.5rem]" label="">
-            {logo}
-          </Icon>
+          <Icon
+            icon="logo"
+            className="h-full w-full max-w-[37.5rem]"
+            label=""
+          />
         </Container>
       </header>
       <main className="select-auto font-serif font-light leading-tight fluid:text-[4rem]">

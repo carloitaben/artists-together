@@ -6,7 +6,6 @@ import { atom, map } from "nanostores"
 import { useStore } from "@nanostores/react"
 
 import Icon from "./Icon"
-import { close } from "./Icons"
 
 type ToastData = {
   id: string
@@ -137,9 +136,7 @@ export default function Toast() {
             >
               <p className="-translate-y-px">{toast.content}</p>
               <button type="button" onClick={() => $toast.set(null)}>
-                <Icon label="Close" className="h-12 w-12 p-4">
-                  {close}
-                </Icon>
+                <Icon icon="close" label="Close" className="h-12 w-12 p-4" />
               </button>
             </motion.div>
           </motion.div>

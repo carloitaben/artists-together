@@ -13,6 +13,7 @@ import { WebSocketProvider } from "~/hooks/ws"
 
 import NavigationSideBar from "~/components/NavigationSideBar"
 import NavigationBottomBar from "~/components/NavigationBottomBar"
+import Icons from "~/components/Icons"
 import Toast from "~/components/Toast"
 import Cursors from "~/components/Cursors"
 import Cursor from "~/components/Cursor"
@@ -45,6 +46,7 @@ export default async function Layout({ children }: Props) {
       suppressHydrationWarning
     >
       <body className="min-h-full pb-14 selection:bg-theme-300 selection:text-theme-900 sm:pb-0 sm:pl-16">
+        <Icons />
         <NavigationSideBar />
         <WebSocketProvider user={session?.user}>
           {children}

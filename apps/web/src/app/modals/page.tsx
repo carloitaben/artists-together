@@ -1,5 +1,4 @@
 import * as Modal from "~/components/Modal"
-import { help } from "~/components/Icons"
 
 export default function Page() {
   return (
@@ -50,13 +49,13 @@ export default function Page() {
         </Modal.Trigger>
         <Modal.Portal kind="tabs">
           <Modal.Tabs>
-            <Modal.Tab icon={help} value="foo">
+            <Modal.Tab icon="help" value="foo">
               Foo
             </Modal.Tab>
-            <Modal.Tab icon={help} value="bar">
+            <Modal.Tab icon="help" value="bar">
               Bar
             </Modal.Tab>
-            <Modal.Tab icon={help} value="baz">
+            <Modal.Tab icon="help" value="baz">
               Baz
             </Modal.Tab>
           </Modal.Tabs>

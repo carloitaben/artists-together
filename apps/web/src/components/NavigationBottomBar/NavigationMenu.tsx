@@ -4,15 +4,6 @@ import { AnimatePresence, Transition, motion } from "framer-motion"
 
 import { useOnMatchScreen } from "~/hooks/media"
 
-import {
-  artists,
-  calendar,
-  help,
-  home,
-  logo,
-  profile,
-  train,
-} from "~/components/Icons"
 import { useControlledDialog } from "~/components/Dialog"
 import * as Dialog from "~/components/Dialog"
 import Icon from "~/components/Icon"
@@ -57,42 +48,45 @@ export default function NavigationMenu() {
                 <li className="flex-1 p-14">
                   <NavigationLink href="/" onClick={() => setOpen(false)}>
                     <Icon
+                      icon="logo"
                       className="h-full w-full rounded-3xl p-2 group-focus-visible:ring-4"
                       label="Artist Together"
-                    >
-                      {logo}
-                    </Icon>
+                    />
                   </NavigationLink>
                 </li>
                 <li>
-                  <NavigationItem disabled label="Coming soon!">
-                    {profile}
-                  </NavigationItem>
+                  <NavigationItem
+                    disabled
+                    label="Coming soon!"
+                    icon="profile"
+                  />
                 </li>
                 <li>
                   <NavigationLink href="/" onClick={() => setOpen(false)}>
-                    <NavigationItem label="Home">{home}</NavigationItem>
+                    <NavigationItem label="Home" icon="home" />
                   </NavigationLink>
                 </li>
                 <li>
                   <NavigationLink href="/about" onClick={() => setOpen(false)}>
-                    <NavigationItem label="About">{help}</NavigationItem>
+                    <NavigationItem label="About" icon="help" />
                   </NavigationLink>
                 </li>
                 <li>
-                  <NavigationItem disabled label="Coming soon!">
-                    {artists}
-                  </NavigationItem>
+                  <NavigationItem
+                    disabled
+                    label="Coming soon!"
+                    icon="artists"
+                  />
                 </li>
                 <li>
-                  <NavigationItem disabled label="Coming soon!">
-                    {train}
-                  </NavigationItem>
+                  <NavigationItem disabled label="Coming soon!" icon="train" />
                 </li>
                 <li>
-                  <NavigationItem disabled label="Coming soon!">
-                    {calendar}
-                  </NavigationItem>
+                  <NavigationItem
+                    disabled
+                    label="Coming soon!"
+                    icon="calendar"
+                  />
                 </li>
               </ul>
             </motion.div>

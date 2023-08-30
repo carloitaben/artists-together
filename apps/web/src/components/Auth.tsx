@@ -9,7 +9,6 @@ import { useToast } from "~/components/Toast"
 import * as Modal from "~/components/Modal"
 import Button from "~/components/Button"
 import Icon from "~/components/Icon"
-import { discord } from "~/components/Icons"
 
 export default function Auth() {
   const [isPending, startTransition] = useTransition()
@@ -40,9 +39,7 @@ export default function Auth() {
               })
             }
           >
-            <Icon label="" className="w-6">
-              {discord}
-            </Icon>
+            <Icon icon="discord" label="" className="w-6" />
             Log-in with Discord
           </Button>
         </div>
