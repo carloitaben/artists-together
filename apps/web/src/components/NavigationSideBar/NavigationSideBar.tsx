@@ -1,12 +1,9 @@
 import { getSession } from "~/services/auth"
 
 import * as NavigationMenu from "~/components/NavigationMenu"
-import * as RadixTooltip from "~/components/Tooltip"
-import NavigationTooltip from "./NavigationTooltip"
-import NavigationItem from "./NavigationItem"
-import NavigationLink from "./NavigationLink"
-import Auth from "~/components/Auth"
-import Profile from "~/components/Profile"
+import * as Dialog from "~/components/Dialog"
+import * as Tooltip from "~/components/Tooltip"
+import Icon from "~/components/Icon"
 import {
   artists,
   calendar,
@@ -16,70 +13,86 @@ import {
   train,
 } from "~/components/Icons"
 
-export default async function NavigationSideBar() {
+import NavigationItem from "./NavigationItem"
+
+export default async function NavigationSidebar() {
   const session = await getSession()
 
   return (
-    <RadixTooltip.Provider>
+    <Tooltip.Provider delayDuration={0}>
       <NavigationMenu.Root
         orientation="vertical"
         className="fixed inset-y-0 left-0 hidden w-16 items-center justify-center overflow-y-auto bg-theme-900 text-theme-50 sm:flex"
       >
-        <NavigationMenu.List className="my-4 flex flex-col gap-6">
-          <NavigationTooltip label={session ? "Your profile" : "Log-in"}>
-            <li>
-              {session ? (
-                <Profile>
-                  <NavigationItem>
-                    {session.user.avatar ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={session.user.avatar}
-                        alt={session.user.username}
-                        className="h-full w-full object-cover"
-                        draggable={false}
-                        decoding="async"
-                        loading="lazy"
-                      />
-                    ) : (
-                      profile
-                    )}
-                  </NavigationItem>
-                </Profile>
-              ) : (
-                <Auth>
-                  <NavigationItem>{profile}</NavigationItem>
-                </Auth>
-              )}
-            </li>
-          </NavigationTooltip>
-          <NavigationTooltip label="Home">
-            <NavigationLink href="/">
-              <NavigationItem>{home}</NavigationItem>
-            </NavigationLink>
-          </NavigationTooltip>
-          <NavigationTooltip label="About">
-            <NavigationLink href="/about">
-              <NavigationItem>{help}</NavigationItem>
-            </NavigationLink>
-          </NavigationTooltip>
-          <NavigationTooltip label="Coming soon!">
-            <li>
-              <NavigationItem disabled>{artists}</NavigationItem>
-            </li>
-          </NavigationTooltip>
-          <NavigationTooltip label="Coming soon!">
-            <li>
-              <NavigationItem disabled>{train}</NavigationItem>
-            </li>
-          </NavigationTooltip>
-          <NavigationTooltip label="Coming soon!">
-            <li>
-              <NavigationItem disabled>{calendar}</NavigationItem>
-            </li>
-          </NavigationTooltip>
+        <NavigationMenu.List className="grid place-items-center gap-2">
+          <Dialog.Root>
+            <NavigationItem label="Log-in">
+              <NavigationMenu.Trigger asChild>
+                <Dialog.Trigger>
+                  <Icon
+                    className="group-group-aria-disabled:text-theme-700 h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300"
+                    label="Log-in"
+                  >
+                    {profile}
+                  </Icon>
+                </Dialog.Trigger>
+              </NavigationMenu.Trigger>
+            </NavigationItem>
+            <Dialog.Portal>
+              <Dialog.Overlay className="fixed inset-0 overflow-y-auto bg-black/20 p-12">
+                <Dialog.Content className="mx-auto w-full max-w-lg bg-white">
+                  <Dialog.Title className="text-xl">Dialog</Dialog.Title>
+                  <Dialog.Description>Dialog</Dialog.Description>
+                  <Dialog.Close>Close</Dialog.Close>
+                  <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
+                  <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
+                  <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
+                </Dialog.Content>
+              </Dialog.Overlay>
+            </Dialog.Portal>
+          </Dialog.Root>
+          <NavigationItem label="Home" href="/">
+            <Icon
+              className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
+              label="Home"
+            >
+              {home}
+            </Icon>
+          </NavigationItem>
+          <NavigationItem label="About" href="/about">
+            <Icon
+              className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
+              label="About"
+            >
+              {help}
+            </Icon>
+          </NavigationItem>
+          <NavigationItem label="Coming soon!" disabled>
+            <Icon
+              className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
+              label="Coming soon!"
+            >
+              {artists}
+            </Icon>
+          </NavigationItem>
+          <NavigationItem label="Coming soon!" disabled>
+            <Icon
+              className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
+              label="Coming soon!"
+            >
+              {train}
+            </Icon>
+          </NavigationItem>
+          <NavigationItem label="Coming soon!" disabled>
+            <Icon
+              className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
+              label="Coming soon!"
+            >
+              {calendar}
+            </Icon>
+          </NavigationItem>
         </NavigationMenu.List>
       </NavigationMenu.Root>
-    </RadixTooltip.Provider>
+    </Tooltip.Provider>
   )
 }

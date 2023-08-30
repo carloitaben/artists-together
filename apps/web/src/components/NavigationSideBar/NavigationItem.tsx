@@ -1,26 +1,55 @@
 "use client"
 
-import { ComponentProps, ReactElement, createContext, useContext } from "react"
-
-import Icon from "~/components/Icon"
-
-const labelContext = createContext<string>("")
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { ReactNode } from "react"
+import * as NavigationMenu from "~/components/NavigationMenu"
+import * as Tooltip from "~/components/Tooltip"
+import NavigationItemTooltip from "./NavigationItemTooltip"
 
 type Props = {
-  children: ReactElement<ComponentProps<"svg">>
+  children: ReactNode
+  label: string
+  href?: string
   disabled?: boolean
 }
 
-export default function NavigationItem({ children, disabled }: Props) {
-  const label = useContext(labelContext)
+export default function NavigationItem({
+  children,
+  disabled,
+  label,
+  href,
+}: Props) {
+  const pathname = usePathname()
+  const isActive = pathname === href
 
   return (
-    <Icon
-      aria-disabled={disabled}
-      label={label}
-      className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 aria-disabled:text-theme-700"
-    >
-      {children}
-    </Icon>
+    <NavigationMenu.Item aria-disabled={disabled}>
+      <Tooltip.ControlledRoot>
+        <Tooltip.Trigger asChild>
+          {href && !disabled ? (
+            <NavigationMenu.Link
+              asChild
+              href={href}
+              active={isActive}
+              aria-disabled={disabled}
+              className="group"
+            >
+              <Link href={href} className="block h-12 w-12 p-2">
+                {children}
+              </Link>
+            </NavigationMenu.Link>
+          ) : (
+            <span
+              aria-disabled={disabled}
+              className="group block h-12 w-12 p-2"
+            >
+              {children}
+            </span>
+          )}
+        </Tooltip.Trigger>
+        <NavigationItemTooltip>{label}</NavigationItemTooltip>
+      </Tooltip.ControlledRoot>
+    </NavigationMenu.Item>
   )
 }
