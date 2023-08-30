@@ -1,24 +1,24 @@
 import { getSession } from "~/services/auth"
 
-import * as NavigationMenu from "~/components/NavigationMenu"
-import * as Dialog from "~/components/Dialog"
 import * as Tooltip from "~/components/Tooltip"
+import * as Modal from "~/components/Modal"
+import * as NavigationMenu from "~/components/NavigationMenu"
+import NavigationItem from "./NavigationItem"
+import Profile from "~/components/Profile"
+import Auth from "~/components/Auth"
 import Icon from "~/components/Icon"
 import {
   artists,
   calendar,
-  discord,
   help,
   home,
   profile,
   train,
 } from "~/components/Icons"
 
-import NavigationItem from "./NavigationItem"
-import Button from "~/components/Button"
-
 export default async function NavigationSidebar() {
   const session = await getSession()
+  const hasSession = !!session
 
   return (
     <Tooltip.Provider delayDuration={0}>
@@ -27,45 +27,21 @@ export default async function NavigationSidebar() {
         className="fixed inset-y-0 left-0 hidden w-16 items-center justify-center overflow-y-auto bg-theme-900 text-theme-50 sm:flex"
       >
         <NavigationMenu.List className="grid place-items-center gap-2">
-          <Dialog.Root>
-            <NavigationItem label="Log-in">
+          <Modal.Root>
+            <NavigationItem label={hasSession ? "Your profile" : "Log-in"}>
               <NavigationMenu.Trigger asChild>
-                <Dialog.Trigger className="group block h-12 w-12 p-2">
+                <Modal.Trigger className="group block h-12 w-12 p-2">
                   <Icon
                     className="group-group-aria-disabled:text-theme-700 h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300"
-                    label="Log-in"
+                    label={hasSession ? "Your profile" : "Log-in"}
                   >
                     {profile}
                   </Icon>
-                </Dialog.Trigger>
+                </Modal.Trigger>
               </NavigationMenu.Trigger>
             </NavigationItem>
-            <Dialog.Portal>
-              <Dialog.Overlay className="fixed inset-0 overflow-y-auto bg-black/20 p-12">
-                <Dialog.Content className="mx-auto w-full max-w-lg">
-                  <div className="bg-white">
-                    <Dialog.Title className="text-xl">Dialog</Dialog.Title>
-                    <Dialog.Description>Dialog</Dialog.Description>
-                    <Dialog.Close>Close</Dialog.Close>
-                    <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
-                    <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
-                    <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
-                  </div>
-                  <div className="flex justify-end">
-                    <Button
-                      color="disabled"
-                      className="bg-[#5865F2] text-gunpla-white-50"
-                    >
-                      <Icon label="" className="w-6">
-                        {discord}
-                      </Icon>
-                      Log-in with Discord
-                    </Button>
-                  </div>
-                </Dialog.Content>
-              </Dialog.Overlay>
-            </Dialog.Portal>
-          </Dialog.Root>
+            {hasSession ? <Profile /> : <Auth />}
+          </Modal.Root>
           <NavigationItem label="Home" href="/">
             <Icon
               className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"

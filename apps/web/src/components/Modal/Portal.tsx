@@ -21,7 +21,7 @@ function getOrientation(kind: Props["kind"]) {
 }
 
 const wrapper = cva(
-  "flex justify-center fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]",
+  "flex justify-center fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px] overflow-y-auto p-12",
   {
     variants: {
       align: {

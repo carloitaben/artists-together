@@ -11,7 +11,7 @@ const container = cva(
       },
       fill: {
         false: "",
-        true: "w-[36rem]",
+        true: "w-full max-w-[36rem]",
       },
       px: {
         false: "",
