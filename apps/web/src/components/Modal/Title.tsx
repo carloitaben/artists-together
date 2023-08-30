@@ -1,8 +1,6 @@
-"use client"
-
-import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { ForwardedRef, forwardRef } from "react"
 import { VariantProps, cva } from "class-variance-authority"
+import * as DialogPrimitive from "~/components/Dialog"
 
 const title = cva("", {
   variants: {
@@ -22,7 +20,7 @@ function Title(
     inset,
     ...props
   }: DialogPrimitive.DialogTitleProps & VariantProps<typeof title>,
-  ref: ForwardedRef<HTMLHeadingElement>
+  ref: ForwardedRef<HTMLHeadingElement>,
 ) {
   return (
     <DialogPrimitive.Title

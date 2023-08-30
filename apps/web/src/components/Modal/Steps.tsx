@@ -1,14 +1,12 @@
-"use client"
-
-import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { ForwardedRef, forwardRef } from "react"
 import { cx } from "class-variance-authority"
 
+import * as TabsPrimitive from "~/components/Tabs"
 import Shiny from "~/components/Shiny"
 
 function Steps(
   { className, ...props }: TabsPrimitive.TabsListProps,
-  ref: ForwardedRef<HTMLDivElement>
+  ref: ForwardedRef<HTMLDivElement>,
 ) {
   return (
     <div className="mb-4 flex items-center justify-between">
@@ -17,7 +15,7 @@ function Steps(
         ref={ref}
         className={cx(
           className,
-          "flex rounded-full bg-gunpla-white-50 p-2 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)]"
+          "flex rounded-full bg-gunpla-white-50 p-2 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)]",
         )}
       />
       <div className="flex gap-2">

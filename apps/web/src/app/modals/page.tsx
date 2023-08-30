@@ -1,15 +1,7 @@
-"use client"
-
-import { redirect } from "next/navigation"
-
-import { help } from "~/components/Icons"
 import * as Modal from "~/components/Modal"
+import { help } from "~/components/Icons"
 
 export default function Page() {
-  if (process.env.NODE_ENV === "production") {
-    redirect("/")
-  }
-
   return (
     <main className="flex flex-col items-start justify-start gap-2">
       <h1>Modal tests</h1>
@@ -56,7 +48,7 @@ export default function Page() {
         <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
           With tabs
         </Modal.Trigger>
-        <Modal.Portal>
+        <Modal.Portal kind="tabs">
           <Modal.Tabs>
             <Modal.Tab icon={help} value="foo">
               Foo
@@ -84,7 +76,7 @@ export default function Page() {
         <Modal.Trigger className="rounded-full bg-theme-800 px-10 py-3 text-center font-sans text-sm">
           With steps
         </Modal.Trigger>
-        <Modal.Portal>
+        <Modal.Portal kind="anchors">
           <Modal.Steps>
             <Modal.Step value={0}>Foo</Modal.Step>
             <Modal.Step value={1}>Bar</Modal.Step>

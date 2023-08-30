@@ -1,8 +1,7 @@
 "use client"
 
 import { Root, TooltipProps } from "@radix-ui/react-tooltip"
-import { useCallback } from "react"
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { createStateContext } from "~/hooks/state"
 
 const [ControlledTooltipContext, useControlledTooltip] =

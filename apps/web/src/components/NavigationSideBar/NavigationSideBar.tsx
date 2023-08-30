@@ -7,6 +7,7 @@ import Icon from "~/components/Icon"
 import {
   artists,
   calendar,
+  discord,
   help,
   home,
   profile,
@@ -14,6 +15,7 @@ import {
 } from "~/components/Icons"
 
 import NavigationItem from "./NavigationItem"
+import Button from "~/components/Button"
 
 export default async function NavigationSidebar() {
   const session = await getSession()
@@ -40,13 +42,26 @@ export default async function NavigationSidebar() {
             </NavigationItem>
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 overflow-y-auto bg-black/20 p-12">
-                <Dialog.Content className="mx-auto w-full max-w-lg bg-white">
-                  <Dialog.Title className="text-xl">Dialog</Dialog.Title>
-                  <Dialog.Description>Dialog</Dialog.Description>
-                  <Dialog.Close>Close</Dialog.Close>
-                  <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
-                  <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
-                  <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
+                <Dialog.Content className="mx-auto w-full max-w-lg">
+                  <div className="bg-white">
+                    <Dialog.Title className="text-xl">Dialog</Dialog.Title>
+                    <Dialog.Description>Dialog</Dialog.Description>
+                    <Dialog.Close>Close</Dialog.Close>
+                    <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
+                    <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
+                    <div className="bg-gray-100 m-2 h-[400px] rounded-lg"></div>
+                  </div>
+                  <div className="flex justify-end">
+                    <Button
+                      color="disabled"
+                      className="bg-[#5865F2] text-gunpla-white-50"
+                    >
+                      <Icon label="" className="w-6">
+                        {discord}
+                      </Icon>
+                      Log-in with Discord
+                    </Button>
+                  </div>
                 </Dialog.Content>
               </Dialog.Overlay>
             </Dialog.Portal>

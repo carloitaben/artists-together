@@ -1,12 +1,10 @@
-"use client"
-
-import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { ForwardedRef, forwardRef } from "react"
 import { cx } from "class-variance-authority"
+import * as TabsPrimitive from "~/components/Tabs"
 
 function Tabs(
   { className, ...props }: TabsPrimitive.TabsListProps,
-  ref: ForwardedRef<HTMLDivElement>
+  ref: ForwardedRef<HTMLDivElement>,
 ) {
   return (
     <TabsPrimitive.List
@@ -14,7 +12,7 @@ function Tabs(
       ref={ref}
       className={cx(
         className,
-        "absolute -left-4 top-0 grid w-56 -translate-x-full gap-2"
+        "absolute -left-4 top-0 grid w-56 -translate-x-full gap-2",
       )}
     />
   )

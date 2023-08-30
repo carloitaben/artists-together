@@ -1,50 +1,38 @@
 "use client"
 
-import {
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-} from "react"
 import { Root, DialogProps } from "@radix-ui/react-dialog"
+import { useCallback, useState } from "react"
+import { createStateContext } from "~/hooks/state"
 
-export * from "@radix-ui/react-dialog"
+const [ControlledDialogContext, useControlledDialog] =
+  createStateContext<boolean>()
 
-type Context = [open: boolean, setOpen: Dispatch<SetStateAction<boolean>>]
+ControlledDialogContext.displayName = "ControlledDialogContext"
 
-const context = createContext<Context | null>(null)
-
-export function useControlledDialog() {
-  const value = useContext(context)
-
-  if (!value) {
-    throw Error("Called useControlledDialog outside of Dialog.ControlledRoot")
-  }
-
-  return value
-}
-
-export function ControlledRoot({
-  children,
+function ControlledRoot({
   open = false,
   onOpenChange,
+  children,
   ...props
 }: Omit<DialogProps, "defaultOpen">) {
-  const state = useState(open)
+  const [opened, setOpened] = useState(open)
 
-  const onChange = useCallback(
-    (open: boolean) => {
-      onOpenChange?.(open)
-      state[1](open)
+  const onChange = useCallback<NonNullable<DialogProps["onOpenChange"]>>(
+    (value) => {
+      setOpened(value)
+      if (onOpenChange) onOpenChange(value)
     },
-    [onOpenChange, state]
+    [onOpenChange],
   )
 
   return (
-    <Root open={state[0]} onOpenChange={onChange}>
-      <context.Provider value={state}>{children}</context.Provider>
-    </Root>
+    <ControlledDialogContext.Provider value={[opened, setOpened]}>
+      <Root {...props} open={opened} onOpenChange={onChange}>
+        {children}
+      </Root>
+    </ControlledDialogContext.Provider>
   )
 }
+
+export * from "@radix-ui/react-dialog"
+export { ControlledRoot, useControlledDialog }

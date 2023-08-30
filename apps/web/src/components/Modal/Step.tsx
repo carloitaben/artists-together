@@ -1,9 +1,7 @@
-"use client"
-
-import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { ForwardedRef, forwardRef } from "react"
 import { cx } from "class-variance-authority"
 
+import * as TabsPrimitive from "~/components/Tabs"
 import Shiny from "~/components/Shiny"
 
 type Props = Omit<TabsPrimitive.TabsTriggerProps, "asChild" | "value"> & {
@@ -12,7 +10,7 @@ type Props = Omit<TabsPrimitive.TabsTriggerProps, "asChild" | "value"> & {
 
 function Step(
   { className, children, value, ...props }: Props,
-  ref: ForwardedRef<HTMLButtonElement>
+  ref: ForwardedRef<HTMLButtonElement>,
 ) {
   return (
     <Shiny>
@@ -22,7 +20,7 @@ function Step(
         value={String(value)}
         className={cx(
           className,
-          "group flex items-center gap-2 rounded-full p-2 text-sm"
+          "group flex items-center gap-2 rounded-full p-2 text-sm",
         )}
       >
         <div className="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-gunpla-white-300 text-center text-[0.9375rem] font-bold text-gunpla-white-50 group-radix-state-active:bg-gunpla-white-500">

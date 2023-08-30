@@ -1,5 +1,3 @@
-"use client"
-
 import { cva, VariantProps } from "class-variance-authority"
 import { ComponentProps, ForwardedRef, forwardRef } from "react"
 
@@ -30,14 +28,14 @@ const container = cva(
       py: true,
       background: true,
     },
-  }
+  },
 )
 
 type Props = ComponentProps<"div"> & VariantProps<typeof container>
 
 function Container(
   { fill, px, py, className, children, background, ...props }: Props,
-  ref: ForwardedRef<HTMLDivElement>
+  ref: ForwardedRef<HTMLDivElement>,
 ) {
   return (
     <div

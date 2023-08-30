@@ -1,7 +1,5 @@
-"use client"
-
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import * as DialogPrimitive from "~/components/Dialog"
+import * as TabsPrimitive from "~/components/Tabs"
 import { VariantProps, cva, cx } from "class-variance-authority"
 import { ForwardedRef, forwardRef } from "react"
 
@@ -22,28 +20,30 @@ function getOrientation(kind: Props["kind"]) {
   }
 }
 
-const wrapper = cva("fixed inset-0 flex justify-center", {
-  variants: {
-    align: {
-      start: "items-start pt-[33.333vh]",
-      center: "items-center",
+const wrapper = cva(
+  "flex justify-center fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]",
+  {
+    variants: {
+      align: {
+        start: "items-start pt-[33.333vh]",
+        center: "items-center",
+      },
+    },
+    defaultVariants: {
+      align: "start",
     },
   },
-  defaultVariants: {
-    align: "start",
-  },
-})
+)
 
 function Portal(
   { children, className, align, kind, ...props }: Props,
-  ref: ForwardedRef<HTMLDivElement>
+  ref: ForwardedRef<HTMLDivElement>,
 ) {
   const orientation = getOrientation(kind)
 
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 bg-arpeggio-black-900/25 backdrop-blur-[24px]" />
-      <div className={wrapper({ align })}>
+      <DialogPrimitive.Overlay className={wrapper({ align })}>
         <DialogPrimitive.Content
           {...props}
           ref={ref}
@@ -57,7 +57,7 @@ function Portal(
             children
           )}
         </DialogPrimitive.Content>
-      </div>
+      </DialogPrimitive.Overlay>
     </DialogPrimitive.Portal>
   )
 }

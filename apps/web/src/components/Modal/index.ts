@@ -1,10 +1,11 @@
-"use client"
+export {
+  Root,
+  ControlledRoot,
+  Trigger,
+  Description,
+  useControlledDialog as useControlledModal,
+} from "~/components/Dialog"
 
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-
-export const Root = DialogPrimitive.Root
-export const Trigger = DialogPrimitive.Trigger
-export const Description = DialogPrimitive.Description
 export { default as Portal } from "./Portal"
 export { default as Container } from "./Container"
 export { default as Content } from "./Content"
