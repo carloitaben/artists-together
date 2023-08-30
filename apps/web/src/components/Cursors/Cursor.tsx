@@ -1,9 +1,15 @@
 "use client"
 
 import { Cursor, CursorState } from "ws-types"
-import { PerfectCursor } from "perfect-cursors"
 import { useRef, useState } from "react"
-import { motion, MotionStyle, Variants } from "framer-motion"
+import {
+  motion,
+  MotionStyle,
+  SpringOptions,
+  useMotionTemplate,
+  useSpring,
+  Variants,
+} from "framer-motion"
 
 import { useWebSocketEvent } from "~/hooks/ws"
 
@@ -21,6 +27,8 @@ const variants: Variants = {
   },
 }
 
+const spring: SpringOptions = { mass: 0.05, stiffness: 175 }
+
 type Props = {
   cursor: Cursor | null
   id: string
@@ -28,35 +36,28 @@ type Props = {
 
 export default function Cursor({ cursor, id }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const motionValueX = useSpring(cursor ? cursor[0] : 0, spring)
+  const motionValueY = useSpring(cursor ? cursor[1] : 1, spring)
+  const percentX = useMotionTemplate`${motionValueX}%`
+  const percentY = useMotionTemplate`${motionValueY}%`
 
   const [state, setState] = useState<CursorState>(() => {
     if (!cursor) return "idle"
     return cursor[2]
   })
 
-  const [pc] = useState(
-    () =>
-      new PerfectCursor((point) => {
-        containerRef.current?.style.setProperty(
-          "transform",
-          `translate(${point[0]}%, ${point[1]}%)`
-        )
-      })
-  )
-
   useWebSocketEvent("cursor:update", ([_id, cursor]) => {
     if (_id !== id || !cursor) return
-    pc.addPoint([cursor[0], cursor[1]])
+    motionValueX.set(cursor[0])
+    motionValueY.set(cursor[1])
     setState(cursor[2])
   })
 
   if (!cursor) return null
 
-  const [x, y] = cursor
-
   const containerStyle: MotionStyle = {
-    x: `${x}%`,
-    y: `${y}%`,
+    x: percentX,
+    y: percentY,
   }
 
   const wrapperStyle: MotionStyle = {

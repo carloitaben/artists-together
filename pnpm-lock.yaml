@@ -125,9 +125,6 @@ importers:
       next:
         specifier: 13.4.19
         version: 13.4.19(react-dom@18.2.0)(react@18.2.0)
-      perfect-cursors:
-        specifier: ^1.0.5
-        version: 1.0.5
       perfect-freehand:
         specifier: ^1.2.0
         version: 1.2.0
@@ -1722,10 +1719,6 @@ packages:
     resolution: {integrity: sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg==}
     dependencies:
       tslib: 2.6.2
-    dev: false
-
-  /@tldraw/vec@1.9.2:
-    resolution: {integrity: sha512-k9vH52MRpJHjVcaahWu6VqvhLeE9h1qL5Z2gLobS9zTMpUJ59kBQPNo0VPzPlDYBpXdS4GxuB4jYQMnKvuPAZg==}
     dev: false
 
   /@tokenizer/token@0.3.0:
@@ -4386,12 +4379,6 @@ packages:
   /peek-readable@5.0.0:
     resolution: {integrity: sha512-YtCKvLUOvwtMGmrniQPdO7MwPjgkFBtFIrmfSbYmYuq3tKDV/mcfAhBth1+C3ru7uXIZasc/pHnb+YDYNkkj4A==}
     engines: {node: '>=14.16'}
-    dev: false
-
-  /perfect-cursors@1.0.5:
-    resolution: {integrity: sha512-LgQJj6QtF6VzYODurlhF9Ayt2liiadJZBocK98brcCC6D/dRtZlSU/r0mXWDoCdGPiO24oJB1+PZKz4p9hblWg==}
-    dependencies:
-      '@tldraw/vec': 1.9.2
     dev: false
 
   /perfect-freehand@1.2.0:
