@@ -25,7 +25,7 @@ export default function NavigationItem({
 
   return (
     <NavigationMenu.Item aria-disabled={disabled}>
-      <Tooltip.ControlledRoot>
+      <Tooltip.ControlledRoot disableHoverableContent>
         <Tooltip.Trigger asChild>
           {href && !disabled ? (
             <NavigationMenu.Link
@@ -40,12 +40,7 @@ export default function NavigationItem({
               </Link>
             </NavigationMenu.Link>
           ) : (
-            <span
-              aria-disabled={disabled}
-              className="group block h-12 w-12 p-2"
-            >
-              {children}
-            </span>
+            children
           )}
         </Tooltip.Trigger>
         <NavigationItemTooltip>{label}</NavigationItemTooltip>

@@ -28,7 +28,7 @@ export default async function NavigationSidebar() {
           <Dialog.Root>
             <NavigationItem label="Log-in">
               <NavigationMenu.Trigger asChild>
-                <Dialog.Trigger>
+                <Dialog.Trigger className="group block h-12 w-12 p-2">
                   <Icon
                     className="group-group-aria-disabled:text-theme-700 h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300"
                     label="Log-in"
@@ -68,28 +68,34 @@ export default async function NavigationSidebar() {
             </Icon>
           </NavigationItem>
           <NavigationItem label="Coming soon!" disabled>
-            <Icon
-              className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
-              label="Coming soon!"
-            >
-              {artists}
-            </Icon>
+            <span aria-disabled className="group block h-12 w-12 p-2">
+              <Icon
+                className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
+                label="Coming soon!"
+              >
+                {artists}
+              </Icon>
+            </span>
           </NavigationItem>
           <NavigationItem label="Coming soon!" disabled>
-            <Icon
-              className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
-              label="Coming soon!"
-            >
-              {train}
-            </Icon>
+            <span aria-disabled className="group block h-12 w-12 p-2">
+              <Icon
+                className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
+                label="Coming soon!"
+              >
+                {train}
+              </Icon>
+            </span>
           </NavigationItem>
           <NavigationItem label="Coming soon!" disabled>
-            <Icon
-              className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
-              label="Coming soon!"
-            >
-              {calendar}
-            </Icon>
+            <span aria-disabled className="group block h-12 w-12 p-2">
+              <Icon
+                className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"
+                label="Coming soon!"
+              >
+                {calendar}
+              </Icon>
+            </span>
           </NavigationItem>
         </NavigationMenu.List>
       </NavigationMenu.Root>
