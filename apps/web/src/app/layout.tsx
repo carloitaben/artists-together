@@ -45,14 +45,13 @@ export default async function Layout({ children }: Props) {
       suppressHydrationWarning
     >
       <body className="min-h-full pb-14 selection:bg-theme-300 selection:text-theme-900 sm:pb-0 sm:pl-16">
-        <Toast>
-          <NavigationSideBar />
-          <WebSocketProvider user={session?.user}>
-            {children}
-            <Cursors user={session?.user} />
-          </WebSocketProvider>
-          <NavigationBottomBar />
-        </Toast>
+        <NavigationSideBar />
+        <WebSocketProvider user={session?.user}>
+          {children}
+          <Cursors user={session?.user} />
+        </WebSocketProvider>
+        <NavigationBottomBar />
+        <Toast />
         <Cursor />
         <Script id="tailwindcss-noscript" strategy="beforeInteractive">
           {`(function(){typeof document !== "undefined" && document.documentElement.classList.add("js");}())`}

@@ -21,16 +21,16 @@ export default function Logout() {
 
           if (!result || !("error" in result)) {
             router.refresh()
-            return emit("Logged out succesfully")
+            return emit.message("Logged out succesfully")
           }
 
           switch (result.error.name) {
             case "VALIDATION_ERROR":
-              return emit("Oops! Something went wrong…")
+              return emit.error()
             case "SERVER_ERROR":
               switch (result.error.cause) {
                 case "UNAUTHORIZED":
-                  return emit("Oops! You cannot do that")
+                  return emit.error("Oops! You cannot do that")
                 default:
                   return unreachable(result.error)
               }

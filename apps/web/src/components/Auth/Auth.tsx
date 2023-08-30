@@ -34,7 +34,7 @@ export default function Auth({ children, ...props }: Props) {
                 await discordSSO({ pathname }).catch((error) => {
                   if (isRedirectError(error)) throw error
                   console.error(error)
-                  emit("Oops! Something went wrong…")
+                  emit.error()
                 })
               })
             }

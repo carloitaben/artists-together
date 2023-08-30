@@ -29,7 +29,7 @@ export default function ConnectionAction({
           await action({ pathname }).catch((error) => {
             if (isRedirectError(error)) throw error
             console.error(error)
-            emit("Oops! Something went wrong…")
+            emit.error()
           })
         })
       }
