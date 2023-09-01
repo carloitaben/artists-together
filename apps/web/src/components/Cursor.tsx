@@ -118,6 +118,7 @@ export default function Cursor() {
       const y = limit((event.clientY * 100) / windowRect.current.innerHeight)
       motionValueX.jump(x)
       motionValueY.jump(y)
+
       setState("idle")
     }
 
@@ -153,6 +154,7 @@ export default function Cursor() {
     window.addEventListener("mousemove", onMouseMove)
     window.addEventListener("mousedown", onMouseDown)
     window.addEventListener("mouseup", onMouseUp)
+
     return () => {
       window.removeEventListener("mousemove", onMouseMove)
       window.removeEventListener("mousedown", onMouseDown)

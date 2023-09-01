@@ -36,13 +36,13 @@ export function useWebSocketEmitter<T extends ClientEvent>(event: T) {
       if (!ws || ws.readyState !== ws.OPEN) return
       ws.send(JSON.stringify([event, data]))
     },
-    [event, ws]
+    [event, ws],
   )
 }
 
 export function useWebSocketEvent<T extends ServerEvent>(
   event: T,
-  callback: (data: ServerEventDataMap[T]) => void
+  callback: (data: ServerEventDataMap[T]) => void,
 ) {
   const calledBuffer = useRef(false)
 

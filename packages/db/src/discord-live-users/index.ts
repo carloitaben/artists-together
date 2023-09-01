@@ -15,7 +15,7 @@ export const list = zod(z.void(), async () =>
   db
     .select()
     .from(discordLiveUsers)
-    .then((value) => value),
+    .then((value) => value)
 )
 
 export const create = zod(
@@ -25,12 +25,12 @@ export const create = zod(
       userId: input.userId,
       url: input.url,
     })
-  },
+  }
 )
 
 export const remove = zod(schema.shape.userId, async (userId) =>
   db
     .delete(discordLiveUsers)
     .where(eq(discordLiveUsers.userId, userId))
-    .then(() => userId),
+    .then(() => userId)
 )

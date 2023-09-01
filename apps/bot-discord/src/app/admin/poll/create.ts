@@ -10,7 +10,7 @@ import {
 } from "discord.js"
 import { parseDate } from "chrono-node"
 import { nanoid } from "nanoid"
-import { and, connect, discordPolls, eq } from "db"
+import { DiscordPolls } from "db"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -55,7 +55,9 @@ function isValidColor(color: string) {
   return /^#[0-9A-F]{6}$/i.test(color)
 }
 
-export default async function handleCreatePollSubcommand(interaction: ChatInputCommandInteraction) {
+export default async function handleCreatePollSubcommand(
+  interaction: ChatInputCommandInteraction,
+) {
   if (!interaction.channel || !("name" in interaction.channel)) {
     return interaction.reply({
       content: "Oops! I cannot create a poll in this channel",
@@ -63,7 +65,9 @@ export default async function handleCreatePollSubcommand(interaction: ChatInputC
     })
   }
 
-  const modal = new ModalBuilder().setCustomId(MODAL_ID).setTitle(`New poll in #${interaction.channel.name}`)
+  const modal = new ModalBuilder()
+    .setCustomId(MODAL_ID)
+    .setTitle(`New poll in #${interaction.channel.name}`)
 
   const titleInput = new TextInputBuilder()
     .setCustomId(INPUT_IDS.TITLE)
@@ -98,14 +102,20 @@ export default async function handleCreatePollSubcommand(interaction: ChatInputC
     .setStyle(TextInputStyle.Paragraph)
     .setRequired(true)
     .setLabel("Options (each line will be a new option)")
-    .setPlaceholder("🪐 2001: A Space Odyssey" + "\n" + `🌪️ Gone with the Wind` + "\n" + `🧙‍♀️ The Wizard of Oz`)
+    .setPlaceholder(
+      "🪐 2001: A Space Odyssey" +
+        "\n" +
+        `🌪️ Gone with the Wind` +
+        "\n" +
+        `🧙‍♀️ The Wizard of Oz`,
+    )
 
   modal.addComponents(
     new ActionRowBuilder<TextInputBuilder>().addComponents(titleInput),
     new ActionRowBuilder<TextInputBuilder>().addComponents(colorInput),
     new ActionRowBuilder<TextInputBuilder>().addComponents(durationInput),
     new ActionRowBuilder<TextInputBuilder>().addComponents(descriptionInput),
-    new ActionRowBuilder<TextInputBuilder>().addComponents(optionsInput)
+    new ActionRowBuilder<TextInputBuilder>().addComponents(optionsInput),
   )
 
   return interaction.showModal(modal)
@@ -123,11 +133,14 @@ registerEventHandler("interactionCreate", async (interaction) => {
     throw Error("Missing channel property in modal interaction")
   }
 
-  const titleInput = interaction.fields.getTextInputValue(INPUT_IDS.TITLE)
-  const colorInput = interaction.fields.getTextInputValue(INPUT_IDS.COLOR) || "#f4f4f4"
-  const durationInput = interaction.fields.getTextInputValue(INPUT_IDS.DURATION)
-  const descriptionInput = interaction.fields.getTextInputValue(INPUT_IDS.DESCRIPTION)
   const optionsInput = interaction.fields.getTextInputValue(INPUT_IDS.OPTIONS)
+  const titleInput = interaction.fields.getTextInputValue(INPUT_IDS.TITLE)
+  const durationInput = interaction.fields.getTextInputValue(INPUT_IDS.DURATION)
+  const colorInput =
+    interaction.fields.getTextInputValue(INPUT_IDS.COLOR) || "#f4f4f4"
+  const descriptionInput = interaction.fields.getTextInputValue(
+    INPUT_IDS.DESCRIPTION,
+  )
 
   if (!isValidColor(colorInput)) {
     return interaction.reply({
@@ -145,7 +158,9 @@ registerEventHandler("interactionCreate", async (interaction) => {
     })
   }
 
-  const endDate = durationInput ? parseDate(durationInput, new Date(), { forwardDate: true }) : undefined
+  const endDate = durationInput
+    ? parseDate(durationInput, new Date(), { forwardDate: true })
+    : undefined
 
   if (durationInput && !endDate) {
     return interaction.reply({
@@ -165,15 +180,11 @@ registerEventHandler("interactionCreate", async (interaction) => {
     }
   }
 
-  const db = connect()
+  const nameUnavailable = await DiscordPolls.listFromChannel(
+    interaction.channel.id,
+  ).then((polls) => Boolean(polls.some((poll) => poll.name === titleInput)))
 
-  const [pollInThisChannelWithThisName] = await db
-    .select()
-    .from(discordPolls)
-    .where(and(eq(discordPolls.channelId, interaction.channel.id), eq(discordPolls.name, titleInput)))
-    .limit(1)
-
-  if (pollInThisChannelWithThisName) {
+  if (nameUnavailable) {
     return interaction.reply({
       content:
         `Oops! A poll with the title "${titleInput}" already exists on this channel 😅` +
@@ -190,10 +201,14 @@ registerEventHandler("interactionCreate", async (interaction) => {
     })
   }
 
-  const description = await parseMentions(interaction.guild.roles, descriptionInput)
+  const description = await parseMentions(
+    interaction.guild.roles,
+    descriptionInput,
+  )
 
   const response = await interaction.reply({
-    content: "I'll open a poll on this channel with the following data. Is it ok?",
+    content:
+      "I'll open a poll on this channel with the following data. Is it ok?",
     ephemeral: true,
     fetchReply: true,
     embeds: [
@@ -210,7 +225,12 @@ registerEventHandler("interactionCreate", async (interaction) => {
         })),
       }).setColor(colorInput as `#${string}`),
     ],
-    components: [new ActionRowBuilder<ButtonBuilder>().addComponents(createButton, cancelButton)],
+    components: [
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
+        createButton,
+        cancelButton,
+      ),
+    ],
   })
 
   try {
@@ -236,7 +256,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
           new ButtonBuilder()
             .setCustomId(encodeButtonVoteOptionId(id, index))
             .setStyle(ButtonStyle.Secondary)
-            .setLabel(option)
+            .setLabel(option),
         )
 
         const pollMessage = await confirmation.channel.send({
@@ -246,14 +266,20 @@ registerEventHandler("interactionCreate", async (interaction) => {
               title: titleInput,
               description,
               footer: {
-                text: `0 votes in total${endDate ? `\nCloses on ${dayjs.utc(endDate).format("lll")} UTC` : ""}`,
+                text: `0 votes in total${
+                  endDate
+                    ? `\nCloses on ${dayjs.utc(endDate).format("lll")} UTC`
+                    : ""
+                }`,
               },
             }).setColor(colorInput as `#${string}`),
           ],
-          components: [new ActionRowBuilder<ButtonBuilder>().addComponents(...buttons)],
+          components: [
+            new ActionRowBuilder<ButtonBuilder>().addComponents(...buttons),
+          ],
         })
 
-        await addPoll(interaction.client, {
+        await addPoll({
           channelId: confirmation.channel.id,
           messageId: pollMessage.id,
           name: titleInput,

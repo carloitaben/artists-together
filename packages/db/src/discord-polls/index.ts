@@ -13,7 +13,7 @@ export type PollVotesSchema = z.infer<typeof pollVotesSchema>
 
 export const create = zod(
   pollsSchema,
-  async (poll) => void db.insert(discordPolls).values(poll),
+  async (poll) => void db.insert(discordPolls).values(poll)
 )
 
 export const remove = zod(
@@ -22,7 +22,7 @@ export const remove = zod(
     void Promise.all([
       db.delete(discordPolls).where(eq(discordPolls.id, id)),
       db.delete(discordPollVotes).where(eq(discordPollVotes.pollId, id)),
-    ]),
+    ])
 )
 
 export const list = zod(z.void(), async () => db.select().from(discordPolls))
@@ -30,7 +30,7 @@ export const list = zod(z.void(), async () => db.select().from(discordPolls))
 export const listFromChannel = zod(
   pollsSchema.shape.channelId,
   async (channelId) =>
-    db.select().from(discordPolls).where(eq(discordPolls.channelId, channelId)),
+    db.select().from(discordPolls).where(eq(discordPolls.channelId, channelId))
 )
 
 export const fromId = zod(pollsSchema.shape.id, async (id) =>
@@ -38,7 +38,7 @@ export const fromId = zod(pollsSchema.shape.id, async (id) =>
     .select()
     .from(discordPolls)
     .where(eq(discordPolls.id, id))
-    .then(([value]) => value),
+    .then(([value]) => value)
 )
 
 export const fromName = zod(pollsSchema.shape.name, async (name) =>
@@ -46,11 +46,11 @@ export const fromName = zod(pollsSchema.shape.name, async (name) =>
     .select()
     .from(discordPolls)
     .where(eq(discordPolls.name, name))
-    .then(([value]) => value),
+    .then(([value]) => value)
 )
 
 export const votesFromId = zod(pollVotesSchema.shape.pollId, async (pollId) =>
-  db.select().from(discordPollVotes).where(eq(discordPollVotes.pollId, pollId)),
+  db.select().from(discordPollVotes).where(eq(discordPollVotes.pollId, pollId))
 )
 
 export const votesFromUser = zod(
@@ -65,9 +65,9 @@ export const votesFromUser = zod(
       .where(
         and(
           eq(discordPollVotes.pollId, input.pollId),
-          eq(discordPollVotes.userId, input.userId),
-        ),
-      ),
+          eq(discordPollVotes.userId, input.userId)
+        )
+      )
 )
 
 export const addVote = zod(
@@ -77,7 +77,7 @@ export const addVote = zod(
       pollId: input.pollId,
       userId: input.userId,
       answer: input.answer,
-    }),
+    })
 )
 
 export const updateVote = zod(
@@ -86,5 +86,5 @@ export const updateVote = zod(
     void db
       .update(discordPollVotes)
       .set({ answer: input.answer })
-      .where(eq(discordPollVotes.id, input.id)),
+      .where(eq(discordPollVotes.id, input.id))
 )
