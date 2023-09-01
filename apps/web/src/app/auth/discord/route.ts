@@ -3,6 +3,7 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { OAuthRequestError } from "@lucia-auth/oauth"
 import { auth, discordAuth, decodeOAuthCookieState } from "~/services/auth"
+import { getThemeCookie } from "~/lib/themes"
 
 export const runtime = "edge"
 export const preferredRegion = "global" // TODO: replace with turso db region array, as it supports string[]
@@ -48,6 +49,7 @@ export const GET = async (request: NextRequest) => {
       attributes: {
         username: discordUser.username,
         email: discordUser.email!,
+        theme: getThemeCookie(cookieStore),
         avatar: avatar,
         discord_id: discordUser.id,
         discord_username: discordUser.username,

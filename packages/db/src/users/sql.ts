@@ -8,6 +8,7 @@ export const user = sqliteTable(
     id: text("id").primaryKey(),
     username: text("username").notNull().unique(),
     email: text("email").notNull().unique(),
+    theme: text("theme").notNull(),
     avatar: text("avatar"),
     discord_id: text("discord_id").unique(),
     discord_username: text("discord_username").unique(),
