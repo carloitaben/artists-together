@@ -52,6 +52,7 @@ export const GET = async (request: NextRequest) => {
         discord_id: discordUser.id,
         discord_username: discordUser.username,
         discord_metadata: JSON.stringify(discordUser),
+        timestamp: new Date(),
       },
     })
   }

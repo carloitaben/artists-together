@@ -1,11 +1,10 @@
 import type { DiscordUser, TwitchUser } from "@lucia-auth/oauth/providers"
 import { sqliteTable, text, blob, index } from "drizzle-orm/sqlite-core"
-import { timestamps } from "../sql"
+import { timestamp } from "../utils"
 
 export const user = sqliteTable(
   "user",
   {
-    ...timestamps,
     id: text("id").primaryKey(),
     username: text("username").notNull().unique(),
     email: text("email").notNull().unique(),
@@ -20,18 +19,19 @@ export const user = sqliteTable(
     twitch_metadata: blob("twitch_metadata", {
       mode: "json",
     }).$type<TwitchUser>(),
+    timestamp: timestamp("timestamp"),
   },
   (table) => ({
     usernameIdx: index("username_idx").on(table.username),
     emailIdx: index("email_idx").on(table.email),
-  }),
+  })
 )
 
 export const key = sqliteTable("auth_key", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id),
+    .references(() => user.id, { onDelete: "cascade" }),
   hashedPassword: text("hashed_password"),
 })
 
@@ -39,7 +39,7 @@ export const session = sqliteTable("auth_session", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id),
+    .references(() => user.id, { onDelete: "cascade" }),
   activeExpires: blob("active_expires", {
     mode: "bigint",
   }).notNull(),

@@ -41,10 +41,7 @@ export default function Cursor({ cursor, id }: Props) {
   const percentX = useMotionTemplate`${motionValueX}%`
   const percentY = useMotionTemplate`${motionValueY}%`
 
-  const [state, setState] = useState<CursorState>(() => {
-    if (!cursor) return "idle"
-    return cursor[2]
-  })
+  const [state, setState] = useState<CursorState>(cursor ? cursor[2] : "idle")
 
   useWebSocketEvent("cursor:update", ([_id, cursor]) => {
     if (_id !== id || !cursor) return

@@ -39,7 +39,7 @@ export default function Auth() {
               })
             }
           >
-            <Icon icon="discord" label="" className="w-6" />
+            <Icon icon="discord" label="" className="h-6 w-6" />
             Log-in with Discord
           </Button>
         </div>

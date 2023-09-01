@@ -1,7 +1,7 @@
 import { createSelectSchema } from "drizzle-zod"
 import { and, eq } from "drizzle-orm"
 import { z } from "zod"
-import { zod } from "../zod"
+import { zod } from "../utils"
 import { db } from "../db"
 import { discordPollVotes, discordPolls } from "./sql"
 

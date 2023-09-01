@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm"
 import { createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
-import { zod } from "../zod"
 import { db } from "../db"
+import { zod } from "../utils"
 import { discordLiveUsers } from "./sql"
 
 export const schema = createSelectSchema(discordLiveUsers, {

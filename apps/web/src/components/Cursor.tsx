@@ -1,22 +1,20 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import useResizeObserver from "@react-hook/resize-observer"
+import { useEffect, useRef, useState } from "react"
 import { CursorState } from "ws-types"
 import {
   AnimatePresence,
   Variants,
   motion,
   useMotionTemplate,
+  useMotionValueEvent,
   useSpring,
 } from "framer-motion"
 
+import { $cursor } from "~/stores/cursor"
 import { useHasCursor } from "~/hooks/media"
-
-function limit(number: number) {
-  if (number < 0) return 0
-  if (number > 100) return 100
-  return number
-}
+import { limit } from "~/lib/utils"
 
 const idle = (
   <svg
@@ -79,12 +77,33 @@ const variants: Variants = {
 export default function Cursor() {
   const [state, setState] = useState<keyof typeof cursorStateSvg>()
   const hasCursor = useHasCursor()
+  const windowRect = useRef<Pick<Window, "innerWidth" | "innerHeight">>()
 
   const motionValueScale = useSpring(1, { mass: 0.05, stiffness: 200 })
   const motionValueX = useSpring(0, { mass: 0.05, stiffness: 175 })
   const motionValueY = useSpring(0, { mass: 0.05, stiffness: 175 })
   const percentX = useMotionTemplate`${motionValueX}%`
   const percentY = useMotionTemplate`${motionValueY}%`
+
+  useResizeObserver(
+    typeof document === "undefined" ? null : document.body,
+    () => {
+      windowRect.current = {
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight,
+      }
+    },
+  )
+
+  useMotionValueEvent(motionValueX, "change", (value) => {
+    if (!windowRect.current) return
+    $cursor.setKey("x", (value * windowRect.current.innerWidth) / 100)
+  })
+
+  useMotionValueEvent(motionValueY, "change", (value) => {
+    if (!windowRect.current) return
+    $cursor.setKey("y", (value * windowRect.current.innerHeight) / 100)
+  })
 
   useEffect(() => {
     if (!hasCursor) {
@@ -94,8 +113,9 @@ export default function Cursor() {
     document.documentElement.classList.add("cursor")
 
     function onMouseEnter(event: MouseEvent) {
-      const x = limit((event.clientX * 100) / window.innerWidth)
-      const y = limit((event.clientY * 100) / window.innerHeight)
+      if (!windowRect.current) return
+      const x = limit((event.clientX * 100) / windowRect.current.innerWidth)
+      const y = limit((event.clientY * 100) / windowRect.current.innerHeight)
       motionValueX.jump(x)
       motionValueY.jump(y)
       setState("idle")
@@ -106,8 +126,9 @@ export default function Cursor() {
     }
 
     function onMouseMove(event: MouseEvent) {
-      const x = limit((event.clientX * 100) / window.innerWidth)
-      const y = limit((event.clientY * 100) / window.innerHeight)
+      if (!windowRect.current) return
+      const x = limit((event.clientX * 100) / windowRect.current.innerWidth)
+      const y = limit((event.clientY * 100) / windowRect.current.innerHeight)
 
       if (!state) {
         motionValueX.jump(x)

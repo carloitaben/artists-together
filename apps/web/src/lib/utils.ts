@@ -13,3 +13,9 @@ export function between(min: number, max: number) {
 export async function wait(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms))
 }
+
+export function limit(number: number) {
+  if (number < 0) return 0
+  if (number > 100) return 100
+  return number
+}

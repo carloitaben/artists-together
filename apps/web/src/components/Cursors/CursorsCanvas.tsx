@@ -1,13 +1,15 @@
 "use client"
 
 import throttle from "just-throttle"
+import useResizeObserver from "@react-hook/resize-observer"
 import { User } from "lucia"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState, useLayoutEffect } from "react"
 import { AnimatePresence } from "framer-motion"
 import { Cursor } from "ws-types"
 
 import { useHasCursor } from "~/hooks/media"
 import { useWebSocketEvent, useWebSocketEmitter } from "~/hooks/ws"
+import { $cursor } from "~/stores/cursor"
 
 import CursorComponent from "./Cursor"
 
@@ -24,6 +26,25 @@ type Props = {
 export default function CursorsCanvas({ user }: Props) {
   const [cursors, setCursors] = useState(new Map<string, Cursor | null>())
   const hasCursor = useHasCursor()
+  const documentRect =
+    useRef<Pick<HTMLElement, "scrollWidth" | "scrollHeight">>()
+
+  useResizeObserver(
+    typeof document === "undefined" ? null : document.body,
+    () => {
+      documentRect.current = {
+        scrollWidth: document.documentElement.scrollWidth,
+        scrollHeight: document.documentElement.scrollHeight,
+      }
+    },
+  )
+
+  useLayoutEffect(() => {
+    documentRect.current = {
+      scrollWidth: document.documentElement.scrollWidth,
+      scrollHeight: document.documentElement.scrollHeight,
+    }
+  }, [])
 
   useWebSocketEvent("room:join", (room) => {
     setCursors(new Map(room))
@@ -62,9 +83,10 @@ export default function CursorsCanvas({ user }: Props) {
 
     function update(x: number, y: number) {
       if (!user) return
+      if (!documentRect.current) return
 
-      const xPercent = limit((x * 100) / document.documentElement.scrollWidth)
-      const yPercent = limit((y * 100) / document.documentElement.scrollHeight)
+      const xPercent = limit((x * 100) / documentRect.current.scrollWidth)
+      const yPercent = limit((y * 100) / documentRect.current.scrollHeight)
 
       updateCursor([
         xPercent,

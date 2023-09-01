@@ -1,7 +1,7 @@
 import { createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
 import { db } from "../db"
-import { zod } from "../zod"
+import { zod } from "../utils"
 import { keepAliveDummies } from "./sql"
 
 export const schema = createSelectSchema(keepAliveDummies)

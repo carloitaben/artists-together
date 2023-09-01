@@ -18,19 +18,24 @@ import Toast from "~/components/Toast"
 import Cursors from "~/components/Cursors"
 import Cursor from "~/components/Cursor"
 
-type Props = {
-  children: ReactNode
-}
-
 export const runtime = "edge"
 
+const metadataBase = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : `http://localhost:${process.env.PORT || 3000}`
+
 export const metadata: Metadata = {
+  metadataBase: new URL(metadataBase),
   title: "Artists Together – Website soon!",
   description: "An inclusive community for all kinds of artists.",
   keywords: ["Art", "Artist Community"],
   twitter: {
     card: "summary_large_image",
   },
+}
+
+type Props = {
+  children: ReactNode
 }
 
 export default async function Layout({ children }: Props) {

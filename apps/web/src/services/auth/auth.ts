@@ -30,8 +30,7 @@ export const auth = lucia({
       twitch_id: data.twitch_id,
       twitch_username: data.twitch_username,
       twitch_metadata: data.twitch_metadata as TwitchUser,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
+      timestamp: data.timestamp,
     } satisfies Omit<Users.UserInsert, "id">
   },
 })
