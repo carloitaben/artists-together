@@ -8,6 +8,7 @@ The source code of the database for all Artist Together apps.
 - `drizzle-orm`
 - `drizzle-kit`
 - `drizzle-zod`
+- `zod`
 
 ## Development
 
