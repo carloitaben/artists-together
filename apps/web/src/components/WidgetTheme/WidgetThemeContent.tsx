@@ -4,7 +4,7 @@ import { useCallback, useState, useTransition } from "react"
 import { motion } from "framer-motion"
 
 import { theme, Theme } from "~/lib/themes"
-import { changeTheme } from "~/actions/public"
+import { changeTheme } from "~/actions/theme"
 
 function WidgetThemeButton({
   change,
