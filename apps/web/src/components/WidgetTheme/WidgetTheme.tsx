@@ -1,7 +1,6 @@
 import { Suspense } from "react"
-import { cookies } from "next/headers"
 
-import { getThemeCookie } from "~/lib/themes"
+import { getThemeFromCookie } from "~/services/theme"
 
 import WidgetThemeContent from "./WidgetThemeContent"
 
@@ -24,8 +23,8 @@ function Fallback() {
   return <div className="text-theme-700">{bg}</div>
 }
 
-export default function WidgetTheme() {
-  const theme = getThemeCookie(cookies())
+export default async function WidgetTheme() {
+  const theme = await getThemeFromCookie()
 
   return (
     <div className="col-span-2">

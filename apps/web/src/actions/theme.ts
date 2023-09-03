@@ -1,16 +1,14 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { z } from "zod"
-import { auth } from "~/services/auth"
-import { cookie, theme } from "~/lib/themes"
+import { auth, getSession } from "~/services/auth"
+import { cookieName, theme } from "~/services/theme"
 import { createAction } from "~/actions/zod"
 
-export const changeTheme = createAction(z.nativeEnum(theme), async (theme) => {
-  const request = auth.handleRequest({ request: null, cookies })
-  const session = await request.validate()
+export const changeTheme = createAction(theme, async (theme) => {
+  cookies().set(cookieName, theme)
 
-  cookies().set(cookie, theme)
+  const session = await getSession()
 
   if (session) {
     await auth.updateUserAttributes(session.user.userId, { theme })

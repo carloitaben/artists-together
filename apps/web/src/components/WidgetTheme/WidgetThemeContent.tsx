@@ -3,7 +3,7 @@
 import { useCallback, useState, useTransition } from "react"
 import { motion } from "framer-motion"
 
-import { theme, Theme } from "~/lib/themes"
+import { getThemeStyle, theme, Theme } from "~/services/theme/utils"
 import { changeTheme } from "~/actions/theme"
 
 function WidgetThemeButton({
@@ -29,10 +29,10 @@ function WidgetThemeButton({
 }
 
 const rotate = {
-  [theme["anamorphic-teal"]]: 0,
-  [theme["arpeggio-black"]]: 270,
-  [theme["tuxedo-crimson"]]: 180,
-  [theme["outsider-violet"]]: 90,
+  [theme.enum["anamorphic-teal"]]: 0,
+  [theme.enum["arpeggio-black"]]: 270,
+  [theme.enum["tuxedo-crimson"]]: 180,
+  [theme.enum["outsider-violet"]]: 90,
 }
 
 function Overlay() {
@@ -55,6 +55,12 @@ export default function WidgetThemeContent({
 
   const change = useCallback((theme: Theme) => {
     setSelected(theme)
+
+    const themeStyle = getThemeStyle(theme)
+    Object.entries(themeStyle).forEach(([k, v]) => {
+      document.documentElement.style.setProperty(k, v)
+    })
+
     startTransition(async () => void changeTheme(theme))
   }, [])
 
@@ -69,25 +75,25 @@ export default function WidgetThemeContent({
           className="bg-anamorphic-teal-100 aria-checked:bg-anamorphic-teal-300"
           selected={selected}
           change={change}
-          theme={theme["anamorphic-teal"]}
+          theme={theme.enum["anamorphic-teal"]}
         />
         <WidgetThemeButton
           className="bg-arpeggio-black-100 aria-checked:bg-arpeggio-black-300"
           selected={selected}
           change={change}
-          theme={theme["arpeggio-black"]}
+          theme={theme.enum["arpeggio-black"]}
         />
         <WidgetThemeButton
           className="bg-outsider-violet-100 aria-checked:bg-outsider-violet-300"
           selected={selected}
           change={change}
-          theme={theme["outsider-violet"]}
+          theme={theme.enum["outsider-violet"]}
         />
         <WidgetThemeButton
           className="bg-tuxedo-crimson-100 aria-checked:bg-tuxedo-crimson-300"
           selected={selected}
           change={change}
-          theme={theme["tuxedo-crimson"]}
+          theme={theme.enum["tuxedo-crimson"]}
         />
       </motion.div>
       <Overlay />

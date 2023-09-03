@@ -2,13 +2,13 @@
 
 import { ReactNode } from "react"
 import { Metadata } from "next"
-import { cookies } from "next/headers"
 import Script from "next/script"
 
 import "~/styles/index.css"
 
-import { getSession } from "~/services/auth/utils"
-import { getThemeCSS, getThemeCookie } from "~/lib/themes"
+import { getSession } from "~/services/auth"
+import { getThemeFromCookie, getThemeStyle } from "~/services/theme"
+
 import { WebSocketProvider } from "~/hooks/ws"
 
 import NavigationSideBar from "~/components/NavigationSideBar"
@@ -40,8 +40,8 @@ type Props = {
 
 export default async function Layout({ children }: Props) {
   const session = await getSession()
-  const theme = getThemeCookie(cookies())
-  const style = getThemeCSS(theme)
+  const theme = await getThemeFromCookie()
+  const style = getThemeStyle(theme)
 
   return (
     <html
