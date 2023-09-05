@@ -19,7 +19,7 @@ This repository uses `pnpm` workspaces, so you should **always run `pnpm install
 Clone the repository:
 
 ```shell
-git clone https://github.com/Carloitaben/artists-together.git
+git clone https://github.com/carloitaben/artists-together.git
 ```
 
 Install workspace dependencies in the root directory:
@@ -72,18 +72,12 @@ pnpm --filter db push
 
 Some packages or apps need specific configuration in order to be able to run locally. Refer to their respective `README.md` file to read more.
 
-### Running tests
-
-TODO
-
 ## Branches
-
-TODO improve this section
 
 ### `main`
 
-The **stable** release of `apps` and `packages` happens on this branch. Pull requests landed here will redeploy production environments.
+The **stable** release of `apps` and `packages` happens on this branch. Pull requests landed here will create new production deployments.
 
 ### Other branches
 
-Other branches are usually linked to a pull request.
+Other branches are usually linked to a pull request and create new preview deployments.

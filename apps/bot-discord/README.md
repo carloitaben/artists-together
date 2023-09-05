@@ -4,14 +4,13 @@ The source code of the Discord integration of Pal (Programmable Artistic Life-fo
 
 ## Stack
 
-- `node`
 - `discord.js`
-- `typescript`
+- `node`
 
 ## Development
 
-> **Note**
-> Before continuing, ensure you have set up the `db` package following the instructions in its [`README.md` file](../../packages/db/).
+> **Important**
+> Before proceeding, make sure to set up the `db` package following the instructions in its [`README.md` file](../../packages/db/).
 
 Install workspace dependencies in the root directory:
 
