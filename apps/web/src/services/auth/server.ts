@@ -24,6 +24,8 @@ export const auth = lucia({
       email: data.email,
       theme: data.theme,
       username: data.username,
+      bio: data.bio,
+      links: data.links,
       discord_id: data.discord_id,
       discord_username: data.discord_username,
       discord_metadata: data.discord_metadata as DiscordUser,
