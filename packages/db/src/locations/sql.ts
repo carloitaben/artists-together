@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer, blob } from "drizzle-orm/sqlite-core"
-import { user } from "src/users/sql"
+import { user } from "../users/sql"
 import { Geo } from "."
 
 export const locations = sqliteTable("locations", {
