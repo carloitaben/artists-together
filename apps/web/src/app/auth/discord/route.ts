@@ -5,6 +5,7 @@ import { OAuthRequestError } from "@lucia-auth/oauth"
 import { Locations } from "db"
 import { auth, discordAuth, decodeOAuthCookieState } from "~/services/auth"
 import { getThemeFromCookie } from "~/services/theme"
+import { getGeo } from "~/lib/geo"
 
 export const runtime = "edge"
 export const preferredRegion = "global" // TODO: replace with turso db region array, as it supports string[]
@@ -59,14 +60,13 @@ export const GET = async (request: NextRequest) => {
       },
     })
 
-    if (request.geo) {
-      const result = Locations.Geo.safeParse(request.geo)
-      if (result.success) {
-        await Locations.create({
-          userId: user.userId,
-          geo: result.data,
-        })
-      }
+    const geo = getGeo(request)
+
+    if (geo) {
+      await Locations.create({
+        userId: user.userId,
+        geo,
+      })
     }
 
     return user

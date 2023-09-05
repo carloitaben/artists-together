@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic"
 
 import { oneOf } from "~/lib/utils"
-import { locations } from "~/data/locations"
+import { getLocations } from "~/lib/geo"
 
 const WidgetClockContent = dynamic(() => import("./WidgetClockContent"), {
   loading: () => <Fallback />,
@@ -17,7 +17,8 @@ export type Timezone = {
   code: string
 }
 
-export default function WidgetClock() {
+export default async function WidgetClock() {
+  const locations = await getLocations()
   const location = oneOf(locations)
 
   return (

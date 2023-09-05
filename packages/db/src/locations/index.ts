@@ -10,7 +10,7 @@ export const Geo = z.object({
   longitude: z.string(),
   country: z.string(),
   city: z.string(),
-  region: z.string(),
+  timezone: z.string(),
 })
 
 export type Geo = z.infer<typeof Geo>

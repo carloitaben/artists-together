@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { z } from "zod"
-
-import { locations } from "~/data/locations"
+import { getLocations } from "~/lib/geo"
 import { oneOf } from "~/lib/utils"
 
 function handleWeatherCode(code: number): {
@@ -126,27 +125,28 @@ const weatherResponseSchema = z.object({
 })
 
 export default async function WidgetWeatherContent() {
+  const locations = await getLocations()
   const location = oneOf(locations)
   const url = new URL("https://api.open-meteo.com/v1/forecast")
 
-  url.searchParams.set("latitude", location.coordinates[0])
-  url.searchParams.set("longitude", location.coordinates[1])
+  url.searchParams.set("latitude", location.latitude)
+  url.searchParams.set("longitude", location.longitude)
   url.searchParams.set("current_weather", "true")
   url.searchParams.set("timezone", "auto")
   url.searchParams.set("forecast_days", "2")
   url.searchParams.append(
     "daily",
-    "weathercode,temperature_2m_max,temperature_2m_min"
+    "weathercode,temperature_2m_max,temperature_2m_min",
   )
 
   const weather = await fetch(url.toString()).then((response) =>
-    response.json().then((data) => weatherResponseSchema.parse(data))
+    response.json().then((data) => weatherResponseSchema.parse(data)),
   )
 
   return (
     <div className="flex h-full w-full items-stretch justify-between font-serif font-light text-anamorphic-teal-700 [background:radial-gradient(484.75%_388.20%_at_76.54%_43.27%,#F4F4F4_0%,#50D5FF_100%)] fluid:text-[2rem]/[2.375rem]">
       <div className="fluid:pb-[2.375rem] fluid:pl-12 fluid:pt-[2.625rem]">
-        <h6 className="fluid:mb-5">{location.name}</h6>
+        <h6 className="fluid:mb-5">{`${location.city}, ${location.country}`}</h6>
         <span>
           Today <span className="font-serif-ampersand">&</span> Tomorrow
         </span>
