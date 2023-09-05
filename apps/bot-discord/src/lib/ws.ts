@@ -1,11 +1,10 @@
 import type { ClientEvent, ClientEventDataMap, ServerEvent, ServerEventDataMap } from "ws-types"
-import { WebSocket } from "ws"
+import { WebSocket } from "partysocket"
 
-const WSS_URL = process.env.NEXT_PUBLIC_WSS_URL
-const url = WSS_URL || process.env.NODE_ENV === "production" ? WSS_URL : "ws://localhost:8080"
+export const url = process.env.NEXT_PUBLIC_WSS_URL || "ws://localhost:8080"
 
 const listeners = new Map<string, Set<Function>>()
-let ws: WebSocket | null = null
+let ws: InstanceType<typeof WebSocket> | null = null
 
 export function connect() {
   return new Promise((resolve) => {
@@ -13,14 +12,14 @@ export function connect() {
 
     ws = new WebSocket(String(url))
 
-    ws.on("message", (rawData) => {
+    ws.onmessage = (rawData) => {
       const [name, data] = JSON.parse(rawData.toString())
       listeners.get(name)?.forEach((callback) => callback(data))
-    })
+    }
 
-    ws.once("open", () => {
+    ws.onopen = () => {
       resolve(ws)
-    })
+    }
   })
 }
 
