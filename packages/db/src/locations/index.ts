@@ -15,29 +15,33 @@ export const Geo = z.object({
 
 export type Geo = z.infer<typeof Geo>
 
-export const LocationsSelectSchema = createSelectSchema(locations)
-export const LocationsInsertSchema = createInsertSchema(locations)
+export const SelectSchema = createSelectSchema(locations, {
+  geo: () => Geo,
+})
 
-export type LocationsSelectSchema = z.infer<typeof LocationsSelectSchema>
-export type LocationsInsertSchema = z.infer<typeof LocationsInsertSchema>
+export const InsertSchema = createInsertSchema(locations, {
+  geo: () => Geo,
+})
+
+export type SelectSchema = z.infer<typeof SelectSchema>
+export type InsertSchema = z.infer<typeof InsertSchema>
 
 export const list = zod(z.void(), async () => db.select().from(locations))
 
-export const create = zod(LocationsInsertSchema, async (location) => {
-  const geo = Geo.parse(location.geo)
-  await db.insert(locations).values({
-    userId: location.userId,
-    geo,
-  })
+export const create = zod(InsertSchema, async (location) => {
+  await db.insert(locations).values(location)
 })
 
-export const remove = zod(LocationsSelectSchema.shape.id, async (id) => {
-  await db.delete(locations).where(eq(locations.id, id))
-})
+export const remove = zod(SelectSchema.shape.id, async (id) =>
+  db
+    .delete(locations)
+    .where(eq(locations.id, id))
+    .then(() => id)
+)
 
-export const removeFromUserId = zod(
-  LocationsSelectSchema.shape.userId,
-  async (userId) => {
-    await db.delete(locations).where(eq(locations.userId, userId))
-  }
+export const removeFromUserId = zod(SelectSchema.shape.userId, async (userId) =>
+  db
+    .delete(locations)
+    .where(eq(locations.userId, userId))
+    .then(() => userId)
 )

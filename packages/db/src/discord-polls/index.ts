@@ -34,19 +34,11 @@ export const listFromChannel = zod(
 )
 
 export const fromId = zod(pollsSchema.shape.id, async (id) =>
-  db
-    .select()
-    .from(discordPolls)
-    .where(eq(discordPolls.id, id))
-    .then(([value]) => value)
+  db.select().from(discordPolls).where(eq(discordPolls.id, id)).get()
 )
 
 export const fromName = zod(pollsSchema.shape.name, async (name) =>
-  db
-    .select()
-    .from(discordPolls)
-    .where(eq(discordPolls.name, name))
-    .then(([value]) => value)
+  db.select().from(discordPolls).where(eq(discordPolls.name, name)).get()
 )
 
 export const votesFromId = zod(pollVotesSchema.shape.pollId, async (pollId) =>
