@@ -2,7 +2,7 @@
 
 # Artists Together
 
-Artists Together is an online, worldwide inclusive community for all kinds of artists and all skill levels.
+[Artists Together](https://artiststogether.online/) is an online, worldwide inclusive community for all kinds of artists and all skill levels.
 
 ## Directory
 
