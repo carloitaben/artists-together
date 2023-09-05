@@ -1,22 +1,25 @@
-export type IconName =
-  | "logo"
-  | "burger"
-  | "options"
-  | "close"
-  | "home"
-  | "profile"
-  | "register"
-  | "info"
-  | "help"
-  | "check"
-  | "artists"
-  | "train"
-  | "calendar"
-  | "twitch"
-  | "discord"
-  | "checkCircle"
-  | "cancelCircle"
-  | "caution"
+export const icons = {
+  logo: "0 0 424 203",
+  burger: "0 0 24 24",
+  options: "0 0 24 24",
+  close: "0 0 16 16",
+  home: "0 0 32 32",
+  profile: "0 0 32 32",
+  register: "0 0 32 32",
+  info: "0 0 24 24",
+  help: "0 0 32 32",
+  check: "0 0 24 24",
+  artists: "0 0 32 32",
+  train: "0 0 32 32",
+  calendar: "0 0 32 32",
+  twitch: "0 0 24 26",
+  discord: "0 0 24 18",
+  checkCircle: "0 0 14 14",
+  cancelCircle: "0 0 14 14",
+  caution: "0 0 19 16",
+}
+
+export type IconName = keyof typeof icons
 
 export default function Icons() {
   return (

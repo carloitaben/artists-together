@@ -1,10 +1,10 @@
 import type { ComponentProps, ForwardedRef } from "react"
 import { forwardRef } from "react"
-import type { IconName } from "~/components/Icons"
+import { icons, IconName } from "~/components/Icons"
 import * as AccesibleIcon from "~/components/AccesibleIcon"
 
 type Props = AccesibleIcon.AccessibleIconProps &
-  ComponentProps<"svg"> & {
+  Omit<ComponentProps<"svg">, "viewBox"> & {
     icon: IconName
   }
 
@@ -14,7 +14,7 @@ function Icon(
 ) {
   return (
     <AccesibleIcon.Root label={label}>
-      <svg {...props} ref={ref}>
+      <svg {...props} viewBox={icons[icon]} ref={ref}>
         <use href={`#${icon}`} />
       </svg>
     </AccesibleIcon.Root>
