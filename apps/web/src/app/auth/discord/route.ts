@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { OAuthRequestError } from "@lucia-auth/oauth"
+import { Locations } from "db"
 import { auth, discordAuth, decodeOAuthCookieState } from "~/services/auth"
 import { getThemeFromCookie } from "~/services/theme"
 
@@ -45,8 +46,7 @@ export const GET = async (request: NextRequest) => {
 
     const avatar = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
     const theme = await getThemeFromCookie()
-
-    return createUser({
+    const user = await createUser({
       attributes: {
         username: discordUser.username,
         email: discordUser.email!,
@@ -58,6 +58,18 @@ export const GET = async (request: NextRequest) => {
         theme,
       },
     })
+
+    if (request.geo) {
+      const result = Locations.Geo.safeParse(request.geo)
+      if (result.success) {
+        await Locations.create({
+          userId: user.userId,
+          geo: result.data,
+        })
+      }
+    }
+
+    return user
   }
 
   try {
