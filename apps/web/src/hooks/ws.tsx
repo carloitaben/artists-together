@@ -1,5 +1,6 @@
 "use client"
 
+import { WebSocket } from "partysocket"
 import {
   ReactNode,
   createContext,
@@ -20,7 +21,9 @@ import { usePathname } from "next/navigation"
 
 const eventBuffer = new Map<string, any>()
 const listeners = new Map<string, Set<Function>>()
-const context = createContext<WebSocket | undefined>(undefined)
+const context = createContext<InstanceType<typeof WebSocket> | undefined>(
+  undefined,
+)
 
 export const url = process.env.NEXT_PUBLIC_WSS_URL || "ws://localhost:8080"
 
@@ -72,7 +75,7 @@ export function WebSocketProvider({
   user: User | undefined
   children: ReactNode
 }) {
-  const [ws, setWs] = useState<WebSocket>()
+  const [ws, setWs] = useState<InstanceType<typeof WebSocket>>()
   const pathname = usePathname()
 
   useEffect(() => {

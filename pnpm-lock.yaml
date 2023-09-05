@@ -128,6 +128,9 @@ importers:
       next:
         specifier: 13.4.19
         version: 13.4.19(react-dom@18.2.0)(react@18.2.0)
+      partysocket:
+        specifier: ^0.0.3
+        version: 0.0.3
       perfect-freehand:
         specifier: ^1.2.0
         version: 1.2.0
@@ -4360,6 +4363,12 @@ packages:
   /parseurl@1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
+    dev: false
+
+  /partysocket@0.0.3:
+    resolution: {integrity: sha512-QeazsxuPHxTWqiKGSNxAB4PJLKdwgB+3rl+/kUVu/2Cc4N9e1CfrK8dmvuFYzr/iumesfd24h/AhCPO0kqLydA==}
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /path-exists@4.0.0:
