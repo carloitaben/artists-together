@@ -1,6 +1,6 @@
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
-import { createSelectSchema, createInsertSchema } from "drizzle-zod"
 import { zod } from "../utils"
 import { db } from "../db"
 import { locations } from "./sql"
@@ -15,16 +15,17 @@ export const Geo = z.object({
 
 export type Geo = z.infer<typeof Geo>
 
-export const SelectSchema = createSelectSchema(locations, {
-  geo: () => Geo,
-})
-
 export const InsertSchema = createInsertSchema(locations, {
   geo: () => Geo,
 })
 
-export type SelectSchema = z.infer<typeof SelectSchema>
+export const SelectSchema = createSelectSchema(locations, {
+  geo: () => Geo,
+})
+
 export type InsertSchema = z.infer<typeof InsertSchema>
+
+export type SelectSchema = z.infer<typeof SelectSchema>
 
 export const list = zod(z.void(), async () => db.select().from(locations))
 

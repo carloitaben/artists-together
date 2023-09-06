@@ -1,23 +1,33 @@
-import { createSelectSchema } from "drizzle-zod"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { and, eq } from "drizzle-orm"
 import { z } from "zod"
 import { zod } from "../utils"
 import { db } from "../db"
 import { discordPollVotes, discordPolls } from "./sql"
 
-export const pollsSchema = createSelectSchema(discordPolls)
-export const pollVotesSchema = createSelectSchema(discordPollVotes)
+export const PollsInsertSchema = createInsertSchema(discordPolls)
 
-export type PollsSchema = z.infer<typeof pollsSchema>
-export type PollVotesSchema = z.infer<typeof pollVotesSchema>
+export const PollsSelectSchema = createSelectSchema(discordPolls)
+
+export const PollVotesInsertSchema = createInsertSchema(discordPollVotes)
+
+export const PollVotesSelectSchema = createSelectSchema(discordPollVotes)
+
+export type PollsInsertSchema = z.infer<typeof PollsInsertSchema>
+
+export type PollsSelectSchema = z.infer<typeof PollsSelectSchema>
+
+export type PollVotesInsertSchema = z.infer<typeof PollVotesInsertSchema>
+
+export type PollVotesSelectSchema = z.infer<typeof PollVotesSelectSchema>
 
 export const create = zod(
-  pollsSchema,
+  PollsInsertSchema,
   async (poll) => void db.insert(discordPolls).values(poll)
 )
 
 export const remove = zod(
-  pollsSchema.shape.id,
+  PollsSelectSchema.shape.id,
   async (id) =>
     void Promise.all([
       db.delete(discordPolls).where(eq(discordPolls.id, id)),
@@ -28,25 +38,30 @@ export const remove = zod(
 export const list = zod(z.void(), async () => db.select().from(discordPolls))
 
 export const listFromChannel = zod(
-  pollsSchema.shape.channelId,
+  PollsSelectSchema.shape.channelId,
   async (channelId) =>
     db.select().from(discordPolls).where(eq(discordPolls.channelId, channelId))
 )
 
-export const fromId = zod(pollsSchema.shape.id, async (id) =>
+export const fromId = zod(PollsSelectSchema.shape.id, async (id) =>
   db.select().from(discordPolls).where(eq(discordPolls.id, id)).get()
 )
 
-export const fromName = zod(pollsSchema.shape.name, async (name) =>
+export const fromName = zod(PollsSelectSchema.shape.name, async (name) =>
   db.select().from(discordPolls).where(eq(discordPolls.name, name)).get()
 )
 
-export const votesFromId = zod(pollVotesSchema.shape.pollId, async (pollId) =>
-  db.select().from(discordPollVotes).where(eq(discordPollVotes.pollId, pollId))
+export const votesFromId = zod(
+  PollVotesSelectSchema.shape.pollId,
+  async (pollId) =>
+    db
+      .select()
+      .from(discordPollVotes)
+      .where(eq(discordPollVotes.pollId, pollId))
 )
 
 export const votesFromUser = zod(
-  pollVotesSchema.pick({
+  PollVotesSelectSchema.pick({
     pollId: true,
     userId: true,
   }),
@@ -63,7 +78,7 @@ export const votesFromUser = zod(
 )
 
 export const addVote = zod(
-  pollVotesSchema.pick({ pollId: true, userId: true, answer: true }),
+  PollVotesInsertSchema.pick({ pollId: true, userId: true, answer: true }),
   async (input) =>
     void db.insert(discordPollVotes).values({
       pollId: input.pollId,
@@ -73,7 +88,7 @@ export const addVote = zod(
 )
 
 export const updateVote = zod(
-  pollVotesSchema.pick({ id: true, answer: true }),
+  PollVotesSelectSchema.pick({ id: true, answer: true }),
   async (input) =>
     void db
       .update(discordPollVotes)

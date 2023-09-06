@@ -1,4 +1,4 @@
-import { createSelectSchema, createInsertSchema } from "drizzle-zod"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
 import { user } from "./sql"
 

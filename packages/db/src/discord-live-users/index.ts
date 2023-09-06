@@ -5,14 +5,15 @@ import { db } from "../db"
 import { zod } from "../utils"
 import { discordLiveUsers } from "./sql"
 
-export const SelectSchema = createSelectSchema(discordLiveUsers)
-
 export const InsertSchema = createInsertSchema(discordLiveUsers, {
   url: (schema) => schema.url.url(),
 })
 
-export type SelectSchema = z.infer<typeof SelectSchema>
+export const SelectSchema = createSelectSchema(discordLiveUsers)
+
 export type InsertSchema = z.infer<typeof InsertSchema>
+
+export type SelectSchema = z.infer<typeof SelectSchema>
 
 export const list = zod(z.void(), async () =>
   db.select().from(discordLiveUsers).all()
