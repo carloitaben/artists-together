@@ -49,7 +49,7 @@ const builder = new SlashCommandBuilder()
   )
   .addSubcommand((subcommand) =>
     subcommand.setName(SUBCOMMANDS.EXTINGUISH).setDescription("Removes all messages from ART emergencies")
-  )
+  ) 
   .addSubcommand((subcommand) =>
     subcommand
       .setName(SUBCOMMANDS.SAY)
