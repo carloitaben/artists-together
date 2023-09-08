@@ -33,10 +33,12 @@ export function registerSlashCommand<T extends CommandBuilderStub>(
 
   registerEventHandler("interactionCreate", (interaction) => {
     if (interaction.isAutocomplete()) {
+      console.log("[isAutocomplete event]", interaction.commandName)
       if (interaction.commandName === builder.name) return callback(interaction)
     }
 
     if (interaction.isChatInputCommand()) {
+      console.log("[interactionCreate event]", interaction.commandName)
       if (interaction.commandName === builder.name) return callback(interaction)
     }
   })

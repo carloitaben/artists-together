@@ -25,6 +25,7 @@ export default async function handleClosePollSubcommand(interaction: ChatInputCo
     throw Error(`Could not find cached poll with id ${id}`)
   }
 
+  console.log("[admin-poll-close-command] are you sure you want to close")
   const response = await interaction.reply({
     content: `Are you sure you want to close the poll "${poll.name}"? This cannot be undone!`,
     ephemeral: true,

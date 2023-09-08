@@ -24,6 +24,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
 
   if (existingUserVote) {
     if (existingUserVote.answer === optionIndex) {
+      console.log("[poll-vote] same as previous")
       return interaction.reply({
         content: "Your vote has been casted! 🎉\nThank you for participating.",
         ephemeral: true,
@@ -35,6 +36,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
       answer: optionIndex,
     })
 
+    console.log("[poll-vote] updated vote")
     return interaction.reply({
       content: "Your vote has been casted! 🎉\nThank you for participating.",
       ephemeral: true,
@@ -66,6 +68,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
     embeds: [new EmbedBuilder(embed.data).setFooter({ text: newFooter })],
   })
 
+  console.log("[poll-vote] created boted")
   return interaction.reply({
     content: "Your vote has been casted! 🎉\nThank you for participating.",
     ephemeral: true,

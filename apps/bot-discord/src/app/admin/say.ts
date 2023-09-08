@@ -14,6 +14,8 @@ export default async function handleSaySubcommand(interaction: ChatInputCommandI
   }
 
   if (!message && !attachment) {
+    console.log("[admin-say-command] cannot send empty message")
+
     return interaction.reply({
       ephemeral: true,
       content: "I cannot send an empty message!",
@@ -27,6 +29,7 @@ export default async function handleSaySubcommand(interaction: ChatInputCommandI
     files: attachment ? [attachment.url] : undefined,
   })
 
+  console.log("[admin-say-command] done")
   return interaction.reply({
     content: "Done!",
     ephemeral: true,

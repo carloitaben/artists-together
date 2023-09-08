@@ -82,6 +82,7 @@ registerSlashCommand(builder, async (interaction) => {
       case SUBCOMMANDS.SAY:
         return handleSaySubcommand(interaction)
       default:
+        console.log("[admin-slash-command] unknown interaction")
         return interaction.reply({
           content: "Unknown subcommand",
           ephemeral: true,

@@ -42,6 +42,8 @@ export default async function handleExtinguishSubcommand(interaction: ChatInputC
     throw Error("Expected ART_EMERGENCIES channel type to be GuildText")
   }
 
+  console.log("[admin-extinguish-command] replying witht confirmation")
+
   const response = await interaction.reply({
     content: `This will delete all messages from the ${channel} channel. Are you sure?`,
     ephemeral: true,
