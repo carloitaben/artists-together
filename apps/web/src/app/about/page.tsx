@@ -48,7 +48,7 @@ export default function Page() {
           <Container
             aria-hidden
             grid
-            padding="none"
+            padding={false}
             className="pointer-events-none absolute inset-0"
           >
             <div className="col-span-1 h-full bg-gradient-to-r from-theme-900 to-transparent" />

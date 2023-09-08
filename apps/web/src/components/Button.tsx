@@ -1,6 +1,6 @@
 import { Slot } from "@radix-ui/react-slot"
 import { cva, VariantProps } from "class-variance-authority"
-import { Children, ComponentProps } from "react"
+import { Children, ComponentProps, ForwardedRef, forwardRef } from "react"
 import Shiny from "./Shiny"
 
 export const styles = cva(
@@ -8,8 +8,8 @@ export const styles = cva(
   {
     variants: {
       color: {
-        true: "bg-gunpla-white-50 text-gunpla-white-500 disabled:bg-gunpla-white-100 disabled:text-gunpla-white-400",
-        disabled: "disabled:bg-gunpla-white-100 disabled:text-gunpla-white-400",
+        white:
+          "bg-gunpla-white-50 text-gunpla-white-500 disabled:bg-gunpla-white-100 disabled:text-gunpla-white-400",
         false: "",
       },
       flex: {
@@ -18,32 +18,31 @@ export const styles = cva(
       },
     },
     defaultVariants: {
-      color: true,
+      color: "white",
       flex: false,
     },
   },
 )
 
-type Props = Omit<ComponentProps<"button">, "ref"> &
+type Props = Omit<ComponentProps<"button">, "ref" | "color"> &
   Omit<VariantProps<typeof styles>, "flex"> & {
     asChild?: boolean
   }
 
-export default function Button({
-  asChild,
-  className,
-  children,
-  color,
-  ...props
-}: Props) {
+function Button(
+  { asChild, className, children, color, ...props }: Props,
+  ref: ForwardedRef<HTMLButtonElement>,
+) {
   const Comp = asChild ? Slot : "button"
   const flex = Children.count(children) > 1
 
   return (
     <Shiny>
-      <Comp {...props} className={styles({ className, color, flex })}>
+      <Comp {...props} ref={ref} className={styles({ className, color, flex })}>
         {children}
       </Comp>
     </Shiny>
   )
 }
+
+export default forwardRef(Button)

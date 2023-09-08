@@ -7,10 +7,10 @@ export const gap = "fluid:gap-4"
 const container = cva("w-full", {
   variants: {
     padding: {
-      left: "pl-4 sm:pl-0",
-      right: "pr-4",
-      both: "px-4 sm:pl-0",
-      none: "",
+      l: "pl-4 sm:pl-0",
+      r: "pr-4",
+      x: "px-4 sm:pl-0",
+      false: "",
     },
     grid: {
       true: ["grid", cols, gap],
@@ -19,7 +19,7 @@ const container = cva("w-full", {
   },
   defaultVariants: {
     grid: false,
-    padding: "both",
+    padding: "x",
   },
 })
 

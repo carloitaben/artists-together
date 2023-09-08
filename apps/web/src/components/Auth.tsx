@@ -26,8 +26,8 @@ export default function Auth() {
         </Modal.Container>
         <div className="mt-2 flex justify-end">
           <Button
-            color="disabled"
-            className="bg-[#5865F2] text-gunpla-white-50"
+            color={false}
+            className="bg-[#5865F2] text-gunpla-white-50 disabled:bg-gunpla-white-100 disabled:text-gunpla-white-400"
             disabled={isPending}
             onClick={() =>
               startTransition(async () => {

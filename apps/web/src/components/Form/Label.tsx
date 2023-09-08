@@ -19,18 +19,18 @@ const label = cva("font-sans text-sm text-gunpla-white-500", {
       false: "",
     },
     padding: {
-      true: "px-3.5",
+      x: "px-3.5",
       false: "",
     },
     margin: {
-      true: "mb-1",
+      b: "mb-1",
       false: "",
     },
   },
   defaultVariants: {
     flex: true,
-    margin: true,
-    padding: true,
+    margin: "b",
+    padding: "x",
   },
 })
 

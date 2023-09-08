@@ -33,7 +33,7 @@
 
 //   return (
 //     <Modal.Container>
-//       <Modal.Title inset>Advanced settings</Modal.Title>
+//       <Modal.Title>Advanced settings</Modal.Title>
 //       <Form.Root {...root()}>
 //         <Form.Field
 //           {...field("settingShareLocation")}

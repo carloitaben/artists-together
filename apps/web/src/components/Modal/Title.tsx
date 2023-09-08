@@ -4,20 +4,26 @@ import * as DialogPrimitive from "~/components/Dialog"
 
 const title = cva("", {
   variants: {
-    inset: {
-      true: "px-3.5",
+    padding: {
+      x: "px-3.5",
+      false: "",
+    },
+    margin: {
+      b: "mb-5",
       false: "",
     },
   },
   defaultVariants: {
-    inset: false,
+    padding: false,
+    margin: "b",
   },
 })
 
 function Title(
   {
-    className = "font-serif text-[2rem] font-light text-gunpla-white-500 mb-5",
-    inset,
+    className = "font-serif text-[2rem] font-light text-gunpla-white-500",
+    padding,
+    margin,
     ...props
   }: DialogPrimitive.DialogTitleProps & VariantProps<typeof title>,
   ref: ForwardedRef<HTMLHeadingElement>,
@@ -26,7 +32,7 @@ function Title(
     <DialogPrimitive.Title
       {...props}
       ref={ref}
-      className={title({ inset, className })}
+      className={title({ padding, margin, className })}
     />
   )
 }
