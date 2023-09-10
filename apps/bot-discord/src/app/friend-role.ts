@@ -16,7 +16,9 @@ registerEventHandler("messageReactionAdd", async (partialReaction, partialUser) 
     return partialReaction.remove()
   }
 
-  // Fetch member and assign role
   const member = await getMember(partialReaction.message.guild.members, partialUser.id)
+
+  if (member.roles.cache.has(ROLES.ARTIST)) return
+
   return member.roles.add(ROLES.FRIEND)
 })
