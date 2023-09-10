@@ -45,6 +45,17 @@ export async function getTextBasedChannel(client: Client, id: string) {
   return channel
 }
 
+export async function getChannel(client: Client, id: string) {
+  const channel =
+    client.channels.cache.get(id) ?? (await client.channels.fetch(id))
+
+  if (!channel) {
+    throw Error(`Channel with id ${id} not found`)
+  }
+
+  return channel
+}
+
 export async function getMember<T extends GuildMemberManager>(manager: T, id: string) {
   const member = manager.cache.get(id) ?? (await manager.fetch(id))
 

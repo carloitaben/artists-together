@@ -1,18 +1,28 @@
 import { Client, Partials, GatewayIntentBits, EmbedBuilder, AttachmentBuilder } from "discord.js"
 
 import { env } from "~/lib/env"
-import { getTextBasedChannel, getRole, getGuild, getPublicFile } from "~/lib/helpers"
+import {
+  getChannel,
+  getTextBasedChannel,
+  getRole,
+  getGuild,
+  getPublicFile,
+} from "~/lib/helpers"
 import { CHANNELS, ROLES } from "~/lib/constants"
 
 const bot = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+  ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 })
 
 async function bootstrapRulesChannel(client: Client) {
   const [rulesChannel, introductionsChannel] = await Promise.all([
     getTextBasedChannel(client, CHANNELS.RULES_N_FAQ),
-    getTextBasedChannel(client, CHANNELS.INTRODUCTIONS),
+    getChannel(client, CHANNELS.INTRODUCTIONS),
   ])
 
   await rulesChannel.send({
