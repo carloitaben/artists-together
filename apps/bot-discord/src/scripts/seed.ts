@@ -9,107 +9,107 @@ const bot = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 })
 
-// async function bootstrapRulesChannel(client: Client) {
-//   const [rulesChannel, introductionsChannel] = await Promise.all([
-//     getTextBasedChannel(client, CHANNELS.RULES_N_FAQ),
-//     getTextBasedChannel(client, CHANNELS.INTRODUCTIONS),
-//   ])
+async function bootstrapRulesChannel(client: Client) {
+  const [rulesChannel, introductionsChannel] = await Promise.all([
+    getTextBasedChannel(client, CHANNELS.RULES_N_FAQ),
+    getTextBasedChannel(client, CHANNELS.INTRODUCTIONS),
+  ])
 
-//   await rulesChannel.send({
-//     files: [
-//       new AttachmentBuilder(getPublicFile("/images/banners/banner-rules.png")),
-//     ],
-//   })
+  await rulesChannel.send({
+    files: [
+      new AttachmentBuilder(getPublicFile("/images/banners/banner-rules.png")),
+    ],
+  })
 
-//   await rulesChannel.send({
-//     embeds: [
-//       new EmbedBuilder({
-//         color: 0x024456,
-//         description:
-//           "# RULES" +
-//           "\n" +
-//           "————————————————————" +
-//           "\n" +
-//           "\n" +
-//           "## :one:  Follow Discord's ToS and Community Guidelines." +
-//           "\n" +
-//           "- [*Terms of Service*](https://discord.com/terms)" +
-//           "\n" +
-//           "- [*Community Guidelines*](https://discord.com/guidelines)" +
-//           "\n" +
-//           "\n" +
-//           "## :two:  Be respectful." +
-//           "\n" +
-//           "- Any form of harassment, hate speech or bullying will not be tolerated." +
-//           "\n" +
-//           "\n" +
-//           "## :three:  Keep topics relevant to the appropriate channels." +
-//           "\n" +
-//           `- Refrain from critiquing others' work unless it is asked for.` +
-//           "\n" +
-//           "- Use the off-topic category accordingly." +
-//           "\n" +
-//           "\n" +
-//           "## :four:  No spam." +
-//           "\n" +
-//           "- Avoid repetitive and excessive messages, pings or embeds." +
-//           "\n" +
-//           "\n" +
-//           "————————————————————" +
-//           "\n" +
-//           "\n" +
-//           "*✱ If you experience a rule break, please contact a moderator.*" +
-//           "\n" +
-//           "\n" +
-//           "*✱ These rules are non-exhaustive, human beings will use their judgement when dealing with disruptive behaviour!*" +
-//           "\n" +
-//           "\n" +
-//           "*✱ Please keep in mind that these rules extend to behaviour in the Voice channels, DMs and all content linked in the channels, as well.*",
-//       }),
-//     ],
-//   })
+  await rulesChannel.send({
+    embeds: [
+      new EmbedBuilder({
+        color: 0x024456,
+        description:
+          "# RULES" +
+          "\n" +
+          "————————————————————" +
+          "\n" +
+          "\n" +
+          "## :one:  Follow Discord's ToS and Community Guidelines." +
+          "\n" +
+          "- [*Terms of Service*](https://discord.com/terms)" +
+          "\n" +
+          "- [*Community Guidelines*](https://discord.com/guidelines)" +
+          "\n" +
+          "\n" +
+          "## :two:  Be respectful." +
+          "\n" +
+          "- Any form of harassment, hate speech or bullying will not be tolerated." +
+          "\n" +
+          "\n" +
+          "## :three:  Keep topics relevant to the appropriate channels." +
+          "\n" +
+          `- Refrain from critiquing others' work unless it is asked for.` +
+          "\n" +
+          "- Use the off-topic category accordingly." +
+          "\n" +
+          "\n" +
+          "## :four:  No spam." +
+          "\n" +
+          "- Avoid repetitive and excessive messages, pings or embeds." +
+          "\n" +
+          "\n" +
+          "————————————————————" +
+          "\n" +
+          "\n" +
+          "*✱ If you experience a rule break, please contact a moderator.*" +
+          "\n" +
+          "\n" +
+          "*✱ These rules are non-exhaustive, human beings will use their judgement when dealing with disruptive behaviour!*" +
+          "\n" +
+          "\n" +
+          "*✱ Please keep in mind that these rules extend to behaviour in the Voice channels, DMs and all content linked in the channels, as well.*",
+      }),
+    ],
+  })
 
-//   await rulesChannel.send({
-//     embeds: [
-//       new EmbedBuilder({
-//         color: 0x024456,
-//         description:
-//           "# FAQ" +
-//           "\n" +
-//           "————————————————————" +
-//           "\n" +
-//           "\n" +
-//           "## :question:  How can I be part of this community?" +
-//           "\n" +
-//           "By being here you already are! Everyone is free to join or leave whenever they want." +
-//           "\n" +
-//           "\n" +
-//           "## :question:  Do I need to be an artist/creative to join this community?" +
-//           "\n" +
-//           "If you do not practise any art medium and you just want to see others' creations, you're more than welcome too." +
-//           "\n" +
-//           "\n" +
-//           "## :question:  Is there any kind of subscription fee?" +
-//           "\n" +
-//           "No, it is and it will keep being totally free! You can of course donate to help us cover the expenses.",
-//       }),
-//     ],
-//   })
+  await rulesChannel.send({
+    embeds: [
+      new EmbedBuilder({
+        color: 0x024456,
+        description:
+          "# FAQ" +
+          "\n" +
+          "————————————————————" +
+          "\n" +
+          "\n" +
+          "## :question:  How can I be part of this community?" +
+          "\n" +
+          "By being here you already are! Everyone is free to join or leave whenever they want." +
+          "\n" +
+          "\n" +
+          "## :question:  Do I need to be an artist/creative to join this community?" +
+          "\n" +
+          "If you do not practise any art medium and you just want to see others' creations, you're more than welcome too." +
+          "\n" +
+          "\n" +
+          "## :question:  Is there any kind of subscription fee?" +
+          "\n" +
+          "No, it is and it will keep being totally free! You can of course donate to help us cover the expenses.",
+      }),
+    ],
+  })
 
-//   const unlockServerMessage = await rulesChannel.send({
-//     embeds: [
-//       new EmbedBuilder({
-//         color: 0x024456,
-//         description:
-//           `**If you're an artist, introduce yourself in ${introductionsChannel} to get the role!**` +
-//           "\n" +
-//           "Reacting with 🔓 you agree you've read the rules.",
-//       }),
-//     ],
-//   })
+  const unlockServerMessage = await rulesChannel.send({
+    embeds: [
+      new EmbedBuilder({
+        color: 0x024456,
+        description:
+          `**If you're an artist, introduce yourself in ${introductionsChannel} to get the role!**` +
+          "\n" +
+          "Reacting with 🔓 you agree you've read the rules.",
+      }),
+    ],
+  })
 
-//   await unlockServerMessage.react("🔓")
-// }
+  await unlockServerMessage.react("🔓")
+}
 
 async function bootstrapAboutChannel(client: Client) {
   const guild = await getGuild(client)
