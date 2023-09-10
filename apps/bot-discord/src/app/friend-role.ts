@@ -3,7 +3,7 @@ import { registerEventHandler } from "~/lib/core"
 import { getMember } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
-const MESSAGE_ID = env.NODE_ENV === "development" ? "" : "1117484625443426304"
+const MESSAGE_ID = env.NODE_ENV === "development" ? "" : "1150447914641010729"
 
 const REACTION = "🔓"
 
