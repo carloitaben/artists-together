@@ -10,7 +10,7 @@
     "start": "tsx ./src/index.ts"
   },
   "dependencies": {
-    "chrono-node": "^2.6.5",
+    "chrono-node": "^2.7.0",
     "dayjs": "^1.11.9",
     "db": "workspace:*",
     "discord.js": "^14.13.0",
@@ -18,13 +18,13 @@
     "fast-glob": "^3.3.1",
     "nanoid": "^4.0.2",
     "node-cron": "^3.0.2",
-    "ws": "^8.13.0",
+    "ws": "^8.14.1",
     "zod": "^3.22.2"
   },
   "devDependencies": {
     "@types/node-cron": "^3.0.8",
     "@types/ws": "^8.5.5",
-    "tsx": "^3.12.7",
+    "tsx": "^3.12.8",
     "typescript": "^5.2.2",
     "ws-types": "workspace:*"
   },
