@@ -18,7 +18,11 @@ registerEventHandler("messageReactionAdd", async (partialReaction, partialUser) 
 
   const member = await getMember(partialReaction.message.guild.members, partialUser.id)
 
+  if (member.roles.cache.has(ROLES.FRIEND)) return
   if (member.roles.cache.has(ROLES.ARTIST)) return
 
-  return member.roles.add(ROLES.FRIEND)
+  await Promise.all([
+    member.roles.remove(ROLES.GUEST),
+    member.roles.add(ROLES.FRIEND),
+  ])
 })
