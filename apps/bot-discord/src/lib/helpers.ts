@@ -9,7 +9,7 @@ export function cron(...args: Parameters<typeof schedule>) {
   return schedule(...args)
 }
 
-export function getRandomArrayItem<T>(arr: T[]) {
+export function oneOf<T>(arr: T[]) {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
