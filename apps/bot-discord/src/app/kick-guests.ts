@@ -9,7 +9,7 @@ dayjs.extend(isSameOrAfter)
 registerEventHandler("ready", (client) => {
   cron("0 0 * * *", async () => {
     const guild = await getGuild(client)
-    const members = await guild.members.list()
+    const members = await guild.members.fetch()
 
     console.log("[kick-guests] members size", members.size)
     members.forEach(async (member) => {
