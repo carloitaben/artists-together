@@ -15,10 +15,9 @@ import { template } from "~/lib/messages"
 const MODAL_ID = "admin-send-embed"
 
 const INPUT_ID = {
-  TITLE: `${MODAL_ID}-title`,
-  COLOR: `${MODAL_ID}-color`,
-  CONTENT: `${MODAL_ID}-content`,
-  FOOTER: `${MODAL_ID}-footer`,
+  EMBED_TITLE: `${MODAL_ID}-title`,
+  EMBED_COLOR: `${MODAL_ID}-color`,
+  EMBED_CONTENT: `${MODAL_ID}-content`,
 }
 
 const BUTTON_ID = {
@@ -60,24 +59,24 @@ export default async function handleSendEmbedSubcommand(
     .setTitle(`New embed in #${interaction.channel.name}`)
 
   const titleInput = new TextInputBuilder()
-    .setCustomId(INPUT_ID.TITLE)
+    .setCustomId(INPUT_ID.EMBED_TITLE)
     .setStyle(TextInputStyle.Short)
     .setRequired(false)
-    .setLabel("Title")
-    .setPlaceholder("Embed title")
+    .setLabel("Embed title")
+    .setPlaceholder("Seriously cool embed")
 
   const colorInput = new TextInputBuilder()
-    .setCustomId(INPUT_ID.COLOR)
+    .setCustomId(INPUT_ID.EMBED_COLOR)
     .setStyle(TextInputStyle.Short)
     .setRequired(false)
-    .setLabel("Color (in hexadecimal)")
+    .setLabel("Embed color (in hexadecimal)")
     .setPlaceholder("#3924ff")
 
   const contentInput = new TextInputBuilder()
-    .setCustomId(INPUT_ID.CONTENT)
+    .setCustomId(INPUT_ID.EMBED_CONTENT)
     .setStyle(TextInputStyle.Paragraph)
     .setRequired(true)
-    .setLabel("Content (supports Markdown)")
+    .setLabel("Embed content (supports Markdown)")
     .setPlaceholder("This is an **awesome** embed!")
 
   modal.addComponents(
@@ -101,10 +100,12 @@ registerEventHandler("interactionCreate", async (interaction) => {
     throw Error("Missing channel property in modal interaction")
   }
 
-  const contentInput = interaction.fields.getTextInputValue(INPUT_ID.CONTENT)
-  const titleInput = interaction.fields.getTextInputValue(INPUT_ID.TITLE)
+  const contentInput = interaction.fields.getTextInputValue(
+    INPUT_ID.EMBED_CONTENT,
+  )
+  const titleInput = interaction.fields.getTextInputValue(INPUT_ID.EMBED_TITLE)
   const colorInput =
-    interaction.fields.getTextInputValue(INPUT_ID.COLOR) || "#f4f4f4"
+    interaction.fields.getTextInputValue(INPUT_ID.EMBED_COLOR) || "#f4f4f4"
 
   if (!isValidColor(colorInput)) {
     return interaction.reply({
