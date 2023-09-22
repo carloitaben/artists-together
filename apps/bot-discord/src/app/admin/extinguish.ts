@@ -10,6 +10,7 @@ import {
 
 import { getTextBasedChannel } from "~/lib/helpers"
 import { CHANNELS } from "~/lib/constants"
+import { template } from "~/lib/messages"
 
 const BUTTON_IDS = {
   DELETE: "confirm",
@@ -35,19 +36,29 @@ async function deleteAllMessages(channel: TextChannel) {
   }
 }
 
-export default async function handleExtinguishSubcommand(interaction: ChatInputCommandInteraction) {
-  const channel = await getTextBasedChannel(interaction.client, CHANNELS.ART_EMERGENCIES)
+export default async function handleExtinguishSubcommand(
+  interaction: ChatInputCommandInteraction,
+) {
+  const channel = await getTextBasedChannel(
+    interaction.client,
+    CHANNELS.ART_EMERGENCIES,
+  )
 
   if (channel.type !== ChannelType.GuildText) {
     throw Error("Expected ART_EMERGENCIES channel type to be GuildText")
   }
 
-  console.log("[admin-extinguish-command] replying witht confirmation")
+  console.log("[admin-extinguish-command] replying with confirmation")
 
   const response = await interaction.reply({
     content: `This will delete all messages from the ${channel} channel. Are you sure?`,
     ephemeral: true,
-    components: [new ActionRowBuilder<ButtonBuilder>().addComponents(deleteButton, cancelButton)],
+    components: [
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
+        deleteButton,
+        cancelButton,
+      ),
+    ],
   })
 
   try {
@@ -67,25 +78,27 @@ export default async function handleExtinguishSubcommand(interaction: ChatInputC
         try {
           await deleteAllMessages(channel)
           return confirmation.editReply({
-            content: "Done!",
+            content: template.done(),
             components: [],
           })
         } catch (error) {
           console.error(error)
           return confirmation.editReply({
-            content: "Oops! There was an error while deleting messages.",
+            content: template.oops(
+              "There was an error while deleting messages.",
+            ),
             components: [],
           })
         }
       case BUTTON_IDS.CANCEL:
         return confirmation.update({
-          content: "Cancelled",
+          content: template.cancel(),
           components: [],
         })
     }
   } catch (error) {
     return response.edit({
-      content: "Confirmation not received within 1 minute, cancelling…",
+      content: template.timeout(),
       components: [],
     })
   }
