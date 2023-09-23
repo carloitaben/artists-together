@@ -56,6 +56,15 @@ registerEventHandler("presenceUpdate", async (_, presence) => {
     (activity) => activity.type === ActivityType.Streaming,
   )
 
+  console.log(
+    "[live-users] presenceUpdate for user",
+    presence.member.user.username,
+    {
+      oldPresence: _,
+      newPresence: presence,
+    },
+  )
+
   if (!streamingActivity || !hasArtistRole) {
     return Promise.all([
       presence.member.roles.remove(ROLES.LIVE_NOW),
