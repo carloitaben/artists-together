@@ -7,7 +7,7 @@
     "dev": "tsx watch ./src/index.ts",
     "sync": "tsx ./src/scripts/sync.ts",
     "seed": "tsx ./src/scripts/seed.ts",
-    "start": "tsx ./src/index.ts"
+    "start": "tsx ./src/scripts/sync.ts && tsx ./src/index.ts"
   },
   "dependencies": {
     "chrono-node": "^2.7.0",
