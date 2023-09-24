@@ -10,6 +10,7 @@ const bot = new Client({
     GatewayIntentBits.GuildPresences,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMembers,
   ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 })
