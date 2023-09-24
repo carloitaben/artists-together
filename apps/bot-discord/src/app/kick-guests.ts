@@ -12,6 +12,7 @@ registerEventHandler("ready", (client) => {
     const members = await guild.members.fetch()
 
     console.log("[kick-guests] members size", members.size)
+
     members.forEach(async (member) => {
       if (!member.roles.cache.has(ROLES.GUEST)) return
       if (member.roles.cache.has(ROLES.FRIEND)) return
@@ -20,9 +21,13 @@ registerEventHandler("ready", (client) => {
       const joinedAt = dayjs(member.joinedAt)
       const aMonthAgo = dayjs().add(-1, "month")
 
+      console.log(`[kick-guests] checking guest: ${member.user.username}`, {
+        shouldBeKicked: !joinedAt.isBefore(aMonthAgo),
+      })
+
       if (!joinedAt.isBefore(aMonthAgo)) return
 
-      console.log(`[kick-guests] sending dm to ${member.user.username}`)
+      console.log(`[kick-guests] sending dm to guest: ${member.user.username}`)
 
       await member.user
         .send(
@@ -37,12 +42,12 @@ registerEventHandler("ready", (client) => {
         )
         .catch((error) => {
           console.log(
-            `[kick-guests] error sending dm to ${member.user.username}`,
+            `[kick-guests] error sending dm to guest: ${member.user.username}`,
           )
           console.error(error)
         })
 
-      console.log(`[kick-guests] kicking guest ${member.user.username}`)
+      console.log(`[kick-guests] kicking guest: ${member.user.username}`)
       await member.kick("Inactivity")
     })
   })
