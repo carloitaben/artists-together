@@ -8,10 +8,11 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js"
-import { APPLICATION_ID } from "~/lib/constants"
+import { APPLICATION_ID, CHANNELS } from "~/lib/constants"
 import { registerContextMenuCommand, registerEventHandler } from "~/lib/core"
 import { getTextBasedChannel, parseMentions } from "~/lib/helpers"
 import { template } from "~/lib/messages"
+import { polls } from "./poll/lib/polls"
 
 const MODAL_ID = "admin-edit-message"
 
@@ -80,9 +81,19 @@ registerContextMenuCommand(builder, async (interaction) => {
   }
 
   const hasEmbed = interaction.targetMessage.embeds.length === 1
+
   const hasMessage = !!interaction.targetMessage.content
 
-  if (!hasEmbed && !hasMessage) {
+  const isErrorMessage =
+    interaction.targetMessage.channelId === CHANNELS.BOT_SHENANIGANS
+
+  const isPollMessage = Array.from(polls).some(
+    ([_, poll]) =>
+      poll.channelId === interaction.targetMessage.channelId &&
+      poll.messageId === interaction.targetMessage.id,
+  )
+
+  if ((!hasEmbed && !hasMessage) || isPollMessage || isErrorMessage) {
     return interaction.reply({
       content: template.oops("Can't make changes to that kind of message"),
       ephemeral: true,
