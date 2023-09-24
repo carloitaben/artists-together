@@ -29,6 +29,22 @@ export const create = zod(schema.pick({ userId: true, url: true }), async (input
   console.log("[discord-live-users] added", input)
 })
 
+export const update = zod(
+  schema.pick({ userId: true, url: true }),
+  async (input) => {
+    console.log("[discord-live-users] updating", input)
+
+    await db
+      .update(discordLiveUsers)
+      .set({
+        userId: input.userId,
+        url: input.url,
+      })
+      .where(eq(discordLiveUsers.userId, input.userId))
+
+    console.log("[discord-live-users] updated", input)
+  }
+)
 export const remove = zod(schema.shape.userId, async (userId) =>
   db
     .delete(discordLiveUsers)
