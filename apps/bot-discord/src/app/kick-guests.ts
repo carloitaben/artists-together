@@ -20,12 +20,13 @@ registerEventHandler("ready", (client) => {
 
       const joinedAt = dayjs(member.joinedAt)
       const aMonthAgo = dayjs().add(-1, "month")
+      const timedOut = joinedAt.isBefore(aMonthAgo)
 
       console.log(`[kick-guests] checking guest: ${member.user.username}`, {
-        shouldBeKicked: !joinedAt.isBefore(aMonthAgo),
+        timedOut,
       })
 
-      if (!joinedAt.isBefore(aMonthAgo)) return
+      if (!timedOut) return
 
       console.log(`[kick-guests] sending dm to guest: ${member.user.username}`)
 
