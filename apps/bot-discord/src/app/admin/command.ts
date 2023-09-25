@@ -4,6 +4,8 @@ import { registerSlashCommand } from "~/lib/core"
 import { template } from "~/lib/messages"
 
 import handleExtinguishSubcommand from "./extinguish"
+import handleStatusSetSubcommand from "./status/set"
+import handleStatusRemoveSubcommand from "./status/remove"
 import handleSendMessageSubcommand from "./send/message"
 import handleSendEmbedSubcommand from "./send/embed"
 import handleAutocompletePoll from "./poll/autocomplete"
@@ -16,6 +18,10 @@ const SUBCOMMANDS = {
   SEND: {
     MESSAGE: "message",
     EMBED: "embed",
+  },
+  STATUS: {
+    SET: "set",
+    REMOVE: "remove",
   },
   POLL: {
     CREATE: "create",
@@ -88,6 +94,24 @@ const builder = new SlashCommandBuilder()
       .setName(SUBCOMMANDS.EXTINGUISH)
       .setDescription("Removes all messages from ART emergencies"),
   )
+  .addSubcommandGroup((group) =>
+    group
+      .setName("status")
+      .setDescription("Status-related commands")
+      .addSubcommand((subcommand) =>
+        subcommand
+          .setName(SUBCOMMANDS.STATUS.SET)
+          .setDescription("Sets a new status for PAL")
+          .addStringOption((option) =>
+            option.setName("status").setDescription("Status").setRequired(true),
+          ),
+      )
+      .addSubcommand((subcommand) =>
+        subcommand
+          .setName(SUBCOMMANDS.STATUS.REMOVE)
+          .setDescription("Removes PAL status"),
+      ),
+  )
 
 registerSlashCommand(builder, async (interaction) => {
   if (interaction.isAutocomplete()) {
@@ -104,6 +128,10 @@ registerSlashCommand(builder, async (interaction) => {
     switch (interaction.options.getSubcommand()) {
       case SUBCOMMANDS.EXTINGUISH:
         return handleExtinguishSubcommand(interaction)
+      case SUBCOMMANDS.STATUS.SET:
+        return handleStatusSetSubcommand(interaction)
+      case SUBCOMMANDS.STATUS.REMOVE:
+        return handleStatusRemoveSubcommand(interaction)
       case SUBCOMMANDS.POLL.CREATE:
         return handleCreatePollSubcommand(interaction)
       case SUBCOMMANDS.POLL.VOTES:
