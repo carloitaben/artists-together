@@ -217,6 +217,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
   )
 
   console.log("[admin-poll-create-command] sending confirmation")
+
   const response = await interaction.reply({
     content: "Opening the following poll in this channel. Sound good?",
     ephemeral: true,

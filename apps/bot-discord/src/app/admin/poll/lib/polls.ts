@@ -16,7 +16,10 @@ export async function deletePoll(id: DiscordPolls.PollsSelectSchema["id"]) {
   return DiscordPolls.remove(id).then(() => polls.delete(id))
 }
 
-export async function countPoll(client: Client, poll: DiscordPolls.PollsSelectSchema) {
+export async function countPoll(
+  client: Client,
+  poll: DiscordPolls.PollsSelectSchema,
+) {
   const channel = await getTextBasedChannel(client, poll.channelId)
   const message = await channel.messages.fetch(poll.messageId)
   const options = message.components[0].components
@@ -54,7 +57,10 @@ export async function countPoll(client: Client, poll: DiscordPolls.PollsSelectSc
   return Array.from(votesCount)
 }
 
-export async function closePoll(client: Client, poll: DiscordPolls.PollsSelectSchema) {
+export async function closePoll(
+  client: Client,
+  poll: DiscordPolls.PollsSelectSchema,
+) {
   const channel = await getTextBasedChannel(client, poll.channelId)
   const message = await channel.messages.fetch(poll.messageId)
 
@@ -99,6 +105,11 @@ export async function closePoll(client: Client, poll: DiscordPolls.PollsSelectSc
 export async function addPoll(poll: DiscordPolls.PollsInsertSchema) {
   await DiscordPolls.create(poll)
   const dbPoll = await DiscordPolls.fromName(poll.name)
+
+  if (!dbPoll) {
+    throw Error(`Missing poll with name: ${poll.name}`)
+  }
+
   polls.set(dbPoll.id, dbPoll)
   return dbPoll
 }

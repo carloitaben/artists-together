@@ -2,7 +2,7 @@ import { ActivityType, Presence } from "discord.js"
 import { DiscordLiveUsers } from "db"
 
 import { registerEventHandler } from "~/lib/core"
-import { getGuild, getRole } from "~/lib/helpers"
+import { getGuild } from "~/lib/helpers"
 import { ROLES } from "~/lib/constants"
 
 function getStreamActivity(presence: Presence | null) {

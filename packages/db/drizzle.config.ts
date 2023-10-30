@@ -1,12 +1,11 @@
-import { config } from "dotenv-mono"
 import { type Config } from "drizzle-kit"
-
-config()
+import { env } from "./src/env"
 
 export default {
   schema: "./src/**/sql.ts",
-  driver: "mysql2",
+  driver: "turso",
   dbCredentials: {
-    connectionString: `mysql://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}/${process.env.DATABASE_NAME}?ssl={"rejectUnauthorized":true}`,
+    url: env.DATABASE_URL,
+    authToken: env.DATABASE_AUTH_TOKEN,
   },
 } satisfies Config

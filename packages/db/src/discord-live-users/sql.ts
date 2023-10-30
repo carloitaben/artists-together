@@ -1,12 +1,9 @@
-import { mysqlTable, serial, char, varchar } from "drizzle-orm/mysql-core"
-import { timestamps } from "../sql"
+import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core"
+import { timestamp } from "../utils"
 
-export const discordLiveUsers = mysqlTable("discord_live_users", {
-  ...timestamps,
-  id: serial("id").primaryKey(),
-  /**
-   * The url of the livestream
-   */
-  url: varchar("url", { length: 255 }).notNull(),
-  userId: char("user_id", { length: 255 }).notNull(),
+export const discordLiveUsers = sqliteTable("discord_live_users", {
+  id: integer("id").primaryKey(),
+  url: text("url").notNull(),
+  userId: text("user_id").notNull(),
+  timestamp: timestamp("timestamp"),
 })
