@@ -1,21 +1,18 @@
-import { createSelectSchema } from "drizzle-zod"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
 import { db } from "../db"
+import { zod } from "../utils"
 import { keepAliveDummies } from "./sql"
-import { zod } from "../zod"
 
-export const schema = createSelectSchema(keepAliveDummies)
+export const InsertSchema = createInsertSchema(keepAliveDummies)
 
-export type Schema = z.infer<typeof schema>
+export const SelectSchema = createSelectSchema(keepAliveDummies)
 
-/**
- * PlanetScale deactivates databases without activity.
- * In the Discord bot deployment we write daily to this table
- * to prevent deactivation
- */
+export type InsertSchema = z.infer<typeof SelectSchema>
+
+export type SelectSchema = z.infer<typeof SelectSchema>
+
 export const poke = zod(z.void(), async () => {
-  console.log("[keep-alive] Poking db")
   await db.insert(keepAliveDummies).values({})
   await db.delete(keepAliveDummies)
-  console.log("[keep-alive] Poked successfully")
 })

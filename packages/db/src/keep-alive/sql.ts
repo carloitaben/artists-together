@@ -1,5 +1,5 @@
-import { mysqlTable, serial } from "drizzle-orm/mysql-core"
+import { sqliteTable, integer } from "drizzle-orm/sqlite-core"
 
-export const keepAliveDummies = mysqlTable("keep_alive_dummies", {
-  id: serial("id").primaryKey(),
+export const keepAliveDummies = sqliteTable("keep_alive_dummies", {
+  id: integer("id").primaryKey(),
 })

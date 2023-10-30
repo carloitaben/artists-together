@@ -1,36 +1,44 @@
 import { eq } from "drizzle-orm"
-import { createSelectSchema } from "drizzle-zod"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
-import { zod } from "../zod"
 import { db } from "../db"
+import { zod } from "../utils"
 import { discordLiveUsers } from "./sql"
 
-export const schema = createSelectSchema(discordLiveUsers, {
+export const InsertSchema = createInsertSchema(discordLiveUsers, {
   url: (schema) => schema.url.url(),
 })
 
-export type Schema = z.infer<typeof schema>
+export const SelectSchema = createSelectSchema(discordLiveUsers)
 
-export const list = zod(z.void(), async () =>
-  db
-    .select()
-    .from(discordLiveUsers)
-    .then((value) => value)
+export type InsertSchema = z.infer<typeof InsertSchema>
+
+export type SelectSchema = z.infer<typeof SelectSchema>
+
+export const list = zod(z.void(), async () => db.select().from(discordLiveUsers).all())
+
+export const create = zod(
+  InsertSchema.pick({ userId: true, url: true }),
+  async (input) => {
+    console.log("[discord-live-users] adding", input)
+
+    return db
+      .insert(discordLiveUsers)
+      .values({
+        userId: input.userId,
+        url: input.url,
+      })
+      .returning({
+        id: discordLiveUsers.id,
+        userId: discordLiveUsers.userId,
+        url: discordLiveUsers.url,
+      })
+      .get()
+  }
 )
 
-export const create = zod(schema.pick({ userId: true, url: true }), async (input) => {
-  console.log("[discord-live-users] adding", input)
-
-  await db.insert(discordLiveUsers).values({
-    userId: input.userId,
-    url: input.url,
-  })
-
-  console.log("[discord-live-users] added", input)
-})
-
 export const update = zod(
-  schema.pick({ userId: true, url: true }),
+  SelectSchema.pick({ userId: true, url: true }),
   async (input) => {
     console.log("[discord-live-users] updating", input)
 
@@ -45,7 +53,8 @@ export const update = zod(
     console.log("[discord-live-users] updated", input)
   }
 )
-export const remove = zod(schema.shape.userId, async (userId) =>
+
+export const remove = zod(SelectSchema.shape.userId, async (userId) =>
   db
     .delete(discordLiveUsers)
     .where(eq(discordLiveUsers.userId, userId))
