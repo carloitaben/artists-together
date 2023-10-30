@@ -31,7 +31,7 @@ export default function Animations() {
 
     visibleTargets.forEach((target, index) => {
       const split = new SplitType(target, {
-        types: "lines, words",
+        types: "lines,words",
         wordClass: "[text-decoration-line:inherit]",
       })
 
