@@ -1,5 +1,5 @@
 import type { ZodTypeAny, TypeOf } from "zod"
-import { integer, text } from "drizzle-orm/sqlite-core"
+import { integer } from "drizzle-orm/sqlite-core"
 import { sql } from "drizzle-orm"
 
 export function zod<Schema extends ZodTypeAny, Return>(
