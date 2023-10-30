@@ -16,7 +16,12 @@ export default {
     },
     fontFamily: {
       sans: "Inter",
-      serif: "Fraunces",
+      serif: [
+        "Fraunces",
+        {
+          fontVariationSettings: '"SOFT" 100, "WONK" 0',
+        },
+      ],
     },
     colors: {
       transparent: "transparent",
