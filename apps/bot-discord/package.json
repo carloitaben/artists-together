@@ -11,20 +11,20 @@
   },
   "dependencies": {
     "chrono-node": "^2.7.0",
-    "dayjs": "^1.11.9",
+    "dayjs": "^1.11.10",
     "db": "workspace:*",
     "discord.js": "^14.13.0",
-    "dotenv-mono": "^1.3.10",
+    "dotenv-mono": "^1.3.12",
     "fast-glob": "^3.3.1",
-    "nanoid": "^4.0.2",
+    "nanoid": "^5.0.2",
     "node-cron": "^3.0.2",
-    "ws": "^8.14.1",
-    "zod": "^3.22.2"
+    "ws": "^8.14.2",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/node-cron": "^3.0.8",
-    "@types/ws": "^8.5.5",
-    "tsx": "^3.12.8",
+    "@types/node-cron": "^3.0.10",
+    "@types/ws": "^8.5.8",
+    "tsx": "^3.14.0",
     "typescript": "^5.2.2",
     "ws-types": "workspace:*"
   },
