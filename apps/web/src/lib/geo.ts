@@ -1,3 +1,4 @@
+import "server-only"
 import type { NextRequest } from "next/server"
 import { Locations } from "db"
 import { cache } from "react"
