@@ -1,6 +1,6 @@
 "use server"
 
-import { cookies } from "next/headers"
+import * as context from "next/headers"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import { createAction, serverError } from "~/actions/zod"
@@ -16,7 +16,7 @@ export const discordSSO = createAction(
   OAuthCookieStateSchema.pick({ pathname: true }),
   async ({ pathname }) => {
     const [url, state] = await discordAuth.getAuthorizationUrl()
-    const cookieStore = cookies()
+    const cookieStore = context.cookies()
 
     cookieStore.set(
       "discord_oauth_state",
@@ -37,7 +37,7 @@ export const discordSSO = createAction(
 )
 
 export const unlinkDiscordSSO = createAction(z.void(), async () => {
-  const request = auth.handleRequest({ request: null, cookies })
+  const request = auth.handleRequest("POST", context)
   const session = await request.validate()
 
   if (!session) return serverError("UNAUTHORIZED")
@@ -54,7 +54,7 @@ export const twitchSSO = createAction(
   OAuthCookieStateSchema.pick({ pathname: true }),
   async ({ pathname }) => {
     const [url, state] = await twitchAuth.getAuthorizationUrl()
-    const cookieStore = cookies()
+    const cookieStore = context.cookies()
 
     cookieStore.set(
       "twitch_oauth_state",
@@ -75,7 +75,7 @@ export const twitchSSO = createAction(
 )
 
 export const unlinkTwitchSSO = createAction(z.void(), async () => {
-  const request = auth.handleRequest({ request: null, cookies })
+  const request = auth.handleRequest("POST", context)
   const session = await request.validate()
 
   if (!session) return serverError("UNAUTHORIZED")
@@ -89,7 +89,7 @@ export const unlinkTwitchSSO = createAction(z.void(), async () => {
 })
 
 export const logout = createAction(z.void(), async () => {
-  const request = auth.handleRequest({ request: null, cookies })
+  const request = auth.handleRequest("POST", context)
   const session = await request.validate()
 
   if (!session) return serverError("UNAUTHORIZED")
@@ -99,7 +99,7 @@ export const logout = createAction(z.void(), async () => {
 })
 
 export const removeAccount = createAction(z.void(), async () => {
-  const request = auth.handleRequest({ request: null, cookies })
+  const request = auth.handleRequest("POST", context)
   const session = await request.validate()
 
   if (!session) return serverError("UNAUTHORIZED")

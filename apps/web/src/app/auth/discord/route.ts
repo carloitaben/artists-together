@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server"
-import { cookies } from "next/headers"
+import * as context from "next/headers"
 import { redirect } from "next/navigation"
 import { OAuthRequestError } from "@lucia-auth/oauth"
 import { Locations } from "db"
@@ -11,14 +11,14 @@ export const runtime = "edge"
 export const preferredRegion = "global" // TODO: replace with turso db region array, as it supports string[]
 
 export const GET = async (request: NextRequest) => {
-  const authRequest = auth.handleRequest({ request, cookies })
+  const authRequest = auth.handleRequest(request.method, context)
   const existingSession = await authRequest.validate()
 
   if (existingSession) {
     return redirect("/")
   }
 
-  const cookieStore = cookies()
+  const cookieStore = context.cookies()
   const cookieValue = cookieStore.get("discord_oauth_state")?.value
 
   if (!cookieValue) {

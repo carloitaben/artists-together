@@ -1,6 +1,6 @@
 import "server-only"
 import { lucia } from "lucia"
-import { nextjs } from "lucia/middleware"
+import { nextjs_future as nextjs } from "lucia/middleware"
 import { libsql } from "@lucia-auth/adapter-sqlite"
 import type { DiscordUser, TwitchUser } from "@lucia-auth/oauth/providers"
 import { discord, twitch } from "@lucia-auth/oauth/providers"
