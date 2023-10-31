@@ -1,11 +1,10 @@
 import { getSession } from "~/services/auth"
 
 import * as Tooltip from "~/components/Tooltip"
-import * as Modal from "~/components/Modal"
+import * as Auth from "~/components/Auth"
 import * as NavigationMenu from "~/components/NavigationMenu"
 import NavigationItem from "./NavigationItem"
 import Profile from "~/components/Profile"
-import Auth from "~/components/Auth"
 import Icon from "~/components/Icon"
 
 export default async function NavigationSidebar() {
@@ -19,20 +18,20 @@ export default async function NavigationSidebar() {
         className="fixed inset-y-0 left-0 hidden w-16 items-center justify-center overflow-y-auto bg-theme-900 text-theme-50 sm:flex"
       >
         <NavigationMenu.List className="grid place-items-center gap-2">
-          <Modal.Root>
+          <Auth.Root>
             <NavigationItem label={hasSession ? "Your profile" : "Log-in"}>
               <NavigationMenu.Trigger asChild>
-                <Modal.Trigger className="group block h-12 w-12 p-2">
+                <Auth.Trigger className="group block h-12 w-12 p-2">
                   <Icon
                     className="group-group-aria-disabled:text-theme-700 h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300"
                     label={hasSession ? "Your profile" : "Log-in"}
                     icon="profile"
                   />
-                </Modal.Trigger>
+                </Auth.Trigger>
               </NavigationMenu.Trigger>
             </NavigationItem>
-            {hasSession ? <Profile /> : <Auth />}
-          </Modal.Root>
+            {hasSession ? <Profile /> : <Auth.Content />}
+          </Auth.Root>
           <NavigationItem label="Home" href="/">
             <Icon
               className="h-8 w-8 text-theme-50 group-[[aria-current='page']]:text-theme-300 group-aria-disabled:text-theme-700"

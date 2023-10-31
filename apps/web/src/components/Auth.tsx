@@ -1,8 +1,9 @@
 "use client"
 
-import { useTransition } from "react"
-import { usePathname } from "next/navigation"
+import { useEffect, useState, useTransition } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { isRedirectError } from "next/dist/client/components/redirect"
+import { DialogProps } from "@radix-ui/react-dialog"
 
 import { discordSSO } from "~/actions/auth"
 import { useToast } from "~/components/Toast"
@@ -10,7 +11,27 @@ import * as Modal from "~/components/Modal"
 import Button from "~/components/Button"
 import Icon from "~/components/Icon"
 
-export default function Auth() {
+export function Root(props: DialogProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const params = useSearchParams()
+
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (open || params.get("modal") !== "login") return
+    setOpen(true)
+    const newParams = new URLSearchParams(params)
+    newParams.delete("modal")
+    router.push(pathname + "?" + newParams.toString())
+  }, [open, params, pathname, router])
+
+  return <Modal.Root {...props} open={open} onOpenChange={setOpen} />
+}
+
+export const Trigger = Modal.Trigger
+
+export function Content() {
   const [isPending, startTransition] = useTransition()
   const pathname = usePathname()
   const emit = useToast()

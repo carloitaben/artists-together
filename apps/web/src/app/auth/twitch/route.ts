@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server"
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 import { OAuthRequestError } from "@lucia-auth/oauth"
 import { auth, twitchAuth } from "~/services/auth"
 import { getSession, decodeOAuthCookieState } from "~/services/auth"
@@ -28,7 +29,17 @@ export const GET = async (request: NextRequest) => {
   const cookieState = decodeOAuthCookieState(cookieValue)
   const url = new URL(request.url)
   const state = url.searchParams.get("state")
+  const error = url.searchParams.get("error")
   const code = url.searchParams.get("code")
+
+  if (error) {
+    switch (error) {
+      case "access_denied":
+        return redirect(cookieState.pathname + "?modal=login")
+      default:
+        return redirect(cookieState.pathname + "?error&modal=login")
+    }
+  }
 
   if (!state || cookieState.state !== state || !code) {
     return new Response(null, {

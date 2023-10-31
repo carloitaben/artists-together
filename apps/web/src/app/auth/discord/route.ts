@@ -13,6 +13,7 @@ export const preferredRegion = "global" // TODO: replace with turso db region ar
 export const GET = async (request: NextRequest) => {
   const authRequest = auth.handleRequest({ request, cookies })
   const existingSession = await authRequest.validate()
+
   if (existingSession) {
     return redirect("/")
   }
@@ -29,7 +30,17 @@ export const GET = async (request: NextRequest) => {
   const cookieState = decodeOAuthCookieState(cookieValue)
   const url = new URL(request.url)
   const state = url.searchParams.get("state")
+  const error = url.searchParams.get("error")
   const code = url.searchParams.get("code")
+
+  if (error) {
+    switch (error) {
+      case "access_denied":
+        return redirect(cookieState.pathname + "?modal=login")
+      default:
+        return redirect(cookieState.pathname + "?error&modal=login")
+    }
+  }
 
   if (!state || cookieState.state !== state || !code) {
     return new Response(null, {

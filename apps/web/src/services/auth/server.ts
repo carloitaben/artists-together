@@ -45,7 +45,7 @@ export type UserAttributes = Omit<Users.UserInsertSchema, "id">
 function makeRedirectUri(provider: string) {
   return process.env.NODE_ENV === "development"
     ? `http://localhost:3000/auth/${provider}`
-    : `https://www.artiststogether.online/auth/${provider}`
+    : `https://${process.env.VERCEL_URL}/auth/${provider}`
 }
 
 export const discordAuth = discord(auth, {
