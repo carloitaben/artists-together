@@ -37,7 +37,7 @@ export const GET = async (request: NextRequest) => {
       case "access_denied":
         return redirect(cookieState.pathname + "?modal=login")
       default:
-        return redirect(cookieState.pathname + "?error&modal=login")
+        return redirect(cookieState.pathname + "?error=true&modal=login")
     }
   }
 

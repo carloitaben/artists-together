@@ -2,6 +2,7 @@
 
 import { ReactNode, useCallback, useEffect, useId, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { atom, map } from "nanostores"
 import { useStore } from "@nanostores/react"
 
@@ -99,7 +100,18 @@ export function useToast() {
 
 export default function Toast() {
   const toast = useStore($toast)
+  const params = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const [hover, setHover] = useState(false)
+
+  useEffect(() => {
+    if (!params.get("error")) return
+    const newParams = new URLSearchParams(params)
+    newParams.delete("error")
+    router.push(pathname + "?" + newParams.toString())
+    emit.error()
+  }, [params, pathname, router])
 
   useEffect(() => {
     if (!toast || hover) return
