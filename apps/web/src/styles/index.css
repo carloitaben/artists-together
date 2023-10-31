@@ -33,12 +33,11 @@
     src: url("/fonts/inter.woff2") format("woff2");
   }
 
-  .font-serif {
-    font-variation-settings: "SOFT" 100, "WONK" 0, "opsz" 144;
-  }
-
   .font-serif-ampersand {
-    font-variation-settings: "SOFT" 100, "WONK" 100, "opsz" 144;
+    font-variation-settings:
+      "SOFT" 100,
+      "WONK" 100,
+      "opsz" 144;
   }
 }
 

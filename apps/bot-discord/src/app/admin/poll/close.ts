@@ -1,6 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction } from "discord.js"
 
 import { closePoll, polls } from "./lib/polls"
+import { template } from "~/lib/messages"
 
 const BUTTON_IDS = {
   CLOSE: "poll-close-button-close",
@@ -17,7 +18,9 @@ const cancelButton = new ButtonBuilder()
   .setStyle(ButtonStyle.Secondary)
   .setLabel("Cancel")
 
-export default async function handleClosePollSubcommand(interaction: ChatInputCommandInteraction) {
+export default async function handleClosePollSubcommand(
+  interaction: ChatInputCommandInteraction,
+) {
   const id = interaction.options.getString("name", true)
   const poll = polls.get(id)
 
@@ -25,11 +28,17 @@ export default async function handleClosePollSubcommand(interaction: ChatInputCo
     throw Error(`Could not find cached poll with id ${id}`)
   }
 
+  console.log("[admin-poll-close-command] are you sure you want to close")
   const response = await interaction.reply({
     content: `Are you sure you want to close the poll "${poll.name}"? This cannot be undone!`,
     ephemeral: true,
     fetchReply: true,
-    components: [new ActionRowBuilder<ButtonBuilder>().addComponents(closeButton, cancelButton)],
+    components: [
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
+        closeButton,
+        cancelButton,
+      ),
+    ],
   })
 
   try {
@@ -44,7 +53,7 @@ export default async function handleClosePollSubcommand(interaction: ChatInputCo
     switch (confirmation.customId) {
       case BUTTON_IDS.CANCEL:
         return confirmation.update({
-          content: "Cancelled",
+          content: template.cancel(),
           embeds: [],
           components: [],
         })
@@ -52,7 +61,7 @@ export default async function handleClosePollSubcommand(interaction: ChatInputCo
         await closePoll(interaction.client, poll)
 
         return confirmation.update({
-          content: "Done!",
+          content: template.done(),
           embeds: [],
           components: [],
         })

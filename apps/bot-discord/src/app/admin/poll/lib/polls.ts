@@ -10,15 +10,15 @@ import { formatVotes } from "./utils"
 
 dayjs.extend(isSameOrAfter)
 
-export const polls = new Map<string, DiscordPolls.PollsSchema>()
+export const polls = new Map<string, DiscordPolls.PollsSelectSchema>()
 
-export async function deletePoll(id: DiscordPolls.PollsSchema["id"]) {
+export async function deletePoll(id: DiscordPolls.PollsSelectSchema["id"]) {
   return DiscordPolls.remove(id).then(() => polls.delete(id))
 }
 
 export async function countPoll(
   client: Client,
-  poll: DiscordPolls.PollsSchema,
+  poll: DiscordPolls.PollsSelectSchema,
 ) {
   const channel = await getTextBasedChannel(client, poll.channelId)
   const message = await channel.messages.fetch(poll.messageId)
@@ -59,7 +59,7 @@ export async function countPoll(
 
 export async function closePoll(
   client: Client,
-  poll: DiscordPolls.PollsSchema,
+  poll: DiscordPolls.PollsSelectSchema,
 ) {
   const channel = await getTextBasedChannel(client, poll.channelId)
   const message = await channel.messages.fetch(poll.messageId)
@@ -102,9 +102,14 @@ export async function closePoll(
   return deletePoll(poll.id)
 }
 
-export async function addPoll(poll: DiscordPolls.PollsSchema) {
+export async function addPoll(poll: DiscordPolls.PollsInsertSchema) {
   await DiscordPolls.create(poll)
   const dbPoll = await DiscordPolls.fromName(poll.name)
+
+  if (!dbPoll) {
+    throw Error(`Missing poll with name: ${poll.name}`)
+  }
+
   polls.set(dbPoll.id, dbPoll)
   return dbPoll
 }

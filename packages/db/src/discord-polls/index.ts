@@ -21,9 +21,16 @@ export type PollVotesInsertSchema = z.infer<typeof PollVotesInsertSchema>
 
 export type PollVotesSelectSchema = z.infer<typeof PollVotesSelectSchema>
 
-export const create = zod(
-  PollsInsertSchema,
-  async (poll) => void db.insert(discordPolls).values(poll)
+export const create = zod(PollsInsertSchema, async (poll) =>
+  db
+    .insert(discordPolls)
+    .values(poll)
+    .returning({
+      id: discordPolls.id,
+      name: discordPolls.name,
+      messageId: discordPolls.messageId,
+    })
+    .get()
 )
 
 export const remove = zod(
@@ -80,11 +87,19 @@ export const votesFromUser = zod(
 export const addVote = zod(
   PollVotesInsertSchema.pick({ pollId: true, userId: true, answer: true }),
   async (input) =>
-    void db.insert(discordPollVotes).values({
-      pollId: input.pollId,
-      userId: input.userId,
-      answer: input.answer,
-    })
+    db
+      .insert(discordPollVotes)
+      .values({
+        pollId: input.pollId,
+        userId: input.userId,
+        answer: input.answer,
+      })
+      .returning({
+        id: discordPollVotes.id,
+        pollId: discordPollVotes.pollId,
+        userId: discordPollVotes.userId,
+      })
+      .get()
 )
 
 export const updateVote = zod(

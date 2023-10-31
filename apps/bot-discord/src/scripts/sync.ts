@@ -6,7 +6,9 @@ import { APPLICATION_ID, SERVER_ID } from "~/lib/constants"
 
 const registrations = await getRegistrations()
 const rest = new REST({ version: "10" }).setToken(env.DISCORD_BOT_TOKEN)
-const body = Array.from(registrations.slashCommands.values()).map((value) => value.toJSON())
+const body = Array.from(registrations.builders.values()).map((value) =>
+  value.toJSON(),
+)
 
 try {
   await rest.put(Routes.applicationGuildCommands(APPLICATION_ID, SERVER_ID), {

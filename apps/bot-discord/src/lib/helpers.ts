@@ -9,7 +9,7 @@ export function cron(...args: Parameters<typeof schedule>) {
   return schedule(...args)
 }
 
-export function getRandomArrayItem<T>(arr: T[]) {
+export function oneOf<T>(arr: T[]) {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
@@ -40,6 +40,17 @@ export async function getTextBasedChannel(client: Client, id: string) {
 
   if (!channel.isTextBased()) {
     throw Error(`Channel with id ${id} is not text based`)
+  }
+
+  return channel
+}
+
+export async function getChannel(client: Client, id: string) {
+  const channel =
+    client.channels.cache.get(id) ?? (await client.channels.fetch(id))
+
+  if (!channel) {
+    throw Error(`Channel with id ${id} not found`)
   }
 
   return channel

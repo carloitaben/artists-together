@@ -18,6 +18,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat"
 
 import { registerEventHandler } from "~/lib/core"
 import { parseMentions } from "~/lib/helpers"
+import { template } from "~/lib/messages"
 
 import { addPoll } from "./lib/polls"
 import { encodeButtonVoteOptionId } from "./lib/utils"
@@ -59,8 +60,9 @@ export default async function handleCreatePollSubcommand(
   interaction: ChatInputCommandInteraction,
 ) {
   if (!interaction.channel || !("name" in interaction.channel)) {
+    console.log("[admin-poll-create-command] cannot create a poll")
     return interaction.reply({
-      content: "Oops! I cannot create a poll in this channel",
+      content: template.oops("I cannot create a poll in this channel"),
       ephemeral: true,
     })
   }
@@ -144,7 +146,9 @@ registerEventHandler("interactionCreate", async (interaction) => {
 
   if (!isValidColor(colorInput)) {
     return interaction.reply({
-      content: `Oops! The color code ${colorInput} doesn't seem to be valid 😅`,
+      content: template.oops(
+        `The color code ${colorInput} doesn't seem to be valid`,
+      ),
       ephemeral: true,
     })
   }
@@ -153,7 +157,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
 
   if (options.length < 2) {
     return interaction.reply({
-      content: "Oops! I need at least two options to create a poll 😅",
+      content: template.oops("I need at least two options to create a poll"),
       ephemeral: true,
     })
   }
@@ -164,7 +168,9 @@ registerEventHandler("interactionCreate", async (interaction) => {
 
   if (durationInput && !endDate) {
     return interaction.reply({
-      content: `Oops! ${durationInput} doesn't seem like a valid duration 😅`,
+      content: template.oops(
+        `${durationInput} doesn't seem like a valid duration`,
+      ),
       ephemeral: true,
     })
   }
@@ -174,7 +180,9 @@ registerEventHandler("interactionCreate", async (interaction) => {
 
     if (diff <= 10) {
       return interaction.reply({
-        content: `Oops! I cannot create a poll with a duration that short 😅`,
+        content: template.oops(
+          `I cannot create a poll with a duration that short`,
+        ),
         ephemeral: true,
       })
     }
@@ -187,7 +195,9 @@ registerEventHandler("interactionCreate", async (interaction) => {
   if (nameUnavailable) {
     return interaction.reply({
       content:
-        `Oops! A poll with the title "${titleInput}" already exists on this channel 😅` +
+        template.oops(
+          `A poll with the title "${titleInput}" already exists on this channel`,
+        ) +
         "\n" +
         "\n" +
         "You could…" +
@@ -206,9 +216,10 @@ registerEventHandler("interactionCreate", async (interaction) => {
     descriptionInput,
   )
 
+  console.log("[admin-poll-create-command] sending confirmation")
+
   const response = await interaction.reply({
-    content:
-      "I'll open a poll on this channel with the following data. Is it ok?",
+    content: "Opening the following poll in this channel. Sound good?",
     ephemeral: true,
     fetchReply: true,
     embeds: [
@@ -245,7 +256,7 @@ registerEventHandler("interactionCreate", async (interaction) => {
     switch (confirmation.customId) {
       case BUTTON_IDS.CANCEL:
         return confirmation.update({
-          content: "Poll creation cancelled",
+          content: template.cancel(),
           embeds: [],
           components: [],
         })
@@ -288,14 +299,14 @@ registerEventHandler("interactionCreate", async (interaction) => {
         })
 
         return confirmation.update({
-          content: "Done!",
+          content: template.done(),
           embeds: [],
           components: [],
         })
     }
   } catch (error) {
     await response.edit({
-      content: "Confirmation not received within 1 minute, cancelling",
+      content: template.timeout(),
       embeds: [],
       components: [],
     })

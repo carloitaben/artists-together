@@ -1,22 +1,34 @@
 import { Client, Partials, GatewayIntentBits, EmbedBuilder, AttachmentBuilder } from "discord.js"
 
 import { env } from "~/lib/env"
-import { getTextBasedChannel, getRole, getGuild, getPublicFile } from "~/lib/helpers"
+import {
+  getChannel,
+  getTextBasedChannel,
+  getRole,
+  getGuild,
+  getPublicFile,
+} from "~/lib/helpers"
 import { CHANNELS, ROLES } from "~/lib/constants"
 
 const bot = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+  ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 })
 
 async function bootstrapRulesChannel(client: Client) {
   const [rulesChannel, introductionsChannel] = await Promise.all([
     getTextBasedChannel(client, CHANNELS.RULES_N_FAQ),
-    getTextBasedChannel(client, CHANNELS.INTRODUCTIONS),
+    getChannel(client, CHANNELS.INTRODUCTIONS),
   ])
 
   await rulesChannel.send({
-    files: [new AttachmentBuilder(getPublicFile("/images/banners/banner-rules.png"))],
+    files: [
+      new AttachmentBuilder(getPublicFile("/images/banners/banner-rules.png")),
+    ],
   })
 
   await rulesChannel.send({
@@ -24,46 +36,45 @@ async function bootstrapRulesChannel(client: Client) {
       new EmbedBuilder({
         color: 0x024456,
         description:
-          "**Please follow these simple rules to keep this place inclusive and friendly for everyone.**" +
+          "# RULES" +
+          "\n" +
+          "————————————————————" +
           "\n" +
           "\n" +
-          "--------------------" +
+          "## :one:  Follow Discord's ToS and Community Guidelines." +
+          "\n" +
+          "- [*Terms of Service*](https://discord.com/terms)" +
+          "\n" +
+          "- [*Community Guidelines*](https://discord.com/guidelines)" +
           "\n" +
           "\n" +
-          "**Rule 1:** Follow Discord's Terms of Service and Community Guidelines." +
+          "## :two:  Be respectful." +
           "\n" +
-          "[*Terms of Service*](https://discord.com/terms)" +
-          "\n" +
-          "[*Community Guidelines*](https://discord.com/guidelines)" +
+          "- Any form of harassment, hate speech or bullying will not be tolerated." +
           "\n" +
           "\n" +
-          "**Rule 2:** Be respectful." +
+          "## :three:  Keep topics relevant to the appropriate channels." +
           "\n" +
-          "*Racism, sexism, homophobia, harassment or any form of bullying or hate speech will not be tolerated anywhere on the server.*" +
+          `- Refrain from critiquing others' work unless it is asked for.` +
           "\n" +
-          "\n" +
-          "**Rule 3:** Keep topics relevant to the appropriate channels." +
-          "\n" +
-          `*Refrain from critiquing others' work unless it is asked for.*` +
-          "\n" +
-          "*Use the off-topic category for non-related AT topics.*" +
+          "- Use the off-topic category accordingly." +
           "\n" +
           "\n" +
-          "**Rule 4:** No spam." +
+          "## :four:  No spam." +
           "\n" +
-          "*Avoid repeated and/or excessive messages. Like pings or embeds, for example.*" +
-          "\n" +
-          "\n" +
-          "--------------------" +
+          "- Avoid repetitive and excessive messages, pings or embeds." +
           "\n" +
           "\n" +
-          "✱ If you experience a rule break, please contact a moderator." +
+          "————————————————————" +
           "\n" +
           "\n" +
-          "✱ These rules are non-exhaustive, human beings will use their judgement when dealing with disruptive behaviour!" +
+          "*✱ If you experience a rule break, please contact a moderator.*" +
           "\n" +
           "\n" +
-          "✱ Please keep in mind that these rules extend to behaviour in the Voice channels, DMs and all content linked in the channels, as well. ",
+          "*✱ These rules are non-exhaustive, human beings will use their judgement when dealing with disruptive behaviour!*" +
+          "\n" +
+          "\n" +
+          "*✱ Please keep in mind that these rules extend to behaviour in the Voice channels, DMs and all content linked in the channels, as well.*",
       }),
     ],
   })
@@ -73,25 +84,24 @@ async function bootstrapRulesChannel(client: Client) {
       new EmbedBuilder({
         color: 0x024456,
         description:
-          "**Frequently asked questions that might help you understand how this community works.**" +
+          "# FAQ" +
+          "\n" +
+          "————————————————————" +
           "\n" +
           "\n" +
-          "--------------------" +
+          "## :question:  How can I be part of this community?" +
+          "\n" +
+          "By being here you already are! Everyone is free to join or leave whenever they want." +
           "\n" +
           "\n" +
-          "**How can I be part of this community?**" +
+          "## :question:  Do I need to be an artist/creative to join this community?" +
           "\n" +
-          "*If you are reading this, you already are! Everyone is free to join or leave whenever they want.*" +
-          "\n" +
-          "\n" +
-          "**Do I need to be an artist/creative to join this community?**" +
-          "\n" +
-          "*Mainly, this is a place for creatives, but if you do not practise any art medium and you just want to see others' creations, you're more than welcome too.*" +
+          "If you do not practise any art medium and you just want to see others' creations, you're more than welcome too." +
           "\n" +
           "\n" +
-          "**Is there any kind of subscription fee?**" +
+          "## :question:  Is there any kind of subscription fee?" +
           "\n" +
-          "*Nope, it is and it will keep being totally free! You can of course donate to help us cover the expenses.*",
+          "No, it is and it will keep being totally free! You can of course donate to help us cover the expenses.",
       }),
     ],
   })
@@ -101,9 +111,9 @@ async function bootstrapRulesChannel(client: Client) {
       new EmbedBuilder({
         color: 0x024456,
         description:
-          `If you're an artist, introduce yourself in ${introductionsChannel} to get the role!` +
+          `**If you're an artist, introduce yourself in ${introductionsChannel} to get the role!**` +
           "\n" +
-          "*Neat! Reacting with 🔓 you agree you've read all the rules of this server.*",
+          "Reacting with 🔓 you agree you've read the rules.",
       }),
     ],
   })
@@ -127,7 +137,7 @@ async function bootstrapAboutChannel(client: Client) {
           "**Artists Together** is an online, worldwide inclusive community for all kinds of artists and all skill levels." +
           "\n" +
           "\n" +
-          "**Our goal**" +
+          "## Our goal" +
           "\n" +
           "The main objective of this community is to give artists from around the globe a voice, a place to celebrate and promote their creative content and, of course, have some fun!" +
           "\n" +
@@ -144,7 +154,7 @@ async function bootstrapAboutChannel(client: Client) {
       new EmbedBuilder({
         color: 0xff1800,
         description:
-          "**Backstory**" +
+          "## Backstory" +
           "\n" +
           'This server was created in October 2020 as *"Artist Back Alley"* by *MissDaisyDee*, *AnonymousTurtle*, and *LittleChook* as an accountability group for fellow creatives with online shops to prepare for the impending holiday shopping season.' +
           "\n" +
