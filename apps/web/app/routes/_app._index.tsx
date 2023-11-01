@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/node"
-import ThemeWidget from "~/components/ThemeWidget"
+import Container from "~/components/Container"
+import WidgetTheme from "~/components/WidgetTheme"
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,9 +15,9 @@ export const handle = {
 
 export default function Index() {
   return (
-    <div>
+    <Container grid>
       <h1 className="text-red-500">:)</h1>
-      <ThemeWidget />
-    </div>
+      <WidgetTheme />
+    </Container>
   )
 }

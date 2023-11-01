@@ -1,4 +1,4 @@
-import ThemeWidget from "~/components/ThemeWidget"
+import WidgetTheme from "~/components/WidgetTheme"
 
 export const handle = {
   actions: {
@@ -10,7 +10,7 @@ export default function Page() {
   return (
     <main>
       <h1>hello there</h1>
-      <ThemeWidget />
+      <WidgetTheme />
     </main>
   )
 }
