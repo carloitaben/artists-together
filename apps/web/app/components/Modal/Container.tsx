@@ -7,7 +7,7 @@ const container = cva({
   base: "rounded-4xl shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)]",
   variants: {
     background: {
-      true: "bg-gunpla-white-50 text-gunpla-white-500 selection:bg-gunpla-white-300 selection:text-gunpla-white-900",
+      true: "bg-gunpla-white-50 text-gunpla-white-500",
       false: "",
     },
     fill: {
