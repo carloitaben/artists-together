@@ -7,7 +7,7 @@
     "build:remix": "vite build && vite build --ssr",
     "build:routes": "remix-routes",
     "build": "run-s build:*",
-    "dev:remix": "vite dev",
+    "dev:remix": "vite dev --host",
     "dev:routes": "remix-routes -w",
     "dev": "run-p dev:*",
     "start": "remix-serve ./build/index.js",
