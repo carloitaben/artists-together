@@ -133,10 +133,10 @@ export default function BottomAppBar() {
           {showMenu ? (
             <NavigationMenu.Item asChild>
               <motion.div
-                className="bg-theme-800 text-theme-50 rounded-2xl flex-none flex items-center justify-center overflow-hidden w-12 h-12"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
+                className="bg-theme-800 text-theme-50 rounded-2xl flex-none flex items-center justify-center overflow-hidden w-12 h-12 -z-10"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
                 transition={transition}
               >
                 <Icon name="more" label="Menu" className="w-6 h-6 flex-none" />
