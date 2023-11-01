@@ -71,7 +71,7 @@ export default function WidgetTheme() {
           navigate={false}
         >
           <motion.div
-            className="pointer-events-auto absolute grid grid-cols-2 grid-rows-2 overflow-hidden rounded-full inset-16"
+            className="pointer-events-auto absolute grid grid-cols-2 grid-rows-2 overflow-hidden rounded-full fluid:inset-16"
             initial={false}
             animate={{ rotate: rotate[currentTheme] }}
           >
@@ -92,6 +92,11 @@ export default function WidgetTheme() {
               theme={theme.enum["tuxedo-crimson"]}
             />
           </motion.div>
+          <div className="absolute flex items-center justify-center overflow-hidden rounded-full fluid:inset-16">
+            <div className="absolute left-0 top-[50%] bg-theme-50 shadow-button fluid:-mt-2 fluid:h-4 fluid:w-40" />
+            <div className="absolute left-[50%] top-0 bg-theme-50 shadow-button fluid:-ml-2 fluid:h-40 fluid:w-4" />
+            <div className="relative rounded-full bg-theme-50 shadow-button fluid:h-28 fluid:w-28" />
+          </div>
         </Form>
       </div>
     </div>

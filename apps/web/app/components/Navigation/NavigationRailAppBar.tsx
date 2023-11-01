@@ -1,14 +1,17 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu"
 import * as Tooltip from "@radix-ui/react-tooltip"
+import * as Dialog from "@radix-ui/react-dialog"
 import { cx } from "cva"
 import { NavLink } from "@remix-run/react"
 import { usePageHandle } from "~/lib/handle"
 import { routes } from "~/lib/routes"
 import Icon from "~/components/Icon"
 import NavigationRailTooltip from "./NavigationRailTooltip"
+import { useUser } from "~/hooks/loaders"
 
 export default function RailAppBar() {
   const handle = usePageHandle<{ page: { name: string } }>()
+  const user = useUser()
 
   return (
     <Tooltip.Provider delayDuration={0}>
@@ -20,7 +23,18 @@ export default function RailAppBar() {
           {handle.page.name}
         </h1>
         <div className="invisible"></div>
-        <NavigationMenu.List className="grid">
+        <NavigationMenu.List className="grid gap-1">
+          <NavigationMenu.Item>
+            <NavigationMenu.Trigger asChild>
+              <Dialog.Trigger className="w-12 h-12 flex items-center justify-center rounded-lg text-theme-700 hover:bg-theme-800 hover:text-theme-100">
+                {user ? (
+                  <div className="w-6 h-6 bg-current" />
+                ) : (
+                  <Icon name="face" label="Sign in" className="w-6 h-6" />
+                )}
+              </Dialog.Trigger>
+            </NavigationMenu.Trigger>
+          </NavigationMenu.Item>
           {routes.map((route) => (
             <NavigationMenu.Item
               key={route.href}

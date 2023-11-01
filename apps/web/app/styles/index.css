@@ -3,6 +3,16 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --fluid-viewport: 360;
+  }
+
+  @screen sm {
+    :root {
+      --fluid-viewport: 1920;
+    }
+  }
+  
   @font-face {
     font-family: "Fraunces";
     font-display: block;
@@ -17,5 +27,23 @@
     font-style: normal;
     font-weight: 100 900;
     src: url("/fonts/inter.woff2") format("woff2");
+  }
+
+  .font-serif-ampersand {
+    font-variation-settings:
+      "SOFT" 100,
+      "WONK" 100,
+      "opsz" 144;
+  }
+}
+
+@layer components {
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
   }
 }

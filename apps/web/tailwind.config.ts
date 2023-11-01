@@ -1,5 +1,33 @@
 import type { Config } from "tailwindcss"
+import plugin from "tailwindcss/plugin"
 
+function getFluidValue(value: string) {
+  if (value.endsWith("rem")) {
+    return parseFloat(value.replace("rem", "")) * 16
+  }
+
+  if (value.endsWith("px")) {
+    return parseFloat(value.replace("rem", ""))
+  }
+}
+
+const fluidPlugin = plugin(({ addVariant }) => {
+  // @ts-expect-error This definitely exists but it's missing in Tailwind types
+  addVariant("fluid", ({ container }) => {
+    // @ts-expect-error This definitely exists but it's missing in Tailwind types
+    container.walkRules((rule) => {
+      rule.selector = `.fluid\\:${rule.selector.slice(1)}`
+
+      // @ts-expect-error This definitely exists but it's missing in Tailwind types
+      rule.walkDecls((decl) => {
+        const value = getFluidValue(decl.value)
+        if (typeof value === "number") {
+          decl.value = `calc(${value * 100}vw / var(--fluid-viewport))`
+        }
+      })
+    })
+  })
+})
 
 export default {
   content: ["./app/**/*.{ts,tsx}"],
@@ -264,5 +292,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [fluidPlugin],
 } satisfies Config
