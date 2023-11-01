@@ -1,4 +1,5 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu"
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import { NavLink } from "@remix-run/react"
 import { cx } from "cva"
 import type { Transition } from "framer-motion"
@@ -7,6 +8,7 @@ import { usePageHandle } from "~/lib/handle"
 import { routes } from "~/lib/routes"
 import Icon from "~/components/Icon"
 import { useState } from "react"
+import NavigationBottomAppBarPill from "./NavigationBottomAppBarPill"
 
 const transition: Transition = {
   type: "spring",
@@ -45,7 +47,7 @@ export default function BottomAppBar() {
                 className="flex justify-start"
                 transition={transition}
               >
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="wait" initial={false}>
                   {focus ? (
                     <motion.div
                       key="menu-icon"
@@ -74,21 +76,12 @@ export default function BottomAppBar() {
                     <li key={route.href}>
                       <NavLink to={route.href}>
                         {({ isActive, isPending }) => (
-                          <div
-                            className={cx(
-                              "flex rounded-2xl gap-5 p-3",
-                              isActive || isPending
-                                ? " bg-theme-300 text-theme-900"
-                                : "bg-theme-900 text-theme-50",
-                            )}
+                          <NavigationBottomAppBarPill
+                            active={isActive || isPending}
+                            icon={route.icon}
                           >
-                            <Icon
-                              name={route.icon}
-                              label=""
-                              className="w-6 h-6 flex-none"
-                            />
-                            <span className="truncate">{route.label}</span>
-                          </div>
+                            {route.label}
+                          </NavigationBottomAppBarPill>
                         )}
                       </NavLink>
                     </li>
@@ -129,18 +122,60 @@ export default function BottomAppBar() {
             </motion.div>
           </motion.div>
         </NavigationMenu.Item>
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence initial={false} mode="popLayout">
           {showMenu ? (
-            <NavigationMenu.Item asChild>
-              <motion.div
-                className="bg-theme-800 text-theme-50 rounded-2xl flex-none flex items-center justify-center overflow-hidden w-12 h-12 -z-10"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0 }}
-                transition={transition}
-              >
-                <Icon name="more" label="Menu" className="w-6 h-6 flex-none" />
-              </motion.div>
+            <NavigationMenu.Item>
+              <DropdownMenu.Root>
+                <NavigationMenu.Trigger asChild>
+                  <DropdownMenu.Trigger asChild>
+                    <motion.button
+                      className="bg-theme-800 text-theme-50 rounded-2xl flex-none flex items-center justify-center overflow-hidden w-12 h-12 -z-10"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={transition}
+                    >
+                      <Icon
+                        name="more"
+                        label="Menu"
+                        className="w-6 h-6 flex-none"
+                      />
+                    </motion.button>
+                  </DropdownMenu.Trigger>
+                </NavigationMenu.Trigger>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content
+                    className="absolute top-0 right-0 -translate-y-full pb-2 bg-acrylic-red-400 space-y-2"
+                    side="right"
+                    align="start"
+                  >
+                    <DropdownMenu.Item asChild>
+                      <NavigationBottomAppBarPill
+                        icon="home"
+                        className="flex-row-reverse"
+                      >
+                        Foo
+                      </NavigationBottomAppBarPill>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item asChild>
+                      <NavigationBottomAppBarPill
+                        icon="home"
+                        className="flex-row-reverse"
+                      >
+                        Foo
+                      </NavigationBottomAppBarPill>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item asChild>
+                      <NavigationBottomAppBarPill
+                        icon="home"
+                        className="flex-row-reverse"
+                      >
+                        Foo
+                      </NavigationBottomAppBarPill>
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
             </NavigationMenu.Item>
           ) : null}
         </AnimatePresence>
