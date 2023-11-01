@@ -24,6 +24,7 @@ export default {
     colors: {
       transparent: "transparent",
       current: "currentColor",
+      unset: "unset",
       white: "#FFFFFF",
       "not-so-white": "#FAFAFA",
       black: "#000000",

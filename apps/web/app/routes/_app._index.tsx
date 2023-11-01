@@ -19,7 +19,6 @@ export const handle = {
 export default function Index() {
   return (
     <Container grid>
-      <h1 className="text-red-500">:)</h1>
       <WidgetTheme />
     </Container>
   )
