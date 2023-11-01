@@ -1,9 +1,28 @@
-import type { ComponentProps } from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { forwardRef } from "react"
+import type { ComponentProps, ForwardedRef } from "react"
 import { useIsSubmitting } from "remix-validated-form"
 
-type Props = ComponentProps<"button">
-
-export default function Submit({ type = "submit", disabled, ...props }: Props) {
-  const isSubmitting = useIsSubmitting()
-  return <button {...props} type={type} disabled={disabled || isSubmitting} />
+type Props = ComponentProps<"button"> & {
+  asChild?: boolean
 }
+
+function Submit(
+  { type = "submit", disabled, asChild, ...props }: Props,
+  ref: ForwardedRef<HTMLButtonElement>,
+) {
+  const isSubmitting = useIsSubmitting()
+
+  const Component = asChild ? Slot : "button"
+
+  return (
+    <Component
+      {...props}
+      ref={ref}
+      type={type}
+      disabled={disabled || isSubmitting}
+    />
+  )
+}
+
+export default forwardRef(Submit)
