@@ -21,28 +21,6 @@ export type UsersInsert = typeof users.$inferInsert
 
 export type UsersSelect = typeof users.$inferSelect
 
-export const create = zod(UsersInsertSchema.omit({ id: true }), async (user) =>
-  db
-    .insert(users)
-    .values(user)
-    .returning({
-      id: users.id,
-      username: users.username,
-      email: users.email,
-      theme: users.theme,
-      avatar: users.avatar,
-      bio: users.bio,
-      discordId: users.discordId,
-      discordUsername: users.discordUsername,
-      discordMetadata: users.discordMetadata,
-      twitchId: users.twitchId,
-      twitchUsername: users.twitchUsername,
-      twitchMetadata: users.twitchMetadata,
-      timestamp: users.timestamp,
-    })
-    .get()
-)
-
 export const fromUsername = zod(
   UsersSelectSchema.shape.username,
   async (username) =>

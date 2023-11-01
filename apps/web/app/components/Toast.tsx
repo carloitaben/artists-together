@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "@remix-run/react"
+import { useSearchParams } from "@remix-run/react"
 import { useStore } from "@nanostores/react"
 import { atom, map } from "nanostores"
 import type { ReactNode } from "react"
@@ -98,23 +98,22 @@ export function useToast() {
 
 export default function Toast() {
   const toast = useStore($toast)
-  const location = useLocation()
-  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [hover, setHover] = useState(false)
 
   useEffect(() => {
-    if (!location.search) return
-
-    const params = new URLSearchParams(location.search)
-    if (!params.get("error")) return
-
-    params.delete("error")
-    emit.error()
-
-    navigate(location.pathname + "?" + params.toString(), {
-      replace: true,
-    })
-  }, [location.pathname, location.search, navigate])
+    if (!searchParams.get("error")) return
+    setSearchParams(
+      (params) => {
+        emit.error()
+        params.delete("error")
+        return params
+      },
+      {
+        replace: true,
+      },
+    )
+  }, [searchParams, setSearchParams])
 
   useEffect(() => {
     if (!toast || hover) return

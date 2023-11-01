@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs } from "@remix-run/node"
+import { redirect, type ActionFunctionArgs } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { validationError } from "remix-validated-form"
 import { auth } from "~/services/auth.server"
@@ -13,7 +13,19 @@ export async function action({ request }: ActionFunctionArgs) {
     return validationError(form.error)
   }
 
-  await auth.logout(request, {
-    redirectTo: form.data.location.pathname,
+  const authRequest = auth.handleRequest(request)
+  const session = await authRequest.validate()
+
+  if (!session) {
+    return redirect(form.data.pathname)
+  }
+
+  await auth.invalidateSession(session.sessionId)
+  const sessionCookie = auth.createSessionCookie(session)
+
+  return redirect(form.data.pathname, {
+    headers: {
+      "Set-Cookie": sessionCookie.serialize(),
+    },
   })
 }

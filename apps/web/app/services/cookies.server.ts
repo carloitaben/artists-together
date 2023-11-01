@@ -1,39 +1,31 @@
-import { createCookie, createCookieSessionStorage } from "@remix-run/node"
+import { createCookie } from "@remix-run/node"
+import type { TypedCookie } from "remix-utils/typed-cookie"
 import { createTypedCookie } from "remix-utils/typed-cookie"
+import type { ZodTypeAny } from "zod"
 import { z } from "zod"
-import { theme, defaultTheme } from "~/lib/themes"
-
-const secret = import.meta.env.DEV ? "s3cr3t" : process.env.AUTH_SECRET
-
-if (import.meta.env.PROD && !secret) {
-  throw Error("Missing AUTH_SECRET environment variable")
-}
-
-export const session = createCookieSessionStorage({
-  cookie: {
-    name: "session",
-    sameSite: "lax",
-    path: "/",
-    httpOnly: true,
-    secrets: [String(secret)],
-    secure: process.env.NODE_ENV === "production",
-  },
-})
+import { theme } from "~/lib/themes"
 
 export const themeCookie = createTypedCookie({
   cookie: createCookie("theme"),
   schema: theme,
 })
 
-export const fromCookieSchema = z.string().nullable()
+export const oauthCookieSchema = z
+  .object({
+    from: z.string(),
+    state: z.string(),
+  })
+  .nullable()
 
-export const fromCookie = createTypedCookie({
-  cookie: createCookie("from"),
-  schema: fromCookieSchema,
+export const oauthCookie = createTypedCookie({
+  cookie: createCookie("oauth"),
+  schema: oauthCookieSchema,
 })
 
-export async function getTheme(request: Request) {
+export async function getCookie<T extends ZodTypeAny>(
+  request: Request,
+  cookie: TypedCookie<T>,
+) {
   const cookieHeader = request.headers.get("Cookie")
-  const theme = await themeCookie.parse(cookieHeader)
-  return theme || defaultTheme
+  return cookie.parse(cookieHeader)
 }

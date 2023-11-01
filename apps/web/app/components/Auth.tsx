@@ -2,7 +2,8 @@ import * as Dialog from "@radix-ui/react-dialog"
 import * as Form from "~/components/Form"
 import { useUser } from "~/hooks/loaders"
 import { validator as logoutValidator } from "~/routes/auth.logout"
-import { validator as authValidator } from "~/routes/auth"
+import { validator as authValidator } from "~/routes/login"
+import { validator as twitchValidator } from "~/routes/auth.connect.twitch"
 
 export default function Auth() {
   const user = useUser()
@@ -17,11 +18,19 @@ export default function Auth() {
               <Dialog.Description>:)</Dialog.Description>
               <pre>{JSON.stringify(user, null, 2)}</pre>
               <Form.Root
+                validator={twitchValidator}
+                action="/auth/connect/twitch"
+                reloadDocument
+              >
+                <Form.Submit type="submit" className="disabled:opacity-25">
+                  Connect with twitch
+                </Form.Submit>
+              </Form.Root>
+              <Form.Root
                 validator={logoutValidator}
                 action="/auth/logout"
                 navigate={false}
               >
-                <Form.Debugger />
                 <Form.Submit className="disabled:opacity-25">
                   Log out
                 </Form.Submit>
@@ -31,8 +40,7 @@ export default function Auth() {
             <>
               <Dialog.Title>Welcome</Dialog.Title>
               <Dialog.Description>Login plz</Dialog.Description>
-              <Form.Root validator={authValidator} action="/auth">
-                <Form.Debugger />
+              <Form.Root validator={authValidator} action="/login">
                 <Form.Submit className="bg-[#5865F2] rounded-full text-gunpla-white-50 p-5 inline-flex">
                   Log-in with Discord
                 </Form.Submit>

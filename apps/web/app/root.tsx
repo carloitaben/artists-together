@@ -10,14 +10,17 @@ import {
 
 import "~/styles/index.css"
 import { auth } from "~/services/auth.server"
-import { getTheme } from "~/services/cookies.server"
-import { useThemeStyle } from "~/lib/themes"
+import { getCookie, themeCookie } from "~/services/cookies.server"
+import { defaultTheme, useThemeStyle } from "~/lib/themes"
 import Icons from "~/components/Icons"
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const [user, theme] = await Promise.all([
-    auth.isAuthenticated(request),
-    getTheme(request),
+  const [theme, user] = await Promise.all([
+    getCookie(request, themeCookie) || defaultTheme,
+    auth
+      .handleRequest(request)
+      .validate()
+      .then((session) => session?.user),
   ])
 
   return {

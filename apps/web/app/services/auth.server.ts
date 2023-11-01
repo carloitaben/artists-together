@@ -1,94 +1,61 @@
-import { Authenticator } from "remix-auth"
-import type { DiscordProfile, PartialDiscordGuild } from "remix-auth-discord"
-import { DiscordStrategy } from "remix-auth-discord"
-import { Users } from "db"
+import type { Users } from "db"
+import { createClient } from "db"
+import { lucia } from "lucia"
+import { web } from "lucia/middleware"
+import { libsql } from "@lucia-auth/adapter-sqlite"
+import type { DiscordUser, TwitchUser } from "@lucia-auth/oauth/providers"
+import { discord, twitch } from "@lucia-auth/oauth/providers"
 import { url } from "~/lib/env"
-import { getTheme, session } from "~/services/cookies.server"
 
-export type User = Users.UsersSelectSchema
-
-export interface DiscordUser {
-  id: DiscordProfile["id"]
-  displayName: DiscordProfile["displayName"]
-  avatar: DiscordProfile["__json"]["avatar"]
-  email: DiscordProfile["__json"]["email"]
-  guilds?: Array<PartialDiscordGuild>
-  accessToken: string
-  refreshToken: string
-}
-
-type PartialDiscordMember = {
-  nick: string
-  roles: string[]
-  user: {
-    id: string
-    username: string
-    avatar: string
-  }
-}
-
-export const auth = new Authenticator<User>(session)
-
-const discordStrategy = new DiscordStrategy(
-  {
-    clientID: String(process.env.DISCORD_OAUTH_ID),
-    clientSecret: String(process.env.DISCORD_OAUTH_SECRET),
-    callbackURL: `${url}/auth/discord`,
-    scope: ["identify", "email", "guilds", "guilds.members.read"],
+export const auth = lucia({
+  env: import.meta.env.DEV ? "DEV" : "PROD",
+  middleware: web(),
+  adapter: libsql(createClient(), {
+    key: "auth_key",
+    session: "auth_session",
+    user: "users",
+  }),
+  sessionCookie: {
+    expires: false,
+    name: "session_v0",
   },
-  async ({ accessToken, profile, request }): Promise<User> => {
-    if (!profile.__json.email) {
-      throw Error("Oops missing email")
-    }
-
-    const existingUser = await Users.fromUsername(profile.displayName)
-
-    if (existingUser) {
-      return existingUser
-    }
-
-    const theme = await getTheme(request)
-
-    const guilds: Array<PartialDiscordGuild> = await fetch(
-      "https://discord.com/api/v10/users/@me/guilds",
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    ).then((response) => response.json())
-
-    const user = await Users.create({
-      email: profile.__json.email,
-      username: profile.displayName,
-      avatar: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.__json.avatar}.png`,
-      theme,
-      discordId: profile.id,
-      discordUsername: profile.displayName,
-      discordMetadata: JSON.stringify(profile),
-    })
-
-    const guild = guilds.find(
-      (guild) => guild.id === process.env.DISCORD_SERVER_ID,
-    )
-
-    if (!guild) {
-      return user
-    }
-
-    const member: PartialDiscordMember = await fetch(
-      `https://discord.com/api/v10/users/@me/guilds/${process.env.DISCORD_SERVER_ID}/member`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    ).then((response) => response.json())
-
-    console.log(member.user.username, member.roles)
-
-    return user
+  getUserAttributes(user) {
+    return {
+      email: user.email,
+      theme: user.theme,
+      username: user.username,
+      bio: user.bio,
+      discord_id: user.discord_id,
+      discord_username: user.discord_username,
+      discord_metadata: user.discord_metadata as DiscordUser,
+      avatar: user.avatar,
+      twitch_id: user.twitch_id,
+      twitch_username: user.twitch_username,
+      twitch_metadata: user.twitch_metadata as TwitchUser,
+      timestamp: user.timestamp,
+    } satisfies Omit<Users.UsersInsert, "id">
   },
-)
+  getSessionAttributes() {
+    return {}
+  },
+})
 
-auth.use(discordStrategy)
+export type Auth = typeof auth
+
+export type UserAttributes = Omit<Users.UsersInsertSchema, "id">
+
+const discordAuth = discord(auth, {
+  clientId: String(process.env.DISCORD_OAUTH_ID),
+  clientSecret: String(process.env.DISCORD_OAUTH_SECRET),
+  redirectUri: `${url}/auth/callback/discord`,
+  scope: ["identify", "email", "guilds", "guilds.members.read"],
+})
+
+const twitchAuth = twitch(auth, {
+  clientId: String(process.env.TWITCH_OAUTH_ID),
+  clientSecret: String(process.env.TWITCH_OAUTH_SECRET),
+  redirectUri: `${url}/auth/callback/twitch`,
+  scope: [],
+})
+
+export { discordAuth as discord, twitchAuth as twitch }

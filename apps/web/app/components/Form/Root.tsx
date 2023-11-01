@@ -22,6 +22,7 @@ export default function Root<
   children,
   action,
   validator,
+  navigate,
   ...props
 }: Props<DataType, Subaction>) {
   const location = useLocation()
@@ -29,13 +30,13 @@ export default function Root<
   return (
     <ValidatedForm
       {...props}
-      fetcherKey={action}
+      fetcherKey={navigate ? undefined : action}
       validator={validator}
+      navigate={navigate}
       method={method}
       action={action}
     >
-      <input type="hidden" name="location.pathname" value={location.pathname} />
-      <input type="hidden" name="location.key" value={location.key} />
+      <input type="hidden" name="pathname" value={location.pathname} />
       {children}
     </ValidatedForm>
   )
