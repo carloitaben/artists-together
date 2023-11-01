@@ -34,7 +34,7 @@ export default function BottomAppBar() {
             <motion.button
               layout
               className={cx(
-                "bg-theme-800 text-theme-50 h-12",
+                "bg-theme-800 text-theme-50 h-12 overflow-hidden",
                 focus ? "w-12 flex-none" : "flex-1 w-full",
               )}
               style={{ borderRadius: 16 }}
@@ -100,20 +100,34 @@ export default function BottomAppBar() {
         </NavigationMenu.Item>
         <NavigationMenu.Viewport className="absolute top-0 inset-x-0 max-w-[14.25rem] w-full -translate-y-full" />
         <NavigationMenu.Item asChild>
-          <motion.input
+          <motion.div
             layout
-            type="text"
             className={cx(
-              "h-12 focus:outline-none",
+              "h-12 overflow-hidden relative",
               focus
                 ? "flex-1 w-full bg-theme-50 text-theme-800"
-                : "w-12 flex-none bg-theme-800 text-theme-50 placeholder-theme-50",
+                : "w-12 flex-none bg-theme-800 text-theme-50",
             )}
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
             style={{ borderRadius: 16 }}
             transition={transition}
-          />
+          >
+            <motion.input
+              layout="preserve-aspect"
+              className="w-full h-full p-4 bg-transparent focus:outline-none"
+              placeholder="Search something"
+              initial={false}
+              animate={{ opacity: focus ? 1 : 0 }}
+              onFocus={() => setFocus(true)}
+              onBlur={() => setFocus(false)}
+              transition={transition}
+            />
+            <motion.div
+              layout="position"
+              className="absolute inset-y-0 right-0 pointer-events-none"
+            >
+              <Icon name="search" label="Search" className="w-6 h-6 m-3" />
+            </motion.div>
+          </motion.div>
         </NavigationMenu.Item>
         <AnimatePresence mode="popLayout">
           {showMenu ? (
