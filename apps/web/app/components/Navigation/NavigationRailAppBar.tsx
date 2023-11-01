@@ -14,7 +14,7 @@ export default function RailAppBar() {
   const user = useUser()
 
   return (
-    <Tooltip.Provider delayDuration={0}>
+    <Tooltip.Provider>
       <NavigationMenu.Root
         orientation="vertical"
         className="fixed inset-y-0 left-0 hidden w-16 bg-theme-900 text-theme-50 sm:flex flex-col items-center justify-center overflow-y-auto gap-y-4 pt-4 pb-2"
@@ -23,17 +23,19 @@ export default function RailAppBar() {
           {handle.page.name}
         </h1>
         <div className="invisible"></div>
-        <NavigationMenu.List className="grid gap-1">
+        <NavigationMenu.List className="grid">
           <NavigationMenu.Item>
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
                 <NavigationMenu.Trigger asChild>
-                  <Dialog.Trigger className="w-12 h-12 flex items-center justify-center rounded-lg text-theme-700 hover:bg-theme-800 hover:text-theme-100">
-                    {user ? (
-                      <div className="w-6 h-6 bg-current" />
-                    ) : (
-                      <Icon name="face" label="Sign in" className="w-6 h-6" />
-                    )}
+                  <Dialog.Trigger className="p-0.5 group">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-lg text-theme-700 group-hover:bg-theme-800 group-hover:text-theme-100">
+                      {user ? (
+                        <div className="w-6 h-6 bg-current" />
+                      ) : (
+                        <Icon name="face" label="Sign in" className="w-6 h-6" />
+                      )}
+                    </div>
                   </Dialog.Trigger>
                 </NavigationMenu.Trigger>
               </Tooltip.Trigger>
@@ -56,13 +58,13 @@ export default function RailAppBar() {
                     href={route.href}
                     aria-disabled={route?.disabled}
                   >
-                    <NavLink to={route.href} className="group">
+                    <NavLink to={route.href} className="group block p-0.5">
                       {({ isActive, isPending }) => (
                         <div
                           className={cx(
-                            "w-12 h-12 flex items-center justify-center rounded-lg group-aria-disabled:text-theme-800 group-aria-disabled:hover:bg-unset",
+                            "w-12 h-12 flex items-center justify-center rounded-lg group-aria-disabled:text-theme-800 group-aria-disabled:group-hover:bg-unset",
                             {
-                              "text-theme-700 hover:bg-theme-800 hover:text-theme-100":
+                              "text-theme-700 group-hover:bg-theme-800 group-hover:text-theme-100":
                                 !isActive && !isPending,
                               "bg-theme-300 text-theme-700":
                                 isActive && !isPending,
