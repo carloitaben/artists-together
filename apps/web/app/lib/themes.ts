@@ -32,7 +32,7 @@ export function useTheme() {
   const fetcher = fetchers.find((fetcher) => fetcher.key === "theme")
   const submission = theme.safeParse(fetcher?.formData?.get("theme"))
 
-  return submission.success ? submission.data : data?.theme
+  return submission.success ? submission.data : data?.theme || defaultTheme
 }
 
 export function useThemeStyle() {
