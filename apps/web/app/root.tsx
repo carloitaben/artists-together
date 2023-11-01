@@ -12,6 +12,7 @@ import "~/styles/index.css"
 import { auth } from "~/services/auth.server"
 import { getTheme } from "~/services/cookies.server"
 import { useThemeStyle } from "~/lib/themes"
+import Icons from "~/components/Icons"
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const [user, theme] = await Promise.all([
@@ -31,7 +32,7 @@ export default function App() {
   return (
     <html
       lang="en"
-      className="h-full bg-theme-900 text-gunpla-white-50  selection:bg-theme-300 selection:text-theme-900 text-sm"
+      className="h-full bg-theme-900 text-gunpla-white-50 selection:bg-theme-300 selection:text-theme-900"
       style={style}
     >
       <head>
@@ -41,8 +42,9 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="min-h-full h-full">
+      <body className="min-h-full h-full text-sm pl-16">
         <Outlet />
+        <Icons />
         <ScrollRestoration />
         <LiveReload />
         <Scripts />

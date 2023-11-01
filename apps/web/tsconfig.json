@@ -1,5 +1,10 @@
 {
-  "include": ["env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "node_modules/vite-plugin-svg-icons-ssr/client.d.ts", // TODO: I'm sure there's a better way to do this
+    "env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,
