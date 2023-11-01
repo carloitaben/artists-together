@@ -36,13 +36,7 @@ const discordStrategy = new DiscordStrategy(
     callbackURL: `${url}/auth/discord`,
     scope: ["identify", "email", "guilds", "guilds.members.read"],
   },
-  async ({
-    accessToken,
-    refreshToken,
-    extraParams,
-    profile,
-    request,
-  }): Promise<User> => {
+  async ({ accessToken, profile, request }): Promise<User> => {
     if (!profile.__json.email) {
       throw Error("Oops missing email")
     }
@@ -50,8 +44,7 @@ const discordStrategy = new DiscordStrategy(
     const existingUser = await Users.fromUsername(profile.displayName)
 
     if (existingUser) {
-      console.log(`[auth]: user ${profile.displayName} exists`)
-      return existingUser
+      throw Error("User already exists")
     }
 
     const theme = await getTheme(request)

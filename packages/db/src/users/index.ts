@@ -32,7 +32,6 @@ export const create = zod(UsersInsertSchema.omit({ id: true }), async (user) =>
       theme: users.theme,
       avatar: users.avatar,
       bio: users.bio,
-      links: users.links,
       discordId: users.discordId,
       discordUsername: users.discordUsername,
       discordMetadata: users.discordMetadata,
