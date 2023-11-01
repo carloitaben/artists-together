@@ -19,9 +19,14 @@ export default function RailAppBar() {
         orientation="vertical"
         className="fixed inset-y-0 left-0 hidden w-16 bg-theme-900 text-theme-50 sm:flex flex-col items-center justify-center overflow-y-auto gap-y-4 pt-4 pb-2"
       >
-        <h1 className="text-theme-100 font-serif text-base font-semibold [writing-mode:vertical-lr] rotate-180 absolute top-4 inset-x-auto">
-          {handle.page.name}
-        </h1>
+        <button
+          className="inline-block absolute top-4 inset-x-auto"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          <h1 className="text-theme-100 font-serif text-base font-semibold [writing-mode:vertical-lr] rotate-180">
+            {handle.page.name}
+          </h1>
+        </button>
         <div className="invisible"></div>
         <NavigationMenu.List className="grid">
           <NavigationMenu.Item>
