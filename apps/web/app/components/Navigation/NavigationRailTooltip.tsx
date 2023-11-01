@@ -37,7 +37,7 @@ function NavigationRailTooltip(
         >
           <path d="M18.455 0H20v38h-1.482a4 4 0 0 1-2.96-1.31L1.533 21.261a4 4 0 0 1 .072-5.458l13.962-14.57A4 4 0 0 1 18.455 0Z" />
         </svg>
-        <div className="-ml-px bg-theme-300 flex items-center pr-3 py-2 rounded-r-[0.25rem]">
+        <div className="-ml-px bg-theme-300 flex items-center pl-0.5 pr-3 py-2 rounded-r-[0.25rem]">
           {children}
         </div>
       </motion.div>

@@ -25,15 +25,24 @@ export default function RailAppBar() {
         <div className="invisible"></div>
         <NavigationMenu.List className="grid gap-1">
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger asChild>
-              <Dialog.Trigger className="w-12 h-12 flex items-center justify-center rounded-lg text-theme-700 hover:bg-theme-800 hover:text-theme-100">
-                {user ? (
-                  <div className="w-6 h-6 bg-current" />
-                ) : (
-                  <Icon name="face" label="Sign in" className="w-6 h-6" />
-                )}
-              </Dialog.Trigger>
-            </NavigationMenu.Trigger>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+                <NavigationMenu.Trigger asChild>
+                  <Dialog.Trigger className="w-12 h-12 flex items-center justify-center rounded-lg text-theme-700 hover:bg-theme-800 hover:text-theme-100">
+                    {user ? (
+                      <div className="w-6 h-6 bg-current" />
+                    ) : (
+                      <Icon name="face" label="Sign in" className="w-6 h-6" />
+                    )}
+                  </Dialog.Trigger>
+                </NavigationMenu.Trigger>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <NavigationRailTooltip>
+                  {user ? "Your profile" : "Sign in"}
+                </NavigationRailTooltip>
+              </Tooltip.Portal>
+            </Tooltip.Root>
           </NavigationMenu.Item>
           {routes.map((route) => (
             <NavigationMenu.Item
