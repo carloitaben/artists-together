@@ -16,7 +16,7 @@ export const handle = {
   },
 }
 
-export default function Index() {
+export default function Page() {
   return (
     <Container grid>
       <WidgetTheme />
