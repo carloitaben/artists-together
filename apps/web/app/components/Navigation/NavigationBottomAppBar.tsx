@@ -6,13 +6,16 @@ import { AnimatePresence, motion } from "framer-motion"
 import { usePageHandle } from "~/lib/handle"
 import { routes } from "~/lib/routes"
 import Icon from "~/components/Icon"
+import { useState } from "react"
 
 const transition: Transition = {
   type: "spring",
-  mass: 0.015,
+  bounce: 0.25,
 }
 
 export default function BottomAppBar() {
+  const [focus, setFocus] = useState(false)
+
   const handle = usePageHandle<{
     page: { name: string }
     actions: Record<string, any>
@@ -30,7 +33,11 @@ export default function BottomAppBar() {
           <NavigationMenu.Trigger asChild>
             <motion.button
               layout
-              className="flex-1 rounded-2xl bg-theme-800 text-theme-50 w-full h-12 flex items-center justify-start"
+              className={cx(
+                "bg-theme-800 text-theme-50 h-12 flex items-center justify-start",
+                focus ? "w-12 flex-none" : "flex-1 w-full",
+              )}
+              style={{ borderRadius: 16 }}
               transition={transition}
             >
               <motion.div
@@ -70,6 +77,22 @@ export default function BottomAppBar() {
           </NavigationMenu.Trigger>
         </NavigationMenu.Item>
         <NavigationMenu.Viewport className="absolute top-0 inset-x-0 max-w-[14.25rem] w-full -translate-y-full" />
+        <NavigationMenu.Item asChild>
+          <motion.input
+            layout
+            type="text"
+            className={cx(
+              "h-12 focus:outline-none",
+              focus
+                ? "flex-1 w-full bg-theme-50 text-theme-800"
+                : "w-12 flex-none bg-theme-800 text-theme-50 placeholder-theme-50",
+            )}
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false)}
+            style={{ borderRadius: 16 }}
+            transition={transition}
+          />
+        </NavigationMenu.Item>
         <AnimatePresence mode="popLayout">
           {showMenu ? (
             <NavigationMenu.Item asChild>
