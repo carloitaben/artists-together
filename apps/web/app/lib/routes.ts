@@ -28,3 +28,13 @@ export const routes = [
     href: $path("/calendar"),
   },
 ] satisfies Route[]
+
+
+export function guardDisabledRoute() {
+  if (import.meta.env.DEV) return
+
+  throw new Response(null, {
+    status: 404,
+    statusText: "Not Found",
+  })
+}
