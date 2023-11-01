@@ -4,6 +4,9 @@ export const handle = {
   actions: {
     help: () => console.log("help"),
   },
+  page: {
+    name: "Artist Raid Train",
+  },
 }
 
 export async function loader() {

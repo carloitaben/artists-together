@@ -4,6 +4,9 @@ export const handle = {
   actions: {
     toggle: () => console.log("toggle"),
   },
+  page: {
+    name: "Calendar",
+  },
 }
 
 export async function loader() {

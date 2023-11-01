@@ -4,6 +4,9 @@ export const handle = {
   actions: {
     paint: () => console.log("paint"),
   },
+  page: {
+    name: "About",
+  },
 }
 
 export default function Page() {

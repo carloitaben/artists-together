@@ -18,14 +18,17 @@ export const routes = [
   {
     label: "Artists Lounge",
     href: $path("/lounge"),
+    disabled: true,
   },
   {
     label: "Artist Raid Train",
     href: $path("/art"),
+    disabled: true,
   },
   {
     label: "Calendar",
     href: $path("/calendar"),
+    disabled: true,
   },
 ] satisfies Route[]
 

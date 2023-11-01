@@ -5,6 +5,9 @@ export const handle = {
     search: () => console.log("search"),
     filter: () => console.log("filter"),
   },
+  page: {
+    name: "Artists Lounge",
+  },
 }
 
 export async function loader() {

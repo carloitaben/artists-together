@@ -11,6 +11,9 @@ export const meta: MetaFunction = () => {
 
 export const handle = {
   actions: {},
+  page: {
+    name: "Home",
+  },
 }
 
 export default function Index() {
