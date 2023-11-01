@@ -1,7 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
-import { Users } from "db"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"
 import { theme } from "~/lib/themes"
@@ -21,13 +20,14 @@ export async function action({ request }: ActionFunctionArgs) {
     return validationError(form.error)
   }
 
-  const user = await auth.isAuthenticated(request)
+  const authRequest = await auth.handleRequest(request).validate()
 
-  if (user) {
-    Users.update({
-      id: user.id,
-      theme: form.data.theme,
-    }).catch(console.error)
+  if (authRequest) {
+    auth
+      .updateUserAttributes(authRequest.user.userId, {
+        theme: form.data.theme,
+      })
+      .catch(console.error)
   }
 
   return json(null, {
