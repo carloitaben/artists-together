@@ -27,7 +27,6 @@ export default function RailAppBar() {
             {handle.page.name}
           </h1>
         </button>
-        <div className="invisible"></div>
         <NavigationMenu.List className="grid">
           <NavigationMenu.Item>
             <Tooltip.Root>
