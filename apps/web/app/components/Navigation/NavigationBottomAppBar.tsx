@@ -28,13 +28,13 @@ export default function BottomAppBar() {
       orientation="horizontal"
       className="fixed bottom-0 inset-x-0 sm:hidden p-2"
     >
-      <NavigationMenu.List className="flex items-center justify-center">
+      <NavigationMenu.List className="flex items-center justify-center gap-2">
         <NavigationMenu.Item asChild>
           <NavigationMenu.Trigger asChild>
             <motion.button
               layout
               className={cx(
-                "bg-theme-800 text-theme-50 h-12 flex items-center justify-start",
+                "bg-theme-800 text-theme-50 h-12",
                 focus ? "w-12 flex-none" : "flex-1 w-full",
               )}
               style={{ borderRadius: 16 }}
@@ -42,9 +42,31 @@ export default function BottomAppBar() {
             >
               <motion.div
                 layout="position"
-                className="text-start truncate px-4"
+                className="flex justify-start"
+                transition={transition}
               >
-                {handle.page.name}
+                <AnimatePresence mode="wait">
+                  {focus ? (
+                    <motion.div
+                      key="menu-icon"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                    >
+                      <Icon name="menu" label="Menu" className="w-6 h-6 m-3" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="menu-name"
+                      className="text-start px-4 whitespace-nowrap"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                    >
+                      {handle.page.name}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
               <NavigationMenu.Content>
                 <ul className="space-y-2 mb-2">
