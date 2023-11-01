@@ -25,16 +25,21 @@ export default function BottomAppBar() {
       orientation="horizontal"
       className="fixed bottom-0 inset-x-0 sm:hidden p-2"
     >
-      <NavigationMenu.List className="flex items-center justify-center gap-1">
+      <NavigationMenu.List className="flex items-center justify-center">
         <NavigationMenu.Item asChild>
           <NavigationMenu.Trigger asChild>
             <motion.button
               layout
-              className="flex-1 rounded-2xl bg-theme-800 text-theme-50 block text-start p-3 w-full h-12"
+              className="flex-1 rounded-2xl bg-theme-800 text-theme-50 w-full h-12 flex items-center justify-start"
               transition={transition}
             >
-              <span className="text-truncate">{handle.page.name}</span>
-              <NavigationMenu.Content className="absolute top-0 inset-x-0 max-w-[14.25rem] w-full -translate-y-full">
+              <motion.div
+                layout="position"
+                className="text-start truncate px-4"
+              >
+                {handle.page.name}
+              </motion.div>
+              <NavigationMenu.Content>
                 <ul className="space-y-2 mb-2">
                   {routes.map((route) => (
                     <li key={route.href}>
@@ -64,14 +69,15 @@ export default function BottomAppBar() {
             </motion.button>
           </NavigationMenu.Trigger>
         </NavigationMenu.Item>
-        <AnimatePresence>
+        <NavigationMenu.Viewport className="absolute top-0 inset-x-0 max-w-[14.25rem] w-full -translate-y-full" />
+        <AnimatePresence mode="popLayout">
           {showMenu ? (
             <NavigationMenu.Item asChild>
               <motion.div
-                className="bg-theme-800 text-theme-50 rounded-2xl flex-none flex items-center justify-center overflow-hidden"
-                initial={{ scale: 0, width: "0rem", height: "0rem" }}
-                animate={{ scale: 1, width: "3rem", height: "3rem" }}
-                exit={{ scale: 0, width: "0rem", height: "0rem" }}
+                className="bg-theme-800 text-theme-50 rounded-2xl flex-none flex items-center justify-center overflow-hidden w-12 h-12"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
                 transition={transition}
               >
                 <Icon name="more" label="Menu" className="w-6 h-6 flex-none" />
