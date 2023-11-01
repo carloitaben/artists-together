@@ -44,7 +44,7 @@ const discordStrategy = new DiscordStrategy(
     const existingUser = await Users.fromUsername(profile.displayName)
 
     if (existingUser) {
-      throw Error("User already exists")
+      return existingUser
     }
 
     const theme = await getTheme(request)
