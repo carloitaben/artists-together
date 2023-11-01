@@ -31,8 +31,8 @@ export const auth = new Authenticator<User>(session)
 
 const discordStrategy = new DiscordStrategy(
   {
-    clientID: String(process.env.VITE_DISCORD_OAUTH_ID),
-    clientSecret: String(process.env.VITE_DISCORD_OAUTH_SECRET),
+    clientID: String(process.env.DISCORD_OAUTH_ID),
+    clientSecret: String(process.env.DISCORD_OAUTH_SECRET),
     callbackURL: `${url}/auth/discord`,
     scope: ["identify", "email", "guilds", "guilds.members.read"],
   },
