@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { usePageHandle } from "~/lib/handle"
 import { routes } from "~/lib/routes"
 import Icon from "~/components/Icon"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import NavigationBottomAppBarPill from "./NavigationBottomAppBarPill"
 
 const transition: Transition = {
@@ -17,6 +17,7 @@ const transition: Transition = {
 
 export default function BottomAppBar() {
   const [focus, setFocus] = useState(false)
+  const input = useRef<HTMLInputElement>(null)
 
   const handle = usePageHandle<{
     page: { name: string }
@@ -24,6 +25,12 @@ export default function BottomAppBar() {
   }>()
 
   const showMenu = Object.keys(handle.actions).length
+
+  useEffect(() => {
+    if (focus && input.current) {
+      input.current.focus()
+    }
+  }, [focus])
 
   return (
     <NavigationMenu.Root
@@ -93,10 +100,10 @@ export default function BottomAppBar() {
         </NavigationMenu.Item>
         <NavigationMenu.Viewport className="absolute top-0 inset-x-0 max-w-[14.25rem] w-full -translate-y-full" />
         <NavigationMenu.Item asChild>
-          <motion.div
+          <motion.li
             layout
             className={cx(
-              "h-12 overflow-hidden relative",
+              "h-12 overflow-hidden relative transition-colors duration-150",
               focus
                 ? "flex-1 w-full bg-theme-50 text-theme-800"
                 : "w-12 flex-none bg-theme-800 text-theme-50",
@@ -104,23 +111,38 @@ export default function BottomAppBar() {
             style={{ borderRadius: 16 }}
             transition={transition}
           >
-            <motion.input
-              layout="preserve-aspect"
-              className="w-full h-full p-4 bg-transparent focus:outline-none"
-              placeholder="Search something"
-              initial={false}
-              animate={{ opacity: focus ? 1 : 0 }}
-              onFocus={() => setFocus(true)}
-              onBlur={() => setFocus(false)}
-              transition={transition}
-            />
+            <NavigationMenu.Trigger asChild>
+              <motion.button
+                className="w-full h-full"
+                onClick={(event) => {
+                  event.preventDefault()
+                  setFocus(true)
+                }}
+              >
+                <motion.input
+                  layout="position"
+                  ref={input}
+                  className={cx(
+                    "w-full h-full p-4 bg-transparent focus:outline-none caret-theme-300",
+                    focus ? "" : "pointer-events-none",
+                  )}
+                  placeholder="Search something"
+                  disabled={!focus}
+                  initial={false}
+                  animate={{ opacity: focus ? 1 : 0 }}
+                  onFocus={() => setFocus(true)}
+                  onBlur={() => setFocus(false)}
+                  transition={transition}
+                />
+              </motion.button>
+            </NavigationMenu.Trigger>
             <motion.div
               layout="position"
               className="absolute inset-y-0 right-0 pointer-events-none"
             >
               <Icon name="search" label="Search" className="w-6 h-6 m-3" />
             </motion.div>
-          </motion.div>
+          </motion.li>
         </NavigationMenu.Item>
         <AnimatePresence initial={false} mode="popLayout">
           {showMenu ? (
