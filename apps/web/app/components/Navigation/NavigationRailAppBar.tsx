@@ -3,11 +3,11 @@ import * as Tooltip from "@radix-ui/react-tooltip"
 import * as Dialog from "@radix-ui/react-dialog"
 import { cx } from "cva"
 import { NavLink } from "@remix-run/react"
+import { useUser } from "~/hooks/loaders"
 import { usePageHandle } from "~/lib/handle"
 import { routes } from "~/lib/routes"
 import Icon from "~/components/Icon"
 import NavigationRailTooltip from "./NavigationRailTooltip"
-import { useUser } from "~/hooks/loaders"
 
 export default function RailAppBar() {
   const handle = usePageHandle<{ page: { name: string } }>()
@@ -35,10 +35,20 @@ export default function RailAppBar() {
                 <NavigationMenu.Trigger asChild>
                   <Dialog.Trigger className="p-0.5 group">
                     <div className="w-12 h-12 flex items-center justify-center rounded-lg text-theme-700 group-hover:bg-theme-800 group-hover:text-theme-100">
-                      {user ? (
-                        <div className="w-6 h-6 bg-current" />
+                      {user?.avatar ? (
+                        <img
+                          className="w-6 h-6 bg-current rounded-full overflow-hidden"
+                          src={user.avatar}
+                          alt="Your profile"
+                          decoding="async"
+                          loading="lazy"
+                        />
                       ) : (
-                        <Icon name="face" label="Sign in" className="w-6 h-6" />
+                        <Icon
+                          name="face"
+                          label={user ? "Your profile" : "Sign in"}
+                          className="w-6 h-6"
+                        />
                       )}
                     </div>
                   </Dialog.Trigger>
