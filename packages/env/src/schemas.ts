@@ -32,3 +32,9 @@ export const web = z.object({
   TWITCH_OAUTH_ID: z.string().min(1),
   TWITCH_OAUTH_SECRET: z.string().min(1),
 })
+
+export const node = z.object({
+  NODE_ENV: z
+    .enum(["development", "test", "production"])
+    .default("development"),
+})
