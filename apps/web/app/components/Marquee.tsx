@@ -1,5 +1,3 @@
-"use client"
-
 import type { CSSProperties, ComponentProps, ForwardedRef } from "react"
 import {
   forwardRef,
