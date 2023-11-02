@@ -1,28 +1,27 @@
-# templates/unstable-vite
+# Artists Together Website
 
-⚠️ Remix support for Vite is unstable and not recommended for production.
+The source code of the official website for the Artist Together community.
 
-📖 See the [Remix Vite docs][remix-vite-docs] for details on supported features.
+## Stack
 
-## Setup
+- `remix`
+- `tailwindcss`
 
-```shellscript
-npx create-remix@latest --template remix-run/remix/templates/unstable-vite
+## Development
+
+> **Important**
+> Before proceeding, make sure to set up the `db` package following the instructions in its [`README.md` file](../../packages/db/).
+
+Install workspace dependencies in the root directory:
+
+```shell
+pnpm install
 ```
 
-## Run
+Run the development server:
 
-Spin up the Vite dev server:
-
-```shellscript
-npm run dev
+```shell
+pnpm --filter web dev
 ```
 
-Or build your app for production and run it:
-
-```shellscript
-npm run build
-npm run start
-```
-
-[remix-vite-docs]: https://remix.run/docs/en/main/future/vite
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
