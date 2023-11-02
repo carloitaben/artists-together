@@ -1,7 +1,6 @@
 import type { MetaFunction } from "@remix-run/node"
 import Container from "~/components/Container"
 import WidgetTheme from "~/components/WidgetTheme"
-import * as Shine from "~/components/Shine"
 
 export const meta: MetaFunction = () => {
   return [
