@@ -1,6 +1,7 @@
 import { unstable_vitePlugin as remix } from "@remix-run/dev"
 import { defineConfig } from "vite"
 import { createSvgIconsSsrPlugin } from "vite-plugin-svg-icons-ssr"
+import { qrcode } from "vite-plugin-qrcode"
 import path from "path"
 import tsconfigPaths from "vite-tsconfig-paths"
 import tailwindcss from "tailwindcss"
@@ -14,6 +15,7 @@ export default defineConfig({
   plugins: [
     remix(),
     tsconfigPaths(),
+    qrcode(),
     createSvgIconsSsrPlugin({
       scanDir: path.resolve(process.cwd(), "app/assets/icons"),
       symbolId: "[name]",
