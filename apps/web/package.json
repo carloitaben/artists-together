@@ -40,6 +40,8 @@
     "nanostores": "^0.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-merge-refs": "^2.1.1",
+    "react-use": "^17.4.0",
     "remix-routes": "^1.5.0",
     "remix-utils": "^7.1.0",
     "remix-validated-form": "^5.1.5",
