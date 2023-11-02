@@ -98,22 +98,20 @@ export function useToast() {
 
 export default function Toast() {
   const toast = useStore($toast)
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [params, setParams] = useSearchParams()
   const [hover, setHover] = useState(false)
 
   useEffect(() => {
-    if (!searchParams.get("error")) return
-    setSearchParams(
+    if (!params.get("error")) return
+    setParams(
       (params) => {
         emit.error()
         params.delete("error")
         return params
       },
-      {
-        replace: true,
-      },
+      { replace: true },
     )
-  }, [searchParams, setSearchParams])
+  }, [params, setParams])
 
   useEffect(() => {
     if (!toast || hover) return

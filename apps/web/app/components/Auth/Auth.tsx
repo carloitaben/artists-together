@@ -1,4 +1,3 @@
-import * as Dialog from "@radix-ui/react-dialog"
 import * as Modal from "~/components/Modal"
 import { useUser } from "~/hooks/loaders"
 import AuthLoginForm from "./AuthLoginForm"
@@ -12,7 +11,7 @@ export default function Auth() {
   const user = useUser()
 
   return (
-    <Dialog.Portal>
+    <Modal.Portal>
       <Modal.Overlay>
         {user ? (
           <Modal.Content>
@@ -26,6 +25,6 @@ export default function Auth() {
           <AuthLoginForm />
         )}
       </Modal.Overlay>
-    </Dialog.Portal>
+    </Modal.Portal>
   )
 }
