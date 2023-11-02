@@ -3,6 +3,7 @@ import Container from "~/components/Container"
 import WidgetTheme from "~/components/WidgetTheme"
 import * as Form from "~/components/Form"
 import Button from "~/components/Button"
+import { validator } from "./api.test"
 
 export const meta: MetaFunction = () => [
   {
@@ -21,9 +22,15 @@ export default function Page() {
   return (
     <Container grid>
       <WidgetTheme />
-      <Form.Root action="/">
+      <Form.Root validator={validator} action="/api/test">
         <Form.Field name="email">
-          <Form.Label>Email</Form.Label>
+          <Form.Label>
+            <Form.Tooltip>
+              We use your approximate location (region) to let other members
+              know your timezone.
+            </Form.Tooltip>
+            Email
+          </Form.Label>
           <Form.Input type="email" placeholder="Enter your email" />
           <Form.Error />
         </Form.Field>

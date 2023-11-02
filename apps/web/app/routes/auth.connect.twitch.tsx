@@ -4,6 +4,7 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { $path } from "remix-routes"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"
+import { zfd } from "zod-form-data"
 import { defaultHiddenFields } from "~/components/Form"
 import { getParams } from "~/lib/params"
 import { twitch } from "~/services/auth.server"
@@ -12,7 +13,7 @@ import { getCookie, oauthCookie } from "~/services/cookies.server"
 export const validator = withZod(defaultHiddenFields)
 
 const searchParams = z.object({
-  url: z.string().url(),
+  url: zfd.text(z.string().url()),
 })
 
 export type SearchParams = z.infer<typeof searchParams>

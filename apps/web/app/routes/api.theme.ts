@@ -3,13 +3,14 @@ import { json } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"
+import { zfd } from "zod-form-data"
 import { theme } from "~/lib/themes"
 import { auth } from "~/services/auth.server"
 import { themeCookie } from "~/services/cookies.server"
 
 export const validator = withZod(
   z.object({
-    theme,
+    theme: zfd.text(theme),
   }),
 )
 
