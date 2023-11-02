@@ -15,7 +15,7 @@ function Overlay(
       ref={ref}
       className={cx(
         className,
-        "fixed inset-0 flex items-center justify-center bg-theme-900/25 backdrop-blur-xl overflow-y-auto",
+        "fixed inset-0 bg-theme-900/25 backdrop-blur-xl overflow-y-auto grid place-items-center",
       )}
     />
   )
