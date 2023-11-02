@@ -5,7 +5,7 @@ import { web } from "lucia/middleware"
 import { libsql } from "@lucia-auth/adapter-sqlite"
 import type { DiscordUser, TwitchUser } from "@lucia-auth/oauth/providers"
 import { discord, twitch } from "@lucia-auth/oauth/providers"
-import { url } from "~/lib/env"
+import { env } from "~/lib/env"
 
 export const auth = lucia({
   env: import.meta.env.DEV ? "DEV" : "PROD",
@@ -47,14 +47,14 @@ export type UserAttributes = Omit<Users.UsersInsertSchema, "id">
 const discordAuth = discord(auth, {
   clientId: String(process.env.DISCORD_OAUTH_ID),
   clientSecret: String(process.env.DISCORD_OAUTH_SECRET),
-  redirectUri: `${url}/auth/callback/discord`,
+  redirectUri: `${env.VERCEL_URL}/auth/callback/discord`,
   scope: ["identify", "email", "guilds", "guilds.members.read"],
 })
 
 const twitchAuth = twitch(auth, {
   clientId: String(process.env.TWITCH_OAUTH_ID),
   clientSecret: String(process.env.TWITCH_OAUTH_SECRET),
-  redirectUri: `${url}/auth/callback/twitch`,
+  redirectUri: `${env.VERCEL_URL}/auth/callback/twitch`,
   scope: [],
 })
 

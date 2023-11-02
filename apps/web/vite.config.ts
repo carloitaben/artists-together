@@ -1,13 +1,14 @@
 import { unstable_vitePlugin as remix } from "@remix-run/dev"
-import { config } from "dotenv-mono"
 import { defineConfig } from "vite"
 import { createSvgIconsSsrPlugin } from "vite-plugin-svg-icons-ssr"
 import path from "path"
 import tsconfigPaths from "vite-tsconfig-paths"
 import tailwindcss from "tailwindcss"
 import autoprefixer from "autoprefixer"
+import { env } from "./app/lib/env"
 
-config()
+// TODO: testing a thing ignore this atm
+void env
 
 export default defineConfig({
   plugins: [
