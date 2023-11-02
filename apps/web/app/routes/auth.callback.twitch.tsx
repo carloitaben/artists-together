@@ -40,10 +40,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
   }
 
-  if (!existingSession) {
-    return redirect(cookie.from)
-  }
-
   if ("error" in params.data) {
     switch (params.data.error) {
       case "access_denied":
@@ -57,6 +53,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return json(null, {
       status: 400,
       statusText: "Invalid state",
+    })
+  }
+
+  if (!existingSession) {
+    return redirect(cookie.from)
+  }
+
+  if (cookie.intent !== "connect") {
+    return json(null, {
+      status: 400,
+      statusText: "Invalid intent",
     })
   }
 

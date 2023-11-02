@@ -7,6 +7,7 @@ import { auth, discord } from "~/services/auth.server"
 import { oauthCookie, getCookie, themeCookie } from "~/services/cookies.server"
 import { getParams } from "~/lib/params"
 import { defaultTheme } from "~/lib/themes"
+import { unreachable } from "~/lib/utils"
 
 const searchParams = z.union([
   z.object({
@@ -53,10 +54,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
   }
 
-  if (existingSession) {
-    return redirect(cookie.from)
-  }
-
   if ("error" in params.data) {
     switch (params.data.error) {
       case "access_denied":
@@ -79,57 +76,82 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const { getExistingUser, discordUser, createUser, discordTokens } =
       await discord.validateCallback(params.data.code)
 
-    user = await getExistingUser()
+    switch (cookie.intent) {
+      case "connect": {
+        if (!existingSession) {
+          return json(null, {
+            status: 400,
+          })
+        }
 
-    if (!user) {
-      const avatar = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
-
-      const member: PartialDiscordMember = await fetch(
-        `https://discord.com/api/v10/users/@me/guilds/${process.env.DISCORD_SERVER_ID}/member`,
-        {
-          headers: {
-            Authorization: `Bearer ${discordTokens.accessToken}`,
-          },
-        },
-      ).then((response) => response.json())
-
-      console.log(member.user.username, member.roles)
-
-      user = await createUser({
-        attributes: {
-          username: discordUser.username,
-          email: discordUser.email!,
-          avatar: avatar,
+        await auth.updateUserAttributes(existingSession.user.userId, {
           discord_id: discordUser.id,
           discord_username: discordUser.username,
           discord_metadata: JSON.stringify(discordUser),
-          timestamp: new Date(),
-          theme: theme || defaultTheme,
-        },
-      })
+        })
 
-      // const geo = getGeo(request)
+        return redirect(cookie.from + "?modal=auth")
+      }
+      case "login": {
+        if (existingSession) {
+          return redirect(cookie.from + "?modal=auth")
+        }
 
-      // if (geo) {
-      //   await Locations.create({
-      //     userId: user.userId,
-      //     geo,
-      //   })
-      // }
+        user = await getExistingUser()
+
+        if (!user) {
+          const avatar = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
+
+          const member: PartialDiscordMember = await fetch(
+            `https://discord.com/api/v10/users/@me/guilds/${process.env.DISCORD_SERVER_ID}/member`,
+            {
+              headers: {
+                Authorization: `Bearer ${discordTokens.accessToken}`,
+              },
+            },
+          ).then((response) => response.json())
+
+          console.log(member.user.username, member.roles)
+
+          user = await createUser({
+            attributes: {
+              username: discordUser.username,
+              email: discordUser.email!,
+              avatar: avatar,
+              discord_id: discordUser.id,
+              discord_username: discordUser.username,
+              discord_metadata: JSON.stringify(discordUser),
+              timestamp: new Date(),
+              theme: theme || defaultTheme,
+            },
+          })
+
+          // const geo = getGeo(request)
+
+          // if (geo) {
+          //   await Locations.create({
+          //     userId: user.userId,
+          //     geo,
+          //   })
+          // }
+        }
+
+        const session = await auth.createSession({
+          userId: user.userId,
+          attributes: {},
+        })
+
+        const sessionCookie = auth.createSessionCookie(session)
+
+        return redirect(cookie.from, {
+          headers: {
+            "Set-Cookie": sessionCookie.serialize(),
+          },
+        })
+      }
+      default:
+        return unreachable(cookie.intent)
     }
-
-    const session = await auth.createSession({
-      userId: user.userId,
-      attributes: {},
-    })
-
-    const sessionCookie = auth.createSessionCookie(session)
-
-    return redirect(cookie.from, {
-      headers: {
-        "Set-Cookie": sessionCookie.serialize(),
-      },
-    })
   } catch (error) {
     console.error(error)
     if (error instanceof OAuthRequestError) {

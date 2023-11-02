@@ -2,7 +2,8 @@ import * as Dialog from "@radix-ui/react-dialog"
 import { useUser } from "~/hooks/loaders"
 import { validator as logoutValidator } from "~/routes/auth.logout"
 import { validator as authValidator } from "~/routes/login"
-import { validator as twitchValidator } from "~/routes/auth.connect.twitch"
+import { validator as connectTwitchValidator } from "~/routes/auth.connect.twitch"
+import { validator as connectDiscordValidator } from "~/routes/auth.connect.discord"
 import * as Modal from "./Modal"
 import * as Form from "./Form"
 import Icon from "./Icon"
@@ -11,6 +12,7 @@ import Button from "./Button"
 export default function Auth() {
   const user = useUser()
 
+  const isConnectedWithDiscord = !!user?.discord_id
   const isConnectedWithTwitch = !!user?.twitch_id
 
   return (
@@ -22,13 +24,38 @@ export default function Auth() {
               <Modal.Title>Your profile</Modal.Title>
               <Dialog.Description>:)</Dialog.Description>
               <pre>{JSON.stringify(user, null, 2)}</pre>
-              {isConnectedWithTwitch ? (
-                <div>connected with twitch :)</div>
+              {isConnectedWithDiscord ? (
+                <div>
+                  <div>connected with twitch :)</div>
+                  <Form.Root action="/auth/disconnect/discord" navigate={false}>
+                    <Form.Submit type="submit" className="disabled:opacity-25">
+                      Disconnect discord
+                    </Form.Submit>
+                  </Form.Root>
+                </div>
               ) : (
                 <Form.Root
-                  validator={twitchValidator}
+                  validator={connectDiscordValidator}
+                  action="/auth/connect/discord"
+                >
+                  <Form.Submit type="submit" className="disabled:opacity-25">
+                    Connect discord
+                  </Form.Submit>
+                </Form.Root>
+              )}
+              {isConnectedWithTwitch ? (
+                <div>
+                  <div>connected with twitch :)</div>
+                  <Form.Root action="/auth/disconnect/twitch">
+                    <Form.Submit type="submit" className="disabled:opacity-25">
+                      Disconnect twitch
+                    </Form.Submit>
+                  </Form.Root>
+                </div>
+              ) : (
+                <Form.Root
+                  validator={connectTwitchValidator}
                   action="/auth/connect/twitch"
-                  reloadDocument
                 >
                   <Form.Submit type="submit" className="disabled:opacity-25">
                     Connect with twitch

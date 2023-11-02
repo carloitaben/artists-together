@@ -12,6 +12,7 @@ export const themeCookie = createTypedCookie({
 
 export const oauthCookieSchema = z
   .object({
+    intent: z.union([z.literal("connect"), z.literal("login")]),
     from: z.string(),
     state: z.string(),
   })

@@ -49,6 +49,7 @@ export async function action({ request }: ActionFunctionArgs) {
     {
       headers: {
         "Set-Cookie": await oauthCookie.serialize({
+          intent: "connect",
           from: form.data.pathname,
           state,
         }),
