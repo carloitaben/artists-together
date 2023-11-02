@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss"
+import radixPlugin from "tailwindcss-radix"
 import plugin from "tailwindcss/plugin"
 
 function getFluidValue(value: string) {
@@ -292,5 +293,5 @@ export default {
       },
     },
   },
-  plugins: [fluidPlugin],
+  plugins: [radixPlugin, fluidPlugin],
 } satisfies Config
