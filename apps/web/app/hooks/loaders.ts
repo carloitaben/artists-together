@@ -14,3 +14,13 @@ export function useRootLoaderData() {
 export function useUser() {
   return useRootLoaderData()?.user || null
 }
+
+export function useUserOrThrow() {
+  const user = useUser()
+
+  if (!user) {
+    throw Error("Missing user data")
+  }
+
+  return user
+}
