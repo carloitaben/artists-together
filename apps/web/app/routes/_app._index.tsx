@@ -1,13 +1,12 @@
-import type { MetaFunction } from "@remix-run/node"
+import type { MetaFunction } from "@remix-run/react"
 import Container from "~/components/Container"
 import WidgetTheme from "~/components/WidgetTheme"
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ]
-}
+export const meta: MetaFunction = () => [
+  {
+    title: "Home – Artists Together",
+  },
+]
 
 export const handle = {
   actions: {},

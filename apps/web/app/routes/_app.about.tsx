@@ -1,6 +1,13 @@
+import type { MetaFunction } from "@remix-run/react"
 import Container from "~/components/Container"
 import Icon from "~/components/Icon"
 import Marquee from "~/components/Marquee"
+
+export const meta: MetaFunction = () => [
+  {
+    title: "About – Artists Together",
+  },
+]
 
 export const handle = {
   actions: {

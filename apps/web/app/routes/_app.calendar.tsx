@@ -1,4 +1,11 @@
+import type { MetaFunction } from "@remix-run/react"
 import { guardDisabledRoute } from "~/lib/routes"
+
+export const meta: MetaFunction = () => [
+  {
+    title: "Calendar – Artists Together",
+  },
+]
 
 export const handle = {
   actions: {

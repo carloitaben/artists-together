@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import {
   Links,
   LiveReload,
@@ -13,6 +13,22 @@ import { auth } from "~/services/auth.server"
 import { getCookie, themeCookie } from "~/services/cookies.server"
 import { defaultTheme, useThemeStyle } from "~/lib/themes"
 import Icons from "~/components/Icons"
+
+export const meta: MetaFunction = () => [
+  {
+    title: "Artists Together",
+    property: "og:title",
+  },
+  {
+    name: "description",
+    property: "og:description",
+    content: "An inclusive community for all kinds of artists.",
+  },
+  {
+    name: "keywords",
+    content: "Art, Artist Community",
+  },
+]
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const [theme, user] = await Promise.all([
