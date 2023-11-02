@@ -45,15 +45,15 @@ export type Auth = typeof auth
 export type UserAttributes = Omit<Users.UsersInsertSchema, "id">
 
 const discordAuth = discord(auth, {
-  clientId: String(process.env.DISCORD_OAUTH_ID),
-  clientSecret: String(process.env.DISCORD_OAUTH_SECRET),
+  clientId: env.DISCORD_OAUTH_ID,
+  clientSecret: env.DISCORD_OAUTH_SECRET,
   redirectUri: `${env.VERCEL_URL}/auth/callback/discord`,
   scope: ["identify", "email", "guilds", "guilds.members.read"],
 })
 
 const twitchAuth = twitch(auth, {
-  clientId: String(process.env.TWITCH_OAUTH_ID),
-  clientSecret: String(process.env.TWITCH_OAUTH_SECRET),
+  clientId: env.TWITCH_OAUTH_ID,
+  clientSecret: env.TWITCH_OAUTH_SECRET,
   redirectUri: `${env.VERCEL_URL}/auth/callback/twitch`,
   scope: [],
 })

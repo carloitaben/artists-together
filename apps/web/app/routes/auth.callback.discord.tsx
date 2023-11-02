@@ -8,6 +8,7 @@ import { oauthCookie, getCookie, themeCookie } from "~/services/cookies.server"
 import { getParams } from "~/lib/params"
 import { defaultTheme } from "~/lib/themes"
 import { unreachable } from "~/lib/utils"
+import { env } from "~/lib/env"
 
 const searchParams = z.union([
   z.object({
@@ -103,7 +104,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           const avatar = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
 
           const member: PartialDiscordMember = await fetch(
-            `https://discord.com/api/v10/users/@me/guilds/${process.env.DISCORD_SERVER_ID}/member`,
+            `https://discord.com/api/v10/users/@me/guilds/${env.DISCORD_SERVER_ID}/member`,
             {
               headers: {
                 Authorization: `Bearer ${discordTokens.accessToken}`,
