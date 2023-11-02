@@ -22,8 +22,15 @@ export default function Page() {
     <Container grid>
       <WidgetTheme />
       <Form.Root action="/">
-        <Form.Field label="hello" name="asd" />
-        <Form.Switch label="hello" name="switch" />
+        <Form.Field name="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Input type="email" placeholder="Enter your email" />
+          <Form.Error />
+        </Form.Field>
+        <Form.Field name="switch">
+          <Form.Label>Toggle something</Form.Label>
+          <Form.Switch />
+        </Form.Field>
         <Form.Submit asChild>
           <Button>Submit</Button>
         </Form.Submit>
