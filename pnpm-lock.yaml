@@ -92,9 +92,6 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.14)(@types/react@18.2.33)(react-dom@18.2.0)(react@18.2.0)
-      '@remix-run/css-bundle':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@remix-run/node':
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.2.2)
@@ -2272,11 +2269,6 @@ packages:
     resolution: {integrity: sha512-fyrgCaedtvMg9NK3en0pnOYJdtfwxUcNolezkNPUsoX57X8oQk+NkqcvzHXD2uKNij6GXmWU9NDru2IWjrO4BQ==}
     dependencies:
       '@babel/runtime': 7.23.2
-    dev: false
-
-  /@remix-run/css-bundle@2.2.0:
-    resolution: {integrity: sha512-PwbtsQx0QpGt93m2nMpdVoH/a7q9amU+vAXF2qtGruRf0PZWSwxc5LYnr9bHlG80SgyixfTeKT93BY/qFpNK+A==}
-    engines: {node: '>=18.0.0'}
     dev: false
 
   /@remix-run/dev@2.2.0(@remix-run/serve@2.2.0)(typescript@5.2.2)(vite@4.5.0):
