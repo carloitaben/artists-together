@@ -30,7 +30,11 @@ function AnimatedContainer({
   Children.only(children)
 
   const [ref, animate] = useAnimate<HTMLDivElement>()
-  const inView = useInView(ref)
+  
+  const inView = useInView(ref, {
+    margin: "-1px",
+  })
+  
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start center", "end end"],
