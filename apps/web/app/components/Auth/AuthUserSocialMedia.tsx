@@ -13,31 +13,51 @@ export default function AuthUserSocialMedia() {
         <ul className="space-y-2">
           <Form.Field name="link" asChild>
             <li>
-              <Form.Input type="text" placeholder="https://example.com/user" />
+              <Form.Input
+                className="w-full"
+                type="text"
+                placeholder="https://example.com/user"
+              />
               <Form.Error />
             </li>
           </Form.Field>
           <Form.Field name="link" asChild>
             <li>
-              <Form.Input type="text" placeholder="https://example.com/user" />
+              <Form.Input
+                className="w-full"
+                type="text"
+                placeholder="https://example.com/user"
+              />
               <Form.Error />
             </li>
           </Form.Field>
           <Form.Field name="link" asChild>
             <li>
-              <Form.Input type="text" placeholder="https://example.com/user" />
+              <Form.Input
+                className="w-full"
+                type="text"
+                placeholder="https://example.com/user"
+              />
               <Form.Error />
             </li>
           </Form.Field>
           <Form.Field name="link" asChild>
             <li>
-              <Form.Input type="text" placeholder="https://example.com/user" />
+              <Form.Input
+                className="w-full"
+                type="text"
+                placeholder="https://example.com/user"
+              />
               <Form.Error />
             </li>
           </Form.Field>
           <Form.Field name="link" asChild>
             <li>
-              <Form.Input type="text" placeholder="https://example.com/user" />
+              <Form.Input
+                className="w-full"
+                type="text"
+                placeholder="https://example.com/user"
+              />
               <Form.Error />
             </li>
           </Form.Field>
