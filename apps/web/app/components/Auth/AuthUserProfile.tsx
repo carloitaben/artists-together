@@ -11,7 +11,7 @@ export default function AuthUserProfile() {
       <Modal.Title>{user.username}</Modal.Title>
       <Form.Root className="flex gap-2">
         <Form.Field name="avatar" className="flex flex-col flex-none pr-6">
-          <Form.Label className="flex items-center">
+          <Form.Label>
             <Form.Tooltip align="start">TODO</Form.Tooltip>
             Avatar
           </Form.Label>

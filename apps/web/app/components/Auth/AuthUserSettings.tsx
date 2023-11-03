@@ -17,7 +17,7 @@ export default function AuthUserSettings() {
           name="share-location"
           className="flex items-center justify-between"
         >
-          <Form.Label className="flex items-center">
+          <Form.Label>
             <Form.Tooltip align="start">
               We use your approximate location (region) to let other members
               know your timezone.
@@ -30,7 +30,7 @@ export default function AuthUserSettings() {
           name="share-streaming"
           className="flex items-center justify-between"
         >
-          <Form.Label className="flex items-center">
+          <Form.Label>
             <Form.Tooltip align="start">TODO</Form.Tooltip>
             Share streaming status
           </Form.Label>
@@ -40,7 +40,7 @@ export default function AuthUserSettings() {
           name="share-cursor"
           className="flex items-center justify-between"
         >
-          <Form.Label className="flex items-center">
+          <Form.Label>
             <Form.Tooltip align="start">TODO</Form.Tooltip>
             Share cursor location
           </Form.Label>
