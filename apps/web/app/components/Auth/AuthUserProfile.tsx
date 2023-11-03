@@ -20,7 +20,7 @@ export default function AuthUserProfile() {
         </Form.Field>
         <Form.Field name="bio" className="flex flex-col flex-1">
           <Form.Label>Description</Form.Label>
-          <Form.Textarea rows={6} placeholder="Placeholder" />
+          <Form.Textarea className="h-full" placeholder="Placeholder" />
           <Form.Error />
         </Form.Field>
       </Form.Root>
