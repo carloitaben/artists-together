@@ -6,6 +6,7 @@ import Container from "~/components/Container"
 import WidgetTheme from "~/components/WidgetTheme"
 import WidgetClock from "~/components/WidgetClock"
 import WidgetCalendar from "~/components/WidgetCalendar"
+import WidgetInstagram from "~/components/WidgetInstagram"
 
 export const meta: MetaFunction = () => [
   {
@@ -33,6 +34,7 @@ export default function Page() {
 
   return (
     <Container grid>
+      <WidgetInstagram />
       <WidgetTheme />
       <WidgetClock location={data.location} />
       <WidgetCalendar />
