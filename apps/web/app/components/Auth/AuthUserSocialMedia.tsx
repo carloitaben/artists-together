@@ -9,7 +9,7 @@ export default function AuthUserSocialMedia() {
     <Modal.Container>
       <Modal.Title>Social media</Modal.Title>
       <Form.Root>
-        <div>Links</div>
+        <h6>Links</h6>
         <ul className="space-y-2">
           <Form.Field name="link" asChild>
             <li>
