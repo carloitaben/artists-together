@@ -16,7 +16,7 @@ export default function AuthUserSupport() {
         </Form.Field>
         <Form.Field name="message" className="flex flex-col">
           <Form.Label>Message</Form.Label>
-          <Form.Textarea placeholder="Example" />
+          <Form.Textarea rows={7} placeholder="Example" />
           <Form.Error />
         </Form.Field>
       </Form.Root>

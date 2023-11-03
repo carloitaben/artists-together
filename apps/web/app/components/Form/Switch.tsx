@@ -27,7 +27,7 @@ function Switch(props: Props, ref: ForwardedRef<HTMLButtonElement>) {
         value: value ? "on" : "off",
         onCheckedChange: onChange,
         className:
-          "rounded-full relative bg-gunpla-white-300 cursor-default w-[3.75rem] h-8 p-1 shadow-inner",
+          "rounded-full relative bg-gunpla-white-300 w-[3.75rem] h-8 p-1 shadow-inner",
       })}
       ref={ref}
     >

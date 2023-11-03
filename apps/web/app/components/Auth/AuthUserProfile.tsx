@@ -9,16 +9,21 @@ export default function AuthUserProfile() {
   return (
     <Modal.Container>
       <Modal.Title>{user.username}</Modal.Title>
-      <div className="flex">
-        <div className="w-32 h-32 bg-not-so-white flex-none"></div>
-        <Form.Root>
-          <Form.Field name="bio" className="flex flex-col">
-            <Form.Label>Description</Form.Label>
-            <Form.Textarea placeholder="Placeholder" />
-            <Form.Error />
-          </Form.Field>
-        </Form.Root>
-      </div>
+      <Form.Root className="flex gap-2">
+        <Form.Field name="avatar" className="flex flex-col flex-none pr-6">
+          <Form.Label className="flex items-center">
+            <Form.Tooltip align="start">TODO</Form.Tooltip>
+            Avatar
+          </Form.Label>
+          <div className="w-32 h-32 bg-not-so-white flex-none rounded-2xl" />
+          <Form.Error />
+        </Form.Field>
+        <Form.Field name="bio" className="flex flex-col flex-1">
+          <Form.Label>Description</Form.Label>
+          <Form.Textarea rows={6} placeholder="Placeholder" />
+          <Form.Error />
+        </Form.Field>
+      </Form.Root>
       <pre>{JSON.stringify(user, null, 2)}</pre>
       <AuthUserProfileConnections />
     </Modal.Container>
