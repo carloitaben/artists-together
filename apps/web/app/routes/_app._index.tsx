@@ -8,6 +8,7 @@ import WidgetClock from "~/components/WidgetClock"
 import WidgetCalendar from "~/components/WidgetCalendar"
 import WidgetInstagram from "~/components/WidgetInstagram"
 import WidgetLive from "~/components/WidgetLive"
+import Icon from "~/components/Icon"
 
 export const meta: MetaFunction = () => [
   {
@@ -34,12 +35,22 @@ export default function Page() {
   const data = useLoaderData<typeof loader>()
 
   return (
-    <Container grid>
-      <WidgetInstagram />
-      <WidgetLive />
-      <WidgetTheme />
-      <WidgetClock location={data.location} />
-      <WidgetCalendar />
-    </Container>
+    <>
+      <header>
+        <Container className="flex justify-center py-16">
+          <h1 className="sr-only">Artists Together</h1>
+          <Icon label="" name="logo" className="w-full max-w-[28rem]" />
+        </Container>
+      </header>
+      <Container grid asChild>
+        <main>
+          <WidgetInstagram />
+          <WidgetLive />
+          <WidgetTheme />
+          <WidgetClock location={data.location} />
+          <WidgetCalendar />
+        </main>
+      </Container>
+    </>
   )
 }
