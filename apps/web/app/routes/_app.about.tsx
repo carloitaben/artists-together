@@ -101,10 +101,7 @@ export default function Page() {
         </Container>
       </header>
       <main className="select-auto font-serif font-light leading-tight fluid:text-[4rem]">
-        <AnimatedContainer
-          grid
-          className="min-h-screen items-center bg-acrylic-red-400"
-        >
+        <AnimatedContainer grid className="min-h-screen items-center">
           <h2 className="col-span-5 col-start-2">
             Artists Together is an online, worldwide
             <br />
