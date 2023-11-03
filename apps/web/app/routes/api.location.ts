@@ -1,5 +1,6 @@
-// import type { NextRequest } from "next/server"
-// import { Locations } from "db"
+import type { SerializeFrom } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { oneOf } from "~/lib/utils"
 
 export const countries: Record<string, string> = {
   AW: "Aruba",
@@ -254,31 +255,54 @@ export const countries: Record<string, string> = {
   ZW: "Zimbabwe",
 }
 
-// export function getGeo(request: NextRequest) {
-//   let country = request.geo?.country
-//   let city = request.geo?.country
-//   let latitude = request.geo?.latitude
-//   let longitude = request.geo?.longitude
-//   let timezone = request.headers.get("x-vercel-ip-timezone")
+export const placeholders = [
+  {
+    country: "SE",
+    city: "Stockholm",
+    latitude: "59.326038",
+    longitude: "17.8172488",
+    timezone: "Europe/Stockholm",
+  },
+  {
+    country: "CA",
+    city: "Toronto",
+    latitude: "43.7181228",
+    longitude: "-79.5428656",
+    timezone: "America/Toronto",
+  },
+  {
+    country: "PT",
+    city: "Lisbon",
+    latitude: "38.7440505",
+    longitude: "-9.2421367",
+    timezone: "Europe/Lisbon",
+  },
+  {
+    country: "AU",
+    city: "Canberra",
+    latitude: "-35.2897347",
+    longitude: "149.1412762",
+    timezone: "Australia/Sydney",
+  },
+  {
+    country: "JP",
+    city: "Sapporo",
+    latitude: "42.9848631",
+    longitude: "140.9183317",
+    timezone: "Asia/Tokyo",
+  },
+]
 
-//   if (process.env.NODE_ENV === "development") {
-//     if (!country) country = "ES"
-//     if (!city) city = "Barcelona"
-//     if (!latitude) latitude = "41.3926386"
-//     if (!longitude) longitude = "2.057789"
-//     if (!timezone) timezone = "Europe/Madrid"
-//   }
+export async function loader() {
+  // const locations = await Locations.list().then((locations) =>
+  //   locations.map((location) => location.geo),
+  // )
 
-//   if (!country || !city || !latitude || !longitude || !timezone) return
-//   if (!(country in countries)) return
+  // return locations.length < placeholders.length
+  //   ? [...locations, ...placeholders]
+  //   : locations
 
-//   const countryName = countries[country]
+  return json(oneOf(placeholders))
+}
 
-//   return {
-//     country: countryName,
-//     city,
-//     latitude,
-//     longitude,
-//     timezone,
-//   }
-// }
+export type Location = SerializeFrom<typeof loader>

@@ -5,7 +5,7 @@ import advancedFormat from "dayjs/plugin/advancedFormat"
 import { useEffect, useMemo, useState } from "react"
 import type { SpringOptions } from "framer-motion"
 import { motion, useSpring } from "framer-motion"
-import type { Location } from "~/services/geo.server"
+import type { Location } from "~/routes/api.location"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)

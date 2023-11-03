@@ -1,7 +1,6 @@
-import type { LoaderFunctionArgs } from "@remix-run/node"
-import { useLoaderData, type MetaFunction } from "@remix-run/react"
-import { getLocations } from "~/services/geo.server"
-import { oneOf } from "~/lib/utils"
+import type { MetaFunction } from "@remix-run/react"
+import type { loader as locationLoader } from "~/routes/api.location"
+import { useQuery } from "~/hooks/query"
 import Container from "~/components/Container"
 import WidgetTheme from "~/components/WidgetTheme"
 import WidgetClock from "~/components/WidgetClock"
@@ -9,6 +8,7 @@ import WidgetCalendar from "~/components/WidgetCalendar"
 import WidgetInstagram from "~/components/WidgetInstagram"
 import WidgetLive from "~/components/WidgetLive"
 import Icon from "~/components/Icon"
+import WidgetWeather from "~/components/WidgetWeather"
 
 export const meta: MetaFunction = () => [
   {
@@ -23,16 +23,10 @@ export const handle = {
   },
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const locations = await getLocations()
-
-  return {
-    location: oneOf(locations),
-  }
-}
-
 export default function Page() {
-  const data = useLoaderData<typeof loader>()
+  const { data = null } = useQuery<typeof locationLoader>({
+    route: "/api/location",
+  })
 
   return (
     <>
@@ -46,9 +40,10 @@ export default function Page() {
         <main>
           <WidgetInstagram />
           <WidgetLive />
-          <WidgetTheme />
-          <WidgetClock location={data.location} />
+          <WidgetClock location={data} />
           <WidgetCalendar />
+          <WidgetWeather location={data} />
+          <WidgetTheme />
         </main>
       </Container>
     </>

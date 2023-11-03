@@ -11,12 +11,14 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react"
 import type { Routes } from "remix-routes"
 
+type Autocomplete<T> = T | (string & Record<never, never>)
+
 export interface QueryOptions {
   /**
    * Other route whose loader is used to fetch data.
    * @default currentPath
    */
-  route?: keyof Routes
+  route?: Autocomplete<keyof Routes>
   /**
    * Enable polling of data by providing interval in milliseconds.
    * @default 0
@@ -59,7 +61,7 @@ export interface QueryOptions {
 export function useQuery<DataType>(options: QueryOptions = {}) {
   const { pathname } = useLocation()
   const {
-    route = pathname as keyof Routes,
+    route = pathname,
     reloadInterval = 0,
     reloadOnWindowVisible = true,
     reloadOnReconnect = true,
