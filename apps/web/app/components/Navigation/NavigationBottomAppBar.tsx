@@ -17,6 +17,8 @@ const transition: Transition = {
 
 export default function BottomAppBar() {
   const [focus, setFocus] = useState(false)
+  const [menu, setMenu] = useState<string>()
+  const [actionsOpened, setActionsOpened] = useState(false)
   const input = useRef<HTMLInputElement>(null)
 
   const handle = usePageHandle<{
@@ -25,6 +27,7 @@ export default function BottomAppBar() {
   }>()
 
   const showMenu = Object.keys(handle.actions).length
+  const showOverlay = menu === "navigation" || actionsOpened
 
   useEffect(() => {
     if (focus && input.current) {
@@ -36,9 +39,16 @@ export default function BottomAppBar() {
     <NavigationMenu.Root
       orientation="horizontal"
       className="fixed bottom-0 inset-x-0 sm:hidden p-2"
+      onValueChange={setMenu}
+      value={menu}
     >
+      <AnimatePresence initial={false}>
+        {showOverlay ? (
+          <motion.div className="fixed inset-0 bg-theme-900/25 backdrop-blur-xl sm:hidden" />
+        ) : null}
+      </AnimatePresence>
       <NavigationMenu.List className="flex items-center justify-center gap-2">
-        <NavigationMenu.Item asChild>
+        <NavigationMenu.Item asChild value="navigation">
           <NavigationMenu.Trigger asChild>
             <motion.button
               layout
@@ -98,7 +108,7 @@ export default function BottomAppBar() {
             </motion.button>
           </NavigationMenu.Trigger>
         </NavigationMenu.Item>
-        <NavigationMenu.Item asChild>
+        <NavigationMenu.Item asChild value="searchbar">
           <motion.li
             layout
             className={cx(
@@ -145,8 +155,11 @@ export default function BottomAppBar() {
         </NavigationMenu.Item>
         <AnimatePresence initial={false} mode="popLayout">
           {showMenu ? (
-            <NavigationMenu.Item>
-              <DropdownMenu.Root>
+            <NavigationMenu.Item value="actions">
+              <DropdownMenu.Root
+                open={actionsOpened}
+                onOpenChange={setActionsOpened}
+              >
                 <NavigationMenu.Trigger asChild>
                   <DropdownMenu.Trigger asChild>
                     <motion.button
