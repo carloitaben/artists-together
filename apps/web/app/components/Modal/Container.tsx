@@ -14,24 +14,29 @@ const container = cva({
       true: "w-full max-w-xl",
       false: "",
     },
+    padding: {
+      true: "px-12 pb-12 pt-10",
+      false: "",
+    },
   },
   defaultVariants: {
     fill: true,
     background: true,
+    padding: true,
   },
 })
 
 type Props = ComponentProps<"div"> & VariantProps<typeof container>
 
 function Content(
-  { className, fill, background, ...props }: Props,
+  { className, fill, background, padding, ...props }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   return (
     <div
       {...props}
       ref={ref}
-      className={container({ className, fill, background })}
+      className={container({ className, fill, background, padding })}
     />
   )
 }

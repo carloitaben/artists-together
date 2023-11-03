@@ -8,7 +8,7 @@ import { validator } from "~/routes/login"
 export default function AuthLogin() {
   return (
     <Modal.Content className="space-y-4">
-      <Modal.Container className="py-10 px-[3.75rem]">
+      <Modal.Container>
         <Modal.Title className="mb-5">Welcome to Artists Together</Modal.Title>
         <Dialog.Description>
           We will be using Discord to manage your Artists Together account.
