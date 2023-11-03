@@ -1,4 +1,9 @@
 import type { MetaFunction } from "@remix-run/react"
+import type { Segment } from "framer-motion"
+import { useAnimate, useInView, useScroll } from "framer-motion"
+import type { ComponentProps } from "react"
+import { Children, useEffect } from "react"
+import SplitType from "split-type"
 import Container from "~/components/Container"
 import Icon from "~/components/Icon"
 import Marquee from "~/components/Marquee"
@@ -18,6 +23,66 @@ export const handle = {
   },
 }
 
+function AnimatedContainer({
+  children,
+  ...props
+}: ComponentProps<typeof Container>) {
+  Children.only(children)
+
+  const [ref, animate] = useAnimate<HTMLDivElement>()
+  const inView = useInView(ref)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start center", "end end"],
+  })
+
+  useEffect(() => {
+    if (
+      !inView ||
+      !ref.current.firstElementChild ||
+      !(ref.current.firstElementChild instanceof HTMLElement)
+    )
+      return
+
+    const split = new SplitType(ref.current.firstElementChild, {
+      split: "words",
+    })
+
+    if (!split.words) {
+      throw Error("Missing split words")
+    }
+
+    const animation = animate(
+      split.words.map<Segment>((word) => [word, { opacity: [0.5, 1] }]),
+      { duration: 1 },
+    )
+
+    animation.pause()
+
+    const removeListener = scrollYProgress.on("change", (progress) => {
+      animation.time = progress
+    })
+
+    function update() {
+      split.split({ split: "words" })
+    }
+
+    window.addEventListener("resize", update)
+
+    return () => {
+      split.revert()
+      window.removeEventListener("resize", update)
+      removeListener()
+    }
+  }, [animate, children, inView, ref, scrollYProgress])
+
+  return (
+    <Container {...props} ref={ref}>
+      {children}
+    </Container>
+  )
+}
+
 export default function Page() {
   return (
     <>
@@ -32,7 +97,10 @@ export default function Page() {
         </Container>
       </header>
       <main className="select-auto font-serif font-light leading-tight fluid:text-[4rem]">
-        <Container grid className="min-h-screen items-center">
+        <AnimatedContainer
+          grid
+          className="min-h-screen items-center bg-acrylic-red-400"
+        >
           <h2 className="col-span-5 col-start-2">
             Artists Together is an online, worldwide
             <br />
@@ -40,8 +108,8 @@ export default function Page() {
             <br />
             and skill levels.
           </h2>
-        </Container>
-        <Container grid className="min-h-screen items-center">
+        </AnimatedContainer>
+        <AnimatedContainer grid className="min-h-screen items-center">
           <h3 className="col-span-4 col-start-4">
             We want to give artists from around the globe
             <br />
@@ -49,7 +117,7 @@ export default function Page() {
             <br />
             and talk with other creative folks.
           </h3>
-        </Container>
+        </AnimatedContainer>
         <div className="relative grid min-h-screen items-center">
           <Marquee>
             drawing, modelling, refurbishing, sculpting, composing, filming,
@@ -65,20 +133,20 @@ export default function Page() {
             <div className="col-span-1 col-end-9 h-full bg-gradient-to-l from-theme-900 to-transparent" />
           </Container>
         </div>
-        <Container grid className="min-h-screen items-center">
+        <AnimatedContainer grid className="min-h-screen items-center">
           <h4 className="col-span-4 col-start-2">
             We celebrate creativity, diversity,
             <br />
             entertainment and learning.
           </h4>
-        </Container>
-        <Container grid className="min-h-screen items-center">
+        </AnimatedContainer>
+        <AnimatedContainer grid className="min-h-screen items-center">
           <h5 className="col-span-4 col-start-4">
             So, create, share and enjoy,
             <br />
             because we are glad to have you here.
           </h5>
-        </Container>
+        </AnimatedContainer>
       </main>
       <footer className="font-serif font-light leading-tight fluid:text-[4rem]">
         <Container className="grid h-screen items-center text-center">

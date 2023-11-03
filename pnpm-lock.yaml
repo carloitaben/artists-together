@@ -152,6 +152,9 @@ importers:
       remix-validated-form:
         specifier: ^5.1.5
         version: 5.1.5(@remix-run/node@2.2.0)(@remix-run/react@2.2.0)(@remix-run/server-runtime@2.2.0)(@types/react@18.2.33)(react@18.2.0)
+      split-type:
+        specifier: ^0.3.4
+        version: 0.3.4
       zod:
         specifier: ^3.22.2
         version: 3.22.4
@@ -9234,6 +9237,10 @@ packages:
     resolution: {integrity: sha512-43ZssAJaMusuKWL8sKUBQXHWOpq8d6CfN/u1p4gUzfJkM05C8rxTmYrkIPTXapZpORA6LkkzcUulJ8FqA7Uudw==}
     engines: {node: '>=6'}
     dev: true
+
+  /split-type@0.3.4:
+    resolution: {integrity: sha512-otEk9vnD8qwfLsk3Lx0gz+qRkNIJCx0mlyL47ImP/DjMuV39d75Lpfwjn9fHteDRz0aoOblSzQjSNT9+Sswxcg==}
+    dev: false
 
   /ssri@10.0.5:
     resolution: {integrity: sha512-bSf16tAFkGeRlUNDjXu8FzaMQt6g2HZJrun7mtMbIPOddxt3GLMSz5VWUWcqTJUPfLEaDIepGxv+bYQW49596A==}
