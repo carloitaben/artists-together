@@ -73,7 +73,7 @@ export default function WidgetClockContent({ location }: Props) {
 
   return (
     <>
-      <div className="absolute inset-0 flex flex-col items-stretch justify-between bg-theme-50 font-serif font-light text-theme-900 fluid:p-24">
+      <div className="flex flex-col items-stretch justify-between bg-theme-50 font-serif font-light text-theme-900 fluid:p-24 w-full h-full">
         <div>
           <div
             aria-hidden

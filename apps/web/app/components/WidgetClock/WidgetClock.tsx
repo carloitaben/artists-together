@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react"
 import type { Location } from "~/services/geo.server"
+import * as AspectRatio from "@radix-ui/react-aspect-ratio"
 import ClientOnly from "~/components/ClientOnly"
 
 const WidgetClockContent = lazy(() => import("./WidgetClockContent"))
@@ -11,7 +12,10 @@ type Props = {
 export default function WidgetClock({ location }: Props) {
   return (
     <div className="col-span-2 select-none">
-      <div className="relative overflow-hidden rounded-full pb-[100%] shadow-card">
+      <AspectRatio.Root
+        ratio={1}
+        className="overflow-hidden rounded-full shadow-card"
+      >
         <ClientOnly
           fallback={<div className="absolute inset-0 bg-theme-700" />}
         >
@@ -19,7 +23,7 @@ export default function WidgetClock({ location }: Props) {
             <WidgetClockContent location={location} />
           </Suspense>
         </ClientOnly>
-      </div>
+      </AspectRatio.Root>
     </div>
   )
 }

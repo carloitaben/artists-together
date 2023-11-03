@@ -5,6 +5,7 @@ import { oneOf } from "~/lib/utils"
 import Container from "~/components/Container"
 import WidgetTheme from "~/components/WidgetTheme"
 import WidgetClock from "~/components/WidgetClock"
+import WidgetCalendar from "~/components/WidgetCalendar"
 
 export const meta: MetaFunction = () => [
   {
@@ -34,6 +35,7 @@ export default function Page() {
     <Container grid>
       <WidgetTheme />
       <WidgetClock location={data.location} />
+      <WidgetCalendar />
     </Container>
   )
 }
