@@ -13,7 +13,10 @@ export default function Tooltip({ children, align }: Props) {
     <TooltipPrimitive.Root delayDuration={0}>
       <TooltipPrimitive.Trigger
         type="button"
-        className="flex items-center justify-center text-gunpla-white-500 p-2"
+        className={cx(
+          "flex items-center justify-center text-gunpla-white-500 p-2",
+          { "-ml-2": align === "start", "-mr-2": align === "end" },
+        )}
       >
         <Icon name="info" label="Info" className="w-3.5 h-3.5" />
       </TooltipPrimitive.Trigger>
