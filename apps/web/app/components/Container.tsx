@@ -1,3 +1,4 @@
+import { Slot } from "@radix-ui/react-slot"
 import type { ComponentProps, ForwardedRef } from "react"
 import { forwardRef } from "react"
 import type { VariantProps } from "cva"
@@ -24,20 +25,25 @@ const container = cva({
   },
 })
 
-type Props = ComponentProps<"div"> & VariantProps<typeof container>
+type Props = ComponentProps<"div"> &
+  VariantProps<typeof container> & {
+    asChild?: boolean
+  }
 
 function Container(
-  { className, children, grid, padding, ...props }: Props,
+  { className, children, grid, padding, asChild, ...props }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
+  const Component = asChild ? Slot : "div"
+
   return (
-    <div
+    <Component
       {...props}
       ref={ref}
       className={container({ grid, padding, className })}
     >
       {children}
-    </div>
+    </Component>
   )
 }
 
