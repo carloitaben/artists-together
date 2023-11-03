@@ -25,7 +25,7 @@ export default function WidgetWeather({ location }: Props) {
     <div className="col-span-4 select-none sm:col-span-3">
       <AspectRatio.Root
         ratio={680 / 298}
-        className="overflow-hidden shadow-card rounded-l-5xl rounded-r-[9.375rem]"
+        className="overflow-hidden shadow-card fluid:rounded-l-5xl fluid:rounded-r-[9.375rem]"
       >
         <ClientOnly
           show={!!data && !!location}
