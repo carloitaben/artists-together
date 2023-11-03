@@ -24,7 +24,6 @@ export default function AuthUserProfile() {
           <Form.Error />
         </Form.Field>
       </Form.Root>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
       <AuthUserProfileConnections />
     </Modal.Container>
   )
