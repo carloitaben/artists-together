@@ -13,7 +13,7 @@ type Props<
   Subaction extends string | undefined,
 > = Omit<FormProps<DataType, Subaction>, "action" | "validator"> &
   Partial<Pick<FormProps<DataType, Subaction>, "validator">> & {
-    action: keyof Routes
+    action?: keyof Routes
   }
 
 const emptyValidator = withZod(z.object({}))
