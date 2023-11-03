@@ -10,7 +10,7 @@ The source code of the official website for the Artist Together community.
 ## Development
 
 > **Important**
-> Before proceeding, make sure to set up the `db` package following the instructions in its [`README.md` file](../../packages/db/).
+> Before proceeding, make sure to set up the `db` package following the instructions in its [`README.md` file](../../packages/db).
 
 Install workspace dependencies in the root directory:
 
