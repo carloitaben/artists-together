@@ -1,10 +1,9 @@
-import { $path } from "remix-routes"
-import { useQuery } from "~/hooks/query"
 import type { Location } from "~/routes/api.location"
-import type { loader } from "~/routes/api.weather"
+import type { Weather } from "~/routes/api.weather"
 
 type Props = {
   location: Location
+  weather: NonNullable<Weather>
 }
 
 function handleWeatherCode(code: number): {
@@ -97,22 +96,7 @@ function handleWeatherCode(code: number): {
   }
 }
 
-export default function WidgetWeatherContent({ location }: Props) {
-  const { data = null, loading } = useQuery<typeof loader>({
-    route: $path("/api/weather", {
-      latitude: location.latitude,
-      longitude: location.longitude,
-    }),
-  })
-
-  if (loading || !data) {
-    return (
-      <div className="w-full h-full bg-theme-700 font-serif">
-        loading bb plz wait
-      </div>
-    )
-  }
-
+export default function WidgetWeatherContent({ location, weather }: Props) {
   return (
     <div className="flex h-full w-full items-stretch justify-between font-serif font-light text-anamorphic-teal-700 [background:radial-gradient(484.75%_388.20%_at_76.54%_43.27%,#F4F4F4_0%,#50D5FF_100%)] fluid:text-[2rem]/[2.375rem]">
       <div className="fluid:pb-[2.375rem] fluid:pl-12 fluid:pt-[2.625rem]">
@@ -121,13 +105,13 @@ export default function WidgetWeatherContent({ location }: Props) {
           Today <span className="font-serif-ampersand">&</span> Tomorrow
         </span>
         <div className="fluid:text-[4rem]/[4rem]">
-          {Math.round(data.daily.temperature_2m_min[0])}/
-          {Math.round(data.daily.temperature_2m_max[0])}ºC
+          {Math.round(weather.daily.temperature_2m_min[0])}/
+          {Math.round(weather.daily.temperature_2m_max[0])}ºC
         </div>
         <div className="flex items-center fluid:gap-5 fluid:text-[4rem]/[4rem]">
           <img
-            src={handleWeatherCode(data.daily.weathercode[1]).src}
-            alt={handleWeatherCode(data.daily.weathercode[1]).label}
+            src={handleWeatherCode(weather.daily.weathercode[1]).src}
+            alt={handleWeatherCode(weather.daily.weathercode[1]).label}
             width={201}
             height={201}
             loading="lazy"
@@ -136,15 +120,15 @@ export default function WidgetWeatherContent({ location }: Props) {
             draggable={false}
           />
           <span>
-            {Math.round(data.daily.temperature_2m_min[1])}/
-            {Math.round(data.daily.temperature_2m_max[1])}ºC
+            {Math.round(weather.daily.temperature_2m_min[1])}/
+            {Math.round(weather.daily.temperature_2m_max[1])}ºC
           </span>
         </div>
       </div>
       <div className="fluid:p-12">
         <img
-          src={handleWeatherCode(data.current_weather.weathercode).src}
-          alt={handleWeatherCode(data.current_weather.weathercode).label}
+          src={handleWeatherCode(weather.current_weather.weathercode).src}
+          alt={handleWeatherCode(weather.current_weather.weathercode).label}
           width={201}
           height={201}
           loading="lazy"

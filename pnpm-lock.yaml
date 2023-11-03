@@ -161,9 +161,6 @@ importers:
       split-type:
         specifier: ^0.3.4
         version: 0.3.4
-      suspend-react:
-        specifier: ^0.1.3
-        version: 0.1.3(react@18.2.0)
       zod:
         specifier: ^3.22.2
         version: 3.22.4
@@ -9500,14 +9497,6 @@ packages:
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
-
-  /suspend-react@0.1.3(react@18.2.0):
-    resolution: {integrity: sha512-aqldKgX9aZqpoDp3e8/BZ8Dm7x1pJl+qI3ZKxDN0i/IQTWUwBx/ManmlVJ3wowqbno6c2bmiIfs+Um6LbsjJyQ==}
-    peerDependencies:
-      react: '>=17.0'
-    dependencies:
-      react: 18.2.0
-    dev: false
 
   /svg-baker-update@1.9.19:
     resolution: {integrity: sha512-94gw0EYyjHnysXQb2vpJqm+zzYqXE0WpxM/AM86dlJRGYjvpagoUAuErmNgvG4OIAIENde7WJCWeJojDP30gtQ==}

@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { z } from "zod"
 import { getParams } from "~/lib/params"
@@ -70,3 +70,5 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return json(null)
   }
 }
+
+export type Weather = SerializeFrom<typeof loader>

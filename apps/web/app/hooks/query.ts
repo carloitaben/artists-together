@@ -15,6 +15,11 @@ type Autocomplete<T> = T | (string & Record<never, never>)
 
 export interface QueryOptions {
   /**
+   * Enables or disables client-side fetching
+   * @default true
+   */
+  load?: boolean
+  /**
    * Other route whose loader is used to fetch data.
    * @default currentPath
    */
@@ -61,6 +66,7 @@ export interface QueryOptions {
 export function useQuery<DataType>(options: QueryOptions = {}) {
   const { pathname } = useLocation()
   const {
+    load = true,
     route = pathname,
     reloadInterval = 0,
     reloadOnWindowVisible = true,
@@ -74,11 +80,13 @@ export function useQuery<DataType>(options: QueryOptions = {}) {
     route,
     isCurrentRoute,
   )
+
   const {
     data: clientData,
     loading: clientLoading,
     reload,
   } = useClientData<DataType>({
+    load,
     route,
     reloadInterval,
     reloadOnReconnect,
@@ -99,8 +107,8 @@ export function useQuery<DataType>(options: QueryOptions = {}) {
   // Initial fetch for different route on client-side
   // if not already loaded on server-side.
   useEffect(() => {
-    if (!serverData) reload()
-  }, [reload, serverData])
+    if (!serverData && load) reload()
+  }, [load, reload, serverData])
 
   return { data, loading, reload }
 }
