@@ -15,7 +15,7 @@ export default function WidgetLive() {
     <div className="col-span-4 select-none sm:col-span-3">
       <AspectRatio.Root
         ratio={16 / 9}
-        className="overflow-hidden fluid:rounded-3xl shadow-card"
+        className="overflow-hidden rounded-3xl shadow-card"
       >
         <ClientOnly
           show={!loading}
