@@ -77,7 +77,7 @@ export default function BottomAppBar() {
                   )}
                 </AnimatePresence>
               </motion.div>
-              <NavigationMenu.Content>
+              <NavigationMenu.Content className="absolute top-0 inset-x-0 max-w-[14.25rem] w-full -translate-y-full">
                 <ul className="space-y-2 mb-2">
                   {routes.map((route) => (
                     <li key={route.href}>
@@ -98,7 +98,6 @@ export default function BottomAppBar() {
             </motion.button>
           </NavigationMenu.Trigger>
         </NavigationMenu.Item>
-        <NavigationMenu.Viewport className="absolute top-0 inset-x-0 max-w-[14.25rem] w-full -translate-y-full" />
         <NavigationMenu.Item asChild>
           <motion.li
             layout
