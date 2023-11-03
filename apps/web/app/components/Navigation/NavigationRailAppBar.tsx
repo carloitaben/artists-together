@@ -2,12 +2,30 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import * as Dialog from "@radix-ui/react-dialog"
 import { cx } from "cva"
+import type { MouseEvent } from "react"
+import { animate } from "framer-motion"
 import { NavLink } from "@remix-run/react"
 import { useUser } from "~/hooks/loaders"
 import { usePageHandle } from "~/lib/handle"
 import { routes } from "~/lib/routes"
 import Icon from "~/components/Icon"
 import NavigationRailTooltip from "./NavigationRailTooltip"
+
+function anchor(event: MouseEvent) {
+  event.preventDefault()
+
+  function stopPropagation(event: Event) {
+    event.stopPropagation()
+  }
+
+  animate(document.documentElement.scrollTop, 0, {
+    type: "spring",
+    mass: 0.075,
+    onPlay: () => window.addEventListener("scroll", stopPropagation),
+    onComplete: () => window.removeEventListener("scroll", stopPropagation),
+    onUpdate: (top) => (document.documentElement.scrollTop = top),
+  })
+}
 
 export default function RailAppBar() {
   const handle = usePageHandle<{ page: { name: string } }>()
@@ -19,14 +37,15 @@ export default function RailAppBar() {
         orientation="vertical"
         className="fixed inset-y-0 left-0 hidden w-16 bg-theme-900 text-theme-50 sm:flex flex-col items-center justify-center overflow-y-auto gap-y-4 pt-4 pb-2"
       >
-        <button
+        <a
           className="inline-block absolute top-4 inset-x-auto"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          href="#top"
+          onClick={anchor}
         >
           <h1 className="text-theme-100 font-serif text-base font-semibold [writing-mode:vertical-lr] rotate-180">
             {handle.page.name}
           </h1>
-        </button>
+        </a>
         <NavigationMenu.List className="grid">
           <NavigationMenu.Item>
             <Tooltip.Root>
