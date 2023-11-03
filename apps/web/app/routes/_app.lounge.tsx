@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/react"
 import { guardDisabledRoute } from "~/lib/routes"
+import * as Form from "~/components/Form"
 
 export const meta: MetaFunction = () => [
   {
@@ -23,5 +24,31 @@ export async function loader() {
 }
 
 export default function Page() {
-  return <main>lounge</main>
+  return (
+    <main>
+      <Form.Root>
+        <Form.Field name="name">
+          <Form.Label>
+            This is a label
+            <Form.Value<string>>{(value = "") => value.length}</Form.Value>
+          </Form.Label>
+          <Form.Input
+            className="w-full"
+            type="text"
+            placeholder="Enter your name"
+          />
+          <Form.Error />
+        </Form.Field>
+        <Form.Field name="password">
+          <Form.Label>This is a label</Form.Label>
+          <Form.Input
+            className="w-full"
+            type="text"
+            placeholder="Enter your name"
+          />
+          <Form.Error />
+        </Form.Field>
+      </Form.Root>
+    </main>
+  )
 }
