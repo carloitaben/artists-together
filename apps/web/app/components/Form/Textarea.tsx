@@ -1,8 +1,8 @@
 import type { ComponentProps, ForwardedRef } from "react"
-import { forwardRef } from "react"
+import { forwardRef, useCallback } from "react"
 import { useField } from "remix-validated-form"
-import { useFieldContext } from "./Field"
 import { cx } from "cva"
+import { useFieldContext } from "./Field"
 
 type Props = Omit<ComponentProps<"textarea">, "name">
 
@@ -10,8 +10,17 @@ function Textarea(
   { className, rows = 4, ...props }: Props,
   ref: ForwardedRef<HTMLTextAreaElement>,
 ) {
-  const { name } = useFieldContext()
+  const { store, name, controlled } = useFieldContext()
   const { getInputProps } = useField(name)
+
+  const onChange = useCallback<NonNullable<Props["onChange"]>>(
+    (event) => {
+      store.set(event.target.value)
+      props.onChange?.(event)
+    },
+    [props, store],
+  )
+
   return (
     <textarea
       rows={rows}
@@ -21,6 +30,7 @@ function Textarea(
       )}
       {...getInputProps({ ...props, id: name })}
       ref={ref}
+      onChange={controlled ? onChange : undefined}
     />
   )
 }

@@ -15,7 +15,12 @@ export default function AuthUserSupport() {
           <Form.Error />
         </Form.Field>
         <Form.Field name="message" className="flex flex-col">
-          <Form.Label>Message</Form.Label>
+          <Form.Label className="justify-between">
+            <span>Message</span>
+            <Form.Value<string>>
+              {(value = "") => `${value.length}/128`}
+            </Form.Value>
+          </Form.Label>
           <Form.Textarea rows={7} placeholder="Example" />
           <Form.Error />
         </Form.Field>

@@ -19,7 +19,12 @@ export default function AuthUserProfile() {
           <Form.Error />
         </Form.Field>
         <Form.Field name="bio" className="flex flex-col flex-1">
-          <Form.Label>Description</Form.Label>
+          <Form.Label className="justify-between">
+            <span>Description</span>
+            <Form.Value<string>>
+              {(value = "") => `${value.length}/128`}
+            </Form.Value>
+          </Form.Label>
           <Form.Textarea className="h-full" placeholder="Placeholder" />
           <Form.Error />
         </Form.Field>
