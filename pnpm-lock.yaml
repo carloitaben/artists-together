@@ -113,6 +113,9 @@ importers:
       cva:
         specifier: 1.0.0-beta.1
         version: 1.0.0-beta.1(typescript@5.2.2)
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       db:
         specifier: workspace:*
         version: link:../../packages/db
