@@ -1,4 +1,4 @@
-import { useLocation } from "@remix-run/react"
+import { useFetcher, useLocation } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { z } from "zod"
 import type { Routes } from "remix-routes"
@@ -28,10 +28,11 @@ export default function Root<
   children,
   action,
   validator,
-  navigate,
+  navigate = true,
   ...props
 }: Props<DataType, Subaction>) {
   const location = useLocation()
+  const fetcher = useFetcher<DataType>()
 
   const validatorFallback =
     validator || (emptyValidator as NonNullable<typeof validator>)
@@ -39,8 +40,9 @@ export default function Root<
   return (
     <ValidatedForm
       {...props}
-      fetcherKey={navigate ? undefined : action}
       validator={validatorFallback}
+      fetcherKey={navigate ? undefined : action}
+      fetcher={navigate ? undefined : fetcher}
       navigate={navigate}
       method={method}
       action={action}
