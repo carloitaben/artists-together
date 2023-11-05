@@ -1,5 +1,6 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
+import * as Dialog from "@radix-ui/react-dialog"
 import { NavLink } from "@remix-run/react"
 import { cx } from "cva"
 import type { Transition } from "framer-motion"
@@ -9,10 +10,39 @@ import { routes } from "~/lib/routes"
 import Icon from "~/components/Icon"
 import { useEffect, useRef, useState } from "react"
 import NavigationBottomAppBarPill from "./NavigationBottomAppBarPill"
+import { useUser } from "~/hooks/loaders"
 
 const transition: Transition = {
   type: "spring",
   bounce: 0.25,
+}
+
+function AuthLink() {
+  const user = useUser()
+
+  return (
+    <li>
+      <Dialog.Trigger asChild>
+        <NavigationBottomAppBarPill
+          icon={
+            user?.avatar ? (
+              <img
+                className="w-6 h-6 bg-current rounded-full overflow-hidden"
+                src={user.avatar}
+                alt="Your profile"
+                decoding="async"
+                loading="lazy"
+              />
+            ) : (
+              "face"
+            )
+          }
+        >
+          {user ? "Your profile" : "Sign in"}
+        </NavigationBottomAppBarPill>
+      </Dialog.Trigger>
+    </li>
+  )
 }
 
 export default function BottomAppBar() {
@@ -89,6 +119,7 @@ export default function BottomAppBar() {
               </motion.div>
               <NavigationMenu.Content className="absolute top-0 inset-x-0 max-w-[14.25rem] w-full -translate-y-full">
                 <ul className="space-y-2 mb-2">
+                  <AuthLink />
                   {routes.map((route) => (
                     <li key={route.href}>
                       <NavLink to={route.href}>
