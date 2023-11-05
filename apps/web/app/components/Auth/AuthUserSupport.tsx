@@ -1,6 +1,8 @@
 import { validator } from "~/routes/api.contact"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
+import Button from "../Button"
+import Icon from "../Icon"
 
 export default function AuthUserSupport() {
   return (
@@ -22,6 +24,11 @@ export default function AuthUserSupport() {
           <Form.Textarea rows={7} placeholder="Example" maxLength={300} />
           <Form.Error />
         </Form.Field>
+        <Form.Submit asChild>
+          <Button>
+            <Icon name="check" label="Submit" className="w-6 h-6" />
+          </Button>
+        </Form.Submit>
       </Form.Root>
     </Modal.Container>
   )

@@ -1,22 +1,51 @@
 import { Slot } from "@radix-ui/react-slot"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
-import { Children, forwardRef } from "react"
-import type { ComponentProps, ForwardedRef } from "react"
+import { Children, forwardRef, isValidElement } from "react"
+import type { ComponentProps, ForwardedRef, ReactNode } from "react"
+import Icon from "./Icon"
+
+function isIconButton(children: ReactNode) {
+  const array = Children.toArray(children)
+
+  if (array.length !== 1) return false
+
+  const child = array[0]
+
+  if (!isValidElement(child)) return false
+
+  return child.type === Icon
+}
 
 const button = cva({
-  base: "rounded-full py-3 text-center font-sans text-sm shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)] transition active:scale-95 disabled:active:scale-100",
+  base: "rounded-full shadow-[0px_4px_16px_0px_rgba(11,14,30,0.08)] transition active:scale-95 disabled:active:scale-100",
   variants: {
+    icon: {
+      true: "p-3 w-12 h-12",
+      false: "font-sans text-center text-sm",
+    },
     color: {
       white:
         "bg-gunpla-white-50 text-gunpla-white-500 disabled:bg-gunpla-white-100 disabled:text-gunpla-white-400",
       false: "",
     },
     flex: {
-      true: "inline-flex gap-2.5 px-5",
-      false: "px-10",
+      true: "",
+      false: "",
     },
   },
+  compoundVariants: [
+    {
+      icon: false,
+      flex: true,
+      className: "inline-flex gap-2.5 py-3 px-5",
+    },
+    {
+      icon: false,
+      flex: false,
+      className: "py-3 px-10",
+    },
+  ],
   defaultVariants: {
     color: "white",
     flex: false,
@@ -24,7 +53,7 @@ const button = cva({
 })
 
 type Props = Omit<ComponentProps<"button">, "color"> &
-  Omit<VariantProps<typeof button>, "flex"> & {
+  Omit<VariantProps<typeof button>, "flex" | "icon"> & {
     asChild?: boolean
   }
 
@@ -33,13 +62,17 @@ function Button(
   ref: ForwardedRef<HTMLButtonElement>,
 ) {
   const Component = asChild ? Slot : "button"
-  const flex = Children.count(children) > 1
 
   return (
     <Component
       {...props}
       ref={ref}
-      className={button({ className, color, flex })}
+      className={button({
+        className,
+        color,
+        flex: Children.count(children) > 1,
+        icon: isIconButton(children),
+      })}
     >
       {children}
     </Component>
