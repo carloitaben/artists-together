@@ -1,16 +1,16 @@
-import * as NavigationMenu from "@radix-ui/react-navigation-menu"
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import * as Dialog from "@radix-ui/react-dialog"
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
+import * as NavigationMenu from "@radix-ui/react-navigation-menu"
 import { NavLink } from "@remix-run/react"
-import { cx } from "cva"
+import { useEffect, useRef, useState } from "react"
 import type { Transition } from "framer-motion"
 import { AnimatePresence, motion } from "framer-motion"
-import { usePageHandle } from "~/lib/handle"
+import { cx } from "cva"
 import { routes } from "~/lib/routes"
-import Icon from "~/components/Icon"
-import { useEffect, useRef, useState } from "react"
-import NavigationBottomAppBarPill from "./NavigationBottomAppBarPill"
+import { usePageHandle } from "~/lib/handle"
 import { useUser } from "~/hooks/loaders"
+import Icon from "~/components/Icon"
+import NavigationBottomAppBarPill from "./NavigationBottomAppBarPill"
 
 const transition: Transition = {
   type: "spring",
