@@ -4,6 +4,7 @@ import { useAnimate, useInView, useScroll } from "framer-motion"
 import type { ComponentProps } from "react"
 import { Children, useEffect } from "react"
 import SplitType from "split-type"
+import * as AspectRatio from "@radix-ui/react-aspect-ratio"
 import Container from "~/components/Container"
 import Icon from "~/components/Icon"
 import Marquee from "~/components/Marquee"
@@ -30,11 +31,11 @@ function AnimatedContainer({
   Children.only(children)
 
   const [ref, animate] = useAnimate<HTMLDivElement>()
-  
+
   const inView = useInView(ref, {
     margin: "-1px",
   })
-  
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start center", "end end"],
@@ -91,13 +92,13 @@ export default function Page() {
   return (
     <>
       <header>
-        <Container className="flex min-h-screen items-center justify-center py-16">
-          <h2 className="sr-only">Artists Together</h2>
-          <Icon
-            name="logo"
-            className="h-full w-full max-w-[37.5rem]"
-            label=""
-          />
+        <Container grid className="min-h-screen place-items-center py-16">
+          <div className="max-w-[37.5rem] w-full col-span-4 col-start-3">
+            <AspectRatio.Root ratio={600 / 286}>
+              <h2 className="sr-only">Artists Together</h2>
+              <Icon name="logo" className="h-full w-full" label="" />
+            </AspectRatio.Root>
+          </div>
         </Container>
       </header>
       <main className="select-auto font-serif font-light leading-tight fluid:text-[4rem]">
