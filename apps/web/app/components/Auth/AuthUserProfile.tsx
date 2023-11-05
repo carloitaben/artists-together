@@ -25,7 +25,11 @@ export default function AuthUserProfile() {
               {(value = "") => `${value.length}/128`}
             </Form.Value>
           </Form.Label>
-          <Form.Textarea className="h-full" placeholder="Placeholder" />
+          <Form.Textarea
+            className="h-full"
+            placeholder="Placeholder"
+            maxLength={128}
+          />
           <Form.Error />
         </Form.Field>
       </Form.Root>

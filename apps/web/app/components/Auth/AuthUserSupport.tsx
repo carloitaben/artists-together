@@ -16,10 +16,10 @@ export default function AuthUserSupport() {
           <Form.Label className="justify-between">
             <span>Message</span>
             <Form.Value<string>>
-              {(value = "") => `${value.length}/128`}
+              {(value = "") => `${value.length}/300`}
             </Form.Value>
           </Form.Label>
-          <Form.Textarea rows={7} placeholder="Example" />
+          <Form.Textarea rows={7} placeholder="Example" maxLength={300} />
           <Form.Error />
         </Form.Field>
       </Form.Root>
