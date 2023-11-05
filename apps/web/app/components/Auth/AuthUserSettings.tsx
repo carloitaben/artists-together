@@ -10,14 +10,14 @@ export default function AuthUserSettings() {
           name="format-24h"
           className="flex items-center justify-between"
         >
-          <Form.Label>24-hour time format</Form.Label>
+          <Form.Label padding={false}>24-hour time format</Form.Label>
           <Form.Switch />
         </Form.Field>
         <Form.Field
           name="share-location"
           className="flex items-center justify-between"
         >
-          <Form.Label>
+          <Form.Label padding={false}>
             <Form.Tooltip align="start">
               We use your approximate location (region) to let other members
               know your timezone.
@@ -30,7 +30,7 @@ export default function AuthUserSettings() {
           name="share-streaming"
           className="flex items-center justify-between"
         >
-          <Form.Label>
+          <Form.Label padding={false}>
             <Form.Tooltip align="start">TODO</Form.Tooltip>
             Share streaming status
           </Form.Label>
@@ -40,7 +40,7 @@ export default function AuthUserSettings() {
           name="share-cursor"
           className="flex items-center justify-between"
         >
-          <Form.Label>
+          <Form.Label padding={false}>
             <Form.Tooltip align="start">TODO</Form.Tooltip>
             Share cursor location
           </Form.Label>
@@ -50,7 +50,7 @@ export default function AuthUserSettings() {
           name="fahrenheit"
           className="flex items-center justify-between"
         >
-          <Form.Label>Temperature in Fahrenheit</Form.Label>
+          <Form.Label padding={false}>Temperature in Fahrenheit</Form.Label>
           <Form.Switch />
         </Form.Field>
       </Form.Root>

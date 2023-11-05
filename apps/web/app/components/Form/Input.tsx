@@ -25,7 +25,7 @@ function Input(
     <input
       className={cx(
         className,
-        "bg-not-so-white placeholder-gunpla-white-300 text-gunpla-white-700 caret-theme-300 rounded-2xl p-2.5",
+        "bg-not-so-white placeholder-gunpla-white-300 text-gunpla-white-700 caret-theme-300 rounded-2xl px-3 py-2.5",
       )}
       {...getInputProps({ ...props, id: name })}
       ref={ref}

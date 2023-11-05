@@ -1,19 +1,34 @@
 import type { ComponentProps, ForwardedRef } from "react"
 import { forwardRef } from "react"
+import type { VariantProps } from "cva"
+import { cva } from "cva"
 import { useFieldContext } from "./Field"
-import { cx } from "cva"
 
-type Props = Omit<ComponentProps<"label">, "htmlFor">
+const label = cva({
+  base: "min-h-[1.875rem] flex items-center",
+  variants: {
+    padding: {
+      true: "px-3",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    padding: true,
+  },
+})
+
+type Props = Omit<ComponentProps<"label">, "htmlFor"> &
+  VariantProps<typeof label>
 
 function Label(
-  { className, ...props }: Props,
+  { className, padding, ...props }: Props,
   ref: ForwardedRef<HTMLLabelElement>,
 ) {
   const { name } = useFieldContext()
 
   return (
     <label
-      className={cx(className, "min-h-[1.875rem] flex items-center")}
+      className={label({ className, padding })}
       {...props}
       htmlFor={name}
       ref={ref}
