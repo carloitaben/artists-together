@@ -144,7 +144,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
         const sessionCookie = auth.createSessionCookie(session)
 
-        return redirect(cookie.from, {
+        return redirect(cookie.from + "?toast=Logged+in+successfully", {
           headers: {
             "Set-Cookie": sessionCookie.serialize(),
           },

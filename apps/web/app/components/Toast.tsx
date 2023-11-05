@@ -102,11 +102,20 @@ export default function Toast() {
   const [hover, setHover] = useState(false)
 
   useEffect(() => {
-    if (!params.get("error")) return
+    const error = params.get("error")
+    const toast = params.get("toast") || ""
+
+    if (!error && !toast) return
+
     setParams(
       (params) => {
-        emit.error()
-        params.delete("error")
+        if (error) {
+          emit.error()
+          params.delete("error")
+        } else if (toast) {
+          emit.message(toast)
+          params.delete("toast")
+        }
         return params
       },
       { replace: true },
