@@ -7,7 +7,7 @@ import Icon from "../Icon"
 export default function AuthUserSupport() {
   return (
     <Modal.Container>
-      <Modal.Title>Contact support</Modal.Title>
+      <Modal.Heading>Contact support</Modal.Heading>
       <Form.Root validator={validator} navigate={false} action="/api/contact">
         <Form.Field name="subject" className="flex flex-col">
           <Form.Label>Subject</Form.Label>

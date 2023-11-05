@@ -1,6 +1,7 @@
 export { default as Container } from "./Container"
 export { default as Content } from "./Content"
 export { default as Description } from "./Description"
+export { default as Heading } from "./Heading"
 export { default as Overlay } from "./Overlay"
 export { default as Portal } from "./Portal"
 export { default as Root } from "./Root"

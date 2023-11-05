@@ -8,7 +8,11 @@ export default function AuthLogin() {
   return (
     <Modal.Content>
       <Modal.Container>
-        <Modal.Title className="mb-5">Welcome to Artists Together</Modal.Title>
+        <Modal.Title asChild>
+          <Modal.Heading className="mb-5">
+            Welcome to Artists Together
+          </Modal.Heading>
+        </Modal.Title>
         <Modal.Description>
           We will be using Discord to manage your Artists Together account.
         </Modal.Description>

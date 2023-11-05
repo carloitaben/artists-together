@@ -72,7 +72,7 @@ export default function AuthUserSocialMedia() {
 
   return (
     <Modal.Container>
-      <Modal.Title>Social media</Modal.Title>
+      <Modal.Heading>Social media</Modal.Heading>
       <Form.Root validator={validator} navigate={false} action="/api/user">
         <h6>Links</h6>
         <ul className="space-y-2">

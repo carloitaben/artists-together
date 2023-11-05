@@ -8,7 +8,8 @@ export default function AuthUserProfile() {
 
   return (
     <Modal.Container>
-      <Modal.Title>{user.username}</Modal.Title>
+      <Modal.Title className="sr-only">Your profile</Modal.Title>
+      <Modal.Heading>{user.username}</Modal.Heading>
       <Form.Root className="flex gap-2">
         <Form.Field name="avatar" className="flex flex-col flex-none pr-6">
           <Form.Label>

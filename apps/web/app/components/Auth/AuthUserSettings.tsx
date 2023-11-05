@@ -4,7 +4,7 @@ import * as Form from "~/components/Form"
 export default function AuthUserSettings() {
   return (
     <Modal.Container>
-      <Modal.Title>Advanced settings</Modal.Title>
+      <Modal.Heading>Advanced settings</Modal.Heading>
       <Form.Root action="/asdasd" className="space-y-2">
         <Form.Field
           name="format-24h"
