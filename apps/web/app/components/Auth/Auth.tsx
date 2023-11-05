@@ -11,20 +11,18 @@ export default function Auth() {
   const user = useUser()
 
   return (
-    <Modal.Portal>
-      <Modal.Overlay>
-        {user ? (
-          <Modal.Content>
-            <AuthUserProfile />
-            <AuthUserSocialMedia />
-            <AuthUserSettings />
-            <AuthUserSupport />
-            <AuthSignOutForm />
-          </Modal.Content>
-        ) : (
-          <AuthLoginForm />
-        )}
-      </Modal.Overlay>
-    </Modal.Portal>
+    <Modal.Overlay className="z-50">
+      {user ? (
+        <Modal.Content>
+          <AuthUserProfile />
+          <AuthUserSocialMedia />
+          <AuthUserSettings />
+          <AuthUserSupport />
+          <AuthSignOutForm />
+        </Modal.Content>
+      ) : (
+        <AuthLoginForm />
+      )}
+    </Modal.Overlay>
   )
 }

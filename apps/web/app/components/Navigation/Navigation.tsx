@@ -1,5 +1,5 @@
 import { useSearchParams } from "@remix-run/react"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import Auth from "~/components/Auth"
 import * as Modal from "~/components/Modal"
 import NavigationBottomAppBar from "./NavigationBottomAppBar"
@@ -7,11 +7,10 @@ import NavigationRailAppBar from "./NavigationRailAppBar"
 
 export default function Navigation() {
   const [params, setParams] = useSearchParams()
-  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     if (params.get("modal") !== "auth") return
-    setOpen(true)
+
     setParams(
       (params) => {
         params.delete("modal")
@@ -21,8 +20,10 @@ export default function Navigation() {
     )
   }, [params, setParams])
 
+  const defaultOpen = params.get("modal") === "auth"
+
   return (
-    <Modal.Root open={open} onOpenChange={setOpen}>
+    <Modal.Root defaultOpen={defaultOpen}>
       <NavigationBottomAppBar />
       <NavigationRailAppBar />
       <Auth />
