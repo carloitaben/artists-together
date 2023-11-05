@@ -11,7 +11,7 @@ export default function Auth() {
   const user = useUser()
 
   return (
-    <Modal.Overlay className="z-50">
+    <Modal.Overlay>
       {user ? (
         <Modal.Content>
           <AuthUserProfile />
