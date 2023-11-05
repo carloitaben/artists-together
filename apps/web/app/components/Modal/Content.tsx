@@ -5,7 +5,7 @@ import type { ForwardedRef } from "react"
 import { forwardRef } from "react"
 
 const content = cva({
-  base: "flex flex-col gap-y-2 [&>*:last-child]:mt-2",
+  base: "flex flex-col gap-y-2 [&>*:last-child]:mt-2 selection:bg-gunpla-white-300 selection:text-gunpla-white-900",
   variants: {
     fill: {
       true: "w-full max-w-xl",
