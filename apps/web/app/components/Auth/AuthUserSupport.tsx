@@ -22,7 +22,6 @@ export default function AuthUserSupport() {
           <Form.Textarea rows={7} placeholder="Example" />
           <Form.Error />
         </Form.Field>
-        <Form.Submit>dale</Form.Submit>
       </Form.Root>
     </Modal.Container>
   )

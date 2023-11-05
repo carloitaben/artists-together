@@ -3,7 +3,6 @@ import { createClient } from "db"
 import { lucia } from "lucia"
 import { web } from "lucia/middleware"
 import { libsql } from "@lucia-auth/adapter-sqlite"
-import type { DiscordUser, TwitchUser } from "@lucia-auth/oauth/providers"
 import { discord, twitch } from "@lucia-auth/oauth/providers"
 import { env } from "~/lib/env"
 
@@ -20,20 +19,20 @@ export const auth = lucia({
     name: "session_v0",
   },
   getUserAttributes(user) {
+    console.log(user)
+
     return {
       email: user.email,
       theme: user.theme,
       username: user.username,
       bio: user.bio,
+      links: user.links,
       discord_id: user.discord_id,
       discord_username: user.discord_username,
-      discord_metadata: user.discord_metadata as DiscordUser,
       avatar: user.avatar,
       twitch_id: user.twitch_id,
       twitch_username: user.twitch_username,
-      twitch_metadata: user.twitch_metadata as TwitchUser,
-      timestamp: user.timestamp,
-    } satisfies Omit<Users.UsersInsert, "id">
+    }
   },
   getSessionAttributes() {
     return {}
@@ -42,7 +41,7 @@ export const auth = lucia({
 
 export type Auth = typeof auth
 
-export type UserAttributes = Omit<Users.UsersInsertSchema, "id">
+export type UserAttributes = Users.UsersSelectSchema
 
 const discordAuth = discord(auth, {
   clientId: env.DISCORD_OAUTH_ID,

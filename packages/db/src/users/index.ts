@@ -7,19 +7,17 @@ import { db } from "../db"
 
 export const UsersInsertSchema = createInsertSchema(users, {
   email: (schema) => schema.email.email(),
+  links: z.array(z.string().url()),
 })
 
 export type UsersInsertSchema = z.infer<typeof UsersInsertSchema>
 
 export const UsersSelectSchema = createSelectSchema(users, {
   email: (schema) => schema.email.email(),
+  links: z.array(z.string().url()),
 })
 
 export type UsersSelectSchema = z.infer<typeof UsersSelectSchema>
-
-export type UsersInsert = typeof users.$inferInsert
-
-export type UsersSelect = typeof users.$inferSelect
 
 export const fromUsername = zod(
   UsersSelectSchema.shape.username,
@@ -29,9 +27,4 @@ export const fromUsername = zod(
 
 export const fromEmail = zod(UsersSelectSchema.shape.email, async (email) =>
   db.select().from(users).where(eq(users.email, email)).get()
-)
-
-export const update = zod(
-  UsersInsertSchema.partial().required({ id: true }),
-  ({ id, ...user }) => db.update(users).set(user).where(eq(users.id, id)).run()
 )

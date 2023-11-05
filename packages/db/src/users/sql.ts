@@ -11,6 +11,10 @@ export const users = sqliteTable(
     theme: text("theme").notNull(),
     avatar: text("avatar"),
     bio: text("bio"),
+    links: blob("links", { mode: "json" })
+      .notNull()
+      .default(JSON.stringify([]))
+      .$type<string[]>(),
     discord_id: text("discord_id").unique(),
     discord_username: text("discord_username").unique(),
     discord_metadata: blob("discord_metadata", {
