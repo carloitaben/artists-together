@@ -52,7 +52,7 @@ export default function RailAppBar() {
               <Tooltip.Trigger asChild>
                 <NavigationMenu.Trigger asChild>
                   <Dialog.Trigger className="p-0.5 group">
-                    <div className="w-12 h-12 flex items-center justify-center rounded-lg text-theme-700 group-hover:bg-theme-800 group-hover:text-theme-100">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-lg group-hover:bg-theme-300 group-hover:text-theme-700 text-theme-700">
                       {user?.avatar ? (
                         <img
                           className="w-6 h-6 bg-current rounded-full overflow-hidden"
@@ -95,14 +95,10 @@ export default function RailAppBar() {
                       {({ isActive, isPending }) => (
                         <div
                           className={cx(
-                            "w-12 h-12 flex items-center justify-center rounded-lg group-aria-disabled:text-theme-800 group-aria-disabled:group-hover:bg-unset",
-                            {
-                              "text-theme-700 group-hover:bg-theme-800 group-hover:text-theme-100":
-                                !isActive && !isPending,
-                              "bg-theme-300 text-theme-700":
-                                isActive && !isPending,
-                              "bg-theme-800 text-theme-100": isPending,
-                            },
+                            "w-12 h-12 flex items-center justify-center rounded-lg group-hover:bg-theme-300 group-hover:text-theme-700",
+                            isActive || isPending
+                              ? "text-theme-100"
+                              : "text-theme-700",
                           )}
                         >
                           <Icon
