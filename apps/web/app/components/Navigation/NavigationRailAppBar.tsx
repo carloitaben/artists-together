@@ -86,30 +86,38 @@ export default function RailAppBar() {
             >
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
-                  <NavigationMenu.Link
-                    asChild
-                    href={route.href}
-                    aria-disabled={route?.disabled}
-                  >
-                    <NavLink to={route.href} className="group block p-0.5">
-                      {({ isActive, isPending }) => (
-                        <div
-                          className={cx(
-                            "w-12 h-12 flex items-center justify-center rounded-lg group-hover:bg-theme-300 group-hover:text-theme-700",
-                            isActive || isPending
-                              ? "text-theme-100"
-                              : "text-theme-700",
-                          )}
-                        >
-                          <Icon
-                            name={route.icon}
-                            label={route.label}
-                            className="w-6 h-6"
-                          />
-                        </div>
-                      )}
-                    </NavLink>
-                  </NavigationMenu.Link>
+                  {route.disabled ? (
+                    <div className="group block p-0.5">
+                      <div className="w-12 h-12 flex items-center justify-center rounded-lg text-theme-700">
+                        <Icon
+                          name={route.icon}
+                          label={route.label}
+                          className="w-6 h-6"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <NavigationMenu.Link asChild href={route.href}>
+                      <NavLink to={route.href} className="group block p-0.5">
+                        {({ isActive, isPending }) => (
+                          <div
+                            className={cx(
+                              "w-12 h-12 flex items-center justify-center rounded-lg group-hover:bg-theme-300 group-hover:text-theme-700",
+                              isActive || isPending
+                                ? "text-theme-100"
+                                : "text-theme-700",
+                            )}
+                          >
+                            <Icon
+                              name={route.icon}
+                              label={route.label}
+                              className="w-6 h-6"
+                            />
+                          </div>
+                        )}
+                      </NavLink>
+                    </NavigationMenu.Link>
+                  )}
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
                   <NavigationRailTooltip>
