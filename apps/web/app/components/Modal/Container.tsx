@@ -10,17 +10,12 @@ const container = cva({
       true: "bg-gunpla-white-50 text-gunpla-white-500",
       false: "",
     },
-    fill: {
-      true: "w-full max-w-xl",
-      false: "",
-    },
     padding: {
       true: "px-12 pb-12 pt-10",
       false: "",
     },
   },
   defaultVariants: {
-    fill: true,
     background: true,
     padding: true,
   },
@@ -29,14 +24,14 @@ const container = cva({
 type Props = ComponentProps<"div"> & VariantProps<typeof container>
 
 function Content(
-  { className, fill, background, padding, ...props }: Props,
+  { className, background, padding, ...props }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   return (
     <div
       {...props}
       ref={ref}
-      className={container({ className, fill, background, padding })}
+      className={container({ className, background, padding })}
     />
   )
 }
