@@ -23,7 +23,7 @@ export async function action({ request }: ActionFunctionArgs) {
   await auth.invalidateSession(session.sessionId)
   const sessionCookie = auth.createSessionCookie(session)
 
-  return redirect(form.data.pathname, {
+  return redirect(form.data.pathname + "?toast=Logged+out+succesfully", {
     headers: {
       "Set-Cookie": sessionCookie.serialize(),
     },
