@@ -32,7 +32,7 @@ export default function RailAppBar() {
   const user = useUser()
 
   return (
-    <Tooltip.Provider>
+    <Tooltip.Provider delayDuration={0}>
       <NavigationMenu.Root
         orientation="vertical"
         className="fixed inset-y-0 left-0 hidden w-16 bg-theme-900 text-theme-50 sm:flex flex-col items-center justify-center overflow-y-auto gap-y-4 pt-4 pb-2"
