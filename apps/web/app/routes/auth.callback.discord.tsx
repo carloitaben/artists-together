@@ -9,6 +9,7 @@ import { getParams } from "~/lib/params"
 import { defaultTheme } from "~/lib/themes"
 import { unreachable } from "~/lib/utils"
 import { env } from "~/lib/env"
+import { Users } from "db"
 
 const searchParams = z.union([
   z.object({
@@ -74,7 +75,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   try {
     let user: User | null = null
 
-    const { getExistingUser, discordUser, createUser, discordTokens } =
+    const { createUser, discordUser, discordTokens } =
       await discord.validateCallback(params.data.code)
 
     switch (cookie.intent) {
@@ -98,7 +99,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
           return redirect(cookie.from + "?modal=auth")
         }
 
-        user = await getExistingUser()
+        user = await Users.fromUsername(discordUser.username)
+          .then((user) => (user?.id ? auth.getUser(user.id) : null))
+          .catch()
 
         if (!user) {
           const avatar = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
