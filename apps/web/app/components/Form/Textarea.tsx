@@ -26,7 +26,7 @@ function Textarea(
       rows={rows}
       className={cx(
         className,
-        "resize-none bg-not-so-white placeholder-gunpla-white-300 text-gunpla-white-700 caret-gunpla-white-500 rounded-2xl px-3 py-2.5",
+        "resize-none bg-not-so-white placeholder-gunpla-white-300 text-gunpla-white-700 caret-gunpla-white-500 rounded-2xl px-3 py-2.5 scroll-px-3 scroll-py-2.5",
       )}
       {...getInputProps({ ...props, id: name })}
       ref={ref}
