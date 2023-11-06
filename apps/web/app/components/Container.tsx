@@ -5,13 +5,13 @@ import type { VariantProps } from "cva"
 import { cva } from "cva"
 
 export const cols = "grid-cols-4 sm:grid-cols-8"
-export const gap = "fluid:gap-4"
+export const gap = "gap-1 sm:fluid:gap-4"
 
 const container = cva({
   base: "w-full",
   variants: {
     padding: {
-      true: "px-4 sm:pl-0",
+      true: "px-1 sm:pr-4 sm:pl-0",
       false: "",
     },
     grid: {
