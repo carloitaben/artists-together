@@ -2,12 +2,15 @@ import type { MetaFunction } from "@remix-run/react"
 import type { Segment } from "framer-motion"
 import { useAnimate, useInView, useScroll } from "framer-motion"
 import type { ComponentProps } from "react"
-import { Children, useEffect } from "react"
+import { Children, Suspense, lazy, useEffect } from "react"
 import SplitType from "split-type"
 import * as AspectRatio from "@radix-ui/react-aspect-ratio"
+import ClientOnly from "~/components/ClientOnly"
 import Container from "~/components/Container"
 import Icon from "~/components/Icon"
 import Marquee from "~/components/Marquee"
+
+const Stars = lazy(() => import("~/components/Stars"))
 
 export const meta: MetaFunction = () => [
   {
@@ -89,6 +92,11 @@ function AnimatedContainer({
 export default function Page() {
   return (
     <>
+      <ClientOnly>
+        <Suspense>
+          <Stars />
+        </Suspense>
+      </ClientOnly>
       <header>
         <Container grid className="min-h-screen place-items-center py-16">
           <div className="max-w-[37.5rem] w-full col-span-2 sm:col-span-4 col-start-2 sm:col-start-3">
