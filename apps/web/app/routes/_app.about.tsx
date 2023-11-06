@@ -16,9 +16,7 @@ export const meta: MetaFunction = () => [
 ]
 
 export const handle = {
-  actions: {
-    paint: () => console.log("paint"),
-  },
+  actions: {},
   page: {
     name: "About",
   },
@@ -93,7 +91,7 @@ export default function Page() {
     <>
       <header>
         <Container grid className="min-h-screen place-items-center py-16">
-          <div className="max-w-[37.5rem] w-full col-span-4 col-start-3">
+          <div className="max-w-[37.5rem] w-full col-span-2 sm:col-span-4 col-start-2 sm:col-start-3">
             <AspectRatio.Root ratio={600 / 286}>
               <h2 className="sr-only">Artists Together</h2>
               <Icon name="logo" className="h-full w-full" label="" />
@@ -101,25 +99,25 @@ export default function Page() {
           </div>
         </Container>
       </header>
-      <main className="select-auto font-serif font-light leading-tight fluid:text-[4rem]">
-        <AnimatedContainer grid className="min-h-screen items-center">
-          <h2 className="col-span-5 col-start-2">
+      <main className="select-auto font-serif font-light fluid:leading-tight fluid:text-2xl sm:fluid:text-[4rem]">
+        <Container grid className="min-h-screen items-center">
+          <h2 className="col-span-4 sm:col-span-7 sm:col-start-2">
             Artists Together is an online, worldwide
             <br />
             inclusive community for all kinds of artists
             <br />
             and skill levels.
           </h2>
-        </AnimatedContainer>
-        <AnimatedContainer grid className="min-h-screen items-center">
-          <h3 className="col-span-4 col-start-4">
-            We want to give artists from around the globe
+        </Container>
+        <Container grid className="min-h-screen items-center">
+          <h3 className="col-span-4 sm:col-span-5 sm:col-start-4">
+            We want to give artists from around
             <br />
-            a place to share, learn
+            the globe a place to share, learn
             <br />
             and talk with other creative folks.
           </h3>
-        </AnimatedContainer>
+        </Container>
         <div className="relative grid min-h-screen items-center">
           <Marquee>
             drawing, modelling, refurbishing, sculpting, composing, filming,
@@ -135,22 +133,22 @@ export default function Page() {
             <div className="col-span-1 col-end-9 h-full bg-gradient-to-l from-theme-900 to-transparent" />
           </Container>
         </div>
-        <AnimatedContainer grid className="min-h-screen items-center">
-          <h4 className="col-span-4 col-start-2">
+        <Container grid className="min-h-screen items-center">
+          <h4 className="col-span-4 sm:col-span-7 sm:col-start-2">
             We celebrate creativity, diversity,
             <br />
             entertainment and learning.
           </h4>
-        </AnimatedContainer>
-        <AnimatedContainer grid className="min-h-screen items-center">
-          <h5 className="col-span-4 col-start-4">
+        </Container>
+        <Container grid className="min-h-screen items-center">
+          <h5 className="col-span-4 sm:col-span-5 sm:col-start-4">
             So, create, share and enjoy,
             <br />
             because we are glad to have you here.
           </h5>
-        </AnimatedContainer>
+        </Container>
       </main>
-      <footer className="font-serif font-light leading-tight fluid:text-[4rem]">
+      <footer className="font-serif font-light fluid:leading-tight fluid:text-[2rem] sm:fluid:text-[4rem]">
         <Container className="grid h-screen items-center text-center">
           <h6>Artists, together.</h6>
         </Container>

@@ -22,7 +22,7 @@ const button = cva({
   variants: {
     icon: {
       true: "p-3 w-12 h-12",
-      false: "font-sans text-center text-sm",
+      false: "font-sans text-center text-xs sm:text-sm",
     },
     color: {
       white:
@@ -38,7 +38,8 @@ const button = cva({
     {
       icon: false,
       flex: true,
-      className: "inline-flex gap-2.5 py-3 px-5",
+      className:
+        "inline-flex items-center gap-2.5 py-4 px-[1.125rem] sm:py-3 sm:px-4",
     },
     {
       icon: false,

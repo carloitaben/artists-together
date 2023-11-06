@@ -4,7 +4,7 @@ import type { ComponentProps, ForwardedRef } from "react"
 import { forwardRef } from "react"
 
 const heading = cva({
-  base: "font-serif text-[2rem] leading-normal font-light text-gunpla-white-500",
+  base: "font-serif text-2xl leading-none sm:text-[2rem] sm:leading-tight font-light text-gunpla-white-500",
   variants: {
     padding: {
       true: "px-3",

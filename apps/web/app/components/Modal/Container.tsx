@@ -11,7 +11,7 @@ const container = cva({
       false: "",
     },
     padding: {
-      true: "px-12 pb-12 pt-10",
+      true: "px-8 pb-8 pt-6 sm:px-12 sm:pb-12 sm:pt-10",
       false: "",
     },
   },
