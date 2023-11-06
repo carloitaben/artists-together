@@ -46,7 +46,7 @@ export default {
       serif: [
         "Fraunces",
         {
-          fontVariationSettings: '"SOFT" 100, "WONK" 0',
+          fontVariationSettings: '"SOFT" 100, "WONK" 0, "OPSZ" 144',
         },
       ],
     },
