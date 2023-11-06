@@ -1,6 +1,7 @@
 import type { MetaFunction } from "@remix-run/react"
 import type { loader as locationLoader } from "~/routes/api.location"
 import { useQuery } from "~/hooks/query"
+import * as AspectRatio from "@radix-ui/react-aspect-ratio"
 import Container from "~/components/Container"
 import WidgetTheme from "~/components/WidgetTheme"
 import WidgetClock from "~/components/WidgetClock"
@@ -30,12 +31,16 @@ export default function Page() {
 
   return (
     <>
-      <header>
-        <Container className="flex justify-center py-16">
-          <h1 className="sr-only">Artists Together</h1>
-          <Icon label="" name="logo" className="w-full max-w-[28rem]" />
-        </Container>
-      </header>
+      <Container grid asChild className="py-7 sm:py-16">
+        <header>
+          <div className="col-span-2 col-start-2 px-7 sm:px-0 sm:col-start-4">
+            <AspectRatio.Root ratio={600 / 286}>
+              <h1 className="sr-only">Artists Together</h1>
+              <Icon label="" name="logo" className="w-full h-full" />
+            </AspectRatio.Root>
+          </div>
+        </header>
+      </Container>
       <Container grid asChild>
         <main>
           <WidgetInstagram />
