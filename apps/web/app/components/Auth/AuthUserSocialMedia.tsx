@@ -43,7 +43,9 @@ function UserLink() {
       <li className="relative">
         <Form.Input
           className="w-full"
-          type="text"
+          type="url"
+          inputMode="url"
+          autoComplete="url"
           placeholder="https://example.com/user"
         />
         <Form.Value<string>>
