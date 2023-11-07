@@ -24,13 +24,15 @@ function getColor(theme: string) {
 type Props = AvatarPrimitive.AvatarProps & {
   className: string
   user: Pick<User, "avatar" | "username" | "theme">
+  alt?: string
 }
 
 function Avatar(
-  { user, className, ...props }: Props,
+  { user, className, alt, ...props }: Props,
   ref: ForwardedRef<HTMLSpanElement>,
 ) {
   const color = getColor(user.theme)
+  const label = alt || user.username
 
   return (
     <AvatarPrimitive.Root
@@ -41,7 +43,7 @@ function Avatar(
       {user.avatar ? (
         <AvatarPrimitive.Image
           src={user.avatar}
-          alt={user.username}
+          alt={label}
           draggable={false}
           className="w-full h-full object-cover"
           loading="lazy"
@@ -52,7 +54,7 @@ function Avatar(
           className="w-full h-full p-1"
           style={{ backgroundColor: color[50], color: color[700] }}
         >
-          <Icon name="face" label={user.username} className="w-full h-full" />
+          <Icon name="face" label={label} className="w-full h-full" />
         </AvatarPrimitive.AvatarFallback>
       )}
     </AvatarPrimitive.Root>
