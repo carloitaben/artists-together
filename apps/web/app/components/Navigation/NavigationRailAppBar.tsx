@@ -73,13 +73,13 @@ export default function RailAppBar() {
                 </NavigationMenu.Trigger>
               </Tooltip.Trigger>
               <Tooltip.Portal>
-                <NavigationRailTooltip>
+                <NavigationRailTooltip id="profile">
                   {user ? "Your profile" : "Sign in"}
                 </NavigationRailTooltip>
               </Tooltip.Portal>
             </Tooltip.Root>
           </NavigationMenu.Item>
-          {routes.map((route) => (
+          {routes.map((route, index) => (
             <NavigationMenu.Item
               key={route.href}
               aria-disabled={route?.disabled}
@@ -120,7 +120,7 @@ export default function RailAppBar() {
                   )}
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
-                  <NavigationRailTooltip>
+                  <NavigationRailTooltip id={route.href}>
                     {route.disabled ? "Coming soon!" : route.label}
                   </NavigationRailTooltip>
                 </Tooltip.Portal>

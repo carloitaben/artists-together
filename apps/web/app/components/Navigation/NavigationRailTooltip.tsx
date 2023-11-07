@@ -2,25 +2,32 @@ import { motion } from "framer-motion"
 import { forwardRef } from "react"
 import type { ForwardedRef, ReactNode } from "react"
 import * as Tooltip from "@radix-ui/react-tooltip"
-import { between, oneOf } from "~/lib/utils"
-
-function getRotation() {
-  return oneOf([between(-15, -5), between(5, 15)])
-}
+import { between } from "~/lib/utils"
 
 type Props = {
+  id: string
   children: ReactNode
 }
 
+let state = {
+  sign: 1,
+  last: "",
+}
+
 function NavigationRailTooltip(
-  { children }: Props,
+  { id, children }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
+  if (state.last !== id) {
+    state.last = id
+    state.sign = state.sign * -1
+  }
+
   return (
     <Tooltip.Content ref={ref} side="right" asChild>
       <motion.div
         initial={{ rotate: 0 }}
-        animate={{ rotate: getRotation() }}
+        animate={{ rotate: between(5, 15) * state.sign }}
         className="ml-1 flex font-semibold text-theme-800 whitespace-nowrap drop-shadow-button origin-left transform"
         transition={{
           type: "spring",
