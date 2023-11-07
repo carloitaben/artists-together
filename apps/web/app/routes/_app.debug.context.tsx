@@ -1,3 +1,4 @@
+import { guardDisabledRoute } from "~/server/lib.server"
 import Container from "~/components/Container"
 import * as ContextMenu from "~/components/ContextMenu"
 
@@ -6,6 +7,11 @@ export const handle = {
   page: {
     name: "Debug",
   },
+}
+
+export async function loader() {
+  guardDisabledRoute()
+  return null
 }
 
 export default function Page() {
