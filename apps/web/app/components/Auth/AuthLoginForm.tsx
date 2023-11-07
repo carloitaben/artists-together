@@ -2,7 +2,7 @@ import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 import Icon from "~/components/Icon"
 import Button from "~/components/Button"
-import { validator } from "~/routes/login"
+import { validator } from "~/routes/auth.login"
 
 export default function AuthLogin() {
   return (
@@ -20,7 +20,7 @@ export default function AuthLogin() {
       </Modal.Container>
       <Form.Root
         validator={validator}
-        action="/login"
+        action="/auth/login"
         className="flex justify-end"
       >
         <Form.Submit asChild>
