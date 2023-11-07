@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react"
 import type { SpringOptions } from "framer-motion"
 import { motion, useSpring } from "framer-motion"
 import type { Location } from "~/routes/api.location"
+import { useUser } from "~/hooks/loaders"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -43,6 +44,7 @@ export default function WidgetClockContent({ location }: Props) {
   const seconds = useSpring(transformSeconds(now.second()), spring)
   const minutes = useSpring(transformMinutes(now.minute()), spring)
   const hours = useSpring(transformHours(now.hour()), spring)
+  const user = useUser()
 
   useEffect(() => {
     let second = now.second()
@@ -94,7 +96,7 @@ export default function WidgetClockContent({ location }: Props) {
             <div className="relative">
               <span className="invisible">00</span>
               <div className="absolute inset-0 flex items-center justify-center">
-                {timestamp.format("HH")}
+                {timestamp.format(user?.settings.use24HourFormat ? "HH" : "hh")}
               </div>
             </div>
             <span>:</span>

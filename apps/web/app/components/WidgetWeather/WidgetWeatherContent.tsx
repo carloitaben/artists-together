@@ -1,3 +1,4 @@
+import { useUser } from "~/hooks/loaders"
 import type { Location } from "~/routes/api.location"
 import type { Weather } from "~/routes/api.weather"
 
@@ -97,6 +98,10 @@ function handleWeatherCode(code: number): {
 }
 
 export default function WidgetWeatherContent({ location, weather }: Props) {
+  const user = useUser()
+
+  const unit = user?.settings.fahrenheit ? "ºF" : "ºC"
+
   return (
     <div className="flex h-full w-full items-stretch justify-between font-serif font-light text-anamorphic-teal-700 [background:radial-gradient(484.75%_388.20%_at_76.54%_43.27%,#F4F4F4_0%,#50D5FF_100%)] fluid:text-[2rem]/[2.375rem]">
       <div className="fluid:pb-[2.375rem] fluid:pl-12 fluid:pt-[2.625rem]">
@@ -106,7 +111,8 @@ export default function WidgetWeatherContent({ location, weather }: Props) {
         </span>
         <div className="fluid:text-[4rem]/[4rem]">
           {Math.round(weather.daily.temperature_2m_min[0])}/
-          {Math.round(weather.daily.temperature_2m_max[0])}ºC
+          {Math.round(weather.daily.temperature_2m_max[0])}
+          {unit}
         </div>
         <div className="flex items-center fluid:gap-5 fluid:text-[4rem]/[4rem]">
           <img
@@ -121,7 +127,8 @@ export default function WidgetWeatherContent({ location, weather }: Props) {
           />
           <span>
             {Math.round(weather.daily.temperature_2m_min[1])}/
-            {Math.round(weather.daily.temperature_2m_max[1])}ºC
+            {Math.round(weather.daily.temperature_2m_max[1])}
+            {unit}
           </span>
         </div>
       </div>

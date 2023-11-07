@@ -36,6 +36,11 @@ const weatherResponseSchema = z.object({
 const searchParams = z.object({
   latitude: z.string(),
   longitude: z.string(),
+  units: z
+    .union([z.literal("celsius"), z.literal("fahrenheit")])
+    .optional()
+    .nullable()
+    .default("celsius"),
 })
 
 export type SearchParams = z.infer<typeof searchParams>
@@ -48,6 +53,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const url = new URL("https://api.open-meteo.com/v1/forecast")
+
+  if (params.data.units === "fahrenheit") {
+    url.searchParams.set("temperature_unit", "fahrenheit")
+  }
 
   url.searchParams.set("latitude", params.data.latitude)
   url.searchParams.set("longitude", params.data.longitude)

@@ -3,6 +3,7 @@ import { Suspense, lazy } from "react"
 import { $path } from "remix-routes"
 import type { Location } from "~/routes/api.location"
 import { useQuery } from "~/hooks/query"
+import { useUser } from "~/hooks/loaders"
 import type { loader } from "~/routes/api.weather"
 import ClientOnly from "~/components/ClientOnly"
 
@@ -13,11 +14,14 @@ type Props = {
 }
 
 export default function WidgetWeather({ location }: Props) {
+  const user = useUser()
+
   const { data = null } = useQuery<typeof loader>({
     load: !!location,
     route: $path("/api/weather", {
       latitude: location?.latitude || "",
       longitude: location?.longitude || "",
+      units: user?.settings.fahrenheit ? "fahrenheit" : "celsius",
     }),
   })
 
