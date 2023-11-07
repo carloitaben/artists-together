@@ -86,7 +86,7 @@ const variants = {
 
 const transition: Transition = {
   type: "spring",
-  mass: 0.4,
+  mass: 0.5,
 }
 
 function Toast({
@@ -180,7 +180,7 @@ export default function Toasts() {
   }, [hover, toasts.length])
 
   return (
-    <div className="fixed inset-x-2 bottom-2 pointer-events-none grid place-items-center z-[999] sm:left16">
+    <div className="fixed inset-x-2 bottom-16 sm:bottom-2 pointer-events-none grid place-items-center z-[999] sm:left16">
       <motion.ol
         ref={ref}
         className="flex flex-col gap-2 pointer-events-auto items-center relative"
