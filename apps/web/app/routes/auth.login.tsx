@@ -42,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const [url, state] = await discord.getAuthorizationUrl()
 
-  return redirect($path("/login", { url: url.toString() }), {
+  return redirect($path("/auth/login", { url: url.toString() }), {
     headers: {
       "Set-Cookie": await oauthCookie.serialize({
         intent: "login",
