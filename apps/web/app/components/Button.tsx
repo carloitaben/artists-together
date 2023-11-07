@@ -1,4 +1,5 @@
 import { Slot } from "@radix-ui/react-slot"
+import { Link, NavLink } from "@remix-run/react"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
 import { Children, forwardRef, isValidElement } from "react"
@@ -14,7 +15,15 @@ function isIconButton(children: ReactNode) {
 
   if (!isValidElement(child)) return false
 
-  return child.type === Icon
+  switch (child.type) {
+    case Link:
+    case NavLink:
+      return isIconButton(child.props?.children)
+    case Icon:
+      return true
+    default:
+      return false
+  }
 }
 
 const button = cva({
@@ -27,6 +36,7 @@ const button = cva({
     color: {
       white:
         "bg-gunpla-white-50 text-gunpla-white-500 disabled:bg-gunpla-white-100 disabled:text-gunpla-white-400",
+      theme: "bg-theme-300 text-theme-900 disabled:bg-theme-800",
       false: "",
     },
     flex: {
