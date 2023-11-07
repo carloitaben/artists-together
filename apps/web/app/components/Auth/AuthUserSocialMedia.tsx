@@ -70,7 +70,7 @@ const fields = Array(5).fill(0)
 export default function AuthUserSocialMedia() {
   const user = useUserOrThrow()
 
-  console.log(user)
+  // console.log(user)
 
   return (
     <Modal.Container>
