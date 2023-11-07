@@ -11,7 +11,7 @@ export function usePageHandle<T>() {
   )
 
   if (!match) {
-    throw Error(`Could not match pathname: ${location.pathname}`)
+    throw Error(`Missing page in route handle: ${location.pathname}`)
   }
 
   return match.handle as T
