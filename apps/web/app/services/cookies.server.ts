@@ -5,10 +5,25 @@ import type { ZodTypeAny } from "zod"
 import { z } from "zod"
 import { theme } from "~/lib/themes"
 
+export async function getCookie<T extends ZodTypeAny>(
+  request: Request,
+  cookie: TypedCookie<T>,
+) {
+  const cookieHeader = request.headers.get("Cookie")
+  return cookie.parse(cookieHeader)
+}
+
 export const themeCookie = createTypedCookie({
   cookie: createCookie("theme"),
   schema: theme,
 })
+
+export const calendarTabCookie = createTypedCookie({
+  cookie: createCookie("calendar"),
+  schema: z.union([z.literal("days"), z.literal("months")]).nullable(),
+})
+
+export const calendarTabCookieDefaultValue = "days"
 
 export const oauthCookieSchema = z
   .object({
@@ -23,10 +38,3 @@ export const oauthCookie = createTypedCookie({
   schema: oauthCookieSchema,
 })
 
-export async function getCookie<T extends ZodTypeAny>(
-  request: Request,
-  cookie: TypedCookie<T>,
-) {
-  const cookieHeader = request.headers.get("Cookie")
-  return cookie.parse(cookieHeader)
-}

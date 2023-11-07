@@ -1,4 +1,6 @@
 import type { MetaFunction } from "@remix-run/react"
+import { Outlet, NavLink } from "@remix-run/react"
+import { $path } from "remix-routes"
 import { guardDisabledRoute } from "~/lib/routes"
 
 export const meta: MetaFunction = () => [
@@ -22,5 +24,16 @@ export async function loader() {
 }
 
 export default function Page() {
-  return <main>calendar</main>
+  return (
+    <>
+      <header>
+        <h2>page title</h2>
+        <nav>
+          <NavLink to={$path("/calendar/days")}>Days</NavLink>
+          <NavLink to={$path("/calendar/months")}>Months</NavLink>
+        </nav>
+      </header>
+      <Outlet />
+    </>
+  )
 }
