@@ -4,16 +4,15 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { $path } from "remix-routes"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"
-import { zfd } from "zod-form-data"
 import { defaultHiddenFields } from "~/components/Form"
 import { getParams } from "~/lib/params"
-import { twitch } from "~/server/auth.server"
+import { discord } from "~/server/auth.server"
 import { getCookie, oauthCookie } from "~/server/cookies.server"
 
 export const validator = withZod(defaultHiddenFields)
 
 const searchParams = z.object({
-  url: zfd.text(z.string().url()),
+  url: z.string().url(),
 })
 
 export type SearchParams = z.infer<typeof searchParams>
@@ -41,20 +40,15 @@ export async function action({ request }: ActionFunctionArgs) {
     return validationError(form.error)
   }
 
-  const [url, state] = await twitch.getAuthorizationUrl()
+  const [url, state] = await discord.getAuthorizationUrl()
 
-  return redirect(
-    $path("/auth/connect/twitch", {
-      url: url.toString(),
-    }),
-    {
-      headers: {
-        "Set-Cookie": await oauthCookie.serialize({
-          intent: "connect",
-          from: form.data.pathname,
-          state,
-        }),
-      },
+  return redirect($path("/api/auth/login", { url: url.toString() }), {
+    headers: {
+      "Set-Cookie": await oauthCookie.serialize({
+        intent: "login",
+        from: form.data.pathname,
+        state,
+      }),
     },
-  )
+  })
 }

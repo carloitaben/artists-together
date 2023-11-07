@@ -7,7 +7,7 @@ import { z } from "zod"
 import { zfd } from "zod-form-data"
 import { defaultHiddenFields } from "~/components/Form"
 import { getParams } from "~/lib/params"
-import { discord } from "~/server/auth.server"
+import { twitch } from "~/server/auth.server"
 import { getCookie, oauthCookie } from "~/server/cookies.server"
 
 export const validator = withZod(defaultHiddenFields)
@@ -41,10 +41,10 @@ export async function action({ request }: ActionFunctionArgs) {
     return validationError(form.error)
   }
 
-  const [url, state] = await discord.getAuthorizationUrl()
+  const [url, state] = await twitch.getAuthorizationUrl()
 
   return redirect(
-    $path("/auth/connect/discord", {
+    $path("/api/auth/connect/twitch", {
       url: url.toString(),
     }),
     {

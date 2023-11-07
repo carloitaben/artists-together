@@ -53,14 +53,14 @@ export type UserAttributes = Users.UsersSelectSchema
 const discordAuth = discord(auth, {
   clientId: env.DISCORD_OAUTH_ID,
   clientSecret: env.DISCORD_OAUTH_SECRET,
-  redirectUri: `${env.VERCEL_URL}/auth/callback/discord`,
+  redirectUri: `${env.VERCEL_URL}/api/auth/callback/discord`,
   scope: ["identify", "email", "guilds", "guilds.members.read"],
 })
 
 const twitchAuth = twitch(auth, {
   clientId: env.TWITCH_OAUTH_ID,
   clientSecret: env.TWITCH_OAUTH_SECRET,
-  redirectUri: `${env.VERCEL_URL}/auth/callback/twitch`,
+  redirectUri: `${env.VERCEL_URL}/api/auth/callback/twitch`,
   scope: [],
 })
 

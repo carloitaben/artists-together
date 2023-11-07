@@ -4,6 +4,7 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { $path } from "remix-routes"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"
+import { zfd } from "zod-form-data"
 import { defaultHiddenFields } from "~/components/Form"
 import { getParams } from "~/lib/params"
 import { discord } from "~/server/auth.server"
@@ -12,7 +13,7 @@ import { getCookie, oauthCookie } from "~/server/cookies.server"
 export const validator = withZod(defaultHiddenFields)
 
 const searchParams = z.object({
-  url: z.string().url(),
+  url: zfd.text(z.string().url()),
 })
 
 export type SearchParams = z.infer<typeof searchParams>
@@ -42,13 +43,18 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const [url, state] = await discord.getAuthorizationUrl()
 
-  return redirect($path("/auth/login", { url: url.toString() }), {
-    headers: {
-      "Set-Cookie": await oauthCookie.serialize({
-        intent: "login",
-        from: form.data.pathname,
-        state,
-      }),
+  return redirect(
+    $path("/api/auth/connect/discord", {
+      url: url.toString(),
+    }),
+    {
+      headers: {
+        "Set-Cookie": await oauthCookie.serialize({
+          intent: "connect",
+          from: form.data.pathname,
+          state,
+        }),
+      },
     },
-  })
+  )
 }

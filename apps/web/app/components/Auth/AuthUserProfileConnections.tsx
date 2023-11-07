@@ -2,8 +2,8 @@ import { cx } from "cva"
 import type { ReactNode } from "react"
 import type { Routes } from "remix-routes"
 import { useUserOrThrow } from "~/hooks/loaders"
-import { validator as connectTwitchValidator } from "~/routes/auth.connect.twitch"
-import { validator as connectDiscordValidator } from "~/routes/auth.connect.discord"
+import { validator as connectTwitchValidator } from "~/routes/api.auth.connect.twitch"
+import { validator as connectDiscordValidator } from "~/routes/api.auth.connect.discord"
 import * as Form from "~/components/Form"
 import Icon from "~/components/Icon"
 
@@ -81,7 +81,7 @@ export default function AuthUserProfileConnections() {
         <ConditionalForm
           connected={isConnectedWithDiscord}
           validator={connectDiscordValidator}
-          action="/auth/connect/discord"
+          action="/api/auth/connect/discord"
         >
           <Connection connected={isConnectedWithDiscord} icon="discord">
             {isConnectedWithDiscord
@@ -92,7 +92,7 @@ export default function AuthUserProfileConnections() {
         <ConditionalForm
           connected={isConnectedWithTwitch}
           validator={connectTwitchValidator}
-          action="/auth/connect/twitch"
+          action="/api/auth/connect/twitch"
         >
           <Connection connected={isConnectedWithTwitch} icon="twitch">
             {isConnectedWithTwitch
