@@ -61,11 +61,12 @@ const variants = {
         delay: index / 75,
       },
     }),
-    exit: {
+    exit: (index: number) => ({
       translateY: "-100%",
+      translateX: index === 0 ? "-50%" : "0%",
       scale: 0,
       opacity: 0,
-    },
+    }),
   },
   content: {
     initial: {
