@@ -1,8 +1,9 @@
 import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+import { Link, useLoaderData } from "@remix-run/react"
 import { useRef } from "react"
 import {
   useScroll,
@@ -13,22 +14,33 @@ import {
 } from "framer-motion"
 import { calendarTabCookie } from "~/server/cookies.server"
 import Container from "~/components/Container"
+import { $params, $path } from "remix-routes"
+import { unreachable } from "~/lib/utils"
 
 dayjs.extend(advancedFormat)
 
 export const handle = {
-  actions: {},
+  actions: {
+    prev: () => {
+      console.log("previous month")
+    },
+    next: () => {
+      console.log("next month")
+    },
+  },
   page: {
     name: "Calendar",
   },
 }
 
-export async function loader() {
-  const today = dayjs().toISOString()
+export async function loader({ params }: LoaderFunctionArgs) {
+  const { year, month } = $params("/calendar/:year/:month", params)
+
+  const date = dayjs().set("year", parseInt(year)).set("month", parseInt(month))
 
   return json(
     {
-      today,
+      date: date.toISOString(),
     },
     {
       headers: {
@@ -64,10 +76,10 @@ function Scrollbar() {
   })
 
   return (
-    <div className="fixed top-0 right-0 left-16">
+    <div>
       <Container grid asChild>
         <motion.div
-          className="bg-theme-800 h-4 fixed top-0 right-0 left-16"
+          className="bg-theme-800 h-4"
           ref={ref}
           onTap={(event, info) => {
             if (!ref.current) return
@@ -83,7 +95,10 @@ function Scrollbar() {
             drag="x"
             dragConstraints={ref}
             dragElastic={0.2}
-            dragTransition={{ bounceStiffness: 400, bounceDamping: 20 }}
+            dragTransition={{
+              bounceStiffness: 400,
+              bounceDamping: 20,
+            }}
             _dragX={x}
           />
         </motion.div>
@@ -94,12 +109,37 @@ function Scrollbar() {
 
 export default function Page() {
   const data = useLoaderData<typeof loader>()
-  const date = dayjs(data.today)
+
+  const date = dayjs(data.date)
+
+  function to(mode: "prev" | "next") {
+    let targetDate: Dayjs | undefined
+
+    switch (mode) {
+      case "prev":
+        targetDate = date.subtract(1, "month")
+        break
+      case "next":
+        targetDate = date.add(1, "month")
+        break
+      default:
+        unreachable(mode)
+    }
+
+    return $path("/calendar/:year/:month", {
+      year: targetDate.year(),
+      month: targetDate.month(),
+    })
+  }
 
   return (
     <>
       <div>
         <Scrollbar />
+      </div>
+      <div>
+        <Link to={to("prev")}>prev</Link>
+        <Link to={to("next")}>next</Link>
       </div>
       <main className="flex gap-1 sm:fluid:gap-4">
         {Array(Math.round(date.daysInMonth() / 4))
