@@ -19,8 +19,6 @@ export const auth = lucia({
     name: "session_v0",
   },
   getUserAttributes(user) {
-    console.log(user)
-
     return {
       email: user.email,
       theme: user.theme,
@@ -32,6 +30,13 @@ export const auth = lucia({
       avatar: user.avatar,
       twitch_id: user.twitch_id,
       twitch_username: user.twitch_username,
+      settings: {
+        use24HourFormat: Boolean(user.settings_use_24_hour_format),
+        shareLocation: Boolean(user.settings_share_location),
+        shareStreaming: Boolean(user.settings_share_streaming),
+        shareCursor: Boolean(user.settings_share_cursor),
+        fahrenheit: Boolean(user.settings_fahrenheit),
+      },
     }
   },
   getSessionAttributes() {

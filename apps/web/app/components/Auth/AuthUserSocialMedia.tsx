@@ -1,7 +1,6 @@
 import { withZod } from "@remix-validated-form/with-zod"
-import { z } from "zod"
-import { zfd } from "zod-form-data"
 import { motion, AnimatePresence } from "framer-motion"
+import { validatorSchema } from "~/routes/api.user"
 import { useUserOrThrow } from "~/hooks/loaders"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
@@ -58,14 +57,7 @@ function UserLink() {
   )
 }
 
-const validator = withZod(
-  z.object({
-    links: zfd.repeatable(
-      z.array(zfd.text(z.string().url().optional())).max(5),
-    ),
-  }),
-)
-
+const validator = withZod(validatorSchema.pick({ links: true }))
 const fields = Array(5).fill(0)
 
 export default function AuthUserSocialMedia() {
@@ -76,7 +68,12 @@ export default function AuthUserSocialMedia() {
   return (
     <Modal.Container>
       <Modal.Heading>Social media</Modal.Heading>
-      <Form.Root validator={validator} navigate={false} action="/api/user">
+      <Form.Root
+        validator={validator}
+        navigate={false}
+        action="/api/user"
+        subaction="links"
+      >
         <h6>Links</h6>
         <ul className="space-y-2">
           {fields.map((_, index) => (

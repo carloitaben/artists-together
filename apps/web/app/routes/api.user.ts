@@ -4,16 +4,22 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"
 import { zfd } from "zod-form-data"
+import type { GlobalDatabaseUserAttributes } from "lucia"
 import { auth } from "~/server/auth.server"
 
-export const validator = withZod(
-  z.object({
-    bio: zfd.text(z.string().max(128).nullable().default(null)),
-    links: zfd.repeatable(
-      z.array(zfd.text(z.string().url().optional())).max(5),
-    ),
+export const validatorSchema = z.object({
+  bio: zfd.text(z.string().max(128).nullable().default(null)),
+  settings: z.object({
+    use24HourFormat: zfd.checkbox(),
+    shareLocation: zfd.checkbox(),
+    shareStreaming: zfd.checkbox(),
+    shareCursor: zfd.checkbox(),
+    fahrenheit: zfd.checkbox(),
   }),
-)
+  links: zfd.repeatable(
+    z.array(zfd.text(z.string().url().nullable().default(null))).max(5),
+  ),
+})
 
 export async function action({ request }: ActionFunctionArgs) {
   const authRequest = await auth.handleRequest(request).validate()
@@ -24,20 +30,61 @@ export async function action({ request }: ActionFunctionArgs) {
     })
   }
 
-  const form = await validator.validate(await request.formData())
+  const data = await request.formData()
 
-  console.log(form)
+  let attributes: Partial<GlobalDatabaseUserAttributes> = {}
 
-  if (form.error) {
-    return validationError(form.error)
+  switch (data.get("subaction")?.toString()) {
+    case "bio":
+      {
+        const form = await withZod(
+          validatorSchema.pick({ bio: true }),
+        ).validate(data)
+
+        if (form.error) {
+          return validationError(form.error)
+        }
+
+        attributes = form.data
+      }
+      break
+    case "settings":
+      {
+        const form = await withZod(
+          validatorSchema.pick({ settings: true }),
+        ).validate(data)
+
+        if (form.error) {
+          return validationError(form.error)
+        }
+
+        attributes = {
+          settings_use_24_hour_format: form.data.settings.use24HourFormat,
+          settings_share_location: form.data.settings.shareLocation,
+          settings_share_streaming: form.data.settings.shareStreaming,
+          settings_share_cursor: form.data.settings.shareCursor,
+          settings_fahrenheit: form.data.settings.fahrenheit,
+        }
+      }
+      break
+    default:
+      return json(null, {
+        status: 400,
+        statusText: "Missing Subaction",
+      })
   }
 
-  await auth.updateUserAttributes(authRequest.user.userId, {
-    links: form.data.links.filter((link) => link) as string[],
-    bio: form.data.bio,
-  })
+  console.log("updating user attributes", attributes)
 
-  return json(null, {
-    status: 200,
-  })
+  try {
+    await auth.updateUserAttributes(authRequest.user.userId, attributes)
+    return json(null, {
+      status: 200,
+    })
+  } catch (error) {
+    console.error(error)
+    return json(error, {
+      status: 502,
+    })
+  }
 }

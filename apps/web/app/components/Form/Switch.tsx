@@ -1,30 +1,39 @@
 import * as SwitchPrimitive from "@radix-ui/react-switch"
-import { useField, useControlField } from "remix-validated-form"
+import { useField, useControlField, useFormContext } from "remix-validated-form"
 import type { ForwardedRef } from "react"
 import { forwardRef, useCallback } from "react"
 import { useFieldContext } from "./Field"
 
-type Props = Omit<SwitchPrimitive.SwitchProps, "name">
+type Props = Omit<SwitchPrimitive.SwitchProps, "name"> & {
+  submitOnChange?: boolean
+}
 
-function Switch(props: Props, ref: ForwardedRef<HTMLButtonElement>) {
+function Switch(
+  { submitOnChange, ...props }: Props,
+  ref: ForwardedRef<HTMLButtonElement>,
+) {
+  const { submit } = useFormContext()
   const { name } = useFieldContext()
-  const { validate, getInputProps } = useField(name)
+  const { getInputProps } = useField(name)
   const [value, setValue] = useControlField<boolean>(name)
 
   const onChange = useCallback(
     (value: boolean) => {
       setValue(value)
-      validate()
+      if (submitOnChange) {
+        queueMicrotask(submit)
+      }
     },
-    [setValue, validate],
+    [setValue, submit, submitOnChange],
   )
 
   return (
     <SwitchPrimitive.Root
-      {...props}
       {...getInputProps({
+        ...props,
         id: name,
         value: value ? "on" : "off",
+        checked: value,
         onCheckedChange: onChange,
         className:
           "rounded-full relative bg-gunpla-white-300 w-[3.75rem] h-8 p-1 shadow-inner",

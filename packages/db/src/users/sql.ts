@@ -1,5 +1,11 @@
 import type { DiscordUser, TwitchUser } from "@lucia-auth/oauth/providers"
-import { sqliteTable, text, blob, index } from "drizzle-orm/sqlite-core"
+import {
+  sqliteTable,
+  text,
+  blob,
+  index,
+  integer,
+} from "drizzle-orm/sqlite-core"
 import { timestamp } from "../utils"
 
 export const users = sqliteTable(
@@ -25,6 +31,32 @@ export const users = sqliteTable(
     twitch_metadata: blob("twitch_metadata", {
       mode: "json",
     }).$type<TwitchUser>(),
+    settings_use_24_hour_format: integer("settings_use_24_hour_format", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(false),
+    settings_share_location: integer("settings_share_location", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(true),
+    settings_share_streaming: integer("settings_share_streaming", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(true),
+    settings_share_cursor: integer("settings_share_cursor", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(true),
+    settings_fahrenheit: integer("settings_fahrenheit", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(false),
+
     timestamp: timestamp("timestamp"),
   },
   (table) => ({

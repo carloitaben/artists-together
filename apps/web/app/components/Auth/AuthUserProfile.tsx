@@ -1,9 +1,11 @@
+import { withZod } from "@remix-validated-form/with-zod"
+import { validatorSchema } from "~/routes/api.user"
 import { useUserOrThrow } from "~/hooks/loaders"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 import AuthUserProfileConnections from "./AuthUserProfileConnections"
 
-import { validator } from "~/routes/api.user"
+const validator = withZod(validatorSchema.pick({ bio: true }))
 
 export default function AuthUserProfile() {
   const user = useUserOrThrow()
@@ -29,6 +31,7 @@ export default function AuthUserProfile() {
           defaultValues={{ bio: user.bio || "" }}
           navigate={false}
           action="/api/user"
+          subaction="bio"
         >
           <Form.Field name="bio" className="flex flex-col w-full h-full">
             <Form.Label className="justify-between">
@@ -45,7 +48,6 @@ export default function AuthUserProfile() {
             />
             <Form.Error />
           </Form.Field>
-          <Form.Debugger />
         </Form.Root>
       </div>
       <AuthUserProfileConnections />

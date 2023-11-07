@@ -1,20 +1,34 @@
+import { withZod } from "@remix-validated-form/with-zod"
+import { validatorSchema } from "~/routes/api.user"
+import { useUserOrThrow } from "~/hooks/loaders"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 
+const validator = withZod(validatorSchema.pick({ settings: true }))
+
 export default function AuthUserSettings() {
+  const user = useUserOrThrow()
+
   return (
     <Modal.Container>
       <Modal.Heading>Advanced settings</Modal.Heading>
-      <Form.Root action="/asdasd" className="space-y-2">
+      <Form.Root
+        action="/api/user"
+        subaction="settings"
+        validator={validator}
+        navigate={false}
+        className="space-y-2"
+        defaultValues={{ settings: user.settings }}
+      >
         <Form.Field
-          name="format-24h"
+          name="settings.use24HourFormat"
           className="flex items-center justify-between"
         >
           <Form.Label>24-hour time format</Form.Label>
-          <Form.Switch />
+          <Form.Switch submitOnChange />
         </Form.Field>
         <Form.Field
-          name="share-location"
+          name="settings.shareLocation"
           className="flex items-center justify-between"
         >
           <Form.Label>
@@ -24,34 +38,34 @@ export default function AuthUserSettings() {
             </Form.Tooltip>
             Share approximate location
           </Form.Label>
-          <Form.Switch />
+          <Form.Switch submitOnChange />
         </Form.Field>
         <Form.Field
-          name="share-streaming"
+          name="settings.shareStreaming"
           className="flex items-center justify-between"
         >
           <Form.Label>
             <Form.Tooltip align="start">TODO</Form.Tooltip>
             Share streaming status
           </Form.Label>
-          <Form.Switch />
+          <Form.Switch submitOnChange />
         </Form.Field>
         <Form.Field
-          name="share-cursor"
+          name="settings.shareCursor"
           className="flex items-center justify-between"
         >
           <Form.Label>
             <Form.Tooltip align="start">TODO</Form.Tooltip>
             Share cursor location
           </Form.Label>
-          <Form.Switch />
+          <Form.Switch submitOnChange />
         </Form.Field>
         <Form.Field
-          name="fahrenheit"
+          name="settings.fahrenheit"
           className="flex items-center justify-between"
         >
           <Form.Label>Temperature in Fahrenheit</Form.Label>
-          <Form.Switch />
+          <Form.Switch submitOnChange />
         </Form.Field>
       </Form.Root>
     </Modal.Container>
