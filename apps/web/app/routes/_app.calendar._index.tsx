@@ -4,7 +4,7 @@ import {
   getCookie,
   calendarTabCookie,
   calendarTabCookieDefaultValue,
-} from "~/services/cookies.server"
+} from "~/server/cookies.server"
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const tab = await getCookie(request, calendarTabCookie)

@@ -1,5 +1,5 @@
 import type { MetaFunction } from "@remix-run/react"
-import { guardDisabledRoute } from "~/lib/routes"
+import { guardDisabledRoute } from "~/server/lib.server"
 
 export const meta: MetaFunction = () => [
   {

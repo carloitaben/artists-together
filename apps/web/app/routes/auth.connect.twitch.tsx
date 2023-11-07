@@ -7,8 +7,8 @@ import { z } from "zod"
 import { zfd } from "zod-form-data"
 import { defaultHiddenFields } from "~/components/Form"
 import { getParams } from "~/lib/params"
-import { twitch } from "~/services/auth.server"
-import { getCookie, oauthCookie } from "~/services/cookies.server"
+import { twitch } from "~/server/auth.server"
+import { getCookie, oauthCookie } from "~/server/cookies.server"
 
 export const validator = withZod(defaultHiddenFields)
 

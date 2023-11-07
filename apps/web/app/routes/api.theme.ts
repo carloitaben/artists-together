@@ -5,8 +5,8 @@ import { validationError } from "remix-validated-form"
 import { z } from "zod"
 import { zfd } from "zod-form-data"
 import { theme } from "~/lib/themes"
-import { auth } from "~/services/auth.server"
-import { themeCookie } from "~/services/cookies.server"
+import { auth } from "~/server/auth.server"
+import { themeCookie } from "~/server/cookies.server"
 
 export const validator = withZod(
   z.object({

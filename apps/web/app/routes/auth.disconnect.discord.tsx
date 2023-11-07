@@ -1,6 +1,6 @@
 import { json } from "@remix-run/node"
 import type { ActionFunctionArgs } from "@remix-run/node"
-import { auth } from "~/services/auth.server"
+import { auth } from "~/server/auth.server"
 
 export async function action({ request }: ActionFunctionArgs) {
   const authRequest = auth.handleRequest(request)

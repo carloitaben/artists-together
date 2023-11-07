@@ -6,8 +6,8 @@ import { validationError } from "remix-validated-form"
 import { z } from "zod"
 import { defaultHiddenFields } from "~/components/Form"
 import { getParams } from "~/lib/params"
-import { discord } from "~/services/auth.server"
-import { getCookie, oauthCookie } from "~/services/cookies.server"
+import { discord } from "~/server/auth.server"
+import { getCookie, oauthCookie } from "~/server/cookies.server"
 
 export const validator = withZod(defaultHiddenFields)
 

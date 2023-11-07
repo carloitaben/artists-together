@@ -1,7 +1,7 @@
 import * as AspectRatio from "@radix-ui/react-aspect-ratio"
 import dayjs from "dayjs"
 import { json } from "@remix-run/node"
-import { calendarTabCookie } from "~/services/cookies.server"
+import { calendarTabCookie } from "~/server/cookies.server"
 import { useLoaderData } from "@remix-run/react"
 import Container from "~/components/Container"
 import CalendarMonth from "~/components/CalendarMonth"

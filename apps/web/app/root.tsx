@@ -9,8 +9,8 @@ import {
 } from "@remix-run/react"
 
 import "~/styles/index.css"
-import { auth } from "~/services/auth.server"
-import { getCookie, themeCookie } from "~/services/cookies.server"
+import { auth } from "~/server/auth.server"
+import { getCookie, themeCookie } from "~/server/cookies.server"
 import { defaultTheme, useThemeStyle } from "~/lib/themes"
 import Icons from "~/components/Icons"
 

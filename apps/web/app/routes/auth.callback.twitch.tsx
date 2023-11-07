@@ -2,8 +2,8 @@ import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { OAuthRequestError } from "@lucia-auth/oauth"
 import { z } from "zod"
-import { auth, twitch } from "~/services/auth.server"
-import { oauthCookie, getCookie } from "~/services/cookies.server"
+import { auth, twitch } from "~/server/auth.server"
+import { oauthCookie, getCookie } from "~/server/cookies.server"
 import { getParams } from "~/lib/params"
 
 const searchParams = z.union([

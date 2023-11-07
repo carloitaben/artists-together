@@ -5,8 +5,8 @@
 /// <reference types="lucia" />
 
 declare namespace Lucia {
-  type Auth = import("./app/services/auth.server").Auth
+  type Auth = import("./app/server/auth.server").Auth
   type DatabaseUserAttributes =
-    import("./app/services/auth.server").UserAttributes
+    import("./app/server/auth.server").UserAttributes
   type DatabaseSessionAttributes = {}
 }

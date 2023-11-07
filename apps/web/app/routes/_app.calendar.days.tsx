@@ -11,7 +11,7 @@ import {
   useMotionValue,
   animate,
 } from "framer-motion"
-import { calendarTabCookie } from "~/services/cookies.server"
+import { calendarTabCookie } from "~/server/cookies.server"
 import Container from "~/components/Container"
 
 dayjs.extend(advancedFormat)

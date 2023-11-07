@@ -4,7 +4,7 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"
 import { zfd } from "zod-form-data"
-import { auth } from "~/services/auth.server"
+import { auth } from "~/server/auth.server"
 
 export const validator = withZod(
   z.object({

@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/react"
 import { Outlet, NavLink } from "@remix-run/react"
 import { $path } from "remix-routes"
-import { guardDisabledRoute } from "~/lib/routes"
+import { guardDisabledRoute } from "~/server/lib.server"
 
 export const meta: MetaFunction = () => [
   {

@@ -1,4 +1,3 @@
-import { redirect } from "@remix-run/node"
 import { $path } from "remix-routes"
 
 type Route = {
@@ -38,9 +37,3 @@ export const routes = [
     disabled: true,
   },
 ] satisfies Route[]
-
-export function guardDisabledRoute() {
-  if (import.meta.env.PROD) {
-    throw redirect("/404")
-  }
-}
