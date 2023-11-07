@@ -47,6 +47,7 @@ function UserLink() {
           inputMode="url"
           autoComplete="url"
           placeholder="https://example.com/user"
+          submitOnBlur
         />
         <Form.Value<string>>
           {(value) => <DyamicLinkIcon>{value}</DyamicLinkIcon>}

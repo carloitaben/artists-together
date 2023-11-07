@@ -1,15 +1,18 @@
 import type { ComponentProps, ForwardedRef } from "react"
 import { forwardRef, useCallback } from "react"
-import { useField } from "remix-validated-form"
+import { useField, useFormContext } from "remix-validated-form"
 import { cx } from "cva"
 import { useFieldContext } from "./Field"
 
-type Props = Omit<ComponentProps<"input">, "name">
+type Props = Omit<ComponentProps<"input">, "name"> & {
+  submitOnBlur?: boolean
+}
 
 function Input(
-  { className, ...props }: Props,
+  { className, submitOnBlur, ...props }: Props,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
+  const { defaultValues = {}, submit } = useFormContext()
   const { store, name, controlled } = useFieldContext()
   const { getInputProps } = useField(name)
 
@@ -21,6 +24,21 @@ function Input(
     [props, store],
   )
 
+  const onBlur = useCallback<NonNullable<Props["onBlur"]>>(
+    (event) => {
+      props.onBlur?.(event)
+
+      if (
+        submitOnBlur &&
+        name in defaultValues &&
+        defaultValues[name] !== event.target.value
+      ) {
+        submit()
+      }
+    },
+    [defaultValues, name, props, submit, submitOnBlur],
+  )
+
   return (
     <input
       className={cx(
@@ -30,6 +48,7 @@ function Input(
       {...getInputProps({ ...props, id: name })}
       ref={ref}
       onChange={controlled ? onChange : undefined}
+      onBlur={onBlur}
     />
   )
 }
