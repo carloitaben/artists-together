@@ -1,4 +1,5 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import {
   Links,
   LiveReload,
@@ -32,17 +33,28 @@ export const meta: MetaFunction = () => [
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const [theme, user] = await Promise.all([
-    getCookie(request, themeCookie) || defaultTheme,
+    getCookie(request, themeCookie),
     auth
       .handleRequest(request)
       .validate()
       .then((session) => session?.user),
   ])
 
-  return {
-    user,
-    theme,
-  }
+  return json(
+    {
+      user,
+      theme: theme || defaultTheme,
+    },
+    theme
+      ? undefined
+      : {
+          headers: {
+            "Set-Cookie": await themeCookie.serialize(
+              user ? user.theme : defaultTheme,
+            ),
+          },
+        },
+  )
 }
 
 export default function App() {

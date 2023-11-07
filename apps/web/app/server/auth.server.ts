@@ -5,6 +5,7 @@ import { web } from "lucia/middleware"
 import { libsql } from "@lucia-auth/adapter-sqlite"
 import { discord, twitch } from "@lucia-auth/oauth/providers"
 import { env } from "~/lib/env"
+import { defaultTheme, theme } from "~/lib/themes"
 
 export const auth = lucia({
   env: import.meta.env.DEV ? "DEV" : "PROD",
@@ -19,9 +20,10 @@ export const auth = lucia({
     name: "session_v0",
   },
   getUserAttributes(user) {
+    const userTheme = theme.safeParse(user.theme)
     return {
       email: user.email,
-      theme: user.theme,
+      theme: userTheme.success ? userTheme.data : defaultTheme,
       username: user.username,
       bio: user.bio,
       links: user.links,
