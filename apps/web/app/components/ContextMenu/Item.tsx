@@ -1,11 +1,19 @@
 import * as ContextMenu from "@radix-ui/react-context-menu"
 import { cx } from "cva"
+import type { User } from "lucia"
+import { useUser } from "~/hooks/loaders"
 
 type Props = ContextMenu.ContextMenuItemProps & {
-  auth?: boolean
+  render?: boolean | ((user: User | null) => boolean)
 }
 
-export default function Content({ auth, className, ...props }: Props) {
+export default function Content({ render = true, className, ...props }: Props) {
+  const user = useUser()
+
+  if ((typeof render === "function" && !render(user)) || !render) {
+    return null
+  }
+
   return (
     <ContextMenu.Item
       {...props}

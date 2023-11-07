@@ -39,6 +39,20 @@ export default function Page() {
             </ContextMenu.Content>
           </ContextMenu.Root>
         </div>
+        <div className="col-span-2">
+          <ContextMenu.Root render={(user) => !!user}>
+            <ContextMenu.Trigger>
+              <div>Root render condition</div>
+            </ContextMenu.Trigger>
+            <ContextMenu.Content>
+              <ContextMenu.Item>Foo</ContextMenu.Item>
+              <ContextMenu.Item>Bar</ContextMenu.Item>
+              <ContextMenu.Item render={(user) => !!user?.bio}>
+                Baz
+              </ContextMenu.Item>
+            </ContextMenu.Content>
+          </ContextMenu.Root>
+        </div>
       </Container>
     </main>
   )
