@@ -23,8 +23,6 @@ export const calendarTabCookie = createTypedCookie({
   schema: z.union([z.literal("days"), z.literal("months")]).nullable(),
 })
 
-export const calendarTabCookieDefaultValue = "days"
-
 export const oauthCookieSchema = z
   .object({
     intent: z.union([z.literal("connect"), z.literal("login")]),
