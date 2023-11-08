@@ -20,9 +20,10 @@ const image = cva({
   },
 })
 
-type Props = Omit<ComponentProps<"img">, "src"> &
+type Props = Omit<ComponentProps<"img">, "src" | "alt"> &
   VariantProps<typeof image> & {
     src: string | Asset | SerializeFrom<Asset>
+    alt: string
   }
 
 function Image(
