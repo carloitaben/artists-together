@@ -6,7 +6,7 @@ import { forwardRef } from "react"
 import type { Asset } from "~/server/files.server"
 
 const image = cva({
-  base: "[text-indent:-100000px]",
+  base: "[text-indent:-100000px] select-none",
   variants: {
     fit: {
       cover: "w-full h-full object-cover",

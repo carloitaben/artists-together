@@ -1,7 +1,20 @@
 import type { VariantProps } from "cva"
 import { cva } from "cva"
-import type { ComponentProps, ForwardedRef, ReactElement } from "react"
-import { forwardRef } from "react"
+import type { ComponentProps, ForwardedRef, ReactNode } from "react"
+import { Children, forwardRef, isValidElement } from "react"
+import Icon from "./Icon"
+
+function hasIcon(children: ReactNode) {
+  const array = Children.toArray(children)
+
+  if (array.length !== 1) return false
+
+  const child = array[0]
+
+  if (!isValidElement(child)) return false
+
+  return child.type === Icon
+}
 
 const pill = cva({
   base: "rounded-full shadow-button gap-1.5 text-sm text-center items-center justify-center whitespace-nowrap",
@@ -32,21 +45,24 @@ const pill = cva({
 })
 
 type Props = Omit<ComponentProps<"div">, "color"> &
-  Omit<VariantProps<typeof pill>, "icon"> & {
-    icon?: ReactElement<ComponentProps<"svg">>
-  }
+  Omit<VariantProps<typeof pill>, "icon">
 
 function Pill(
-  { color, inline, icon, size, children, className, ...props }: Props,
+  { color, inline, size, children, className, ...props }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   return (
     <div
       {...props}
       ref={ref}
-      className={pill({ color, inline, icon: !!icon, size, className })}
+      className={pill({
+        color,
+        inline,
+        icon: hasIcon(children),
+        size,
+        className,
+      })}
     >
-      {icon ? <span className="h-4 w-4 flex-none">{icon}</span> : null}
       {children}
     </div>
   )
