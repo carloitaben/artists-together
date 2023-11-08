@@ -17,20 +17,25 @@ const label = cva({
   },
 })
 
-type Props = Omit<ComponentProps<"label">, "htmlFor"> &
-  VariantProps<typeof label>
+type Props = ComponentProps<"label"> & VariantProps<typeof label>
 
 function Label(
-  { className, padding, ...props }: Props,
+  { className, padding, htmlFor, ...props }: Props,
   ref: ForwardedRef<HTMLLabelElement>,
 ) {
-  const { name } = useFieldContext()
+  const context = useFieldContext()
+
+  if (!context && !htmlFor) {
+    throw Error(
+      "Either use Form.Label inside a Form.Field or set the htmlFor prop",
+    )
+  }
 
   return (
     <label
       className={label({ className, padding })}
       {...props}
-      htmlFor={name}
+      htmlFor={context?.name || htmlFor}
       ref={ref}
     />
   )

@@ -2,7 +2,7 @@ import * as SwitchPrimitive from "@radix-ui/react-switch"
 import { useField, useControlField, useFormContext } from "remix-validated-form"
 import type { ForwardedRef } from "react"
 import { forwardRef, useCallback } from "react"
-import { useFieldContext } from "./Field"
+import { useFieldContextOrThrow } from "./Field"
 
 type Props = Omit<SwitchPrimitive.SwitchProps, "name"> & {
   submitOnChange?: boolean
@@ -13,7 +13,7 @@ function Switch(
   ref: ForwardedRef<HTMLButtonElement>,
 ) {
   const { submit } = useFormContext()
-  const { name } = useFieldContext()
+  const { name } = useFieldContextOrThrow()
   const { getInputProps } = useField(name)
   const [value, setValue] = useControlField<boolean>(name)
 

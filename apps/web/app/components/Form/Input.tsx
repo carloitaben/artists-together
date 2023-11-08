@@ -2,7 +2,7 @@ import type { ComponentProps, ForwardedRef } from "react"
 import { forwardRef, useCallback } from "react"
 import { useField, useFormContext } from "remix-validated-form"
 import { cx } from "cva"
-import { useFieldContext } from "./Field"
+import { useFieldContextOrThrow } from "./Field"
 
 type Props = Omit<ComponentProps<"input">, "name"> & {
   submitOnBlur?: boolean
@@ -13,7 +13,7 @@ function Input(
   ref: ForwardedRef<HTMLInputElement>,
 ) {
   const { defaultValues = {}, submit } = useFormContext()
-  const { store, name, controlled } = useFieldContext()
+  const { store, name, controlled } = useFieldContextOrThrow()
   const { getInputProps } = useField(name)
 
   const onChange = useCallback<NonNullable<Props["onChange"]>>(

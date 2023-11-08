@@ -1,13 +1,13 @@
 import type { ReactNode } from "react"
 import { useStore } from "@nanostores/react"
-import { useFieldContext } from "./Field"
+import { useFieldContextOrThrow } from "./Field"
 
 type Props<T> = {
   children: (value?: T) => ReactNode
 }
 
 export default function Value<T>({ children }: Props<T>) {
-  const { store } = useFieldContext()
+  const { store } = useFieldContextOrThrow()
 
   const value = useStore(store)
 

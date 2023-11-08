@@ -5,7 +5,7 @@ import { cva } from "cva"
 import type { HTMLMotionProps } from "framer-motion"
 import { motion, AnimatePresence } from "framer-motion"
 import { useField } from "remix-validated-form"
-import { useFieldContext } from "./Field"
+import { useFieldContextOrThrow } from "./Field"
 
 const styles = cva({
   base: "",
@@ -29,7 +29,7 @@ function Error(
   { children, className, padding, ...props }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const { name } = useFieldContext()
+  const { name } = useFieldContextOrThrow()
   const { error } = useField(name)
 
   if (!error) return

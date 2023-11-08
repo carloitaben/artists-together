@@ -23,7 +23,11 @@ const context = createContext<Context | null>(null)
 context.displayName = "FormFieldContext"
 
 export function useFieldContext() {
-  const value = useContext(context)
+  return useContext(context)
+}
+
+export function useFieldContextOrThrow() {
+  const value = useFieldContext()
 
   if (!value) {
     throw Error("Called field context outside provider")

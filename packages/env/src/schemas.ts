@@ -31,6 +31,9 @@ export const web = z.object({
   DISCORD_OAUTH_SECRET: z.string().min(1),
   TWITCH_OAUTH_ID: z.string().min(1),
   TWITCH_OAUTH_SECRET: z.string().min(1),
+  CLOUDFLARE_ACCOUNT_ID: z.string().min(1),
+  CLOUDFLARE_R2_ACCESS_KEY_ID: z.string().min(1),
+  CLOUDFLARE_R2_SECRET_ACCESS_KEY: z.string().min(1),
 })
 
 export const node = z.object({

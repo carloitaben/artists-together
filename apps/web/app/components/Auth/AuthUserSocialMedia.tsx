@@ -74,7 +74,7 @@ export default function AuthUserSocialMedia() {
         action="/api/user"
         subaction="links"
       >
-        <h6>Links</h6>
+        <Form.Label htmlFor="links">Links</Form.Label>
         <ul className="space-y-2">
           {fields.map((_, index) => (
             <UserLink key={index} />

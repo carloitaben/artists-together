@@ -24,6 +24,23 @@ export default function AuthUserSupport() {
           <Form.Textarea rows={7} placeholder="Example" maxLength={300} />
           <Form.Error />
         </Form.Field>
+        <div>
+          <Form.Label htmlFor="content">
+            <Form.Tooltip align="start">TODO</Form.Tooltip>
+            Attach files
+          </Form.Label>
+          <div className="grid grid-cols-3 gap-2">
+            <Form.Field name="content">
+              <Form.File />
+            </Form.Field>
+            <Form.Field name="content">
+              <Form.File />
+            </Form.Field>
+            <Form.Field name="content">
+              <Form.File />
+            </Form.Field>
+          </div>
+        </div>
         <Form.Submit asChild>
           <Button>
             <Icon name="check" label="Submit" className="w-6 h-6" />

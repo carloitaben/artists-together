@@ -16,6 +16,7 @@ export const validatorSchema = z.object({
     shareCursor: zfd.checkbox(),
     fahrenheit: zfd.checkbox(),
   }),
+  avatar: zfd.text(z.string().url().nullable().default(null)),
   links: zfd.repeatable(
     z.array(zfd.text(z.string().url().nullable().default(null))).max(5),
   ),
@@ -35,10 +36,10 @@ export async function action({ request }: ActionFunctionArgs) {
   let attributes: Partial<GlobalDatabaseUserAttributes> = {}
 
   switch (data.get("subaction")?.toString()) {
-    case "bio":
+    case "profile":
       {
         const form = await withZod(
-          validatorSchema.pick({ bio: true }),
+          validatorSchema.pick({ avatar: true, bio: true }),
         ).validate(data)
 
         if (form.error) {

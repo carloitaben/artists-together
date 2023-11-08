@@ -5,7 +5,7 @@ import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 import AuthUserProfileConnections from "./AuthUserProfileConnections"
 
-const validator = withZod(validatorSchema.pick({ bio: true }))
+const validator = withZod(validatorSchema.pick({ avatar: true, bio: true }))
 
 export default function AuthUserProfile() {
   const user = useUserOrThrow()
@@ -14,42 +14,45 @@ export default function AuthUserProfile() {
     <Modal.Container>
       <Modal.Title className="sr-only">Your profile</Modal.Title>
       <Modal.Heading>{user.username}</Modal.Heading>
-      <div className="flex gap-2">
-        <Form.Root className="flex-none pr-6">
-          <Form.Field name="avatar" className="flex flex-col">
-            <Form.Label>
-              <Form.Tooltip align="start">TODO</Form.Tooltip>
-              Avatar
-            </Form.Label>
-            <div className="w-32 h-32 bg-not-so-white flex-none rounded-2xl" />
-            <Form.Error />
-          </Form.Field>
-        </Form.Root>
-        <Form.Root
-          className="flex-1"
-          validator={validator}
-          defaultValues={{ bio: user.bio || "" }}
-          navigate={false}
-          action="/api/user"
-          subaction="bio"
-        >
-          <Form.Field name="bio" className="flex flex-col w-full h-full">
-            <Form.Label className="justify-between">
-              <span>Description</span>
-              <Form.Value<string>>
-                {(value = "") => `${value.length}/128`}
-              </Form.Value>
-            </Form.Label>
-            <Form.Textarea
-              className="h-full"
-              placeholder="Placeholder"
-              maxLength={128}
-              submitOnBlur
-            />
-            <Form.Error />
-          </Form.Field>
-        </Form.Root>
-      </div>
+      <Form.Root
+        className="flex gap-2"
+        validator={validator}
+        navigate={false}
+        action="/api/user"
+        subaction="profile"
+        defaultValues={{
+          avatar: user.avatar,
+          bio: user.bio,
+        }}
+      >
+        <Form.Field name="avatar" className="flex flex-col flex-none pr-6">
+          <Form.Label>
+            <Form.Tooltip align="start">TODO</Form.Tooltip>
+            Avatar
+          </Form.Label>
+          <Form.File
+            bucket="avatar"
+            className="w-32 h-32 flex-none"
+            submitOnChange
+          />
+          <Form.Error />
+        </Form.Field>
+        <Form.Field name="bio" className="flex flex-col w-full h-full flex-1">
+          <Form.Label className="justify-between">
+            <span>Description</span>
+            <Form.Value<string>>
+              {(value = "") => `${value.length}/128`}
+            </Form.Value>
+          </Form.Label>
+          <Form.Textarea
+            className="h-full"
+            placeholder="Placeholder"
+            maxLength={128}
+            submitOnBlur
+          />
+          <Form.Error />
+        </Form.Field>
+      </Form.Root>
       <AuthUserProfileConnections />
     </Modal.Container>
   )
