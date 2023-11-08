@@ -41,7 +41,6 @@ export default function Root<
     <ValidatedForm
       {...props}
       validator={validatorFallback}
-      fetcherKey={navigate ? undefined : action}
       fetcher={navigate ? undefined : fetcher}
       navigate={navigate}
       method={method}
