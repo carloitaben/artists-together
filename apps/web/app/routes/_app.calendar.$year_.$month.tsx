@@ -3,7 +3,7 @@ import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { Link, useLoaderData } from "@remix-run/react"
+import { useLoaderData } from "@remix-run/react"
 import { useRef } from "react"
 import {
   useScroll,
@@ -16,7 +16,7 @@ import { calendarTabCookie } from "~/server/cookies.server"
 import Container from "~/components/Container"
 import { $params, $path } from "remix-routes"
 import { unreachable } from "~/lib/utils"
-import { useHints } from "~/hooks/loaders"
+import CalendarHeader from "~/components/CalendarHeader"
 
 dayjs.extend(advancedFormat)
 
@@ -109,7 +109,6 @@ function Scrollbar() {
 }
 
 export default function Page() {
-  const hints = useHints()
   const data = useLoaderData<typeof loader>()
   const date = dayjs(data.date)
 
@@ -135,16 +134,21 @@ export default function Page() {
 
   return (
     <>
+      <CalendarHeader
+        date={date}
+        active="days"
+        prev={to("prev")}
+        next={to("next")}
+        days={$path("/calendar/:year/:month", {
+          year: dayjs().year(),
+          month: dayjs().month(),
+        })}
+        months={$path("/calendar/:year", {
+          year: date.year(),
+        })}
+      />
       <div>
         <Scrollbar />
-      </div>
-      <div>
-        <Link to={to("prev")} prefetch={hints.saveData ? "none" : "intent"}>
-          prev
-        </Link>
-        <Link to={to("next")} prefetch={hints.saveData ? "none" : "intent"}>
-          next
-        </Link>
       </div>
       <main className="flex gap-1 sm:fluid:gap-4">
         {Array(Math.round(date.daysInMonth() / 4))

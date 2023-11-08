@@ -2,14 +2,14 @@ import * as AspectRatio from "@radix-ui/react-aspect-ratio"
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { calendarTabCookie } from "~/server/cookies.server"
-import { Link, useLoaderData } from "@remix-run/react"
+import { useLoaderData } from "@remix-run/react"
 import Container from "~/components/Container"
 import CalendarMonth from "~/components/CalendarMonth"
 import { $params, $path } from "remix-routes"
 import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 import { unreachable } from "~/lib/utils"
-import { useHints } from "~/hooks/loaders"
+import CalendarHeader from "~/components/CalendarHeader"
 
 export const handle = {
   actions: {
@@ -43,7 +43,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export default function Page() {
-  const hints = useHints()
   const data = useLoaderData<typeof loader>()
   const date = dayjs(data.date)
 
@@ -68,14 +67,19 @@ export default function Page() {
 
   return (
     <>
-      <div>
-        <Link to={to("prev")} prefetch={hints.saveData ? "none" : "intent"}>
-          prev
-        </Link>
-        <Link to={to("next")} prefetch={hints.saveData ? "none" : "intent"}>
-          next
-        </Link>
-      </div>
+      <CalendarHeader
+        date={date}
+        active="months"
+        prev={to("prev")}
+        next={to("next")}
+        days={$path("/calendar/:year/:month", {
+          year: date.year(),
+          month: date.month(),
+        })}
+        months={$path("/calendar/:year", {
+          year: dayjs().year(),
+        })}
+      />
       <Container grid asChild>
         <main>
           {Array(12)
