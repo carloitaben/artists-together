@@ -15,7 +15,6 @@ const searchParams = z.object({
 export type SearchParams = z.infer<typeof searchParams>
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log("loader file api endpoint")
   const params = getSearchParams(request, searchParams)
 
   if (!params.success) {
@@ -33,15 +32,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
   }
 
-  console.log("creating url")
-
   try {
     const S3 = new S3Client({
       region: "auto",
       endpoint: `https://${env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
       credentials: {
-        accessKeyId: env.CLOUDFLARE_R2_ACCESS_KEY_ID,
-        secretAccessKey: env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+        accessKeyId: String(env.CLOUDFLARE_R2_ACCESS_KEY_ID),
+        secretAccessKey: String(env.CLOUDFLARE_R2_SECRET_ACCESS_KEY),
       },
     })
 
