@@ -4,7 +4,7 @@ import { z } from "zod"
 import type { Routes } from "remix-routes"
 import type { FormProps } from "remix-validated-form"
 import { ValidatedForm } from "remix-validated-form"
-import { Provider as TooltipProvider } from "@radix-ui/react-tooltip"
+import { Provider } from "@radix-ui/react-tooltip"
 
 type Props<
   DataType extends {
@@ -45,7 +45,7 @@ export default function Root<
       method={method}
       action={action}
     >
-      <TooltipProvider>{children}</TooltipProvider>
+      <Provider>{children}</Provider>
     </ValidatedForm>
   )
 }
