@@ -54,7 +54,7 @@ const button = cva({
     {
       icon: false,
       flex: false,
-      className: "py-3 px-10",
+      className: "py-3 px-10 inline-block",
     },
   ],
   defaultVariants: {
