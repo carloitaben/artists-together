@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { cx } from "cva"
 import { routes } from "~/lib/routes"
 import { usePageHandle } from "~/lib/handle"
-import { useUser } from "~/hooks/loaders"
+import { useHints, useUser } from "~/hooks/loaders"
 import Icon from "~/components/Icon"
 import NavigationBottomAppBarPill from "./NavigationBottomAppBarPill"
 
@@ -49,6 +49,7 @@ export default function BottomAppBar() {
   const [focus, setFocus] = useState(false)
   const [menu, setMenu] = useState<string>()
   const [actionsOpened, setActionsOpened] = useState(false)
+  const hints = useHints()
   const input = useRef<HTMLInputElement>(null)
 
   const handle = usePageHandle<{
@@ -122,7 +123,10 @@ export default function BottomAppBar() {
                   <AuthLink />
                   {routes.map((route) => (
                     <li key={route.href}>
-                      <NavLink to={route.href}>
+                      <NavLink
+                        to={route.href}
+                        prefetch={hints.saveData ? "intent" : "viewport"}
+                      >
                         {({ isActive, isPending }) => (
                           <NavigationBottomAppBarPill
                             active={isActive || isPending}

@@ -44,6 +44,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     {
       user,
       theme: theme || defaultTheme,
+      hints: {
+        saveData: request.headers.get("Save-Data") === "on",
+      },
     },
     theme
       ? undefined
@@ -52,6 +55,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
             "Set-Cookie": await themeCookie.serialize(
               user ? user.theme : defaultTheme,
             ),
+            Vary: "Save-Data",
           },
         },
   )

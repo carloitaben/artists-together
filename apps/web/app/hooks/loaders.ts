@@ -24,3 +24,7 @@ export function useUserOrThrow() {
 
   return user
 }
+
+export function useHints() {
+  return useRootLoaderData().hints
+}

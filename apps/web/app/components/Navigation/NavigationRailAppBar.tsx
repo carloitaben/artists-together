@@ -5,7 +5,7 @@ import { cx } from "cva"
 import type { MouseEvent } from "react"
 import { animate } from "framer-motion"
 import { NavLink } from "@remix-run/react"
-import { useUser } from "~/hooks/loaders"
+import { useHints, useUser } from "~/hooks/loaders"
 import { usePageHandle } from "~/lib/handle"
 import { routes } from "~/lib/routes"
 import Icon from "~/components/Icon"
@@ -29,6 +29,7 @@ function anchor(event: MouseEvent) {
 
 export default function RailAppBar() {
   const handle = usePageHandle<{ page: { name: string } }>()
+  const hints = useHints()
   const user = useUser()
 
   return (
@@ -79,7 +80,7 @@ export default function RailAppBar() {
               </Tooltip.Portal>
             </Tooltip.Root>
           </NavigationMenu.Item>
-          {routes.map((route, index) => (
+          {routes.map((route) => (
             <NavigationMenu.Item
               key={route.href}
               aria-disabled={route?.disabled}
@@ -98,7 +99,11 @@ export default function RailAppBar() {
                     </div>
                   ) : (
                     <NavigationMenu.Link asChild href={route.href}>
-                      <NavLink to={route.href} className="group block p-0.5">
+                      <NavLink
+                        className="group block p-0.5"
+                        to={route.href}
+                        prefetch={hints.saveData ? "intent" : "viewport"}
+                      >
                         {({ isActive, isPending }) => (
                           <div
                             className={cx(
