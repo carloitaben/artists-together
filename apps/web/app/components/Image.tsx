@@ -3,7 +3,7 @@ import type { VariantProps } from "cva"
 import { cva } from "cva"
 import type { ComponentProps, ForwardedRef } from "react"
 import { forwardRef } from "react"
-import type { loader } from "~/routes/api.lqip"
+import type { Asset } from "~/server/files.server"
 
 const image = cva({
   base: "[text-indent:-100000px]",
@@ -20,9 +20,9 @@ const image = cva({
   },
 })
 
-type Props = ComponentProps<"img"> &
+type Props = Omit<ComponentProps<"img">, "src"> &
   VariantProps<typeof image> & {
-    lqip?: SerializeFrom<typeof loader>
+    src: string | Asset | SerializeFrom<Asset>
   }
 
 function Image(
@@ -30,7 +30,6 @@ function Image(
     src,
     alt,
     fit = false,
-    lqip,
     className,
     loading = "lazy",
     decoding = "async",
@@ -42,38 +41,40 @@ function Image(
   }: Props,
   ref: ForwardedRef<HTMLImageElement>,
 ) {
-  const styles = lqip
-    ? {
-        ...style,
-        backgroundImage: `url(${lqip.base64})`,
-        backgroundSize: "cover",
-      }
-    : style
+  const asset = typeof src === "string" ? undefined : src
 
   if (import.meta.env.DEV) {
-    if (!lqip && !fit && (!width || !height)) {
+    if (!asset && !fit && (!width || !height)) {
       console.warn(
         "Detected image without width or height attributes. " +
-          "Consider adding either a LQIP, setting a fit prop, or manually adding both width and height attributes " +
-          "to the image with the following src " +
+          "Consider passing an Asset as src, setting a fit prop, or manually adding both width and height attributes " +
+          "to the image with the following src: " +
           src,
       )
     }
   }
 
+  const styles = asset
+    ? {
+        ...style,
+        backgroundImage: `url(${asset.placeholder.base64})`,
+        backgroundSize: "cover",
+      }
+    : style
+
   return (
     <img
       {...props}
       ref={ref}
-      src={src}
+      src={typeof src === "string" ? src : src.src}
       alt={alt}
       style={styles}
       loading={loading}
       decoding={decoding}
       draggable={draggable}
       className={image({ className, fit })}
-      width={width || lqip?.metadata.width}
-      height={height || lqip?.metadata.height}
+      width={width || asset ? asset?.placeholder.metadata.width : undefined}
+      height={height || asset ? asset?.placeholder.metadata.height : undefined}
     />
   )
 }

@@ -19,9 +19,8 @@ export default function WidgetInstagramContent({ data }: Props) {
     >
       <Image
         className="h-full w-full object-cover"
-        src={data.src}
-        lqip={data.lqip}
-        alt=""
+        src={data.asset}
+        alt={data.alt}
       />
       <Pill className="absolute bottom-4 right-4">@{IG_HANDLE}</Pill>
     </a>

@@ -182,6 +182,9 @@ importers:
       remix-validated-form:
         specifier: ^5.1.5
         version: 5.1.5(@remix-run/node@2.2.0)(@remix-run/react@2.2.0)(@remix-run/server-runtime@2.2.0)(@types/react@18.2.33)(react@18.2.0)
+      sharp:
+        specifier: ^0.32.6
+        version: 0.32.6
       split-type:
         specifier: ^0.3.4
         version: 0.3.4
