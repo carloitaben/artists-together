@@ -2,7 +2,7 @@ import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { z } from "zod"
 import type { Routes } from "remix-routes"
-import type { FormProps } from "remix-validated-form"
+import type { FormProps, Validator } from "remix-validated-form"
 import { ValidatedForm } from "remix-validated-form"
 import { Provider } from "@radix-ui/react-tooltip"
 
@@ -15,8 +15,6 @@ type Props<
   Partial<Pick<FormProps<DataType, Subaction>, "validator">> & {
     action?: keyof Routes
   }
-
-const emptyValidator = withZod(z.object({}))
 
 export default function Root<
   DataType extends {
@@ -34,7 +32,7 @@ export default function Root<
   const fetcher = useFetcher<DataType>()
 
   const validatorFallback =
-    validator || (emptyValidator as NonNullable<typeof validator>)
+    validator || (withZod(z.object({})) as Validator<DataType>)
 
   return (
     <ValidatedForm
