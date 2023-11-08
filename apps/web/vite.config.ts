@@ -6,7 +6,7 @@ import path from "path"
 import tsconfigPaths from "vite-tsconfig-paths"
 import tailwindcss from "tailwindcss"
 import autoprefixer from "autoprefixer"
-import { env } from "./app/lib/env"
+import { env } from "./app/server/env.server"
 
 // TODO: testing a thing ignore this atm
 void env

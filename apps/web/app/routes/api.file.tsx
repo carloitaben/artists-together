@@ -5,7 +5,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { auth } from "~/server/auth.server"
 import { z } from "zod"
 import { getParams } from "~/lib/params"
-import { env } from "~/lib/env"
+import { env } from "~/server/env.server"
 
 const searchParams = z.object({
   bucket: z.union([z.literal("avatar"), z.literal("support")]),

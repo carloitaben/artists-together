@@ -4,7 +4,7 @@ import { lucia } from "lucia"
 import { web } from "lucia/middleware"
 import { libsql } from "@lucia-auth/adapter-sqlite"
 import { discord, twitch } from "@lucia-auth/oauth/providers"
-import { env } from "~/lib/env"
+import { env } from "~/server/env.server"
 import { defaultTheme, theme } from "~/lib/themes"
 
 export const auth = lucia({

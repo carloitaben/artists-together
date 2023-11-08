@@ -8,7 +8,7 @@ import { oauthCookie, getCookie, themeCookie } from "~/server/cookies.server"
 import { getParams } from "~/lib/params"
 import { defaultTheme } from "~/lib/themes"
 import { unreachable } from "~/lib/utils"
-import { env } from "~/lib/env"
+import { env } from "~/server/env.server"
 import { Users } from "db"
 
 const searchParams = z.union([
