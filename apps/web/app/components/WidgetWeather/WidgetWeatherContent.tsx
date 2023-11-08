@@ -1,6 +1,7 @@
 import { useUser } from "~/hooks/loaders"
 import type { Location } from "~/routes/api.location"
 import type { Weather } from "~/routes/api.weather"
+import Image from "~/components/Image"
 
 type Props = {
   location: Location
@@ -115,15 +116,12 @@ export default function WidgetWeatherContent({ location, weather }: Props) {
           {unit}
         </div>
         <div className="flex items-center fluid:gap-5 fluid:text-[4rem]/[4rem]">
-          <img
+          <Image
             src={handleWeatherCode(weather.daily.weathercode[1]).src}
             alt={handleWeatherCode(weather.daily.weathercode[1]).label}
             width={201}
             height={201}
-            loading="lazy"
-            decoding="async"
             className="object-contain drop-shadow-card fluid:mt-1 fluid:h-10 fluid:w-10"
-            draggable={false}
           />
           <span>
             {Math.round(weather.daily.temperature_2m_min[1])}/
@@ -133,15 +131,10 @@ export default function WidgetWeatherContent({ location, weather }: Props) {
         </div>
       </div>
       <div className="fluid:p-12">
-        <img
+        <Image
           src={handleWeatherCode(weather.current_weather.weathercode).src}
           alt={handleWeatherCode(weather.current_weather.weathercode).label}
-          width={201}
-          height={201}
-          loading="lazy"
-          decoding="async"
           className="h-full w-full object-contain drop-shadow-card"
-          draggable={false}
         />
       </div>
     </div>

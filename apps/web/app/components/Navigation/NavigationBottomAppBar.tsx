@@ -10,6 +10,7 @@ import { routes } from "~/lib/routes"
 import { usePageHandle } from "~/lib/handle"
 import { useHints, useUser } from "~/hooks/loaders"
 import Icon from "~/components/Icon"
+import Image from "~/components/Image"
 import NavigationBottomAppBarPill from "./NavigationBottomAppBarPill"
 
 const transition: Transition = {
@@ -26,12 +27,10 @@ function AuthLink() {
         <NavigationBottomAppBarPill
           icon={
             user?.avatar ? (
-              <img
+              <Image
                 className="w-6 h-6 bg-current rounded-full overflow-hidden"
                 src={user.avatar}
                 alt="Your profile"
-                decoding="async"
-                loading="lazy"
               />
             ) : (
               "face"

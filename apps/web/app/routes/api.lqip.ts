@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { z } from "zod"
 import { zfd } from "zod-form-data"
-import { getPlaiceholder } from "plaiceholder"
+import { getRemoteLQIP } from "~/server/files.server"
 import { getSearchParams } from "~/lib/params"
 
 const searchParams = z.object({
@@ -22,13 +22,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   try {
-    const buffer = await fetch(params.data.url)
-      .then((response) => response.arrayBuffer())
-      .then((arrayBuffer) => Buffer.from(arrayBuffer))
-
-    const plaiceholder = await getPlaiceholder(buffer)
-
-    return json(plaiceholder)
+    const placeholder = await getRemoteLQIP(params.data.url)
+    return json(placeholder)
   } catch (error) {
     console.error(error)
     return json(null, {

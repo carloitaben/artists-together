@@ -9,6 +9,7 @@ import { useHints, useUser } from "~/hooks/loaders"
 import { usePageHandle } from "~/lib/handle"
 import { routes } from "~/lib/routes"
 import Icon from "~/components/Icon"
+import Image from "~/components/Image"
 import NavigationRailTooltip from "./NavigationRailTooltip"
 
 function anchor(event: MouseEvent) {
@@ -55,12 +56,10 @@ export default function RailAppBar() {
                   <Dialog.Trigger className="p-0.5 group">
                     <div className="w-12 h-12 flex items-center justify-center rounded-lg group-hover:bg-theme-300 group-hover:text-theme-700 text-theme-700">
                       {user?.avatar ? (
-                        <img
+                        <Image
                           className="w-6 h-6 bg-current rounded-full overflow-hidden"
                           src={user.avatar}
                           alt="Your profile"
-                          decoding="async"
-                          loading="lazy"
                         />
                       ) : (
                         <Icon

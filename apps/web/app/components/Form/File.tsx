@@ -8,6 +8,7 @@ import { forwardRef, useCallback, useEffect, useReducer, useState } from "react"
 import type { SearchParams, loader } from "~/routes/api.file"
 import { unreachable } from "~/lib/utils"
 import Icon from "~/components/Icon"
+import Image from "~/components/Image"
 import { emit } from "~/components/Toasts"
 import { useFieldContextOrThrow } from "./Field"
 
@@ -257,13 +258,10 @@ function FormFile(
       <AspectRatio.Root ratio={1}>
         {optimisticValue ? (
           <>
-            <img
+            <Image
               className="w-full h-full object-cover group-hover:invisible group-focus:invisible"
               src={optimisticValue}
               alt="TODO"
-              loading="lazy"
-              decoding="async"
-              draggable={false}
             />
             <div
               title={optimisticFormat.filename}
