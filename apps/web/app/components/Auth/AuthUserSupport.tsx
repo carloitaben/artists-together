@@ -31,13 +31,13 @@ export default function AuthUserSupport() {
           </Form.Label>
           <div className="grid grid-cols-3 gap-2">
             <Form.Field name="content">
-              <Form.File />
+              <Form.File bucket="support" />
             </Form.Field>
             <Form.Field name="content">
-              <Form.File />
+              <Form.File bucket="support" />
             </Form.Field>
             <Form.Field name="content">
-              <Form.File />
+              <Form.File bucket="support" />
             </Form.Field>
           </div>
         </div>
