@@ -70,14 +70,14 @@ export default function Page() {
             <Link to="#">
               <Icon
                 name="arrow"
-                label="Previous"
+                alt="Previous"
                 className="w-6 h-6 -rotate-90"
               />
             </Link>
           </Button>
           <Button color="theme" asChild>
             <Link to="#">
-              <Icon name="arrow" label="Next" className="w-6 h-6 rotate-90" />
+              <Icon name="arrow" alt="Next" className="w-6 h-6 rotate-90" />
             </Link>
           </Button>
           <div className="rounded-full bg-theme-800 text-theme-900 h-12 flex p-1">

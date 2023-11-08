@@ -54,7 +54,7 @@ function Avatar(
           className="w-full h-full p-1"
           style={{ backgroundColor: color[50], color: color[700] }}
         >
-          <Icon name="face" label={label} className="w-full h-full" />
+          <Icon name="face" alt={label} className="w-full h-full" />
         </AvatarPrimitive.AvatarFallback>
       )}
     </AvatarPrimitive.Root>

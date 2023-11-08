@@ -43,7 +43,7 @@ export default function AuthUserSupport() {
         </div>
         <Form.Submit asChild>
           <Button>
-            <Icon name="check" label="Submit" className="w-6 h-6" />
+            <Icon name="check" alt="Submit" className="w-6 h-6" />
           </Button>
         </Form.Submit>
       </Form.Root>

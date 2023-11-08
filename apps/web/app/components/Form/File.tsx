@@ -272,10 +272,10 @@ function FormFile(
                 className="p-2 w-10 h-10 flex-none self-end"
                 onClick={remove}
               >
-                <Icon name="close" className="w-6 h-6" label="Add file" />
+                <Icon name="close" className="w-6 h-6" alt="Add file" />
               </button>
               <div className="flex-1 h-full flex items-center justify-center">
-                <Icon name="info" className="w-8 h-8" label="" />
+                <Icon name="info" className="w-8 h-8" alt="" />
               </div>
               <div className="flex-none h-10 flex items-center justify-center px-5">
                 <span className="truncate">{optimisticFormat.filename}</span>
@@ -284,7 +284,7 @@ function FormFile(
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-not-so-white relative">
-            <Icon name="close" className="w-8 h-8 rotate-45" label="Add file" />
+            <Icon name="close" className="w-8 h-8 rotate-45" alt="Add file" />
             <input
               type="file"
               className="w-full h-full absolute inset-0 file:hidden text-transparent cursor-pointer"

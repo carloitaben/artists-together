@@ -35,7 +35,7 @@ export default function AuthLogin() {
           >
             <Icon
               name="discord"
-              label=""
+              alt=""
               className="w-4 h-3 sm:w-6 sm:h-[1.125rem] flex items-center justify-center"
             />
             Log-in with Discord

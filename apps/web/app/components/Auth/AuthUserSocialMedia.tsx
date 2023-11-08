@@ -29,7 +29,7 @@ function DyamicLinkIcon({ children = "" }: { children?: string }) {
           exit={{ opacity: 0, scale: 0 }}
           className="absolute inset-y-0 right-0 pointer-events-none w-10 h-10 flex items-center justify-center"
         >
-          <Icon name={icon} label="" className="w-3.5 h-3.5" />
+          <Icon name={icon} alt="" className="w-3.5 h-3.5" />
         </motion.div>
       ) : null}
     </AnimatePresence>

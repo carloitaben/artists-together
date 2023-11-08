@@ -132,7 +132,7 @@ function Toast({
           className="w-12 h-12 flex items-center justify-center"
           onClick={close}
         >
-          <Icon name="close" label="Close" className="h-4 w-4" />
+          <Icon name="close" alt="Close" className="h-4 w-4" />
         </button>
       </motion.div>
     </motion.div>

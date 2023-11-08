@@ -36,7 +36,7 @@ export default function Page() {
           <div className="col-span-2 col-start-2 px-7 sm:px-0 sm:col-start-4">
             <AspectRatio.Root ratio={600 / 286}>
               <h1 className="sr-only">Artists Together</h1>
-              <Icon label="" name="logo" className="w-full h-full" />
+              <Icon alt="" name="logo" className="w-full h-full" />
             </AspectRatio.Root>
           </div>
         </header>

@@ -25,7 +25,7 @@ function NavigationBottomAppBarPill(
       )}
     >
       {typeof icon === "string" ? (
-        <Icon name={icon} label="" className="w-6 h-6 flex-none" />
+        <Icon name={icon} alt="" className="w-6 h-6 flex-none" />
       ) : (
         icon
       )}

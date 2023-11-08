@@ -107,7 +107,7 @@ export default function Page() {
           <div className="max-w-[37.5rem] w-full col-span-2 sm:col-span-4 col-start-2 sm:col-start-3">
             <AspectRatio.Root ratio={600 / 286}>
               <h2 className="sr-only">Artists Together</h2>
-              <Icon name="logo" className="h-full w-full" label="" />
+              <Icon name="logo" className="h-full w-full" alt="" />
             </AspectRatio.Root>
           </div>
         </Container>

@@ -104,7 +104,7 @@ export default function BottomAppBar() {
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0, opacity: 0 }}
                     >
-                      <Icon name="menu" label="Menu" className="w-6 h-6 m-3" />
+                      <Icon name="menu" alt="Menu" className="w-6 h-6 m-3" />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -185,7 +185,7 @@ export default function BottomAppBar() {
               layout="position"
               className="absolute inset-y-0 right-0 pointer-events-none"
             >
-              <Icon name="search" label="Search" className="w-6 h-6 m-3" />
+              <Icon name="search" alt="Search" className="w-6 h-6 m-3" />
             </motion.div>
           </motion.li>
         </NavigationMenu.Item>
@@ -207,7 +207,7 @@ export default function BottomAppBar() {
                     >
                       <Icon
                         name="more"
-                        label="Menu"
+                        alt="Menu"
                         className="w-6 h-6 flex-none"
                       />
                     </motion.button>

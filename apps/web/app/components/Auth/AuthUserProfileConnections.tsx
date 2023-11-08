@@ -27,14 +27,14 @@ function Connection({
             : "bg-not-so-white text-gunpla-white-500",
         )}
       >
-        <Icon name={icon} label="" className="w-6 h-6" />
+        <Icon name={icon} alt="" className="w-6 h-6" />
       </div>
       <div className="flex-1">{children}</div>
       <span className="inline-flex gap-2 text-end items-center justify-end">
         {connected ? "Connected" : "Disconnected"}
         <Icon
           name={connected ? "check-circle" : "cancel-circle"}
-          label=""
+          alt=""
           className="w-3.5 h-3.5"
         />
       </span>
