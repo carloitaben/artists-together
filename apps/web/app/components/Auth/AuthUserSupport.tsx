@@ -1,8 +1,8 @@
 import { validator } from "~/routes/api.contact"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
-import Button from "../Button"
-import Icon from "../Icon"
+import Button from "~/components/Button"
+import Icon from "~/components/Icon"
 
 export default function AuthUserSupport() {
   return (
