@@ -40,8 +40,8 @@ export default function AuthUserProfile() {
         <Form.Field name="bio" className="flex flex-col w-full h-full flex-1">
           <Form.Label className="justify-between">
             <span>Description</span>
-            <Form.Value<string>>
-              {(value = "") => `${value.length}/128`}
+            <Form.Value<typeof user.bio>>
+              {(value) => `${value ? value.length : 0}/128`}
             </Form.Value>
           </Form.Label>
           <Form.Textarea
