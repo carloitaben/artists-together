@@ -9,6 +9,7 @@ import { $params, $path } from "remix-routes"
 import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 import { unreachable } from "~/lib/utils"
+import { useHints } from "~/hooks/loaders"
 
 export const handle = {
   actions: {
@@ -42,8 +43,8 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export default function Page() {
+  const hints = useHints()
   const data = useLoaderData<typeof loader>()
-
   const date = dayjs(data.date)
 
   function to(mode: "prev" | "next") {
@@ -68,8 +69,12 @@ export default function Page() {
   return (
     <>
       <div>
-        <Link to={to("prev")}>prev</Link>
-        <Link to={to("next")}>next</Link>
+        <Link to={to("prev")} prefetch={hints.saveData ? "none" : "intent"}>
+          prev
+        </Link>
+        <Link to={to("next")} prefetch={hints.saveData ? "none" : "intent"}>
+          next
+        </Link>
       </div>
       <Container grid asChild>
         <main>

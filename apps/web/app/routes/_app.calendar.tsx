@@ -6,6 +6,7 @@ import type { ReactNode } from "react"
 import { $path } from "remix-routes"
 import Button from "~/components/Button"
 import Icon from "~/components/Icon"
+import { useHints } from "~/hooks/loaders"
 import { guardDisabledRoute } from "~/server/lib.server"
 
 export const meta: MetaFunction = () => [
@@ -40,8 +41,10 @@ function LinkPill({
   active: boolean
   children: ReactNode
 }) {
+  const hints = useHints()
+
   return (
-    <Link to={to}>
+    <Link to={to} prefetch={hints.saveData ? "intent" : "viewport"}>
       <div
         className={cx(
           "rounded-full h-10 whitespace-nowrap flex items-center justify-center py-3 px-5",

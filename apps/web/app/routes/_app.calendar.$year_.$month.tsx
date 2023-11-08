@@ -16,6 +16,7 @@ import { calendarTabCookie } from "~/server/cookies.server"
 import Container from "~/components/Container"
 import { $params, $path } from "remix-routes"
 import { unreachable } from "~/lib/utils"
+import { useHints } from "~/hooks/loaders"
 
 dayjs.extend(advancedFormat)
 
@@ -108,8 +109,8 @@ function Scrollbar() {
 }
 
 export default function Page() {
+  const hints = useHints()
   const data = useLoaderData<typeof loader>()
-
   const date = dayjs(data.date)
 
   function to(mode: "prev" | "next") {
@@ -138,8 +139,12 @@ export default function Page() {
         <Scrollbar />
       </div>
       <div>
-        <Link to={to("prev")}>prev</Link>
-        <Link to={to("next")}>next</Link>
+        <Link to={to("prev")} prefetch={hints.saveData ? "none" : "intent"}>
+          prev
+        </Link>
+        <Link to={to("next")} prefetch={hints.saveData ? "none" : "intent"}>
+          next
+        </Link>
       </div>
       <main className="flex gap-1 sm:fluid:gap-4">
         {Array(Math.round(date.daysInMonth() / 4))
