@@ -1,5 +1,5 @@
 import * as AspectRatio from "@radix-ui/react-aspect-ratio"
-import type { LoaderFunctionArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { calendarTabCookie } from "~/server/cookies.server"
 import { useLoaderData } from "@remix-run/react"
@@ -10,6 +10,12 @@ import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 import { unreachable } from "~/lib/utils"
 import CalendarHeader from "~/components/CalendarHeader"
+
+export const meta: MetaFunction = () => [
+  {
+    title: "Calendar – Artists Together",
+  },
+]
 
 export const handle = {
   actions: {

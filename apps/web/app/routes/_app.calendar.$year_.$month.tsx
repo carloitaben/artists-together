@@ -1,7 +1,7 @@
 import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import type { LoaderFunctionArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { useRef } from "react"
@@ -19,6 +19,12 @@ import { unreachable } from "~/lib/utils"
 import CalendarHeader from "~/components/CalendarHeader"
 
 dayjs.extend(advancedFormat)
+
+export const meta: MetaFunction = () => [
+  {
+    title: "Calendar – Artists Together",
+  },
+]
 
 export const handle = {
   actions: {
