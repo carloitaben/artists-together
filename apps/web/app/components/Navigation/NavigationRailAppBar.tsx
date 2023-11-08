@@ -60,6 +60,8 @@ export default function RailAppBar() {
                           className="w-6 h-6 bg-current rounded-full overflow-hidden"
                           src={user.avatar}
                           alt="Your profile"
+                          width={24}
+                          height={24}
                         />
                       ) : (
                         <Icon

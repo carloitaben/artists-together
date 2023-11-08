@@ -259,9 +259,10 @@ function FormFile(
         {optimisticValue ? (
           <>
             <Image
-              className="w-full h-full object-cover group-hover:invisible group-focus:invisible"
+              className="group-hover:invisible group-focus:invisible"
               src={optimisticValue}
               alt="TODO"
+              fit="cover"
             />
             <div
               title={optimisticFormat.filename}

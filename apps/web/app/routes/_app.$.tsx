@@ -18,7 +18,9 @@ const user = {
 } as const
 
 export async function loader() {
-  const src = "https://i1.sndcdn.com/artworks-000070701368-di7zt7-t500x500.jpg"
+  const src =
+    "https://images.unsplash.com/photo-1600804340584-c7db2eacf0bf?q=80&w=1287&auto=format"
+
   const lqip = await getRemoteLQIP(src)
 
   return {
@@ -34,14 +36,7 @@ export default function Page() {
     <Container asChild grid>
       <main className="min-h-full items-center py-16">
         <figure className="col-span-4 sm:col-span-2 sm:col-start-4 space-y-4 pb-2 sm:pb-0">
-          <Image
-            src={data.src}
-            lqip={data.lqip}
-            alt=""
-            className="bg-theme-300 w-full"
-            width={500}
-            height={500}
-          />
+          <Image src={data.src} lqip={data.lqip} alt="" />
           <figcaption className="flex items-center gap-4">
             <Avatar user={user} className="w-8 h-8" />@{user.username}
           </figcaption>

@@ -134,7 +134,8 @@ export default function WidgetWeatherContent({ location, weather }: Props) {
         <Image
           src={handleWeatherCode(weather.current_weather.weathercode).src}
           alt={handleWeatherCode(weather.current_weather.weathercode).label}
-          className="h-full w-full object-contain drop-shadow-card"
+          className="drop-shadow-card"
+          fit="contain"
         />
       </div>
     </div>

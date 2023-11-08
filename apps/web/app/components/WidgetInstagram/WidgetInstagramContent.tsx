@@ -1,9 +1,15 @@
+import type { SerializeFrom } from "@remix-run/node"
+import type { loader } from "~/routes/api.last-instagram-post"
 import Image from "~/components/Image"
 import Pill from "~/components/Pill"
 
 const IG_HANDLE = "artiststogether.online"
 
-export default function WidgetInstagramContent() {
+type Props = {
+  data: NonNullable<SerializeFrom<typeof loader>>
+}
+
+export default function WidgetInstagramContent({ data }: Props) {
   return (
     <a
       className="relative block h-full w-full"
@@ -13,7 +19,8 @@ export default function WidgetInstagramContent() {
     >
       <Image
         className="h-full w-full object-cover"
-        src="https://images.unsplash.com/photo-1600804340584-c7db2eacf0bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+        src={data.src}
+        lqip={data.lqip}
         alt=""
       />
       <Pill className="absolute bottom-4 right-4">@{IG_HANDLE}</Pill>
