@@ -40,6 +40,9 @@ export default {
       lg: "1024px",
       xl: "1280px",
       "2xl": "1536px",
+      cursor: {
+        raw: "(hover: hover) and (pointer: fine)",
+      },
     },
     fontFamily: {
       sans: "Inter",
