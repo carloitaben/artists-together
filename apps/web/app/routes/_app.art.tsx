@@ -91,12 +91,12 @@ export default function Page() {
             </div>
             <div className="absolute bottom-0 right-0 flex items-center gap-2 p-4">
               <Pill>
-                <Icon name="face" alt="" className="flex-none w-4 h-4" />
-                Lorem ipsum
+                <Icon name="timer" alt="" className="flex-none w-4 h-4" />
+                Event starts {dates.start.fromNow()}
               </Pill>
               <Pill>
-                <Icon name="face" alt="" className="flex-none w-4 h-4" />
-                Dolor sit amet
+                <Icon name="how-to-reg" alt="" className="flex-none w-4 h-4" />
+                12 Members participating
               </Pill>
             </div>
           </AspectRatio.Root>
@@ -126,16 +126,6 @@ export default function Page() {
                 </h4>
               </div>
             </div>
-          </div>
-          <div className="col-span-4 rounded-2xl bg-theme-50 text-theme-900 fluid:py-4 fluid:px-8">
-            <h4 className="font-serif font-light fluid:text-[4rem] leading-none">
-              Saturday 3<sup>rd</sup>
-            </h4>
-          </div>
-          <div className="col-span-4 rounded-2xl bg-theme-50 text-theme-900 fluid:py-4 fluid:px-8">
-            <h4 className="font-serif font-light fluid:text-[4rem] leading-none">
-              Saturday 3<sup>rd</sup>
-            </h4>
           </div>
         </main>
       </Container>
