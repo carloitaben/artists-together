@@ -4,7 +4,7 @@ import { OAuthRequestError } from "@lucia-auth/oauth"
 import { z } from "zod"
 import { auth, twitch } from "~/server/auth.server"
 import { oauthCookie, getCookie } from "~/server/cookies.server"
-import { getParams } from "~/lib/params"
+import { getSearchParams } from "~/lib/params"
 
 const searchParams = z.union([
   z.object({
@@ -19,7 +19,7 @@ const searchParams = z.union([
 export type SearchParams = z.infer<typeof searchParams>
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const params = getParams(request, searchParams)
+  const params = getSearchParams(request, searchParams)
 
   if (!params.success) {
     return json(null, {

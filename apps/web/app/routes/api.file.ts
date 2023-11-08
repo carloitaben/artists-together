@@ -2,9 +2,9 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
-import { auth } from "~/server/auth.server"
 import { z } from "zod"
-import { getParams } from "~/lib/params"
+import { auth } from "~/server/auth.server"
+import { getSearchParams } from "~/lib/params"
 import { env } from "~/server/env.server"
 
 const searchParams = z.object({
@@ -16,7 +16,7 @@ export type SearchParams = z.infer<typeof searchParams>
 
 export async function loader({ request }: LoaderFunctionArgs) {
   console.log("loader file api endpoint")
-  const params = getParams(request, searchParams)
+  const params = getSearchParams(request, searchParams)
 
   if (!params.success) {
     return json(null, {

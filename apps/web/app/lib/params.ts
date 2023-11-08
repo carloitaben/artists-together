@@ -1,6 +1,6 @@
 import type { SafeParseReturnType, ZodTypeAny, TypeOf } from "zod"
 
-export function getParams<T extends ZodTypeAny>(
+export function getSearchParams<T extends ZodTypeAny>(
   request: Request,
   schema: T,
 ): SafeParseReturnType<T, TypeOf<T>> {

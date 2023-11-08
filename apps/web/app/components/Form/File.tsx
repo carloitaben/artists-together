@@ -1,17 +1,15 @@
 import * as AspectRatio from "@radix-ui/react-aspect-ratio"
+import type { SerializeFrom } from "@remix-run/node"
+import { useControlField, useFormContext } from "remix-validated-form"
+import { $path } from "remix-routes"
 import { cx } from "cva"
 import type { ComponentProps, ForwardedRef } from "react"
-import type { SerializeFrom } from "@remix-run/node"
 import { forwardRef, useCallback, useEffect, useReducer, useState } from "react"
-import { useControlField, useField, useFormContext } from "remix-validated-form"
-import { useFieldContextOrThrow } from "./Field"
-import Icon from "../Icon"
-import { emit } from "../Toasts"
-import type { FetcherWithComponents } from "@remix-run/react"
-import { useFetcher } from "@remix-run/react"
-import { $path } from "remix-routes"
 import type { SearchParams, loader } from "~/routes/api.file"
 import { unreachable } from "~/lib/utils"
+import Icon from "~/components/Icon"
+import { emit } from "~/components/Toasts"
+import { useFieldContextOrThrow } from "./Field"
 
 type Props = ComponentProps<"div"> & {
   /**
@@ -39,14 +37,29 @@ function formatFile(uri: string | null) {
 }
 
 type State =
-  | { type: "default"; data: { src: string | null } }
+  | {
+      type: "default"
+      data: {
+        file: null
+        src: string | null
+        promise: null
+      }
+    }
   | {
       type: "getting"
-      data: { file: File; promises: Promise<[Response, string]> }
+      data: {
+        file: File
+        src: Promise<string>
+        promise: Promise<Response>
+      }
     }
   | {
       type: "putting"
-      data: { file: File; promise: Promise<Response> }
+      data: {
+        file: File
+        src: Promise<string> | string | null
+        promise: Promise<Response>
+      }
     }
 
 type Action =
@@ -60,7 +73,6 @@ type Action =
   | {
       type: "put"
       data: {
-        file: File
         url: string
       }
     }
@@ -77,35 +89,36 @@ async function readFile(file: File) {
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "get": {
-      const promises = Promise.all([
-        fetch(
-          $path("/api/file", {
-            bucket: action.data.bucket,
-            extension: formatFile(action.data.file.name).extension,
-          }),
-        ),
-        readFile(action.data.file),
-      ])
+      const src = readFile(action.data.file)
+
+      const promise = fetch(
+        $path("/api/file", {
+          bucket: action.data.bucket,
+          extension: formatFile(action.data.file.name).extension,
+        }),
+      )
 
       return {
         type: "getting",
         data: {
+          src,
+          promise,
           file: action.data.file,
-          promises,
         },
       }
     }
     case "put": {
-      console.log(action.data.url)
+      if (!state.data.file) throw Error("Missing file")
+
       const promise = fetch(action.data.url, {
-        body: action.data.file,
+        body: state.data.file,
         method: "put",
       })
 
       return {
         type: "putting",
         data: {
-          file: action.data.file,
+          ...state.data,
           promise,
         },
       }
@@ -114,7 +127,9 @@ function reducer(state: State, action: Action): State {
       return {
         type: "default",
         data: {
-          src: state.type === "putting" ? action.data?.file.toString() : null,
+          src: typeof state.data.src === "string" ? state.data.src : null,
+          file: null,
+          promise: null,
         },
       }
     default:
@@ -133,19 +148,21 @@ function FormFile(
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const { name } = useFieldContextOrThrow()
-  // const { submit } = useFormContext()
-  // const { validate } = useField(name)
+  const { submit } = useFormContext()
   const [value, setValue] = useControlField<string | null>(name)
-  // const [file, setFile] = useState<File>()
-  // const [preview, setPreview] = useState(value)
+  const [preview, setPreview] = useState(value)
 
   const [state, dispatch] = useReducer(reducer, {
     type: "default",
-    data: { src: value },
-  })
+    data: {
+      file: null,
+      promise: null,
+      src: value,
+    },
+  } satisfies State)
 
-  // const optimisticValue = preview || value
-  // const format = formatFile(file ? file.name : value)
+  const optimisticValue = preview || value
+  const optimisticFormat = formatFile(optimisticValue)
 
   const onChange = useCallback<NonNullable<Props["onChange"]>>(
     (event) => {
@@ -173,16 +190,6 @@ function FormFile(
           file,
         },
       })
-
-      // const reader = new FileReader()
-      // reader.onload = () => {
-      // setFile(file)
-      // setPreview(
-      //   typeof event.target?.result === "string" ? event.target.result : null,
-      // )
-      // }
-
-      // reader.readAsDataURL(file as Blob)
     },
     [bucket, maxFileSize, props],
   )
@@ -198,35 +205,32 @@ function FormFile(
       case "default":
         break
       case "getting":
-        state.data.promises
-          .then([])
+        state.data.src.then((src) => setPreview(src)).catch(() => emit.error())
+        state.data.promise
           .then((response) => {
             if (!response.ok) throw Error("Invalid response")
             return response.json()
           })
           .then((url: SerializeFrom<typeof loader>) => {
             if (!url) throw Error("Missing url")
-            dispatch({
-              type: "put",
-              data: {
-                url,
-                file: state.data.file,
-              },
-            })
+            dispatch({ type: "put", data: { url } })
           })
           .catch((error) => {
             console.error(error)
             emit.error()
-            dispatch({
-              type: "end",
-              data: null,
-            })
+            dispatch({ type: "end", data: null })
           })
         break
       case "putting":
         state.data.promise
           .then((response) => {
             if (!response.ok) emit.error()
+            setValue("TODO_FILE_URL_FROM_BUCKET_GOES_HERE")
+            console.log("do something here to get the r2 READ file link")
+            console.log(
+              "with the r2 READ file link, we should get a plaiceholder base64 url here, maybe GETing /api/file/{fileURL}",
+            )
+            if (submitOnChange) submit()
           })
           .catch((error) => {
             console.error(error)
@@ -242,7 +246,7 @@ function FormFile(
       default:
         unreachable(state)
     }
-  }, [state])
+  }, [setValue, state, submit, submitOnChange])
 
   return (
     <div
@@ -251,18 +255,18 @@ function FormFile(
       className={cx(className, "overflow-hidden rounded-2xl group")}
     >
       <AspectRatio.Root ratio={1}>
-        {state.data.src ? (
+        {optimisticValue ? (
           <>
             <img
               className="w-full h-full object-cover group-hover:invisible group-focus:invisible"
-              src={state.data.src}
+              src={optimisticValue}
               alt="TODO"
               loading="lazy"
               decoding="async"
               draggable={false}
             />
             <div
-              title={formatFile(state.data.src).extension}
+              title={optimisticFormat.filename}
               className="absolute inset-0 text-gunpla-white-50 group-hover:flex group-focus:flex hidden flex-col bg-gunpla-white-300"
             >
               <button
@@ -275,9 +279,7 @@ function FormFile(
                 <Icon name="info" className="w-8 h-8" label="" />
               </div>
               <div className="flex-none h-10 flex items-center justify-center px-5">
-                <span className="truncate">
-                  {formatFile(state.data.src).extension}
-                </span>
+                <span className="truncate">{optimisticFormat.filename}</span>
               </div>
             </div>
           </>

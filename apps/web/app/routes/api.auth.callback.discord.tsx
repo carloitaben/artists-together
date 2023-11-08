@@ -5,7 +5,7 @@ import { z } from "zod"
 import type { User } from "lucia"
 import { auth, discord } from "~/server/auth.server"
 import { oauthCookie, getCookie, themeCookie } from "~/server/cookies.server"
-import { getParams } from "~/lib/params"
+import { getSearchParams } from "~/lib/params"
 import { defaultTheme } from "~/lib/themes"
 import { unreachable } from "~/lib/utils"
 import { env } from "~/server/env.server"
@@ -34,7 +34,7 @@ type PartialDiscordMember = {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const params = getParams(request, searchParams)
+  const params = getSearchParams(request, searchParams)
 
   if (!params.success) {
     return json(null, {

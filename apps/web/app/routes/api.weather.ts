@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { z } from "zod"
-import { getParams } from "~/lib/params"
+import { getSearchParams } from "~/lib/params"
 
 const weatherResponseSchema = z.object({
   latitude: z.number(),
@@ -46,7 +46,7 @@ const searchParams = z.object({
 export type SearchParams = z.infer<typeof searchParams>
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const params = getParams(request, searchParams)
+  const params = getSearchParams(request, searchParams)
 
   if (!params.success) {
     throw Error("*panics in spanish*")

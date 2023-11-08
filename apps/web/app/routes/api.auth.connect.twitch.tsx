@@ -5,7 +5,7 @@ import { $path } from "remix-routes"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"
 import { zfd } from "zod-form-data"
-import { getParams } from "~/lib/params"
+import { getSearchParams } from "~/lib/params"
 import { twitch } from "~/server/auth.server"
 import { getCookie, oauthCookie } from "~/server/cookies.server"
 
@@ -22,7 +22,7 @@ const searchParams = z.object({
 export type SearchParams = z.infer<typeof searchParams>
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const params = getParams(request, searchParams)
+  const params = getSearchParams(request, searchParams)
 
   if (!params.success) {
     throw Error("*panics in spanish*")
