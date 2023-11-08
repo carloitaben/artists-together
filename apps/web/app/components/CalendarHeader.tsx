@@ -5,15 +5,26 @@ import Button from "./Button"
 import Icon from "./Icon"
 
 type Props = {
-  prev: string
-  next: string
+  prev: string | number
+  next: string | number
   date: Dayjs
-  days: string
-  months: string
+  days: string | number
+  months: string | number
   active: "days" | "months"
 }
 
-export default function CalendarHeader({ prev, next, date, days, months, active }: Props) {
+function coerce(value: string | number) {
+  return typeof value === "number" ? value.toString() : value
+}
+
+export default function CalendarHeader({
+  prev,
+  next,
+  date,
+  days,
+  months,
+  active,
+}: Props) {
   const hints = useHints()
 
   return (
@@ -23,7 +34,7 @@ export default function CalendarHeader({ prev, next, date, days, months, active 
       </h2>
       <nav className="flex items-center justify-end gap-2">
         <Button color="theme" asChild>
-          <Link to={prev} prefetch={hints.saveData ? "none" : "intent"}>
+          <Link to={coerce(prev)} prefetch={hints.saveData ? "none" : "intent"}>
             <Icon
               name="arrow"
               alt="Previous year"
@@ -32,13 +43,13 @@ export default function CalendarHeader({ prev, next, date, days, months, active 
           </Link>
         </Button>
         <Button color="theme" asChild>
-          <Link to={next} prefetch={hints.saveData ? "none" : "intent"}>
+          <Link to={coerce(next)} prefetch={hints.saveData ? "none" : "intent"}>
             <Icon name="arrow" alt="Next year" className="w-6 h-6 rotate-90" />
           </Link>
         </Button>
         <div className="rounded-full bg-theme-800 text-theme-900 h-12 flex p-1">
           <Link
-            to={days}
+            to={coerce(days)}
             prefetch={hints.saveData ? "none" : "intent"}
             className="group"
             aria-current={active === "days" ? "page" : undefined}
@@ -48,7 +59,7 @@ export default function CalendarHeader({ prev, next, date, days, months, active 
             </div>
           </Link>
           <Link
-            to={months}
+            to={coerce(months)}
             prefetch={hints.saveData ? "none" : "intent"}
             className="group"
             aria-current={active === "months" ? "page" : undefined}

@@ -15,7 +15,6 @@ import {
 import { calendarTabCookie } from "~/server/cookies.server"
 import Container from "~/components/Container"
 import { $params, $path } from "remix-routes"
-import { unreachable } from "~/lib/utils"
 import CalendarHeader from "~/components/CalendarHeader"
 
 dayjs.extend(advancedFormat)
@@ -43,7 +42,9 @@ export const handle = {
 export async function loader({ params }: LoaderFunctionArgs) {
   const { year, month } = $params("/calendar/:year/:month", params)
 
-  const date = dayjs().set("year", parseInt(year)).set("month", parseInt(month))
+  const date = dayjs()
+    .set("year", parseInt(year))
+    .set("month", parseInt(month) - 1)
 
   return json(
     {
@@ -118,37 +119,14 @@ export default function Page() {
   const data = useLoaderData<typeof loader>()
   const date = dayjs(data.date)
 
-  function to(mode: "prev" | "next") {
-    let targetDate: Dayjs | undefined
-
-    switch (mode) {
-      case "prev":
-        targetDate = date.subtract(1, "month")
-        break
-      case "next":
-        targetDate = date.add(1, "month")
-        break
-      default:
-        unreachable(mode)
-    }
-
-    return $path("/calendar/:year/:month", {
-      year: targetDate.year(),
-      month: targetDate.month(),
-    })
-  }
-
   return (
     <>
       <CalendarHeader
         date={date}
         active="days"
-        prev={to("prev")}
-        next={to("next")}
-        days={$path("/calendar/:year/:month", {
-          year: dayjs().year(),
-          month: dayjs().month(),
-        })}
+        prev={date.subtract(1, "month").month() + 1}
+        next={date.add(1, "month").month() + 1}
+        days={dayjs().month() + 1}
         months={$path("/calendar/:year", {
           year: date.year(),
         })}

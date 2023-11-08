@@ -20,7 +20,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       return redirect(
         $path("/calendar/:year/:month", {
           year: today.year(),
-          month: today.month(),
+          month: today.month() + 1,
         }),
         tab
           ? undefined

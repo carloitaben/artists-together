@@ -6,9 +6,7 @@ import { useLoaderData } from "@remix-run/react"
 import Container from "~/components/Container"
 import CalendarMonth from "~/components/CalendarMonth"
 import { $params, $path } from "remix-routes"
-import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
-import { unreachable } from "~/lib/utils"
 import CalendarHeader from "~/components/CalendarHeader"
 
 export const meta: MetaFunction = () => [
@@ -52,39 +50,18 @@ export default function Page() {
   const data = useLoaderData<typeof loader>()
   const date = dayjs(data.date)
 
-  function to(mode: "prev" | "next") {
-    let targetDate: Dayjs | undefined
-
-    switch (mode) {
-      case "prev":
-        targetDate = date.subtract(1, "year")
-        break
-      case "next":
-        targetDate = date.add(1, "year")
-        break
-      default:
-        unreachable(mode)
-    }
-
-    return $path("/calendar/:year", {
-      year: targetDate.year(),
-    })
-  }
-
   return (
     <>
       <CalendarHeader
         date={date}
         active="months"
-        prev={to("prev")}
-        next={to("next")}
+        prev={date.subtract(1, "year").year()}
+        next={date.subtract(1, "year").year()}
         days={$path("/calendar/:year/:month", {
           year: date.year(),
-          month: date.month(),
+          month: date.month() + 1,
         })}
-        months={$path("/calendar/:year", {
-          year: dayjs().year(),
-        })}
+        months={dayjs().year()}
       />
       <Container grid asChild>
         <main>
