@@ -66,7 +66,7 @@ export default function RailAppBar() {
                       ) : (
                         <Icon
                           name="face"
-                          label={user ? "Your profile" : "Sign in"}
+                          alt={user ? "Your profile" : "Sign in"}
                           className="w-6 h-6"
                         />
                       )}
@@ -93,7 +93,7 @@ export default function RailAppBar() {
                       <div className="w-12 h-12 flex items-center justify-center rounded-lg text-theme-700">
                         <Icon
                           name={route.icon}
-                          label={route.label}
+                          alt={route.label}
                           className="w-6 h-6"
                         />
                       </div>
@@ -116,7 +116,7 @@ export default function RailAppBar() {
                           >
                             <Icon
                               name={route.icon}
-                              label={route.label}
+                              alt={route.label}
                               className="w-6 h-6"
                             />
                           </div>
