@@ -37,7 +37,7 @@ export default function AuthUserProfile() {
           />
           <Form.Error />
         </Form.Field>
-        <Form.Field name="bio" className="flex flex-col w-full h-full flex-1">
+        <Form.Field name="bio" className="w-full h-full flex-1">
           <Form.Label className="justify-between">
             <span>Description</span>
             <Form.Value<typeof user.bio>>
@@ -45,7 +45,7 @@ export default function AuthUserProfile() {
             </Form.Value>
           </Form.Label>
           <Form.Textarea
-            className="h-full"
+            className="h-32 w-full"
             placeholder="Placeholder"
             maxLength={128}
             submitOnBlur
