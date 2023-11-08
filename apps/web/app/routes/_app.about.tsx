@@ -9,6 +9,7 @@ import ClientOnly from "~/components/ClientOnly"
 import Container from "~/components/Container"
 import Icon from "~/components/Icon"
 import Marquee from "~/components/Marquee"
+import { useHints } from "~/hooks/loaders"
 
 const Stars = lazy(() => import("~/components/Stars"))
 
@@ -90,13 +91,17 @@ function AnimatedContainer({
 }
 
 export default function Page() {
+  const hints = useHints()
+
   return (
     <>
-      <ClientOnly>
-        <Suspense>
-          <Stars />
-        </Suspense>
-      </ClientOnly>
+      {hints.saveData ? null : (
+        <ClientOnly>
+          <Suspense>
+            <Stars />
+          </Suspense>
+        </ClientOnly>
+      )}
       <header>
         <Container grid className="min-h-screen place-items-center py-16">
           <div className="max-w-[37.5rem] w-full col-span-2 sm:col-span-4 col-start-2 sm:col-start-3">
