@@ -35,16 +35,12 @@ export default function CalendarHeader({
       <nav className="flex items-center justify-end gap-2">
         <Button color="theme" asChild>
           <Link to={coerce(prev)} prefetch={hints.saveData ? "none" : "intent"}>
-            <Icon
-              name="arrow"
-              alt="Previous year"
-              className="w-6 h-6 -rotate-90"
-            />
+            <Icon name="arrow" alt="Previous" className="w-6 h-6 -rotate-90" />
           </Link>
         </Button>
         <Button color="theme" asChild>
           <Link to={coerce(next)} prefetch={hints.saveData ? "none" : "intent"}>
-            <Icon name="arrow" alt="Next year" className="w-6 h-6 rotate-90" />
+            <Icon name="arrow" alt="Next" className="w-6 h-6 rotate-90" />
           </Link>
         </Button>
         <div className="rounded-full bg-theme-800 text-theme-900 h-12 flex p-1">
