@@ -1,10 +1,13 @@
+import { useLocation } from "@remix-run/react"
+import { validator } from "~/routes/api.auth.login"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
 import Icon from "~/components/Icon"
 import Button from "~/components/Button"
-import { validator } from "~/routes/api.auth.login"
 
 export default function AuthLogin() {
+  const location = useLocation()
+
   return (
     <Modal.Content>
       <Modal.Container>
@@ -27,6 +30,8 @@ export default function AuthLogin() {
           <Button
             color={false}
             className="bg-[#5865F2] text-gunpla-white-50 selection:bg-gunpla-white-50 selection:text-[#5865F2]"
+            name="pathname"
+            value={location.pathname}
           >
             <Icon
               name="discord"

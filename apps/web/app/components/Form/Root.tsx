@@ -1,4 +1,4 @@
-import { useFetcher, useLocation } from "@remix-run/react"
+import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { z } from "zod"
 import type { Routes } from "remix-routes"
@@ -31,7 +31,6 @@ export default function Root<
   navigate = true,
   ...props
 }: Props<DataType, Subaction>) {
-  const location = useLocation()
   const fetcher = useFetcher<DataType>()
 
   const validatorFallback =
@@ -46,7 +45,6 @@ export default function Root<
       method={method}
       action={action}
     >
-      <input type="hidden" name="pathname" value={location.pathname} />
       <TooltipProvider>{children}</TooltipProvider>
     </ValidatedForm>
   )

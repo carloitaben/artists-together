@@ -4,12 +4,16 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { $path } from "remix-routes"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"
-import { defaultHiddenFields } from "~/components/Form"
+import { zfd } from "zod-form-data"
 import { getParams } from "~/lib/params"
 import { discord } from "~/server/auth.server"
 import { getCookie, oauthCookie } from "~/server/cookies.server"
 
-export const validator = withZod(defaultHiddenFields)
+export const validator = withZod(
+  z.object({
+    pathname: zfd.text(z.string().min(1)),
+  }),
+)
 
 const searchParams = z.object({
   url: z.string().url(),

@@ -1,8 +1,10 @@
+import { useLocation } from "@remix-run/react"
+import { validator } from "~/routes/api.auth.logout"
 import * as Form from "~/components/Form"
 import Button from "~/components/Button"
-import { validator } from "~/routes/api.auth.logout"
 
 export default function AuthSignOutForm() {
+  const location = useLocation()
   return (
     <Form.Root
       validator={validator}
@@ -11,7 +13,9 @@ export default function AuthSignOutForm() {
       navigate={false}
     >
       <Form.Submit className="disabled:opacity-25" asChild>
-        <Button>Log out</Button>
+        <Button name="pathname" value={location.pathname}>
+          Log out
+        </Button>
       </Form.Submit>
     </Form.Root>
   )

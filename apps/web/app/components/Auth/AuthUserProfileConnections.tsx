@@ -1,6 +1,7 @@
 import { cx } from "cva"
 import type { ReactNode } from "react"
 import type { Routes } from "remix-routes"
+import { useLocation } from "@remix-run/react"
 import { useUserOrThrow } from "~/hooks/loaders"
 import { validator as connectTwitchValidator } from "~/routes/api.auth.connect.twitch"
 import { validator as connectDiscordValidator } from "~/routes/api.auth.connect.discord"
@@ -52,6 +53,8 @@ function ConditionalForm({
   validator: any
   action: keyof Routes
 }) {
+  const location = useLocation()
+
   if (connected) {
     return <>{children}</>
   }
@@ -61,6 +64,8 @@ function ConditionalForm({
       <Form.Submit
         type="submit"
         className="w-full [text-align:unset] disabled:opacity-25"
+        name="pathname"
+        value={location.pathname}
       >
         {children}
       </Form.Submit>

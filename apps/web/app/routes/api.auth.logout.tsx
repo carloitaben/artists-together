@@ -1,10 +1,15 @@
 import { redirect, type ActionFunctionArgs } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { validationError } from "remix-validated-form"
+import { z } from "zod"
+import { zfd } from "zod-form-data"
 import { auth } from "~/server/auth.server"
-import { defaultHiddenFields } from "~/components/Form"
 
-export const validator = withZod(defaultHiddenFields)
+export const validator = withZod(
+  z.object({
+    pathname: zfd.text(z.string().min(1)),
+  }),
+)
 
 export async function action({ request }: ActionFunctionArgs) {
   const form = await validator.validate(await request.formData())
