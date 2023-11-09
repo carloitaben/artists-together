@@ -7,10 +7,13 @@ export async function loader() {
 
   const alt = "Lorem ipsum"
 
-  const asset = await makeRemoteAsset(src)
-
-  return json({
-    asset,
-    alt,
-  })
+  try {
+    const asset = await makeRemoteAsset(src)
+    return json({ asset, alt })
+  } catch (error) {
+    console.error(error)
+    return json(null, {
+      status: 500,
+    })
+  }
 }
