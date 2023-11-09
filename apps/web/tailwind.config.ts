@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss"
 import radixPlugin from "tailwindcss-radix"
 import plugin from "tailwindcss/plugin"
+import type { ScreensConfig } from "tailwindcss/types/config"
 
 function getFluidValue(value: string) {
   if (value.endsWith("rem")) {
@@ -30,20 +31,22 @@ const fluidPlugin = plugin(({ addVariant }) => {
   })
 })
 
+export const screens = {
+  xs: "360px",
+  sm: "640px",
+  md: "768px",
+  lg: "1024px",
+  xl: "1280px",
+  "2xl": "1536px",
+  cursor: {
+    raw: "(hover: hover) and (pointer: fine)",
+  },
+} satisfies ScreensConfig
+
 export default {
   content: ["./app/**/*.{ts,tsx}"],
   theme: {
-    screens: {
-      xs: "360px",
-      sm: "640px",
-      md: "768px",
-      lg: "1024px",
-      xl: "1280px",
-      "2xl": "1536px",
-      cursor: {
-        raw: "(hover: hover) and (pointer: fine)",
-      },
-    },
+    screens,
     fontFamily: {
       sans: "Inter",
       serif: [

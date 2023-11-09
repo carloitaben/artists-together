@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html.cursor * {
+    @apply cursor-none;
+  }
+
   html {
     -webkit-tap-highlight-color: transparent;
   }

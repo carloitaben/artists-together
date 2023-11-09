@@ -57,6 +57,7 @@
     "sharp": "^0.32.6",
     "split-type": "^0.3.4",
     "three": "^0.158.0",
+    "ws": "workspace:*",
     "zod": "^3.22.2",
     "zod-form-data": "^2.0.2"
   },
