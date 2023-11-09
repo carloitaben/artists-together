@@ -8,7 +8,7 @@ import {
 } from "framer-motion"
 import type { CursorState } from "ws"
 import { useEffect, useState } from "react"
-import { useScreen } from "~/hooks/media"
+import { useMeasure, useScreen } from "~/hooks/media"
 import Icon from "./Icon"
 
 const variants: Variants = {
@@ -39,6 +39,8 @@ export default function Cursor() {
   const [state, setState] = useState<CursorState | null>(null)
   const cursor = useScreen("cursor")
 
+  const documentRect = useMeasure(() => document.documentElement)
+
   const scale = useSpring(1, { mass: 0.05, stiffness: 200 })
   const positionX = useSpring(0, { mass: 0.025, stiffness: 175 })
   const positionY = useSpring(0, { mass: 0.025, stiffness: 175 })
@@ -52,14 +54,21 @@ export default function Cursor() {
 
     document.documentElement.classList.add("cursor")
 
-    const windowRect = {
-      innerWidth: window.innerWidth,
-      innerHeight: window.innerHeight,
-    }
-
     function onMouseEnter(event: MouseEvent) {
-      const x = clamp(0, 100, (event.clientX * 100) / windowRect.innerWidth)
-      const y = clamp(0, 100, (event.clientY * 100) / windowRect.innerHeight)
+      if (!documentRect.current) return
+
+      const x = clamp(
+        0,
+        100,
+        (event.clientX * 100) / documentRect.current.contentRect.width,
+      )
+
+      const y = clamp(
+        0,
+        100,
+        (event.clientY * 100) / documentRect.current.contentRect.height,
+      )
+
       positionX.jump(x)
       positionX.jump(y)
       setState("idle")
@@ -70,8 +79,20 @@ export default function Cursor() {
     }
 
     function onMouseMove(event: MouseEvent) {
-      const x = clamp(0, 100, (event.clientX * 100) / windowRect.innerWidth)
-      const y = clamp(0, 100, (event.clientY * 100) / windowRect.innerHeight)
+      if (!documentRect.current) return
+
+      const x = clamp(
+        0,
+        100,
+        (event.clientX * 100) / documentRect.current.contentRect.width,
+      )
+
+      const y = clamp(
+        0,
+        100,
+        (event.clientY * 100) / documentRect.current.contentRect.height,
+      )
+
       positionX.set(x)
       positionY.set(y)
     }
@@ -95,6 +116,7 @@ export default function Cursor() {
     window.addEventListener("mousemove", onMouseMove, { passive: true })
     window.addEventListener("mousedown", onMouseDown, { passive: true })
     window.addEventListener("mouseup", onMouseUp, { passive: true })
+
     return () => {
       document.documentElement.removeEventListener("mouseenter", onMouseEnter)
       document.documentElement.removeEventListener("mouseleave", onMouseLeave)
@@ -102,7 +124,7 @@ export default function Cursor() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [positionX, positionY, cursor, scale])
+  }, [positionX, positionY, cursor, scale, documentRect])
 
   return (
     <div
