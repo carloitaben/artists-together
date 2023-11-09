@@ -110,7 +110,7 @@ export default function CalendarMonth({
   return (
     <div
       className={cx(
-        "h-full w-full text-center fluid:px-10 fluid:py-12 fluid:text-2xl",
+        "h-full w-full text-center fluid:px-10 fluid:py-12 fluid:text-2xl select-none",
         active ? "bg-theme-50 text-theme-900" : "bg-theme-800 text-theme-50",
       )}
     >
