@@ -4,7 +4,7 @@ export default function WidgetThemeBg() {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 448 448"
-      className="shadow-card"
+      className="drop-shadow-card"
       aria-hidden
     >
       <path
