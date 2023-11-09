@@ -4,13 +4,26 @@ import { useControlField, useFormContext } from "remix-validated-form"
 import { $path } from "remix-routes"
 import { cx } from "cva"
 import type { ComponentProps, ForwardedRef } from "react"
-import { forwardRef, useCallback, useEffect, useReducer, useState } from "react"
+import { forwardRef, useCallback, useEffect, useState } from "react"
 import type { SearchParams, loader } from "~/routes/api.file"
-import { unreachable } from "~/lib/utils"
 import Icon from "~/components/Icon"
 import Image from "~/components/Image"
 import { emit } from "~/components/Toasts"
 import { useFieldContextOrThrow } from "./Field"
+
+// https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
+const fileType = {
+  image: [
+    "image/apng",
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/webp",
+  ],
+}
+
+const allFileTypes = Object.values(fileType).flatMap((values) => values)
 
 type Props = ComponentProps<"div"> & {
   /**
@@ -18,18 +31,10 @@ type Props = ComponentProps<"div"> & {
    */
   maxFileSize?: number
   submitOnChange?: boolean
+  folder: string
   bucket: SearchParams["bucket"]
+  type?: keyof typeof fileType
 }
-
-// https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
-const fileTypes = [
-  "image/apng",
-  "image/gif",
-  "image/jpeg",
-  "image/pjpeg",
-  "image/png",
-  "image/webp",
-]
 
 function formatFile(uri: string | null) {
   const filename = (uri || "").split("/").slice(-1)[0]
@@ -37,143 +42,43 @@ function formatFile(uri: string | null) {
   return { filename, extension }
 }
 
-type State =
-  | {
-      type: "default"
-      data: {
-        file: null
-        src: string | null
-        promise: null
-      }
-    }
-  | {
-      type: "getting"
-      data: {
-        file: File
-        src: Promise<string>
-        promise: Promise<Response>
-      }
-    }
-  | {
-      type: "putting"
-      data: {
-        file: File
-        src: Promise<string> | string | null
-        promise: Promise<Response>
-      }
-    }
-
-type Action =
-  | {
-      type: "get"
-      data: {
-        bucket: Props["bucket"]
-        file: File
-      }
-    }
-  | {
-      type: "put"
-      data: {
-        url: string
-      }
-    }
-  | { type: "end"; data: null }
-
-async function readFile(file: File) {
-  return new Promise<string>((resolve) => {
-    const reader = new FileReader()
-    reader.onload = (event) => resolve(event.target!.result as string)
-    reader.readAsDataURL(file as Blob)
-  })
-}
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case "get": {
-      const src = readFile(action.data.file)
-
-      const promise = fetch(
-        $path("/api/file", {
-          bucket: action.data.bucket,
-          extension: formatFile(action.data.file.name).extension,
-        }),
-      )
-
-      return {
-        type: "getting",
-        data: {
-          src,
-          promise,
-          file: action.data.file,
-        },
-      }
-    }
-    case "put": {
-      if (!state.data.file) throw Error("Missing file")
-
-      const promise = fetch(action.data.url, {
-        body: state.data.file,
-        method: "put",
-      })
-
-      return {
-        type: "putting",
-        data: {
-          ...state.data,
-          promise,
-        },
-      }
-    }
-    case "end":
-      return {
-        type: "default",
-        data: {
-          src: typeof state.data.src === "string" ? state.data.src : null,
-          file: null,
-          promise: null,
-        },
-      }
-    default:
-      unreachable(action)
-  }
-}
-
 function FormFile(
   {
     className,
     maxFileSize = 1_000_000,
-    bucket,
     submitOnChange,
+    bucket,
+    folder,
+    type,
     ...props
   }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const { name } = useFieldContextOrThrow()
-  const { submit } = useFormContext()
+  const { submit: submitForm } = useFormContext()
   const [value, setValue] = useControlField<string | null>(name)
-  const [preview, setPreview] = useState(value)
+  const [urls, setUrls] = useState<SerializeFrom<typeof loader>>(null)
+  const [asset, setAsset] = useState<{ file: File; base64: string } | null>(
+    null,
+  )
 
-  const [state, dispatch] = useReducer(reducer, {
-    type: "default",
-    data: {
-      file: null,
-      promise: null,
-      src: value,
-    },
-  } satisfies State)
+  const remove = useCallback(() => {
+    setAsset(null)
+    setValue(null)
+    alert("TODO: delete from bucket")
+  }, [setValue])
 
-  const optimisticValue = preview || value
-  const optimisticFormat = formatFile(optimisticValue)
-
-  const onChange = useCallback<NonNullable<Props["onChange"]>>(
+  const onChange = useCallback<
+    NonNullable<ComponentProps<"input">["onChange"]>
+  >(
     (event) => {
-      props.onChange?.(event)
-
-      if (!(event.target instanceof HTMLInputElement)) return
-
-      const file = event.target.files?.item(0)
+      const file = event.target.files?.[0]
 
       if (!file) return
+
+      if (type && !fileType[type].includes(file.type)) {
+        return emit.error("Oops! Invalid file type")
+      }
 
       if (file.size > maxFileSize) {
         const format = maxFileSize.toString().length > 6 ? "MB" : "KB"
@@ -184,70 +89,76 @@ function FormFile(
         return emit.error(`Oops! File must be less than ${amount}${format}`)
       }
 
-      dispatch({
-        type: "get",
-        data: {
-          bucket,
+      const reader = new FileReader()
+
+      reader.onload = (event) => {
+        setAsset({
           file,
-        },
-      })
+          base64: event.target!.result as string,
+        })
+      }
+
+      reader.readAsDataURL(file as Blob)
     },
-    [bucket, maxFileSize, props],
+    [maxFileSize, type],
   )
 
-  const remove = useCallback(() => {
-    // setPreview(null)
-    // setValue(null)
-    alert("WIP")
-  }, [])
-
   useEffect(() => {
-    switch (state.type) {
-      case "default":
-        break
-      case "getting":
-        state.data.src.then((src) => setPreview(src)).catch(() => emit.error())
-        state.data.promise
-          .then((response) => {
-            if (!response.ok) throw Error("Invalid response")
-            return response.json()
-          })
-          .then((url: SerializeFrom<typeof loader>) => {
-            if (!url) throw Error("Missing url")
-            dispatch({ type: "put", data: { url } })
-          })
-          .catch((error) => {
-            console.error(error)
-            emit.error()
-            dispatch({ type: "end", data: null })
-          })
-        break
-      case "putting":
-        state.data.promise
-          .then((response) => {
-            if (!response.ok) emit.error()
-            setValue("TODO_FILE_URL_FROM_BUCKET_GOES_HERE")
-            console.log("do something here to get the r2 READ file link")
-            console.log(
-              "with the r2 READ file link, we should get a plaiceholder base64 url here, maybe GETing /api/file/{fileURL}",
-            )
-            if (submitOnChange) submit()
-          })
-          .catch((error) => {
-            console.error(error)
-            emit.error()
-          })
-          .finally(() =>
-            dispatch({
-              type: "end",
-              data: null,
-            }),
-          )
-        break
-      default:
-        unreachable(state)
+    if (!asset?.file) return
+
+    const abortController = new AbortController()
+
+    if (!urls) {
+      fetch(
+        $path("/api/file", {
+          bucket,
+          folder,
+          filename: asset.file.name,
+        }),
+        {
+          signal: abortController.signal,
+          method: "GET",
+        },
+      )
+        .then((response) => {
+          if (!response.ok) throw Error("Invalid response")
+          return response.json()
+        })
+        .then((json: SerializeFrom<typeof loader>) => {
+          if (!json) throw Error("Invalid JSON")
+          setUrls(json)
+        })
+        .catch((error) => {
+          console.error(error)
+          emit.error()
+        })
+
+      return () => abortController.abort()
     }
-  }, [setValue, state, submit, submitOnChange])
+
+    fetch(urls.signedUrl, {
+      body: asset.file,
+      signal: abortController.signal,
+      method: "PUT",
+      headers: {
+        "Content-Type": asset.file.type,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) throw Error("Invalid response")
+        if (submitOnChange) submitForm()
+        setValue(urls.fileUrl)
+      })
+      .catch((error) => {
+        console.error(error)
+        emit.error()
+      })
+
+    return () => abortController.abort()
+  }, [asset, bucket, folder, setValue, submitForm, submitOnChange, urls])
+
+  const optimisticValue = asset?.base64 || value
+  const optimisticFormat = formatFile(asset?.file.name || value)
 
   return (
     <div
@@ -261,13 +172,10 @@ function FormFile(
             <Image
               className="group-hover:invisible group-focus:invisible"
               src={optimisticValue}
-              alt="TODO"
+              alt={optimisticFormat.filename}
               fit="cover"
             />
-            <div
-              title={optimisticFormat.filename}
-              className="absolute inset-0 text-gunpla-white-50 group-hover:flex group-focus:flex hidden flex-col bg-gunpla-white-300"
-            >
+            <div className="absolute inset-0 text-gunpla-white-50 group-hover:flex group-focus:flex hidden flex-col bg-gunpla-white-300">
               <button
                 className="p-2 w-10 h-10 flex-none self-end"
                 onClick={remove}
@@ -278,7 +186,9 @@ function FormFile(
                 <Icon name="info" className="w-8 h-8" alt="" />
               </div>
               <div className="flex-none h-10 flex items-center justify-center px-5">
-                <span className="truncate">{optimisticFormat.filename}</span>
+                <span className="truncate" title={optimisticFormat.filename}>
+                  {optimisticFormat.filename}
+                </span>
               </div>
             </div>
           </>
@@ -288,7 +198,7 @@ function FormFile(
             <input
               type="file"
               className="w-full h-full absolute inset-0 file:hidden text-transparent cursor-pointer"
-              accept={fileTypes.join(", ")}
+              accept={allFileTypes.join(", ")}
               onChange={onChange}
             />
           </div>

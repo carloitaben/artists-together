@@ -31,7 +31,8 @@ export default function AuthUserProfile() {
             Avatar
           </Form.Label>
           <Form.File
-            bucket="avatar"
+            bucket="public"
+            folder="avatar"
             className="w-32 h-32 flex-none"
             submitOnChange
           />

@@ -4,12 +4,13 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { z } from "zod"
 import { auth } from "~/server/auth.server"
-import { getSearchParams } from "~/lib/params"
 import { env } from "~/server/env.server"
+import { getSearchParams } from "~/lib/params"
 
 const searchParams = z.object({
-  bucket: z.union([z.literal("avatar"), z.literal("support")]),
-  extension: z.string(),
+  bucket: z.union([z.literal("private"), z.literal("public")]),
+  folder: z.string(),
+  filename: z.string(),
 })
 
 export type SearchParams = z.infer<typeof searchParams>
@@ -42,24 +43,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     })
 
-    const filename = `${authRequest.user.userId}-${crypto.randomUUID()}.${
-      params.data.extension
-    }`
+    const filename = `${params.data.folder}/${
+      authRequest.user.userId
+    }/${Date.now()}.${params.data.filename.split(".").pop()}`
 
-    const bucket = [import.meta.env.DEV ? "dev" : "", params.data.bucket]
-      .filter(Boolean)
-      .join("-")
+    const fileUrl = `https://https://pub-a02278b3d408411aba6645978096249a.r2.dev/${filename}`
 
-    const url = await getSignedUrl(
+    const signedUrl = await getSignedUrl(
       S3,
       new PutObjectCommand({
-        Bucket: bucket,
+        Bucket: `artists-together-${params.data.bucket}`,
         Key: filename,
       }),
       { expiresIn: 3_600 },
     )
 
-    return json(url)
+    return json({ fileUrl, signedUrl })
   } catch (error) {
     console.error(error)
     return json(null, {
