@@ -6,6 +6,7 @@ import { z } from "zod"
 import { zfd } from "zod-form-data"
 import type { GlobalDatabaseUserAttributes } from "lucia"
 import { auth } from "~/server/auth.server"
+import { makeRemoteAsset } from "~/server/files.server"
 
 export const validatorSchema = z.object({
   bio: zfd.text(z.string().max(128).nullable().default(null)),
@@ -44,6 +45,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
         if (form.error) {
           return validationError(form.error)
+        }
+
+        if (form.data.avatar) {
+          const asset = await makeRemoteAsset(form.data.avatar)
+          // TODO: persist this in db as JSON with Asset type
         }
 
         attributes = form.data
