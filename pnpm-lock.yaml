@@ -128,9 +128,6 @@ importers:
       '@remix-validated-form/with-zod':
         specifier: ^2.0.7
         version: 2.0.7(remix-validated-form@5.1.5)(zod@3.22.4)
-      '@types/three':
-        specifier: ^0.158.1
-        version: 0.158.1
       color2k:
         specifier: ^2.0.2
         version: 2.0.2
@@ -210,6 +207,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.7
         version: 18.2.14
+      '@types/three':
+        specifier: ^0.158.1
+        version: 0.158.1
       autoprefixer:
         specifier: ^10.4.16
         version: 10.4.16(postcss@8.4.31)
@@ -4222,7 +4222,6 @@ packages:
 
   /@types/stats.js@0.17.2:
     resolution: {integrity: sha512-j1oI+BOPiAAAKFysNNutE9aAIjvHqqILubCs2EeHKc19pi4uybaGAgBfLXsCgJYcyKWkiilEvl8CkFF/SL+baA==}
-    dev: false
 
   /@types/three@0.158.1:
     resolution: {integrity: sha512-U7SimpoMrlpY2TjYedb9sQeOVHdRWJEiaNQxywJETMGMoEhWEfpP0sywRADR/xOQbaixZ6lk5Hv+3IOFriprkw==}
@@ -4231,7 +4230,6 @@ packages:
       '@types/webxr': 0.5.7
       fflate: 0.6.10
       meshoptimizer: 0.18.1
-    dev: false
 
   /@types/unist@2.0.9:
     resolution: {integrity: sha512-zC0iXxAv1C1ERURduJueYzkzZ2zaGyc+P2c95hgkikHPr3z8EdUZOlgEQ5X0DRmwDZn+hekycQnoeiiRVrmilQ==}
@@ -4239,7 +4237,6 @@ packages:
 
   /@types/webxr@0.5.7:
     resolution: {integrity: sha512-Rcgs5c2eNFnHp53YOjgtKfl/zWX1Y+uFGUwlSXrWcZWu3yhANRezmph4MninmqybUYT6g9ZE0aQ9QIdPkLR3Kg==}
-    dev: false
 
   /@types/ws@8.5.8:
     resolution: {integrity: sha512-flUksGIQCnJd6sZ1l5dqCEG/ksaoAg/eUwiLAGTJQcfgvZJKF++Ta4bJA6A5aPSJmsr+xlseHn4KLgVlNnvPTg==}
@@ -7058,7 +7055,6 @@ packages:
 
   /fflate@0.6.10:
     resolution: {integrity: sha512-IQrh3lEPM93wVCEczc9SaAOvkmcoQn/G8Bo1e8ZPlY3X3bnAxWaBdvTdvM1hP62iZp0BXWDy4vTAy4fF0+Dlpg==}
-    dev: false
 
   /file-entry-cache@6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
@@ -8594,7 +8590,6 @@ packages:
 
   /meshoptimizer@0.18.1:
     resolution: {integrity: sha512-ZhoIoL7TNV4s5B6+rx5mC//fw8/POGyNxS/DZyCJeiZ12ScLfVwRE/GfsxwiTkMYYD5DmK2/JXnEVXqL4rF+Sw==}
-    dev: false
 
   /methods@1.1.2:
     resolution: {integrity: sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==}
