@@ -21,8 +21,15 @@ export const botDiscord = z.object({
 })
 
 export const db = z.object({
-  DATABASE_URL: z.string().url().default("http://127.0.0.1:8080"),
   DATABASE_AUTH_TOKEN: z.string().default(""),
+  DATABASE_URL: z
+    .string()
+    .url()
+    .default(() =>
+      process.env.NODE_ENV === "development"
+        ? "file:../../.local.db"
+        : String(process.env.DATABASE_URL)
+    ),
 })
 
 export const web = z.object({
