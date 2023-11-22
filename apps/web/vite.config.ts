@@ -9,11 +9,7 @@ import path from "path"
 import tsconfigPaths from "vite-tsconfig-paths"
 import tailwindcss from "tailwindcss"
 import autoprefixer from "autoprefixer"
-import { env } from "./app/server/env.server"
 import type { Asset } from "./app/server/files.server"
-
-// TODO: testing a thing ignore this atm
-void env
 
 const asset: OutputFormat = (args) => async (metadata) => {
   const picture = builtinOutputFormats.picture(args)(metadata) as Picture
