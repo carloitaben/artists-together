@@ -6,8 +6,7 @@
   "main": "src/index.ts",
   "scripts": {
     "push": "drizzle-kit push:sqlite",
-    "studio": "drizzle-kit studio",
-    "dev": "mkdir -p .db && turso dev -f .db/db.sqlite"
+    "studio": "drizzle-kit studio"
   },
   "peerDependencies": {
     "zod": ">=3"
