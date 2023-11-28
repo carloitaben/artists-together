@@ -32,7 +32,7 @@ function Marquee(
   { children, className, ...props }: Props,
   forwardedRef: ForwardedRef<HTMLDivElement>,
 ) {
-  const [shadows, setShadows] = useState("currentColor")
+  const [shadows, setShadows] = useState<string>()
   const ref = useRef<HTMLSpanElement>(null)
 
   const recalculate = useCallback(() => {
@@ -69,7 +69,11 @@ function Marquee(
       <span
         aria-hidden
         ref={ref}
-        className="pointer-events-none inline-block select-none [animation-iteration-count:infinite] [animation-name:marquee] [animation-timing-function:linear]"
+        className={cx(
+          "pointer-events-none inline-block select-none",
+          shadows &&
+            "[animation-iteration-count:infinite] [animation-name:marquee] [animation-timing-function:linear]",
+        )}
         style={style}
       >
         {children}&nbsp;
