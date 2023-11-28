@@ -55,7 +55,7 @@ function FormFile(
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const { name } = useFieldContextOrThrow()
-  const { submit: submitForm } = useFormContext()
+  const { submit } = useFormContext()
   const [value, setValue] = useControlField<string | null>(name)
   const [urls, setUrls] = useState<SerializeFrom<typeof loader>>(null)
   const [asset, setAsset] = useState<{ file: File; base64: string } | null>(
@@ -146,7 +146,7 @@ function FormFile(
     })
       .then((response) => {
         if (!response.ok) throw Error("Invalid response")
-        if (submitOnChange) submitForm()
+        if (submitOnChange) submit()
         setValue(urls.fileUrl)
       })
       .catch((error) => {
@@ -155,7 +155,7 @@ function FormFile(
       })
 
     return () => abortController.abort()
-  }, [asset, bucket, folder, setValue, submitForm, submitOnChange, urls])
+  }, [asset, bucket, folder, setValue, submit, submitOnChange, urls])
 
   const optimisticValue = asset?.base64 || value
   const optimisticFormat = formatFile(asset?.file.name || value)

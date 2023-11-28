@@ -3,7 +3,7 @@
 import { Object3D, Matrix4, Vector3, Color } from "three"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
-import { useScroll, useSpring, useVelocity } from "framer-motion"
+import { useScroll } from "framer-motion"
 
 const COUNT = 500
 const XY_BOUNDS = 40

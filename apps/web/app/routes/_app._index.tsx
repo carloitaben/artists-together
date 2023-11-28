@@ -1,5 +1,5 @@
 import type { MetaFunction } from "@remix-run/react"
-import type { loader as locationLoader } from "~/routes/api.location"
+import type { loader } from "~/routes/api.location"
 import { useQuery } from "~/hooks/query"
 import * as AspectRatio from "@radix-ui/react-aspect-ratio"
 import Container from "~/components/Container"
@@ -25,7 +25,7 @@ export const handle = {
 }
 
 export default function Page() {
-  const { data = null } = useQuery<typeof locationLoader>({
+  const { data = null } = useQuery<typeof loader>({
     route: "/api/location",
   })
 
