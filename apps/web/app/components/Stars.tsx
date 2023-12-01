@@ -3,7 +3,7 @@
 import { Object3D, Matrix4, Vector3, Color } from "three"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
-import { useScroll } from "framer-motion"
+import { useScroll, motion } from "framer-motion"
 
 const COUNT = 500
 const XY_BOUNDS = 40
@@ -96,10 +96,15 @@ function Scene() {
 
 export default function Stars() {
   return (
-    <div className="fixed inset-y-0 right-0 -left-16 -z-10 pointer-events-none">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.75, delay: 0.3 }}
+      className="fixed inset-y-0 right-0 -left-16 -z-10 pointer-events-none"
+    >
       <Canvas className="absolute inset-0 w-full h-full">
         <Scene />
       </Canvas>
-    </div>
+    </motion.div>
   )
 }
