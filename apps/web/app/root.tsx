@@ -77,7 +77,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="min-h-full h-full text-sm sm:pl-16">
+      <body className="min-h-full h-full text-sm sm:pl-16 min-w-fit w-full">
         <Outlet />
         <Icons />
         <ScrollRestoration />
