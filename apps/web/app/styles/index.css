@@ -7,10 +7,6 @@
     @apply cursor-none;
   }
 
-  html {
-    -webkit-tap-highlight-color: transparent;
-  }
-
   :root {
     --fluid-viewport: 360;
   }

@@ -67,7 +67,7 @@ export default function App() {
   return (
     <html
       lang="en"
-      className="h-full bg-theme-900 text-gunpla-white-50 selection:bg-theme-300 selection:text-theme-900"
+      className="h-full bg-theme-900 text-gunpla-white-50 selection:bg-theme-300 selection:text-theme-900 [-webkit-tap-highlight-color:transparent]"
       style={style}
     >
       <head>
