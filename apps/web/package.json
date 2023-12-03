@@ -44,6 +44,7 @@
     "discord-api-types": "^0.37.62",
     "framer-motion": "^10.16.5",
     "isbot": "^3.7.0",
+    "lottie-web": "^5.12.2",
     "lucia": "^2.7.2",
     "nanostores": "^0.9.5",
     "plaiceholder": "^3.0.0",
