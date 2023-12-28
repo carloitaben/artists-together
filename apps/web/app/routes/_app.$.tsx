@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react"
-import { makeRemoteAsset } from "~/server/files.server"
+import { makeAssetFromRemoteUrl } from "~/server/files.server"
 import Image from "~/components/Image"
 import Avatar from "~/components/Avatar"
 import Container from "~/components/Container"
@@ -22,7 +22,7 @@ export async function loader() {
   const src =
     "https://images.unsplash.com/photo-1600804340584-c7db2eacf0bf?q=80&w=1287&auto=format"
 
-  const asset = await makeRemoteAsset(src)
+  const asset = await makeAssetFromRemoteUrl(src)
 
   return json({
     asset,

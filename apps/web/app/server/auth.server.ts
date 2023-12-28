@@ -24,12 +24,12 @@ export const auth = lucia({
     return {
       email: user.email,
       theme: userTheme.success ? userTheme.data : defaultTheme,
+      avatar: user.avatar,
       username: user.username,
       bio: user.bio,
       links: user.links,
       discord_id: user.discord_id,
       discord_username: user.discord_username,
-      avatar: user.avatar,
       twitch_id: user.twitch_id,
       twitch_username: user.twitch_username,
       settings: {

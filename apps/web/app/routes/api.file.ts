@@ -1,11 +1,11 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { z } from "zod"
 import { auth } from "~/server/auth.server"
-import { env } from "~/server/env.server"
 import { getSearchParams } from "~/lib/params"
+import { withZod } from "@remix-validated-form/with-zod"
+import { validationError } from "remix-validated-form"
+import { getSignedUrl, remove } from "~/server/files.server"
 
 const searchParams = z.object({
   bucket: z.union([z.literal("private"), z.literal("public")]),
@@ -34,31 +34,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   try {
-    const S3 = new S3Client({
-      region: "auto",
-      endpoint: `https://${env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-      credentials: {
-        accessKeyId: String(env.CLOUDFLARE_R2_ACCESS_KEY_ID),
-        secretAccessKey: String(env.CLOUDFLARE_R2_SECRET_ACCESS_KEY),
-      },
+    const payload = await getSignedUrl({
+      userId: authRequest.user.userId,
+      bucket: params.data.bucket,
+      folder: params.data.folder,
+      filename: params.data.filename,
     })
 
-    const filename = `${params.data.folder}/${
-      authRequest.user.userId
-    }/${Date.now()}.${params.data.filename.split(".").pop()}`
-
-    const fileUrl = `https://https://pub-a02278b3d408411aba6645978096249a.r2.dev/${filename}`
-
-    const signedUrl = await getSignedUrl(
-      S3,
-      new PutObjectCommand({
-        Bucket: `artists-together-${params.data.bucket}`,
-        Key: filename,
-      }),
-      { expiresIn: 3_600 },
-    )
-
-    return json({ fileUrl, signedUrl })
+    return json(payload)
   } catch (error) {
     console.error(error)
     return json(null, {
@@ -67,7 +50,42 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 }
 
+const deleteActionValidator = withZod(
+  z.object({
+    url: z.string().url(),
+  }),
+)
+
 export async function action({ request }: ActionFunctionArgs) {
-  console.log("action file", request.method)
-  return null
+  if (request.method !== "DELETE") {
+    return json(null, {
+      status: 405,
+    })
+  }
+
+  const authRequest = await auth.handleRequest(request).validate()
+
+  if (!authRequest) {
+    return json(null, {
+      status: 401,
+    })
+  }
+
+  const form = await deleteActionValidator.validate(await request.formData())
+
+  if (form.error) {
+    return validationError(form.error)
+  }
+
+  try {
+    await remove(form.data.url)
+    return json(null, {
+      status: 200,
+    })
+  } catch (error) {
+    console.error(error)
+    return json(null, {
+      status: 500,
+    })
+  }
 }

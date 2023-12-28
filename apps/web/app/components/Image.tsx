@@ -3,7 +3,7 @@ import type { VariantProps } from "cva"
 import { cva } from "cva"
 import type { ComponentProps, ForwardedRef } from "react"
 import { forwardRef } from "react"
-import type { Asset } from "~/server/files.server"
+import type { Asset } from "db"
 
 const image = cva({
   base: "[text-indent:-100000px] select-none",
@@ -58,7 +58,7 @@ function Image(
   const styles = asset
     ? {
         ...style,
-        backgroundImage: `url(${asset.placeholder.base64})`,
+        backgroundImage: `url(${asset.base64})`,
         backgroundSize: "cover",
       }
     : style
@@ -67,15 +67,15 @@ function Image(
     <img
       {...props}
       ref={ref}
-      src={typeof src === "string" ? src : src.src}
+      src={typeof src === "string" ? src : src.url}
       alt={alt}
       style={styles}
       loading={loading}
       decoding={decoding}
       draggable={draggable}
       className={image({ className, fit })}
-      width={width || asset ? asset?.placeholder.metadata.width : undefined}
-      height={height || asset ? asset?.placeholder.metadata.height : undefined}
+      width={width || asset?.width}
+      height={height || asset?.height}
     />
   )
 }

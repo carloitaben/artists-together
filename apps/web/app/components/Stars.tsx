@@ -2,7 +2,7 @@
 
 import { Object3D, Matrix4, Vector3, Color } from "three"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useScroll, motion } from "framer-motion"
 
 const COUNT = 500
@@ -50,7 +50,8 @@ function Scene() {
       tempPos.setFromMatrixPosition(temp)
 
       if (tempPos.z > Z_BOUNDS / 2) {
-        tempPos.z = -Z_BOUNDS / 2
+        const max = -Z_BOUNDS / 2
+        tempPos.z = Math.random() * max
       } else {
         tempPos.z += Math.max(delta, velocity * MAX_SPEED_FACTOR)
       }
@@ -95,14 +96,19 @@ function Scene() {
 }
 
 export default function Stars() {
+  const [loaded, setLoaded] = useState(false)
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={false}
+      animate={{ opacity: loaded ? 1 : 0 }}
       transition={{ duration: 1.75, delay: 0.3 }}
       className="fixed inset-y-0 right-0 -left-16 -z-10 pointer-events-none"
     >
-      <Canvas className="absolute inset-0 w-full h-full">
+      <Canvas
+        className="absolute inset-0 w-full h-full"
+        onCreated={() => setLoaded(true)}
+      >
         <Scene />
       </Canvas>
     </motion.div>

@@ -13,3 +13,18 @@ export function between(min: number, max: number) {
 export async function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
+export const months = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december",
+] as const

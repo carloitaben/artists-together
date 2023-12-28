@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node"
-import { makeRemoteAsset } from "~/server/files.server"
+import { makeAssetFromRemoteUrl } from "~/server/files.server"
 
 export async function loader() {
   const src =
@@ -8,7 +8,7 @@ export async function loader() {
   const alt = "Lorem ipsum"
 
   try {
-    const asset = await makeRemoteAsset(src)
+    const asset = await makeAssetFromRemoteUrl(src)
     return json({ asset, alt })
   } catch (error) {
     console.error(error)

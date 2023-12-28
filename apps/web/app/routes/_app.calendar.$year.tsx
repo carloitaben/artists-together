@@ -1,12 +1,13 @@
 import * as AspectRatio from "@radix-ui/react-aspect-ratio"
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { calendarTabCookie } from "~/server/cookies.server"
 import { useLoaderData } from "@remix-run/react"
 import Container from "~/components/Container"
 import CalendarMonth from "~/components/CalendarMonth"
-import { $params, $path } from "remix-routes"
+import { $path } from "remix-routes"
 import type { Dayjs } from "dayjs"
+import { z } from "zod"
 import dayjs from "dayjs"
 import CalendarHeader from "~/components/CalendarHeader"
 import { unreachable } from "~/lib/utils"
@@ -31,10 +32,18 @@ export const handle = {
   },
 }
 
-export async function loader({ params }: LoaderFunctionArgs) {
-  const { year } = $params("/calendar/:year", params)
+const paramsSchema = z.object({
+  year: z.coerce.number().min(1970),
+})
 
-  const date = dayjs().set("year", parseInt(year))
+export async function loader({ params }: LoaderFunctionArgs) {
+  const result = paramsSchema.safeParse(params)
+
+  if (!result.success) {
+    throw redirect("/404")
+  }
+
+  const date = dayjs().set("year", result.data.year)
 
   return json(
     {
@@ -80,7 +89,7 @@ export default function Page() {
         next={to("next")}
         days={$path("/calendar/:year/:month", {
           year: date.year(),
-          month: date.month() + 1,
+          month: date.format("MMMM").toLowerCase(),
         })}
         months={$path("/calendar/:year", {
           year: dayjs().year(),

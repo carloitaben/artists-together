@@ -7,28 +7,33 @@ import {
   integer,
 } from "drizzle-orm/sqlite-core"
 import { timestamp } from "../utils"
+import type { Asset } from "../utils"
 
 export const users = sqliteTable(
   "users",
   {
     id: text("id").primaryKey(),
-    username: text("username").notNull().unique(),
+    username: text("username").notNull(),
     email: text("email").notNull().unique(),
     theme: text("theme").notNull(),
-    avatar: text("avatar"),
+    avatar: text("avatar", {
+      mode: "json",
+    }).$type<Asset>(),
     bio: text("bio"),
-    links: blob("links", { mode: "json" })
+    links: text("links", {
+      mode: "json",
+    })
       .notNull()
       .default(JSON.stringify([]))
       .$type<string[]>(),
     discord_id: text("discord_id").unique(),
     discord_username: text("discord_username").unique(),
-    discord_metadata: blob("discord_metadata", {
+    discord_metadata: text("discord_metadata", {
       mode: "json",
     }).$type<DiscordUser>(),
     twitch_id: text("twitch_id").unique(),
     twitch_username: text("twitch_username").unique(),
-    twitch_metadata: blob("twitch_metadata", {
+    twitch_metadata: text("twitch_metadata", {
       mode: "json",
     }).$type<TwitchUser>(),
     settings_use_24_hour_format: integer("settings_use_24_hour_format", {
@@ -60,7 +65,6 @@ export const users = sqliteTable(
     timestamp: timestamp("timestamp"),
   },
   (table) => ({
-    usernameIdx: index("username_idx").on(table.username),
     emailIdx: index("email_idx").on(table.email),
   })
 )

@@ -5,6 +5,7 @@ import { $path } from "remix-routes"
 import { cx } from "cva"
 import type { ComponentProps, ForwardedRef } from "react"
 import { forwardRef, useCallback, useEffect, useState } from "react"
+import { flushSync } from "react-dom"
 import type { SearchParams, loader } from "~/routes/api.file"
 import Icon from "~/components/Icon"
 import Image from "~/components/Image"
@@ -36,7 +37,7 @@ type Props = ComponentProps<"div"> & {
   type?: keyof typeof fileType
 }
 
-function formatFile(uri: string | null) {
+function formatFile(uri?: string) {
   const filename = (uri || "").split("/").slice(-1)[0]
   const extension = filename.split(".").slice(-1)[0]
   return { filename, extension }
@@ -56,17 +57,31 @@ function FormFile(
 ) {
   const { name } = useFieldContextOrThrow()
   const { submit } = useFormContext()
-  const [value, setValue] = useControlField<string | null>(name)
-  const [urls, setUrls] = useState<SerializeFrom<typeof loader>>(null)
-  const [asset, setAsset] = useState<{ file: File; base64: string } | null>(
-    null,
-  )
+  const [value = "", setValue] = useControlField<string>(name)
+  const [file, setFile] = useState<File>()
+  const [urls, setUrls] = useState<SerializeFrom<typeof loader>>()
+  const [loading, setLoading] = useState(false)
 
   const remove = useCallback(() => {
-    setAsset(null)
-    setValue(null)
-    alert("TODO: delete from bucket")
-  }, [setValue])
+    setFile(undefined)
+    setUrls(undefined)
+    setValue("")
+    if (submitOnChange) submit()
+
+    if (!value) return
+
+    const formData = new FormData()
+    formData.append("bucket", bucket)
+    formData.append("url", value)
+
+    fetch($path("/api/file"), {
+      body: formData,
+      method: "DELETE",
+    }).catch((error) => {
+      console.error(error)
+      emit.error()
+    })
+  }, [bucket, setValue, submit, submitOnChange, value])
 
   const onChange = useCallback<
     NonNullable<ComponentProps<"input">["onChange"]>
@@ -89,22 +104,17 @@ function FormFile(
         return emit.error(`Oops! File must be less than ${amount}${format}`)
       }
 
-      const reader = new FileReader()
-
-      reader.onload = (event) => {
-        setAsset({
-          file,
-          base64: event.target!.result as string,
-        })
-      }
-
-      reader.readAsDataURL(file as Blob)
+      setFile(file)
     },
     [maxFileSize, type],
   )
 
   useEffect(() => {
-    if (!asset?.file) return
+    if (!file) {
+      return setLoading(false)
+    }
+
+    setLoading(true)
 
     const abortController = new AbortController()
 
@@ -113,11 +123,11 @@ function FormFile(
         $path("/api/file", {
           bucket,
           folder,
-          filename: asset.file.name,
+          filename: file.name,
         }),
         {
-          signal: abortController.signal,
           method: "GET",
+          signal: abortController.signal,
         },
       )
         .then((response) => {
@@ -131,80 +141,87 @@ function FormFile(
         .catch((error) => {
           console.error(error)
           emit.error()
+          setFile(undefined)
         })
 
       return () => abortController.abort()
     }
 
     fetch(urls.signedUrl, {
-      body: asset.file,
-      signal: abortController.signal,
+      body: file,
       method: "PUT",
+      signal: abortController.signal,
       headers: {
-        "Content-Type": asset.file.type,
+        "Content-Type": file.type,
       },
     })
       .then((response) => {
         if (!response.ok) throw Error("Invalid response")
+        flushSync(() => setValue(urls.fileUrl))
         if (submitOnChange) submit()
-        setValue(urls.fileUrl)
       })
       .catch((error) => {
         console.error(error)
         emit.error()
       })
+      .finally(() => {
+        setFile(undefined)
+        setUrls(undefined)
+      })
 
     return () => abortController.abort()
-  }, [asset, bucket, folder, setValue, submit, submitOnChange, urls])
+  }, [bucket, file, folder, setValue, submit, submitOnChange, urls])
 
-  const optimisticValue = asset?.base64 || value
-  const optimisticFormat = formatFile(asset?.file.name || value)
+  const format = formatFile(value)
 
   return (
-    <div
-      {...props}
-      ref={ref}
-      className={cx(className, "overflow-hidden rounded-2xl group")}
-    >
-      <AspectRatio.Root ratio={1}>
-        {optimisticValue ? (
-          <>
-            <Image
-              className="group-hover:invisible group-focus:invisible"
-              src={optimisticValue}
-              alt={optimisticFormat.filename}
-              fit="cover"
-            />
-            <div className="absolute inset-0 text-gunpla-white-50 group-hover:flex group-focus:flex hidden flex-col bg-gunpla-white-300">
-              <button
-                className="p-2 w-10 h-10 flex-none self-end"
-                onClick={remove}
-              >
-                <Icon name="close" className="w-6 h-6" alt="Add file" />
-              </button>
-              <div className="flex-1 h-full flex items-center justify-center">
-                <Icon name="info" className="w-8 h-8" alt="" />
+    <>
+      <input type="hidden" name={name} value={value || undefined} />
+      <div
+        {...props}
+        ref={ref}
+        className={cx(className, "overflow-hidden rounded-2xl group")}
+      >
+        <AspectRatio.Root ratio={1}>
+          {value ? (
+            <>
+              <Image
+                className="group-hover:invisible group-focus:invisible"
+                src={value}
+                alt={format.filename}
+                fit="cover"
+              />
+              <div className="absolute inset-0 text-gunpla-white-50 group-hover:flex group-focus:flex hidden flex-col bg-gunpla-white-300">
+                <button
+                  className="p-2 w-10 h-10 flex-none self-end"
+                  onClick={remove}
+                >
+                  <Icon name="close" className="w-6 h-6" alt="Add file" />
+                </button>
+                <div className="flex-1 h-full flex items-center justify-center">
+                  <Icon name="info" className="w-8 h-8" alt="" />
+                </div>
+                <div className="flex-none h-10 flex items-center justify-center px-5">
+                  <span className="truncate" title={format.filename}>
+                    {format.filename}
+                  </span>
+                </div>
               </div>
-              <div className="flex-none h-10 flex items-center justify-center px-5">
-                <span className="truncate" title={optimisticFormat.filename}>
-                  {optimisticFormat.filename}
-                </span>
-              </div>
+            </>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-not-so-white relative">
+              <Icon name="close" className="w-8 h-8 rotate-45" alt="Add file" />
+              <input
+                type="file"
+                className="w-full h-full absolute inset-0 file:hidden text-transparent cursor-pointer"
+                accept={allFileTypes.join(", ")}
+                onChange={onChange}
+              />
             </div>
-          </>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-not-so-white relative">
-            <Icon name="close" className="w-8 h-8 rotate-45" alt="Add file" />
-            <input
-              type="file"
-              className="w-full h-full absolute inset-0 file:hidden text-transparent cursor-pointer"
-              accept={allFileTypes.join(", ")}
-              onChange={onChange}
-            />
-          </div>
-        )}
-      </AspectRatio.Root>
-    </div>
+          )}
+        </AspectRatio.Root>
+      </div>
+    </>
   )
 }
 

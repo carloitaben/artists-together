@@ -3,6 +3,7 @@ import { validatorSchema } from "~/routes/api.user"
 import { useUserOrThrow } from "~/hooks/loaders"
 import * as Modal from "~/components/Modal"
 import * as Form from "~/components/Form"
+import Image from "~/components/Image"
 import AuthUserProfileConnections from "./AuthUserProfileConnections"
 
 const validator = withZod(validatorSchema.pick({ avatar: true, bio: true }))
@@ -21,7 +22,7 @@ export default function AuthUserProfile() {
         action="/api/user"
         subaction="profile"
         defaultValues={{
-          avatar: user.avatar,
+          avatar: user.avatar?.url,
           bio: user.bio,
         }}
       >

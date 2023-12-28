@@ -6,7 +6,7 @@ import { z } from "zod"
 import { zfd } from "zod-form-data"
 import type { GlobalDatabaseUserAttributes } from "lucia"
 import { auth } from "~/server/auth.server"
-import { makeRemoteAsset } from "~/server/files.server"
+import { makeAssetFromRemoteUrl } from "~/server/files.server"
 
 export const validatorSchema = z.object({
   bio: zfd.text(z.string().max(128).nullable().default(null)),
@@ -47,12 +47,14 @@ export async function action({ request }: ActionFunctionArgs) {
           return validationError(form.error)
         }
 
-        if (form.data.avatar) {
-          const asset = await makeRemoteAsset(form.data.avatar)
-          // TODO: persist this in db as JSON with Asset type
-        }
+        const asset = form.data.avatar
+          ? await makeAssetFromRemoteUrl(form.data.avatar)
+          : null
 
-        attributes = form.data
+        attributes = {
+          avatar: asset,
+          bio: form.data.bio,
+        }
       }
       break
     case "settings":
@@ -76,7 +78,7 @@ export async function action({ request }: ActionFunctionArgs) {
       break
     default:
       return json(null, {
-        status: 400,
+        status: 403,
         statusText: "Missing Subaction",
       })
   }

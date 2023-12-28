@@ -2,7 +2,7 @@ import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { useRef } from "react"
 import {
@@ -14,9 +14,10 @@ import {
 } from "framer-motion"
 import { calendarTabCookie } from "~/server/cookies.server"
 import Container from "~/components/Container"
-import { $params, $path } from "remix-routes"
+import { $path } from "remix-routes"
 import CalendarHeader from "~/components/CalendarHeader"
-import { unreachable } from "~/lib/utils"
+import { months, unreachable } from "~/lib/utils"
+import { z } from "zod"
 
 dayjs.extend(advancedFormat)
 
@@ -40,12 +41,21 @@ export const handle = {
   },
 }
 
+const paramsSchema = z.object({
+  year: z.coerce.number().min(1970),
+  month: z.enum(months).transform((value) => months.indexOf(value)),
+})
+
 export async function loader({ params }: LoaderFunctionArgs) {
-  const { year, month } = $params("/calendar/:year/:month", params)
+  const result = paramsSchema.safeParse(params)
+
+  if (!result.success) {
+    throw redirect("/404")
+  }
 
   const date = dayjs()
-    .set("year", parseInt(year))
-    .set("month", parseInt(month) - 1)
+    .set("year", result.data.year)
+    .set("month", result.data.month)
 
   return json(
     {
@@ -136,7 +146,7 @@ export default function Page() {
 
     return $path("/calendar/:year/:month", {
       year: targetDate.year(),
-      month: targetDate.month() + 1,
+      month: targetDate.format("MMMM").toLowerCase(),
     })
   }
 
@@ -149,7 +159,7 @@ export default function Page() {
         next={to("next")}
         days={$path("/calendar/:year/:month", {
           year: dayjs().year(),
-          month: dayjs().month() + 1,
+          month: dayjs().format("MMMM").toLowerCase(),
         })}
         months={$path("/calendar/:year", {
           year: date.year(),

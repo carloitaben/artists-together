@@ -9,14 +9,20 @@ import path from "path"
 import tsconfigPaths from "vite-tsconfig-paths"
 import tailwindcss from "tailwindcss"
 import autoprefixer from "autoprefixer"
-import type { Asset } from "./app/server/files.server"
+import type { Asset } from "db"
 
 const asset: OutputFormat = (args) => async (metadata) => {
   const picture = builtinOutputFormats.picture(args)(metadata) as Picture
-  const placeholder = await getPlaiceholder(await metadata[0].image.toBuffer())
+  const buffer = await metadata[0].image.toBuffer()
+
+  const placeholder = await getPlaiceholder(buffer)
+
   return {
-    placeholder,
-    src: picture.img.src, // TODO: make this a Picture
+    base64: placeholder.base64,
+    hex: placeholder.color.hex,
+    width: placeholder.metadata.width,
+    height: placeholder.metadata.height,
+    url: picture.img.src,
   } satisfies Asset
 }
 

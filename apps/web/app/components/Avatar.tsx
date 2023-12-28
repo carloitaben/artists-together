@@ -42,7 +42,7 @@ function Avatar(
     >
       {user.avatar ? (
         <AvatarPrimitive.Image
-          src={user.avatar}
+          src={user.avatar.url}
           alt={label}
           draggable={false}
           className="w-full h-full object-cover"

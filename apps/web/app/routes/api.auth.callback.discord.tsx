@@ -104,7 +104,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           .catch()
 
         if (!user) {
-          const avatar = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
+          // const avatarUrl = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
 
           const member: PartialDiscordMember = await fetch(
             `https://discord.com/api/v10/users/@me/guilds/${env.DISCORD_SERVER_ID}/member`,
@@ -121,7 +121,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
             attributes: {
               username: discordUser.username,
               email: discordUser.email!,
-              avatar: avatar,
+              avatar: null,
               discord_id: discordUser.id,
               discord_username: discordUser.username,
               discord_metadata: JSON.stringify(discordUser),

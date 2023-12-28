@@ -1,4 +1,4 @@
-import type { ZodTypeAny, TypeOf } from "zod"
+import { type ZodTypeAny, type TypeOf, z } from "zod"
 import { integer } from "drizzle-orm/sqlite-core"
 import { sql } from "drizzle-orm"
 
@@ -23,3 +23,13 @@ export function timestamp<const T extends string>(name: T) {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull()
 }
+
+export const asset = z.object({
+  url: z.string().url(),
+  base64: z.string(),
+  width: z.number(),
+  height: z.number(),
+  hex: z.string(),
+})
+
+export type Asset = z.infer<typeof asset>

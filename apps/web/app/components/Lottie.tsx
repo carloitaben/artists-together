@@ -14,7 +14,7 @@ import {
 
 type Props = ComponentProps<"div"> &
   Pick<AnimationConfigWithData, "autoplay" | "loop"> & {
-    src: string
+    src: `${string}.json`
   }
 
 function Lottie(
@@ -31,7 +31,7 @@ function Lottie(
     if (!animationData) {
       const controller = new AbortController()
 
-      fetch(src, {
+      fetch(`/lottie/${src}`, {
         signal: controller.signal,
       })
         .then((response) => response.json())
