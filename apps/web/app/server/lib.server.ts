@@ -1,4 +1,4 @@
-import { redirect } from "@remix-run/node"
+import { redirect } from "@vercel/remix"
 
 export function guardDisabledRoute() {
   if (import.meta.env.PROD) {

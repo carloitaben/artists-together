@@ -1,4 +1,4 @@
-import type { SerializeFrom } from "@remix-run/node"
+import type { SerializeFrom } from "@vercel/remix"
 import type { loader } from "~/routes/api.live-user"
 
 type Props = {

@@ -1,4 +1,4 @@
-import { json } from "@remix-run/node"
+import { json } from "@vercel/remix"
 import { makeAssetFromRemoteUrl } from "~/server/files.server"
 
 export async function loader() {

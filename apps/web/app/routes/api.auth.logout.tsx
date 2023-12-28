@@ -1,4 +1,4 @@
-import { redirect, type ActionFunctionArgs } from "@remix-run/node"
+import { redirect, type ActionFunctionArgs } from "@vercel/remix"
 import { withZod } from "@remix-validated-form/with-zod"
 import { validationError } from "remix-validated-form"
 import { z } from "zod"

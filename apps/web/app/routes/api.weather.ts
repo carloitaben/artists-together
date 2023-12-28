@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import type { LoaderFunctionArgs, SerializeFrom } from "@vercel/remix"
+import { json } from "@vercel/remix"
 import { z } from "zod"
 import { getSearchParams } from "~/lib/params"
 

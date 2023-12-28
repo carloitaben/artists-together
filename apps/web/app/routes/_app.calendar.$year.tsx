@@ -1,6 +1,6 @@
 import * as AspectRatio from "@radix-ui/react-aspect-ratio"
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
+import type { LoaderFunctionArgs, MetaFunction } from "@vercel/remix"
+import { json, redirect } from "@vercel/remix"
 import { calendarTabCookie } from "~/server/cookies.server"
 import { useLoaderData } from "@remix-run/react"
 import Container from "~/components/Container"

@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node"
+import type { MetaFunction } from "@vercel/remix"
 import Container from "~/components/Container"
 
 export const meta: MetaFunction = () => [

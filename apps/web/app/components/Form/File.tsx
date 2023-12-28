@@ -1,5 +1,5 @@
 import * as AspectRatio from "@radix-ui/react-aspect-ratio"
-import type { SerializeFrom } from "@remix-run/node"
+import type { SerializeFrom } from "@vercel/remix"
 import { useControlField, useFormContext } from "remix-validated-form"
 import { $path } from "remix-routes"
 import { cx } from "cva"

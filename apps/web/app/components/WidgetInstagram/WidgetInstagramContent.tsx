@@ -1,4 +1,4 @@
-import type { SerializeFrom } from "@remix-run/node"
+import type { SerializeFrom } from "@vercel/remix"
 import type { loader } from "~/routes/api.last-instagram-post"
 import Image from "~/components/Image"
 import Pill from "~/components/Pill"

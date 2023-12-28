@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@vercel/remix"
+import { json, redirect } from "@vercel/remix"
 import { OAuthRequestError } from "@lucia-auth/oauth"
 import { z } from "zod"
 import type { User } from "lucia"

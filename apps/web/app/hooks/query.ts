@@ -1,6 +1,6 @@
 // Adapted from https://github.com/GuptaSiddhant/remix-query/blob/main/src/useQuery.ts
 
-import type { SerializeFrom } from "@remix-run/node"
+import type { SerializeFrom } from "@vercel/remix"
 import {
   useFetcher,
   useLoaderData,

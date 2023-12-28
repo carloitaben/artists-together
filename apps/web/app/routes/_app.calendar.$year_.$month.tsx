@@ -1,8 +1,8 @@
 import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
+import type { LoaderFunctionArgs, MetaFunction } from "@vercel/remix"
+import { json, redirect } from "@vercel/remix"
 import { useLoaderData } from "@remix-run/react"
 import { useRef } from "react"
 import {

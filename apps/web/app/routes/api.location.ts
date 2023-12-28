@@ -1,5 +1,5 @@
-import type { SerializeFrom } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import type { SerializeFrom } from "@vercel/remix"
+import { json } from "@vercel/remix"
 import { oneOf } from "~/lib/utils"
 
 export const countries: Record<string, string> = {

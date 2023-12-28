@@ -1,4 +1,4 @@
-import { createCookie } from "@remix-run/node"
+import { createCookie } from "@vercel/remix"
 import type { TypedCookie } from "remix-utils/typed-cookie"
 import { createTypedCookie } from "remix-utils/typed-cookie"
 import type { ZodTypeAny } from "zod"
@@ -35,4 +35,3 @@ export const oauthCookie = createTypedCookie({
   cookie: createCookie("oauth"),
   schema: oauthCookieSchema,
 })
-

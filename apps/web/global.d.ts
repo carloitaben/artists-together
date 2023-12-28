@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
-/// <reference types="@remix-run/node" />
+/// <reference types="@vercel/remix" />
 /// <reference types="vite/client" />
 /// <reference types="lucia" />
 

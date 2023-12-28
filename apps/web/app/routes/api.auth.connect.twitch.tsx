@@ -1,5 +1,5 @@
-import { redirect } from "@remix-run/node"
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
+import { redirect } from "@vercel/remix"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@vercel/remix"
 import { withZod } from "@remix-validated-form/with-zod"
 import { $path } from "remix-routes"
 import { validationError } from "remix-validated-form"

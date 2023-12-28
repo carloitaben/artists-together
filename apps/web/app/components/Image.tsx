@@ -1,4 +1,4 @@
-import type { SerializeFrom } from "@remix-run/node"
+import type { SerializeFrom } from "@vercel/remix"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
 import type { ComponentProps, ForwardedRef } from "react"

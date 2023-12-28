@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@vercel/remix"
+import { redirect } from "@vercel/remix"
 import dayjs from "dayjs"
 import { $path } from "remix-routes"
 import { getCookie, calendarTabCookie } from "~/server/cookies.server"

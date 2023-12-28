@@ -1,4 +1,4 @@
-import type { SerializeFrom } from "@remix-run/node"
+import type { SerializeFrom } from "@vercel/remix"
 import { useCallback, useEffect, useState } from "react"
 import { $path } from "remix-routes"
 import { emit } from "~/components/Toasts"

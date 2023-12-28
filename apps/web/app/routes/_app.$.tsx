@@ -3,7 +3,7 @@ import { makeAssetFromRemoteUrl } from "~/server/files.server"
 import Image from "~/components/Image"
 import Avatar from "~/components/Avatar"
 import Container from "~/components/Container"
-import { json } from "@remix-run/node"
+import { json } from "@vercel/remix"
 
 export const handle = {
   actions: {},
