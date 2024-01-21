@@ -1,7 +1,7 @@
 import { registerEventHandler } from "~/lib/core"
 import { cron, oneOf, getPublicFile } from "~/lib/helpers"
 
-const avatars = ["0", "2", "3", "4", "5"]
+const avatars = ["0"]
 
 registerEventHandler("ready", (client) => {
   cron("0 0 * * *", async () => {
