@@ -14,10 +14,13 @@ type Merge<U> = UnionToIntersection<U> extends infer O
 export function load<T extends ZodTypeAny[]>(
   ...schemas: T
 ): Merge<TypeOf<T[number]>> {
-  const output = dotenvLoad()
+  // Railway does weird things when using dotenv so we read the variables directly
+  const env = process.env.RAILWAY_PROJECT_ID ? process.env : dotenvLoad().env
+
+  console.log(env)
 
   return schemas.reduce<TypeOf<T[number]>>(
-    (result, schema) => ({ ...result, ...schema.parse(output.env) }),
+    (result, schema) => ({ ...result, ...schema.parse(env) }),
     {}
   )
 }
