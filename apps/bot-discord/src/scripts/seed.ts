@@ -128,15 +128,19 @@ async function bootstrapRulesChannel(client: Client) {
 
 async function bootstrapAboutChannel(client: Client) {
   const guild = await getGuild(client)
-  const channel = await getTextBasedChannel(client, CHANNELS.ABOUT)
 
-  await channel.send({
+  const [aboutChannel, artistsRaidTrainChannel] = await Promise.all([
+    getTextBasedChannel(client, CHANNELS.ABOUT),
+    getChannel(client, CHANNELS.ARTISTS_RAID_TRAIN),
+  ])
+
+  await aboutChannel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-about.png")),
     ],
   })
 
-  await channel.send({
+  await aboutChannel.send({
     embeds: [
       new EmbedBuilder({
         color: 0xff1800,
@@ -156,7 +160,7 @@ async function bootstrapAboutChannel(client: Client) {
     ],
   })
 
-  await channel.send({
+  await aboutChannel.send({
     embeds: [
       new EmbedBuilder({
         color: 0xff1800,
@@ -177,7 +181,7 @@ async function bootstrapAboutChannel(client: Client) {
     ],
   })
 
-  await channel.send({
+  await aboutChannel.send({
     content:
       "**Website:** https://artiststogether.online/" +
       "\n" +
@@ -197,13 +201,13 @@ async function bootstrapAboutChannel(client: Client) {
       "*You can also contact us at info@artiststogether.online*",
   })
 
-  await channel.send({
+  await aboutChannel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-art.png")),
     ],
   })
 
-  await channel.send({
+  await aboutChannel.send({
     embeds: [
       new EmbedBuilder({
         color: 0xffdc48,
@@ -221,18 +225,21 @@ async function bootstrapAboutChannel(client: Client) {
           "\n" +
           "- *Learn more about new art mediums/styles/processes.*" +
           "\n" +
-          "- *Help you reach your stream goals.*",
+          "- *Help you reach your stream goals.*" +
+          "\n" +
+          "\n" +
+          `${artistsRaidTrainChannel}`,
       }),
     ],
   })
 
-  await channel.send({
+  await aboutChannel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-pal.png")),
     ],
   })
 
-  await channel.send({
+  await aboutChannel.send({
     embeds: [
       new EmbedBuilder({
         color: 0x3924ff,
@@ -263,13 +270,13 @@ async function bootstrapAboutChannel(client: Client) {
       getRole(guild.roles, ROLES.PAL),
     ])
 
-  await channel.send({
+  await aboutChannel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-roles.png")),
     ],
   })
 
-  await channel.send({
+  await aboutChannel.send({
     embeds: [
       new EmbedBuilder({
         color: 0xf4f4f4,
