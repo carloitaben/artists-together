@@ -17,8 +17,6 @@ export function load<T extends ZodTypeAny[]>(
   // Railway does weird things when using dotenv so we read the variables directly
   const env = process.env.RAILWAY_PROJECT_ID ? process.env : dotenvLoad().env
 
-  console.log(env)
-
   return schemas.reduce<TypeOf<T[number]>>(
     (result, schema) => ({ ...result, ...schema.parse(env) }),
     {}
