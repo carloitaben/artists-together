@@ -27,12 +27,12 @@ export default function Layout({ children }: Props) {
     <html
       lang="en"
       className={cx(
-        "bg-arpeggio-black-900 text-gunpla-white-50",
+        "bg-arpeggio-black-900 text-gunpla-white-50 min-h-full h-full",
         inter.variable,
         fraunces.variable,
       )}
     >
-      <body>{children}</body>
+      <body className="h-full">{children}</body>
     </html>
   )
 }
