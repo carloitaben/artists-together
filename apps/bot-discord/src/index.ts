@@ -1,8 +1,8 @@
+import { load } from "dotenv-mono"
 import { Client, Partials, GatewayIntentBits } from "discord.js"
+import { getRegistrations } from "./lib/core"
 
-import { env } from "~/lib/env"
-import { connect } from "~/lib/ws"
-import { getRegistrations } from "~/lib/core"
+load()
 
 const bot = new Client({
   intents: [
@@ -17,12 +17,14 @@ const bot = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 })
 
-bot.once("ready", () => console.log("🚀"))
+bot.once("ready", () => console.log(`Logged in as ${bot.user?.tag}`))
 
 const registrations = await getRegistrations()
 
 registrations.handlers.forEach((callbacks, event) => {
-  bot.addListener(event, (...args) => callbacks.forEach((callback) => callback(...args)))
+  bot.addListener(event, (...args) =>
+    callbacks.forEach((callback) => callback(...args))
+  )
 })
 
-await Promise.all([bot.login(env.DISCORD_BOT_TOKEN), connect()])
+await bot.login(process.env.DISCORD_BOT_TOKEN)
