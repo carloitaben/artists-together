@@ -1,24 +1,28 @@
+import type { RESTOptions } from "@discordjs/rest"
 import { REST } from "@discordjs/rest"
 import { API } from "@discordjs/core/http-only"
 
-const rest = new REST({
-  version: "10",
-}).setToken(String(process.env.DISCORD_BOT_TOKEN))
+export function createDiscordClient({
+  token,
+  ...options
+}: Partial<RESTOptions> & { token: string }) {
+  const rest = new REST({
+    // @ts-expect-error
+    makeRequest: globalThis.fetch,
+    version: "10",
+    ...options,
+  }).setToken(token)
 
-export const dc = new API(rest)
+  return new API(rest)
+}
+
+export const dc = createDiscordClient({
+  authPrefix: "Bot",
+  token: String(process.env.DISCORD_BOT_TOKEN),
+})
 
 function id(production: string, development: string) {
-  if ("process" in globalThis && "env" in globalThis.process) {
-    return process.env.NODE_ENV === "development" ? development : production
-  }
-
-  // @ts-ignore
-  if ("env" in import.meta && "DEV" in import.meta.env) {
-    // @ts-ignore
-    return import.meta.env.DEV ? development : production
-  }
-
-  throw Error("Could not determine environment")
+  return process.env.NODE_ENV === "development" ? development : production
 }
 
 export const CHANNELS = {

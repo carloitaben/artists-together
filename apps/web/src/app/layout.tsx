@@ -1,8 +1,11 @@
 import font from "next/font/local"
 import type { ReactNode } from "react"
 import { cx } from "cva"
+import Navigation from "~/components/Navigation"
 import "~/styles/index.css"
+import { AuthContext } from "~/services/auth/server"
 
+export const runtime = "edge"
 export const dynamic = "force-dynamic"
 export const fetchCache = "default-no-store"
 
@@ -27,12 +30,16 @@ export default function Layout({ children }: Props) {
     <html
       lang="en"
       className={cx(
-        "bg-arpeggio-black-900 text-gunpla-white-50 min-h-full h-full",
+        "bg-arpeggio-black-900 text-gunpla-white-50 h-full min-h-full",
         inter.variable,
         fraunces.variable,
       )}
     >
-      <body className="h-full">{children}</body>
+      <body className="h-full">
+        <AuthContext>
+          <Navigation>{children}</Navigation>
+        </AuthContext>
+      </body>
     </html>
   )
 }

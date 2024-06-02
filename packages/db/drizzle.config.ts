@@ -1,7 +1,5 @@
+import "dotenv-mono/load"
 import type { Config } from "drizzle-kit"
-import { load } from "dotenv-mono"
-
-load()
 
 export default {
   schema: "src/schema.ts",

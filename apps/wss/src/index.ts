@@ -28,10 +28,10 @@ function getRoomState(room: string) {
 
       ++state.count
 
-      if (ws.data.auth.user) {
+      if (ws.data.auth) {
         state.members.push({
           cursor: ws.data.cursor,
-          username: ws.data.auth.user?.username,
+          username: ws.data.auth.user.username,
         })
       }
 
@@ -114,7 +114,7 @@ const server = Bun.serve<WebSocketData>({
           )
           break
         case "cursor:update":
-          if (ws.data.room && ws.data.auth.user) {
+          if (ws.data.room && ws.data.auth) {
             ws.data.cursor = parsed.data.payload
             update(ws)
             server.publish(

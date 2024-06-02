@@ -1,8 +1,6 @@
-import { load } from "dotenv-mono"
+import "dotenv-mono/load"
 import { Client, Partials, GatewayIntentBits } from "discord.js"
 import { getRegistrations } from "./lib/core"
-
-load()
 
 const bot = new Client({
   intents: [

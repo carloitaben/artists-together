@@ -5,18 +5,16 @@ import { Lucia } from "lucia"
 import type { Session, User } from "lucia"
 import { Discord, Twitch } from "arctic"
 
-export const adapter = new DrizzleSQLiteAdapter(db, sessions, users)
-
-const secure =
-  "env" in import.meta && "PROD" in import.meta.env
-    ? Boolean(import.meta.env.PROD)
-    : process.env.NODE_ENV === "production"
+const adapter = new DrizzleSQLiteAdapter(db, sessions, users)
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
     name: "session",
+    // this sets cookies with super long expiration
+    // since Next.js doesn't allow Lucia to extend cookie expiration when rendering pages
+    expires: false,
     attributes: {
-      secure,
+      secure: process.env.NODE_ENV === "production",
     },
   },
   getUserAttributes(attributes) {
@@ -24,7 +22,6 @@ export const lucia = new Lucia(adapter, {
       username: attributes.username,
       avatar: attributes.avatar,
       email: attributes.email,
-      theme: attributes.theme,
       bio: attributes.bio,
       discordId: attributes.discordId,
       discordUsername: attributes.discordUsername,
@@ -46,7 +43,7 @@ declare module "lucia" {
   }
 }
 
-const SITE_URL = "http://localhost:3000/"
+const SITE_URL = "http://localhost:3000/" // TODO: this should be an environment variable
 
 export const provider = {
   discord: new Discord(
@@ -67,15 +64,10 @@ export type AuthenticateResult<Authenticated extends boolean = false> =
         user: User
         session: Session
       }
-    :
-        | {
-            user: User
-            session: Session
-          }
-        | {
-            user: null
-            session: null
-          }
+    : {
+        user: User
+        session: Session
+      } | null
 
 export async function authenticate(
   request: Request
@@ -83,13 +75,13 @@ export async function authenticate(
   const sessionId = lucia.readSessionCookie(request.headers.get("Cookie") ?? "")
 
   if (!sessionId) {
-    return {
-      user: null,
-      session: null,
-    }
+    return null
   }
 
-  return lucia.validateSession(sessionId)
+  return lucia
+    .validateSession(sessionId)
+    .then((result) => (result.user && result.session ? result : null))
 }
 
 export * from "lucia"
+export * from "arctic"
