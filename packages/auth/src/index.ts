@@ -1,5 +1,6 @@
 import type { SelectUser } from "@artists-together/db"
 import { db, sessions, users } from "@artists-together/db"
+import { WEB_URL } from "@artists-together/core/constants"
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle"
 import { Lucia } from "lucia"
 import type { Session, User } from "lucia"
@@ -43,18 +44,16 @@ declare module "lucia" {
   }
 }
 
-const SITE_URL = "http://localhost:3000/" // TODO: this should be an environment variable
-
 export const provider = {
   discord: new Discord(
     String(process.env.DISCORD_OAUTH_ID),
     String(process.env.DISCORD_OAUTH_SECRET),
-    new URL("/api/auth/callback/discord", SITE_URL).toString()
+    new URL("/api/auth/callback/discord", WEB_URL).toString()
   ),
   twitch: new Twitch(
     String(process.env.TWITCH_OAUTH_ID),
     String(process.env.TWITCH_OAUTH_SECRET),
-    new URL("/api/auth/callback/twitch", SITE_URL).toString()
+    new URL("/api/auth/callback/twitch", WEB_URL).toString()
   ),
 }
 

@@ -136,6 +136,9 @@ importers:
 
   packages/auth:
     dependencies:
+      '@artists-together/core':
+        specifier: workspace:*
+        version: link:../core
       '@artists-together/db':
         specifier: workspace:*
         version: link:../db
