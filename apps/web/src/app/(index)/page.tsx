@@ -9,7 +9,7 @@ export default function Page() {
       <div>Inter</div>
       <div className="font-serif">Fraunces</div>
       <div>{WEB_URL.toString()}</div>
-      <FileUpload/>
+      <FileUpload />
     </div>
   )
 }
