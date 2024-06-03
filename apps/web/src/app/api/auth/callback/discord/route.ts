@@ -9,7 +9,7 @@ import { z } from "zod"
 import { parseSearchParams } from "~/lib/server"
 import { oauthCookie } from "~/services/auth/server"
 
-export const searchParams = z.union([
+const searchParams = z.union([
   z.object({
     error: z.string(),
     error_description: z.string().optional(),
