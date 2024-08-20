@@ -1,7 +1,20 @@
 "use client"
 
-import type { ReactNode } from "react"
-import { createContext, createElement, use } from "react"
+import type { ReactNode, RefObject } from "react"
+import {
+  createContext,
+  createElement,
+  use,
+  startTransition,
+  useCallback,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+  useTransition,
+} from "react"
+import type { ScreensConfig } from "tailwindcss/types/config"
+import type { Screen } from "~/lib/tailwind"
+import { screens } from "~/../tailwind.config"
 
 export function createSafeContext<T>(displayName: string, defaultValue?: T) {
   const Context = createContext<T | null>(defaultValue || null)
@@ -23,4 +36,179 @@ export function createSafeContext<T>(displayName: string, defaultValue?: T) {
   }
 
   return [SafeProvider, useContext] as const
+}
+
+function getScreenMediaQuery(screen: Screen) {
+  const config = screens[screen] as string | ScreensConfig
+
+  if (typeof config === "string") {
+    return `(min-width: ${config})`
+  }
+
+  if ("min" in config && "max" in config) {
+    return `(min-width: ${config.min} and max-width: ${config.max})`
+  }
+
+  if ("max" in config) {
+    return `(max-width: ${config.max})`
+  }
+
+  if ("raw" in config && typeof config.raw === "string") {
+    return config.raw
+  }
+
+  throw Error(`Unhandled screen: ${screen}`)
+}
+
+function subscribe(query: string, callback: VoidFunction) {
+  const mql = window.matchMedia(query)
+
+  mql.addEventListener("change", callback, {
+    passive: true,
+  })
+
+  return () => {
+    mql.removeEventListener("change", callback)
+  }
+}
+
+export function useMediaQuery(query: string) {
+  const subscription = useCallback(
+    (callback: VoidFunction) => subscribe(query, callback),
+    [query],
+  )
+
+  return useSyncExternalStore<boolean | null>(
+    subscription,
+    () => window.matchMedia(query).matches,
+    () => null,
+  )
+}
+
+export function useScreen(screen: Screen) {
+  return useMediaQuery(getScreenMediaQuery(screen))
+}
+
+const precached = new Set<string>()
+
+function precacheImpl(url: string) {
+  return new Promise<string>((resolve, reject) => {
+    if (precached.has(url)) {
+      return resolve(url)
+    }
+
+    const img = new Image()
+    img.onload = () => resolve(url)
+    img.onerror = reject
+    img.src = url
+  })
+}
+
+export function precache(urls: string[]) {
+  return Promise.allSettled(urls.map(precacheImpl))
+}
+
+export function usePrecache(urls: string[]) {
+  const [pending, startTransition] = useTransition()
+  const [cached, setCached] = useState(() =>
+    urls.every((url) => precached.has(url)),
+  )
+
+  function startCaching() {
+    if (cached || pending) return
+
+    startTransition(async () => {
+      await precache(urls)
+      setCached(true)
+    })
+  }
+
+  return [cached, startCaching] as const
+}
+
+export type MeasureResult = Omit<DOMRectReadOnly, "toJSON"> & {
+  measured: boolean
+}
+
+export type MeasureCallback = (rect: MeasureResult) => void
+
+const resizeObserverCallbacks = new Map<Element, MeasureCallback>()
+
+const resizeObserver =
+  typeof window === "undefined"
+    ? undefined
+    : new ResizeObserver((entries) => {
+        entries.forEach((entry) => {
+          resizeObserverCallbacks.get(entry.target)?.(
+            Object.assign(entry.contentRect, { measured: true }),
+          )
+        })
+      })
+
+export function useOnMeasure<T extends Element = Element>(
+  ref: RefObject<T>,
+  callback: MeasureCallback,
+  options?: ResizeObserverOptions,
+) {
+  useEffect(() => {
+    const target = ref.current
+
+    if (!target) return
+    if (!resizeObserver) return
+
+    resizeObserverCallbacks.set(target, callback)
+    resizeObserver.observe(target, options)
+
+    return () => {
+      resizeObserverCallbacks.delete(target)
+      resizeObserver.unobserve(target)
+    }
+  }, [callback, options, ref])
+}
+
+export function useMeasure<T extends Element = Element>(
+  ref: RefObject<T>,
+  options?: ResizeObserverOptions,
+) {
+  const [entry, setEntry] = useState<MeasureResult>({
+    bottom: 0,
+    height: 0,
+    left: 0,
+    right: 0,
+    top: 0,
+    width: 0,
+    x: 0,
+    y: 0,
+    measured: false,
+  })
+
+  const callback = useCallback<MeasureCallback>((entry) => {
+    startTransition(() => setEntry(entry))
+  }, [])
+
+  useOnMeasure(ref, callback, options)
+
+  return entry
+}
+
+export function subscribeOnce() {
+  return () => {}
+}
+
+/**
+ * Returns a `boolean` indicating whether React hydrated the page.
+ *
+ * @example
+ * Basic usage
+ *
+ * ```ts
+ * const hydrated = useHydrated()
+ * ```
+ */
+export function useHydrated() {
+  return useSyncExternalStore(
+    subscribeOnce,
+    () => true,
+    () => false,
+  )
 }

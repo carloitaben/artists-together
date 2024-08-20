@@ -1,5 +1,10 @@
 import plugin from "tailwindcss/plugin"
 import defaultTheme from "tailwindcss/defaultTheme"
+import type { screens } from "~/../tailwind.config"
+
+export type Screens = typeof screens
+
+export type Screen = keyof Screens
 
 /**
  * Enables the `Grid` component subgrid behavior

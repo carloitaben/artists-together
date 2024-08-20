@@ -4,7 +4,7 @@ import Image from "next/image"
 import { use, useEffect, useState } from "react"
 import { motion, wrap, AnimatePresence } from "framer-motion"
 import type { getRandomContentShared } from "~/services/content-shared/server"
-import { usePrecache } from "~/hooks/media"
+import { usePrecache } from "~/lib/react/client"
 
 const SLIDER_DURATION = 10_000
 
@@ -58,7 +58,7 @@ export default function WidgetSlideshowContent({ promise }: Props) {
             src={item.url}
             alt=""
             fill
-            className="size-full object-cover"
+            className="size-full select-none object-cover"
             unoptimized
             draggable={false}
           />

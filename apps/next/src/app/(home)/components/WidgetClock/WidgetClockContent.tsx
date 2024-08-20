@@ -80,12 +80,10 @@ export default function WidgetClockContent({ promise }: Props) {
     ? user.settingsFullHourFormat
       ? "HH"
       : "hh"
-    : hints.hourCycle === "h24"
-      ? "kk"
-      : hints.hourCycle === "h23"
-        ? "HH"
-        : "hh"
-
+    : hints.hourFormat === "24"
+      ? "HH"
+      : "hh"
+      
   return (
     <>
       <div className="flex size-full flex-col items-stretch justify-between bg-theme-50 font-fraunces font-light text-theme-900 scale:p-24">

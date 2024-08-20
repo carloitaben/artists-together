@@ -1,11 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { useSyncExternalStore } from "react"
-
-function subscribe() {
-  return () => {}
-}
+import { useHydrated } from "~/lib/react/client"
 
 type Props = {
   fallback?: ReactNode
@@ -16,11 +12,5 @@ export default function ClientOnly({
   children = null,
   fallback = null,
 }: Props) {
-  const render = useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false,
-  )
-
-  return render ? children : fallback
+  return useHydrated() ? children : fallback
 }

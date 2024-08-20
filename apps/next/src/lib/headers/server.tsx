@@ -6,6 +6,28 @@ import { headers } from "next/headers"
 import { z } from "zod"
 import { HintsContextProvider as HintsContextProviderClient } from "./client"
 
+function getTemperatureUnit(locale: string) {
+  switch (locale) {
+    case "en-BS":
+    case "en-BZ":
+    case "en-KY":
+    case "en-LR":
+    case "en-PW":
+    case "en-US":
+      return "fahrenheit"
+    default:
+      return "celsius"
+  }
+}
+
+function getHourFormat(locale: string) {
+  const dateTimeFormat = new Intl.DateTimeFormat(locale, {
+    hour: "numeric",
+  })
+
+  return dateTimeFormat.resolvedOptions().hour12 ? "12" : "24"
+}
+
 export const hints = cache(() => {
   const readonlyHeaders = headers()
   const negotiator = new Negotiator({
@@ -14,33 +36,12 @@ export const hints = cache(() => {
 
   const locale = negotiator.language() || "en-US"
 
-  const temperatureUnit = [
-    "en-BS",
-    "en-BZ",
-    "en-KY",
-    "en-LR",
-    "en-PW",
-    "en-US",
-  ].includes(locale)
-    ? ("fahrenheit" as const)
-    : ("celsius" as const)
-
-  const timeFormat = new Intl.DateTimeFormat(locale, {
-    hour: "numeric",
-  }).resolvedOptions()
-
   return {
     locale,
-    temperatureUnit,
+    temperatureUnit: getTemperatureUnit(locale),
+    hourFormat: getHourFormat(locale),
     saveData: readonlyHeaders.get("Save-Data") === "on",
-    /**
-     * - `"h12"` for 12-hour format (e.g., "2 PM")
-     * - `"h23"` for 24-hour format starting from 0 (e.g., "14:00")
-     * - `"h11"` for 12-hour format starting from 0 (less common)
-     * - `"h24"` for 24-hour format starting from 1
-     */
-    hourCycle: timeFormat.hourCycle || "h23",
-  }
+  } as const
 })
 
 export const geolocationSchema = z

@@ -3,12 +3,11 @@ import type { Metadata } from "next"
 import type { ReactNode } from "react"
 import { cx } from "cva"
 import { WEB_URL } from "@artists-together/core/constants"
+import { HintsContextProvider } from "~/lib/headers/server"
 import Footer from "~/components/Footer"
 import Theme from "~/components/Theme"
 import Sidebar from "~/components/Sidebar"
-import Spritesheet from "~/components/Spritesheet"
 import "~/styles/index.css"
-import { HintsContextProvider } from "~/lib/headers/server"
 
 export const runtime = "edge"
 export const fetchCache = "default-no-store"
@@ -68,7 +67,6 @@ export default function Layout({ children }: Props) {
         "bg-arpeggio-black-900 text-gunpla-white-50 selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900",
       )}
     >
-      <Spritesheet />
       <HintsContextProvider>
         <Theme theme="arpeggio-black" asChild>
           <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
