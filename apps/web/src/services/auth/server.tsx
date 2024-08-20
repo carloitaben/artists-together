@@ -6,7 +6,7 @@ import { cache } from "react"
 import { cookies } from "next/headers"
 import { z } from "zod"
 import { createCookie } from "~/lib/server"
-import { Geolocation } from "~/lib/headers"
+import { Geolocation } from "~/lib/headers/server"
 import { Provider } from "./client"
 
 export const oauthCookie = createCookie(
@@ -59,5 +59,5 @@ export const authenticate = cache(async (): Promise<AuthenticateResult> => {
 
 export async function AuthContext({ children }: { children: ReactNode }) {
   const auth = await authenticate()
-  return <Provider value={auth}>{children}</Provider>
+  return <Provider value={auth?.user}>{children}</Provider>
 }

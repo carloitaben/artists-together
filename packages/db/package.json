@@ -7,21 +7,20 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "sqld",
-    "push": "drizzle-kit push:sqlite",
+    "push": "drizzle-kit push",
     "clean": "rm -r data.sqld",
     "studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@libsql/client": "^0.6.0",
-    "drizzle-orm": "^0.30.9",
+    "@libsql/client": "^0.8.1",
+    "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@artists-together/ts": "workspace:*",
     "@types/node": "^20.12.10",
-    "dotenv-mono": "^1.3.14",
-    "drizzle-kit": "^0.20.18",
-    "typescript": "^5.4.5"
+    "drizzle-kit": "^0.24.0",
+    "typescript": "^5.5.4"
   }
 }

@@ -135,7 +135,9 @@ export async function GET(request: NextRequest) {
       sessionCookie.attributes,
     )
 
-    return redirect(cookie.data.pathname)
+    return redirect(
+      `${cookie.data.pathname}?toast=Logged+in+as+${user.username}`,
+    )
   } catch (error) {
     if (isRedirectError(error)) {
       throw error

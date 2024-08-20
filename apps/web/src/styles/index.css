@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html.cursor * {
+    @apply cursor-none;
+  }
+
+  .font-fraunces-ampersand {
+    font-variation-settings:
+      "SOFT" 100,
+      "WONK" 100,
+      "opsz" 144;
+  }
+}

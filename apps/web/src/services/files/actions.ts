@@ -1,47 +1,33 @@
 "use server"
 
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
-import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
+import { DeleteObjectCommand } from "@aws-sdk/client-s3"
 import { authenticate } from "~/services/auth/server"
-import { S3 } from "./server"
-import { decodeUrl, encodeFilename, encodeUrl } from "./shared"
+import { S3, getSignedURL as getSignedURLFn } from "./server"
+import { decodeUrl } from "./shared"
 import type { FileUpload } from "./shared"
+import { error } from "~/lib/actions"
 
 export async function getSignedURL(params: FileUpload) {
-  const filename = encodeFilename(params)
-  const fileUrl = encodeUrl(params)
+  const auth = await authenticate()
 
-  const signedUrl = await getSignedUrl(
-    S3,
-    new PutObjectCommand({
-      Bucket: "artists-together-public",
-      Key: filename,
-    }),
-    { expiresIn: 15 * 60 },
-  )
-
-  return {
-    fileUrl,
-    filename,
-    signedUrl,
+  if (!auth) {
+    return error({ cause: "UNAUTHORIZED" })
   }
+
+  return getSignedURLFn(params)
 }
 
 export async function removeFile(url: string) {
   const auth = await authenticate()
 
   if (!auth) {
-    return {
-      error: "Unauthorized",
-    }
+    return error({ cause: "UNAUTHORIZED" })
   }
 
   const decoded = decodeUrl(url)
 
   if (auth.user.id !== decoded.userId) {
-    return {
-      error: "Unauthorized",
-    }
+    return error({ cause: "UNAUTHORIZED" })
   }
 
   const command = new DeleteObjectCommand({

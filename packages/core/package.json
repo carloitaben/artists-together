@@ -16,6 +16,6 @@
   "devDependencies": {
     "@artists-together/ts": "workspace:*",
     "@types/node": "^20.12.10",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.4"
   }
 }

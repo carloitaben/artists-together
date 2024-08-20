@@ -1,0 +1,63 @@
+{
+  "name": "next",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "check": "tsc --noEmit",
+    "lint": "next lint",
+    "generate": "next-typesafe-url"
+  },
+  "dependencies": {
+    "@ark-ui/react": "^3.2.1",
+    "@artists-together/auth": "workspace:*",
+    "@artists-together/core": "workspace:*",
+    "@artists-together/db": "workspace:*",
+    "@artists-together/kv": "workspace:*",
+    "@conform-to/react": "^1.1.4",
+    "@conform-to/zod": "^1.1.4",
+    "@react-three/fiber": "^8.17.5",
+    "aws4fetch": "^1.0.19",
+    "cva": "1.0.0-beta.1",
+    "dayjs": "^1.11.10",
+    "framer-motion": "^11.2.10",
+    "lottie-web": "^5.12.2",
+    "negotiator": "^0.6.3",
+    "next": "^14.2.5",
+    "next-typesafe-url": "^4.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-error-boundary": "^4.0.13",
+    "server-only": "^0.0.1",
+    "three": "^0.167.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@carloitaben/tailwindcss-scale": "^0.0.1",
+    "@types/negotiator": "^0.6.3",
+    "@types/node": "^22.4.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.5",
+    "postcss": "^8.4.41",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.6.1",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
+  },
+  "prettier": {
+    "semi": false,
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "next/core-web-vitals"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "extends": "@artists-together/ts/base.json",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "compilerOptions": {
+    "types": ["bun-types"],
+    "lib": ["ESNext"],
+    "esModuleInterop": false,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "rootDir": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    }
+  }
+}

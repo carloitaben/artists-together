@@ -6,9 +6,9 @@ function getWebURL() {
   }
 
   const vercel =
-    process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ||
-    process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL ||
-    process.env.NEXT_PUBLIC_VERCEL_URL
+    process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+      ? process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
+      : process.env.NEXT_PUBLIC_VERCEL_URL
 
   if (vercel) {
     return new URL(`https://${vercel}`)

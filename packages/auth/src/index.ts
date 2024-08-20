@@ -21,6 +21,7 @@ export const lucia = new Lucia(adapter, {
   getUserAttributes(attributes) {
     return {
       username: attributes.username,
+      pronouns: attributes.pronouns,
       avatar: attributes.avatar,
       email: attributes.email,
       bio: attributes.bio,
@@ -70,8 +71,27 @@ export type AuthenticateResult<Authenticated extends boolean = false> =
 
 export async function authenticate(
   request: Request
+): Promise<AuthenticateResult>
+
+export async function authenticate(
+  headers: Headers
+): Promise<AuthenticateResult>
+
+export async function authenticate(
+  cookie: string | null | undefined
+): Promise<AuthenticateResult>
+
+export async function authenticate(
+  input: Request | Headers | string | null | undefined
 ): Promise<AuthenticateResult> {
-  const sessionId = lucia.readSessionCookie(request.headers.get("Cookie") ?? "")
+  const cookie =
+    input instanceof Request
+      ? input.headers.get("Cookie")
+      : input instanceof Headers
+        ? input.get("Cookie")
+        : input
+
+  const sessionId = lucia.readSessionCookie(cookie ?? "")
 
   if (!sessionId) {
     return null
