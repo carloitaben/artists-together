@@ -7,6 +7,7 @@ export const iconNames = [
   "Timer",
   "Settings",
   "Search",
+  "QuestionMark",
   "More",
   "Menu",
   "Logo",
@@ -28,6 +29,6 @@ export const iconNames = [
   "Calendar",
   "Arrow",
   "Add",
-] as const;
+] as const
 
-export type IconName = (typeof iconNames)[number];
+export type IconName = (typeof iconNames)[number]

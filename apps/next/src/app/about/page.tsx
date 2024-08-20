@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
+import { lazy, Suspense } from "react"
 import { hints } from "~/lib/headers/server"
 import AspectRatio from "~/components/AspectRatio"
 import Container from "~/components/Container"
 import Grid from "~/components/Grid"
 import Marquee from "~/components/Marquee"
-import { lazy, Suspense } from "react"
+import Icon from "~/components/Icon"
+import Lottie from "~/components/Lottie"
 
 const Stars = lazy(() => import("./components/Stars"))
 
@@ -26,10 +28,17 @@ export default function Page() {
         <Container asChild>
           <Grid className="min-h-screen place-items-center py-16">
             <div className="col-span-2 col-start-2 w-full max-w-[37.5rem] sm:col-span-4 sm:col-start-3">
-              <AspectRatio.Root ratio={600 / 286}>
-                <AspectRatio.Content className="bg-[red]">
+              <AspectRatio.Root ratio={2 / 1}>
+                <AspectRatio.Content>
                   <h2 className="sr-only">Artists Together</h2>
-                  {/* <Icon src="logo" alt="" className="size-full" /> */}
+                  {saveData ? (
+                    <Icon src="Logo" alt="" className="size-full" />
+                  ) : (
+                    <Lottie
+                      src={() => import("~/assets/lottie/logo-w.json")}
+                      autoplay
+                    />
+                  )}
                 </AspectRatio.Content>
               </AspectRatio.Root>
             </div>

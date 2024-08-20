@@ -68,7 +68,7 @@ export default function CalendarHeader() {
           <ul className="flex gap-x-2 py-4">
             <li>
               <Button icon>
-                <Icon src="Info" alt="More info" />
+                <Icon src="QuestionMark" alt="More info" />
               </Button>
             </li>
             <li>
