@@ -34,8 +34,7 @@ const weatherResponseSchema = z
     daily: z.object({
       temperature_2m_max: z.tuple([z.number(), z.number()]),
       temperature_2m_min: z.tuple([z.number(), z.number()]),
-      time: z.array(z.string()),
-      weathercode: z.tuple([z.coerce.number(), z.coerce.number()]),
+      weathercode: z.tuple([z.number(), z.number()]),
     }),
   })
   .transform(
@@ -95,7 +94,7 @@ export const handler: Handler = async () => {
           })
         )
 
-      await wait(5_000)
+      await wait(1_000)
     } catch (error) {
       console.error(error)
     }

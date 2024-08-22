@@ -5,10 +5,10 @@ import { db, eq, users } from "@artists-together/db"
 import { parseWithZod } from "@conform-to/zod"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import { getGeolocation } from "~/lib/headers/server"
+import { geolocation } from "~/lib/headers/server"
+import { error } from "~/lib/server"
 import { authenticate, oauthCookie } from "./server"
 import { updateSchema } from "./shared"
-import { error } from "~/lib/actions"
 
 export async function login(pathname: string) {
   const auth = await authenticate()
@@ -17,17 +17,20 @@ export async function login(pathname: string) {
     return error({ cause: "ALREADY_LOGGED_IN" })
   }
 
-  const geolocation = getGeolocation()
   const state = generateState()
+  const geo = geolocation()
   const url = await provider.discord.createAuthorizationURL(state, {
     scopes: ["identify", "email"],
   })
 
-  oauthCookie.setOrThrow({
-    geolocation,
-    pathname,
-    state,
-  })
+  oauthCookie.set(
+    {
+      geolocation: geo,
+      pathname,
+      state,
+    },
+    { strict: true },
+  )
 
   return redirect(url.toString())
 }
@@ -94,11 +97,14 @@ export async function connectDiscord(pathname: string) {
     scopes: ["identify", "email"],
   })
 
-  oauthCookie.setOrThrow({
-    geolocation: null,
-    pathname,
-    state,
-  })
+  oauthCookie.set(
+    {
+      geolocation: null,
+      pathname,
+      state,
+    },
+    { strict: true },
+  )
 
   return redirect(url.toString())
 }
@@ -130,11 +136,14 @@ export async function connectTwitch(pathname: string) {
   const state = generateState()
   const url = await provider.twitch.createAuthorizationURL(state)
 
-  oauthCookie.setOrThrow({
-    geolocation: null,
-    pathname,
-    state,
-  })
+  oauthCookie.set(
+    {
+      geolocation: null,
+      pathname,
+      state,
+    },
+    { strict: true },
+  )
 
   return redirect(url.toString())
 }

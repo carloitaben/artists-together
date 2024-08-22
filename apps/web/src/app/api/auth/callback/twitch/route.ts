@@ -4,7 +4,7 @@ import { isRedirectError } from "next/dist/client/components/redirect"
 import { redirect } from "next/navigation"
 import type { NextRequest } from "next/server"
 import { z } from "zod"
-import { parseSearchParams } from "~/lib/server"
+import { parseSearchParams } from "~/lib/params"
 import { authenticate, oauthCookie } from "~/services/auth/server"
 
 const searchParams = z.union([
@@ -28,7 +28,9 @@ export async function GET(request: NextRequest) {
     })
   }
 
-  const params = parseSearchParams(request.nextUrl.searchParams, searchParams)
+  const params = parseSearchParams(request.nextUrl.searchParams, {
+    schema: searchParams,
+  })
 
   if (!params.success) {
     return redirect(`${cookie.data.pathname}?error`)

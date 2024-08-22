@@ -6,8 +6,9 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import type { NextRequest } from "next/server"
 import { z } from "zod"
-import { parseSearchParams } from "~/lib/server"
 import { oauthCookie } from "~/services/auth/server"
+import { hints } from "~/lib/headers/server"
+import { parseSearchParams } from "~/lib/params"
 
 const searchParams = z.union([
   z.object({
@@ -30,7 +31,9 @@ export async function GET(request: NextRequest) {
     })
   }
 
-  const params = parseSearchParams(request.nextUrl.searchParams, searchParams)
+  const params = parseSearchParams(request.nextUrl.searchParams, {
+    schema: searchParams,
+  })
 
   if (!params.success) {
     return redirect(`${cookie.data.pathname}?error`)
@@ -83,6 +86,8 @@ export async function GET(request: NextRequest) {
         discordId: discordUser.id,
         discordUsername: discordUser.username,
         discordMetadata: discordUser,
+        settingsFahrenheit: hints().temperatureUnit === "fahrenheit",
+        settingsFullHourFormat: hints().hourFormat === "24",
       })
       .onConflictDoUpdate({
         target: users.email,

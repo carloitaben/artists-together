@@ -1,23 +1,20 @@
-import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import type { HTMLArkProps } from "@ark-ui/react"
+import { ark } from "@ark-ui/react"
+import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
 import { cx } from "cva"
-import Slot from "~/components/Slot"
 
-type Props = ComponentProps<"div"> & {
-  asChild?: boolean
-}
+type Props = HTMLArkProps<"div">
 
 function Content(
-  { className, asChild, ...props }: Props,
+  { className, ...props }: Props,
   ref: ForwardedRef<ComponentRef<"div">>,
 ) {
-  const Component = asChild ? Slot : "div"
-
   return (
-    <Component
-      {...props}
+    <ark.div
       ref={ref}
       className={cx("absolute inset-0", className)}
+      {...props}
     />
   )
 }

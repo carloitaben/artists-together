@@ -1,18 +1,29 @@
 import "server-only"
-import type { SafeParseReturnType, TypeOf, ZodTypeAny } from "zod"
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies"
-import type { ReadonlyURLSearchParams } from "next/navigation"
 import { cookies } from "next/headers"
+import type { ReadonlyURLSearchParams } from "next/navigation"
+import type { SafeParseReturnType, TypeOf, ZodTypeAny } from "zod"
 
-export function parseSearchParams<Schema extends ZodTypeAny>(
+export function parseSearchParams<
+  Schema extends ZodTypeAny,
+  Strict extends boolean = false,
+>(
   params: ReadonlyURLSearchParams | URLSearchParams,
-  schema: Schema,
-): SafeParseReturnType<Schema, TypeOf<Schema>> {
-  return schema.safeParse(
+  options: {
+    schema: Schema
+    strict?: Strict
+  },
+): Strict extends true
+  ? TypeOf<Schema>
+  : SafeParseReturnType<Schema, TypeOf<Schema>> {
+  const searchParams =
     params instanceof URLSearchParams
       ? Object.fromEntries(params.entries())
-      : params,
-  )
+      : params
+
+  return options.strict
+    ? options.schema.parse(searchParams)
+    : options.schema.safeParse(searchParams)
 }
 
 export function createCookie<Name extends string, Schema extends ZodTypeAny>(
@@ -24,32 +35,46 @@ export function createCookie<Name extends string, Schema extends ZodTypeAny>(
     has() {
       return cookies().has(name)
     },
-    get(): SafeParseReturnType<Schema, TypeOf<Schema>> {
-      const value = cookies().get(name)?.value || ""
-      return schema.safeParse(JSON.parse(value))
+    get<Strict extends boolean = false>(options?: {
+      strict?: Strict
+    }): Strict extends true
+      ? TypeOf<Schema>
+      : SafeParseReturnType<Schema, TypeOf<Schema>> {
+      const cookie = cookies().get(name)?.value || ""
+
+      return options?.strict
+        ? schema.parse(JSON.parse(cookie))
+        : schema.safeParse(JSON.parse(cookie))
     },
-    getOrThrow(): TypeOf<Schema> {
-      const value = cookies().get(name)?.value || ""
-      return schema.parse(JSON.parse(value))
-    },
-    set(
+    set<Strict extends boolean = false>(
       value: TypeOf<Schema>,
-      options = baseOptions,
+      options?: Partial<ResponseCookie> & { strict?: Strict },
     ): SafeParseReturnType<Schema, TypeOf<Schema>> {
+      const { strict, ...resolvedOptions } = {
+        ...baseOptions,
+        ...options,
+      }
+
+      if (strict) {
+        const parsed = schema.parse(value)
+        cookies().set(name, JSON.stringify(parsed), resolvedOptions)
+      }
+
       const parsed = schema.safeParse(value)
 
       if (!parsed.success) {
         return parsed
       }
 
-      cookies().set(name, JSON.stringify(parsed.data), options)
+      cookies().set(name, JSON.stringify(parsed.data), resolvedOptions)
 
-      return { success: true, data: value } as const
-    },
-    setOrThrow(value: TypeOf<Schema>, options = baseOptions): TypeOf<Schema> {
-      const parsed = schema.parse(value)
-      cookies().set(name, JSON.stringify(parsed), options)
       return parsed
     },
   }
+}
+
+export function error<T extends string>(error: { cause: T; message?: string }) {
+  return {
+    error,
+  } as const
 }

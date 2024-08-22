@@ -7,9 +7,9 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "sqld",
-    "push": "drizzle-kit push",
+    "push": "sst shell drizzle-kit push",
     "clean": "rm -r data.sqld",
-    "studio": "drizzle-kit studio"
+    "studio": "sst shell drizzle-kit studio"
   },
   "dependencies": {
     "@libsql/client": "^0.8.1",

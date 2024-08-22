@@ -1,11 +1,15 @@
-type Params = {
-  year: string
+import dayjs from "dayjs"
+import type { InferPagePropsType } from "next-typesafe-url"
+import { withParamValidation } from "next-typesafe-url/app/hoc"
+import type { RouteType } from "./routeType"
+import { Route } from "./routeType"
+
+type Props = InferPagePropsType<RouteType>
+
+function Page({ routeParams }: Props) {
+  const date = dayjs().set("year", routeParams.year)
+
+  return <div>calendar {date.format("YYYY")}</div>
 }
 
-type Props = {
-  params: Params
-}
-
-export default function Page({ params }: Props) {
-  return <div>calendar year {params.year}</div>
-}
+export default withParamValidation(Page, Route)

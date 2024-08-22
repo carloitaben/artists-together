@@ -1,53 +1,37 @@
-import type { ComponentProps, ForwardedRef } from "react"
-import { forwardRef } from "react"
+import type { HTMLArkProps } from "@ark-ui/react"
+import { ark } from "@ark-ui/react"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
-import Slot from "./Slot"
+import type { ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 
-export const cols = "grid-cols-4 sm:grid-cols-8"
+export const padding = "px-1 sm:pr-4 sm:pl-0"
 
-export const gap = {
-  x: "gap-x-1 sm:scale:gap-x-4",
-  y: "gap-y-1 sm:scale:gap-y-4",
-}
-
-const container = cva({
-  base: "w-full",
+const variants = cva({
+  base: "w-full mx-auto",
   variants: {
     padding: {
-      true: "px-1 sm:pr-4 sm:pl-0",
-      false: "",
-    },
-    grid: {
-      true: ["grid", cols, gap.x, gap.y],
+      true: padding,
       false: "",
     },
   },
   defaultVariants: {
-    grid: false,
     padding: true,
   },
 })
 
-type Props = ComponentProps<"div"> &
-  VariantProps<typeof container> & {
-    asChild?: boolean
-  }
+type Props = HTMLArkProps<"div"> & VariantProps<typeof variants>
 
 function Container(
-  { className, children, grid, padding, asChild, ...props }: Props,
-  ref: ForwardedRef<HTMLDivElement>,
+  { className, padding, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<"div">>,
 ) {
-  const Component = asChild ? Slot : "div"
-
   return (
-    <Component
-      {...props}
+    <ark.div
       ref={ref}
-      className={container({ grid, padding, className })}
-    >
-      {children}
-    </Component>
+      className={variants({ className, padding })}
+      {...props}
+    />
   )
 }
 

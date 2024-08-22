@@ -1,0 +1,7 @@
+{
+  "extends": "./.sst/platform/tsconfig.json",
+  "exclude": ["packages/"],
+  "compilerOptions": {
+    "skipLibCheck": true
+  }
+}

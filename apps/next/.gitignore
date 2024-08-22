@@ -1,7 +1,0 @@
-/coverage
-/.next/
-/out/
-/build
-*.pem
-.env*.local
-next-env.d.ts

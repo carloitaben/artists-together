@@ -1,40 +1,31 @@
-import type {
-  ComponentPropsWithoutRef,
-  ComponentRef,
-  ForwardedRef,
-} from "react"
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
-import type { IconName } from "~/lib/types/icons"
+import type { IconName } from "~/lib/icons"
 
-type Props = Omit<ComponentPropsWithoutRef<"svg">, "children"> & {
-  name: IconName
+type Props = ComponentProps<"svg"> & {
+  src: IconName
   alt: string
 }
 
 function Icon(
-  { name, alt, ...props }: Props,
+  { src, alt, ...props }: Props,
   ref: ForwardedRef<ComponentRef<"svg">>,
 ) {
-  const svg = (
-    <svg {...props} ref={ref} focusable={false} aria-hidden>
-      <use href={`./spritesheet.svg#${name}`} />
-    </svg>
+  return (
+    <>
+      <svg
+        ref={ref}
+        focusable={false}
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        aria-hidden
+        {...props}
+      >
+        <use href={`/spritesheet.svg#${src}`} />
+      </svg>
+      {alt ? <span className="sr-only">{alt}</span> : null}
+    </>
   )
-
-  if (alt) {
-    return (
-      <>
-        {
-          <svg {...props} ref={ref} focusable={false} aria-hidden>
-            <use href={`./spritesheet.svg#${name}`} />
-          </svg>
-        }
-        <span className="sr-only">{alt}</span>
-      </>
-    )
-  }
-
-  return svg
 }
 
 export default forwardRef(Icon)

@@ -12,6 +12,6 @@
   "devDependencies": {
     "@artists-together/ts": "workspace:*",
     "@types/aws-lambda": "^8.10.137",
-    "sst": "^3.0.48"
+    "sst": "^3.0.66"
   }
 }

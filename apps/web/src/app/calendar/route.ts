@@ -1,7 +1,17 @@
+import { $path } from "next-typesafe-url"
 import { redirect } from "next/navigation"
-import type { NextRequest } from "next/server"
+import { monthNumberSchema } from "~/lib/schemas"
 
-export async function GET(request: NextRequest) {
-  void request
-  return redirect("/")
+export async function GET() {
+  const now = new Date()
+
+  return redirect(
+    $path({
+      route: "/calendar/[year]/[month]",
+      routeParams: {
+        year: now.getFullYear(),
+        month: monthNumberSchema.parse(now.getMonth() + 1),
+      },
+    }),
+  )
 }

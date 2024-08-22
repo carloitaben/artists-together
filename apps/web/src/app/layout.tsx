@@ -1,29 +1,30 @@
 import font from "next/font/local"
+import type { Metadata } from "next"
 import type { ReactNode } from "react"
 import { cx } from "cva"
-import Navigation from "~/components/Navigation"
-import "~/styles/index.css"
-import type { Metadata } from "next"
 import { WEB_URL } from "@artists-together/core/constants"
+import { HintsContextProvider } from "~/lib/headers/server"
 import Footer from "~/components/Footer"
-import Spritesheet from "~/components/Spritesheet"
-import Auth from "~/components/Auth"
-import Toast from "~/components/Toast"
+import Theme from "~/components/Theme"
+import Sidebar from "~/components/Sidebar"
+import "~/styles/index.css"
+import Toasts from "~/components/Toasts"
 
 export const runtime = "edge"
-export const dynamic = "force-dynamic"
 export const fetchCache = "default-no-store"
 
 const inter = font({
   src: "../styles/fonts/inter.woff2",
   variable: "--font-inter",
   display: "block",
+  preload: true,
 })
 
 const fraunces = font({
   src: "../styles/fonts/fraunces.woff2",
   variable: "--font-fraunces",
   display: "block",
+  preload: true,
 })
 
 export const metadata: Metadata = {
@@ -37,22 +38,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Artists Together",
     description: "An inclusive community for all kinds of artists.",
-    url: "https://artiststogether.online/",
     siteName: "Artists Together",
-    locale: "en_US",
+    locale: "en",
     type: "website",
+    url: WEB_URL,
   },
   robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-    },
-  },
-  twitter: {
-    title: "Lee Robinson",
-    card: "summary_large_image",
+    index: process.env.VERCEL_ENV === "production",
+    follow: process.env.VERCEL_ENV === "production",
   },
   // themeColor: [
   //   { media: "(prefers-color-scheme: light)", color: "white" },
@@ -69,22 +62,22 @@ export default function Layout({ children }: Props) {
     <html
       lang="en"
       className={cx(
-        "h-full min-h-full font-inter antialiased",
-        "bg-arpeggio-black-900 text-gunpla-white-50 selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900",
         inter.variable,
         fraunces.variable,
+        "relative min-h-full font-inter antialiased",
+        "bg-arpeggio-black-900 text-gunpla-white-50 selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900",
       )}
     >
-      <Spritesheet />
-      <body className="h-full text-sm sm:pl-16">
-        <Auth>
-          <Navigation>
+      <HintsContextProvider>
+        <Theme theme="arpeggio-black" asChild>
+          <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
+            <Sidebar />
             {children}
             <Footer />
-          </Navigation>
-        </Auth>
-        <Toast />
-      </body>
+            <Toasts />
+          </body>
+        </Theme>
+      </HintsContextProvider>
     </html>
   )
 }

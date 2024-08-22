@@ -1,19 +1,12 @@
 "use client"
 
-import type {
-  ComponentPropsWithoutRef,
-  ComponentRef,
-  ForwardedRef,
-  MouseEvent,
-} from "react"
-import { forwardRef, useCallback } from "react"
+import type { HTMLArkProps } from "@ark-ui/react"
+import { ark } from "@ark-ui/react"
 import { animate } from "framer-motion"
-import Slot from "~/components/Slot"
+import type { ComponentRef, ForwardedRef, MouseEvent } from "react"
+import { forwardRef, useCallback } from "react"
 
-type Props = Omit<ComponentPropsWithoutRef<"a">, "href"> & {
-  href: string
-  asChild?: boolean
-}
+type Props = HTMLArkProps<"a">
 
 function pxToNumber(px: string) {
   const match = px.match(/\d+/)?.[0]
@@ -25,47 +18,65 @@ function pxToNumber(px: string) {
   return parseInt(match)
 }
 
-export function anchor<T extends MouseEvent>(event: T, target?: string) {
+export function anchor(event: MouseEvent, href?: string) {
   event.preventDefault()
 
   if (!(event.target instanceof Element)) {
-    throw Error("Event target is not instanceof Element")
+    throw Error("Expected event target to be an Element instance")
   }
 
-  const container =
+  const root =
     event.target.closest('[class*="overflow-"]') || document.documentElement
 
-  const scrollPadding = pxToNumber(getComputedStyle(container).scrollPadding)
+  const scrollPadding = pxToNumber(getComputedStyle(root).scrollPadding)
 
-  const to = target
-    ? document.querySelector(target)!.getBoundingClientRect().top
-    : 0
+  let to = 0
 
-  animate(container.scrollTop, Math.max(to - scrollPadding, 0), {
-    type: "spring",
-    mass: 0.075,
-    onPlay: () => window.addEventListener("scroll", event.stopPropagation),
-    onComplete: () =>
-      window.removeEventListener("scroll", event.stopPropagation),
-    onUpdate: (top) => (container.scrollTop = top),
-  })
+  if (href) {
+    const target = document.querySelector(href)
+
+    if (!target) {
+      throw Error("Expected href target to exist")
+    }
+
+    to = target.getBoundingClientRect().top
+  }
+
+  function stop() {
+    animation.stop()
+  }
+
+  const animation = animate(
+    root.scrollTop,
+    Math.min(
+      root.scrollTop + to - scrollPadding,
+      root.scrollHeight - root.clientHeight,
+    ),
+    {
+      type: "spring",
+      mass: 0.075,
+      onPlay: () => window.addEventListener("wheel", stop),
+      onComplete: () => window.removeEventListener("wheel", stop),
+      onUpdate: (top) => {
+        root.scrollTop = top
+      },
+    },
+  )
 }
 
 function Anchor(
-  { asChild, href, ...props }: Props,
+  { href, onClick, ...props }: Props,
   ref: ForwardedRef<ComponentRef<"a">>,
 ) {
-  const Component = asChild ? Slot : "a"
-
-  const scrollTo = useCallback<NonNullable<Props["onClick"]>>(
+  const scroll = useCallback<NonNullable<Props["onClick"]>>(
     (event) => {
-      props.onClick?.(event)
-      anchor(event, href)
+      onClick?.(event)
+      if (!event.defaultPrevented) anchor(event, href)
     },
-    [href, props],
+    [href, onClick],
   )
 
-  return <Component {...props} ref={ref} href={href} onClick={scrollTo} />
+  return <ark.a ref={ref} href={href} onClick={scroll} {...props} />
 }
 
 export default forwardRef(Anchor)

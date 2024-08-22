@@ -1,19 +1,20 @@
 import "server-only"
 import type { AuthenticateResult } from "@artists-together/auth"
-import { lucia } from "@artists-together/auth"
+import { lucia, authenticate as doAuthenticate } from "@artists-together/auth"
 import type { ReactNode } from "react"
 import { cache } from "react"
 import { cookies } from "next/headers"
 import { z } from "zod"
+import { geolocationSchema } from "~/lib/headers/server"
 import { createCookie } from "~/lib/server"
-import { Geolocation } from "~/lib/headers/server"
-import { Provider } from "./client"
+import { pathnameSchema } from "~/lib/schemas"
+import { AuthProvider as AuthProviderClient } from "./client"
 
 export const oauthCookie = createCookie(
   "oauth",
   z.object({
-    geolocation: Geolocation,
-    pathname: z.string().startsWith("/"),
+    geolocation: geolocationSchema,
+    pathname: pathnameSchema,
     state: z.string(),
   }),
   {
@@ -26,17 +27,12 @@ export const oauthCookie = createCookie(
 )
 
 export const authenticate = cache(async (): Promise<AuthenticateResult> => {
-  const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null
-
-  if (!sessionId) {
-    return null
-  }
-
-  const result = await lucia.validateSession(sessionId)
+  const cookie = cookies().get(lucia.sessionCookieName)?.value
+  const result = await doAuthenticate(cookie)
 
   // next.js throws when you attempt to set cookie when rendering page
   try {
-    if (result.session && result.session.fresh) {
+    if (result?.session && result.session.fresh) {
       const sessionCookie = lucia.createSessionCookie(result.session.id)
       cookies().set(
         sessionCookie.name,
@@ -44,7 +40,8 @@ export const authenticate = cache(async (): Promise<AuthenticateResult> => {
         sessionCookie.attributes,
       )
     }
-    if (!result.session) {
+
+    if (!result?.session) {
       const sessionCookie = lucia.createBlankSessionCookie()
       cookies().set(
         sessionCookie.name,
@@ -54,10 +51,15 @@ export const authenticate = cache(async (): Promise<AuthenticateResult> => {
     }
   } catch {}
 
-  return result.user && result.session ? result : null
+  return result?.user && result?.session ? result : null
 })
 
 export async function AuthContext({ children }: { children: ReactNode }) {
   const auth = await authenticate()
-  return <Provider value={auth?.user}>{children}</Provider>
+
+  return (
+    <AuthProviderClient value={auth?.user || null}>
+      {children}
+    </AuthProviderClient>
+  )
 }

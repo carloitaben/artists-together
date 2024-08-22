@@ -1,5 +1,5 @@
-import { cx } from "cva"
-import Container, { gap } from "./Container"
+import Container from "~/components/Container"
+import Grid from "~/components/Grid"
 
 const links = [
   {
@@ -32,33 +32,32 @@ const links = [
 export default function Footer() {
   return (
     <Container className="pb-16 pt-4 sm:pb-4">
-      <Container asChild grid>
-        <footer className="rounded-3xl bg-arpeggio-black-800 py-12">
+      <Grid asChild>
+        <footer className="rounded-6 bg-arpeggio-black-800 py-12">
           <div className="col-span-4 space-y-14 sm:col-span-2 sm:col-start-7">
-            <nav
-              aria-label="Secondary navigation"
-              className={cx("grid-cols-2 sm:grid", gap.x)}
-            >
-              <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      target={"target" in link ? link.target : undefined}
-                      className="hover:underline"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <Grid asChild>
+              <nav aria-label="Secondary navigation">
+                <ul className="space-y-2">
+                  {links.map((link) => (
+                    <li key={link.label}>
+                      <a
+                        href={link.href}
+                        target={"target" in link ? link.target : undefined}
+                        className="hover:underline"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </Grid>
             <small className="block text-sm">
               Artists&nbsp;Together ©&nbsp;{new Date().getFullYear()}
             </small>
           </div>
         </footer>
-      </Container>
+      </Grid>
     </Container>
   )
 }

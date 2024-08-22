@@ -1,35 +1,30 @@
 "use client"
 
-import type {
-  ComponentPropsWithoutRef,
-  ComponentRef,
-  ForwardedRef,
-} from "react"
-import { forwardRef } from "react"
-import { usePathname } from "next/navigation"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 
-type Props = Omit<ComponentPropsWithoutRef<typeof Link>, "href"> & {
+type Props = Omit<ComponentProps<typeof Link>, "href"> & {
   href: string
-  mode: "page" | "layout"
-}
-
-function stripQueryParameters(href: string) {
-  return String(href.split("?")[0])
+  /**
+   * Changes the matching logic to only match to the "end" of the path.
+   * If the URL is longer than href, it will no longer be considered active.
+   *
+   * @default true
+   */
+  end?: boolean
 }
 
 function NavLink(
-  { href, mode, ...props }: Props,
+  { end = true, href, ...props }: Props,
   ref: ForwardedRef<ComponentRef<typeof Link>>,
 ) {
   const pathname = usePathname()
+  const active = end ? pathname === href : pathname.startsWith(href)
+  const activeProps = active ? ({ "aria-current": "page" } as const) : undefined
 
-  const selected =
-    mode === "layout"
-      ? pathname.startsWith(href)
-      : pathname === stripQueryParameters(href)
-
-  return <Link {...props} href={href} ref={ref} aria-selected={selected} />
+  return <Link ref={ref} href={href} {...props} {...activeProps} />
 }
 
 export default forwardRef(NavLink)

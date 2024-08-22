@@ -1,25 +1,23 @@
-import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import type { HTMLArkProps } from "@ark-ui/react"
+import { ark } from "@ark-ui/react"
+import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
 import { cx } from "cva"
-import Slot from "~/components/Slot"
 
-type Props = ComponentProps<"div"> & {
+type Props = HTMLArkProps<"div"> & {
   ratio: number
-  asChild?: boolean
 }
 
 function Root(
-  { asChild, className, ratio, style = {}, ...props }: Props,
+  { className, ratio, style, ...props }: Props,
   ref: ForwardedRef<ComponentRef<"div">>,
 ) {
-  const Component = asChild ? Slot : "div"
-
   return (
-    <Component
-      {...props}
+    <ark.div
+      ref={ref}
       className={cx("relative w-full", className)}
       style={{ ...style, paddingBottom: `${100 / ratio}%` }}
-      ref={ref}
+      {...props}
     />
   )
 }

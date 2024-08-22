@@ -21,6 +21,7 @@ export default function LottieComponent({
   return (
     <div
       {...props}
+      className={cx(className, "*:!transform-none")}
       ref={(container) => {
         if (!container) return
 
@@ -33,7 +34,6 @@ export default function LottieComponent({
 
         return () => animation.destroy()
       }}
-      className={cx(className, "*:!transform-none")}
     />
   )
 }

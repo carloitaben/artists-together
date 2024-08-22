@@ -1,7 +1,6 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core"
 import { relations, sql } from "drizzle-orm"
-import { createSelectSchema } from "drizzle-zod"
-import { z } from "zod"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 export const locations = sqliteTable("locations", {
   city: text("city").unique().primaryKey(),
@@ -28,43 +27,20 @@ export const weathers = sqliteTable("weathers", {
     .unique()
     .primaryKey()
     .references(() => locations.city, { onDelete: "cascade" }),
-  todayMin: integer("today_min"),
-  todayMax: integer("today_max"),
-  todayWeatherCode: integer("today_weather_code"),
-  tomorrowMin: integer("tomorrow_min"),
-  tomorrowMax: integer("tomorrow_max"),
-  tomorrowWeatherCode: integer("tomorrow_weather_code"),
+  todayMin: integer("today_min").notNull(),
+  todayMax: integer("today_max").notNull(),
+  todayWeatherCode: integer("today_weather_code").notNull(),
+  tomorrowMin: integer("tomorrow_min").notNull(),
+  tomorrowMax: integer("tomorrow_max").notNull(),
+  tomorrowWeatherCode: integer("tomorrow_weather_code").notNull(),
   updatedAt: text("updated_at")
     .notNull()
     .$onUpdate(() => sql`(current_timestamp)`),
 })
 
-export const SelectWeathers = createSelectSchema(weathers).transform(
-  (value, context) => {
-    // Thanks zod :) https://github.com/colinhacks/zod/pull/3141
-    if (
-      value.todayMax === null ||
-      value.todayWeatherCode === null ||
-      value.tomorrowMin === null ||
-      value.tomorrowMax === null ||
-      value.tomorrowWeatherCode === null
-    ) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Cannot be null",
-        path: [],
-      })
+export const InsertWeathers = createInsertSchema(weathers)
 
-      return z.NEVER
-    }
-
-    return value as
-      | {
-          [K in keyof typeof value]: Exclude<(typeof value)[K], null>
-        }
-      | null
-  }
-)
+export const SelectWeathers = createSelectSchema(weathers)
 
 export type InsertWeathers = typeof weathers.$inferInsert
 

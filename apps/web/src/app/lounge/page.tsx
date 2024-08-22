@@ -1,23 +1,15 @@
-"use client"
+import type { Metadata } from "next"
+import Profile from "~/components/Profile"
 
-import { emit } from "~/components/Toast"
+export const metadata: Metadata = {
+  title: "Artists Lounge",
+}
 
 export default function Page() {
   return (
     <div>
-      <button
-        onClick={() =>
-          emit({
-            type: "info",
-            title: Math.random().toString(),
-          })
-        }
-      >
-        emit info toast
-      </button>
-      <button onClick={() => emit({ type: "error", title: "Liada" })}>
-        emit error toast
-      </button>
+      <div>loiunge</div>
+      <Profile />
     </div>
   )
 }
