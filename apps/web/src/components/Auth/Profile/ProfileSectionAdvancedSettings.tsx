@@ -1,8 +1,8 @@
 import { Switch } from "@ark-ui/react"
 import SwitchControl from "~/components/SwitchControl"
 import InlineTooltip from "~/components/InlineTooltip"
-import ProfileContainer from "./ProfileContainer"
-import ProfileTitle from "./ProfileTitle"
+import DialogContainer from "../DialogContainer"
+import DialogTitle from "../DialogTitle"
 import { sectionData } from "./lib"
 
 type Setting = {
@@ -44,8 +44,8 @@ export default function ProfileSectionAdvancedSettings() {
   const section = sectionData["advanced-settings"]
 
   return (
-    <ProfileContainer section="advanced-settings">
-      <ProfileTitle className="pb-6">{section.label}</ProfileTitle>
+    <DialogContainer id="advanced-settings">
+      <DialogTitle className="pb-6">{section.label}</DialogTitle>
       <form className="space-y-2">
         {settings.map((setting) => (
           <Switch.Root
@@ -67,6 +67,6 @@ export default function ProfileSectionAdvancedSettings() {
           </Switch.Root>
         ))}
       </form>
-    </ProfileContainer>
+    </DialogContainer>
   )
 }

@@ -1,4 +1,3 @@
-import { $path } from "next-typesafe-url"
 import type { IconName } from "~/lib/icons"
 
 export type Route = {
@@ -18,24 +17,18 @@ export const routes = [
   {
     label: "About",
     icon: "Help",
-    href: $path({
-      route: "/about",
-    }),
+    href: "/about",
   },
   {
     label: "Artists Lounge",
     icon: "Diversity",
-    href: $path({
-      route: "/lounge",
-    }),
+    href: "/lounge",
     disabled: true,
   },
   {
     label: "Artist Raid Train",
     icon: "Train",
-    href: $path({
-      route: "/art",
-    }),
+    href: "/art",
     disabled: true,
   },
   {

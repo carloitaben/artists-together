@@ -1,7 +1,6 @@
 import { SegmentGroup } from "@ark-ui/react"
 import type { Dayjs } from "dayjs"
 import { motion } from "framer-motion"
-import { $path } from "next-typesafe-url"
 import Link from "next/link"
 import { startTransition, useOptimistic } from "react"
 import { monthNumberSchema } from "~/lib/schemas"
@@ -42,13 +41,7 @@ export default function CalendarHeaderToggle({ date, mode }: Props) {
       <SegmentGroup.Item asChild value="month">
         <Link
           className="relative grid place-items-center rounded-full px-5 text-center"
-          href={$path({
-            route: "/calendar/[year]/[month]",
-            routeParams: {
-              year: date.get("year"),
-              month: monthNumberSchema.parse(date.get("month") + 1),
-            },
-          })}
+          href={`/calendar/${date.get("year")}/${monthNumberSchema.parse(date.get("month") + 1)}`}
         >
           <SegmentGroup.Context>
             {(context) => (context.value === "month" ? <Indicator /> : null)}
@@ -63,12 +56,7 @@ export default function CalendarHeaderToggle({ date, mode }: Props) {
       <SegmentGroup.Item asChild value="year">
         <Link
           className="relative grid place-items-center rounded-full px-5 text-center"
-          href={$path({
-            route: "/calendar/[year]",
-            routeParams: {
-              year: date.get("year"),
-            },
-          })}
+          href={`/calendar/${date.get("year")}`}
         >
           <SegmentGroup.Context>
             {(context) => (context.value === "year" ? <Indicator /> : null)}

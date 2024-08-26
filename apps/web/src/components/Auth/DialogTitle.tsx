@@ -6,7 +6,7 @@ import { forwardRef } from "react"
 
 type Props = HTMLArkProps<"span">
 
-function ProfileTitle(
+function DialogTitle(
   { className, ...props }: Props,
   ref: ForwardedRef<ComponentRef<"span">>,
 ) {
@@ -22,4 +22,4 @@ function ProfileTitle(
   )
 }
 
-export default forwardRef(ProfileTitle)
+export default forwardRef(DialogTitle)

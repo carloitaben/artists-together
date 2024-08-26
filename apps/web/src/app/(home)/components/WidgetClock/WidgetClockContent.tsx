@@ -83,7 +83,7 @@ export default function WidgetClockContent({ promise }: Props) {
     : hints.hourFormat === "24"
       ? "HH"
       : "hh"
-      
+
   return (
     <>
       <div className="flex size-full flex-col items-stretch justify-between bg-theme-50 font-fraunces font-light text-theme-900 scale:p-24">

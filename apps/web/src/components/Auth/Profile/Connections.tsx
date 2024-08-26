@@ -1,8 +1,8 @@
 "use client"
 
-import type { IconName } from "~/lib/icons"
-import Icon from "../Icon"
 import { Checkbox } from "@ark-ui/react"
+import type { IconName } from "~/lib/icons"
+import Icon from "~/components/Icon"
 
 type ConnectionProps = {
   action: any

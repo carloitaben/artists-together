@@ -1,8 +1,8 @@
-import { Suspense } from "react"
+import { lazy, Suspense } from "react"
 import { getRandomLocationWithWeather } from "~/services/locations/server"
 import AspectRatio from "~/components/AspectRatio"
-import ClientOnly from "~/components/ClientOnly"
-import WidgetClockContent from "./WidgetClockContent"
+
+const WidgetClockContent = lazy(() => import("./WidgetClockContent"))
 
 export default function WidgetClock() {
   const location = getRandomLocationWithWeather()
@@ -15,9 +15,7 @@ export default function WidgetClock() {
       >
         <AspectRatio.Content>
           <Suspense>
-            <ClientOnly>
-              <WidgetClockContent promise={location} />
-            </ClientOnly>
+            <WidgetClockContent promise={location} />
           </Suspense>
         </AspectRatio.Content>
       </AspectRatio.Root>

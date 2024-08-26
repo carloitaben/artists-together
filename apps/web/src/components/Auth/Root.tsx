@@ -9,14 +9,14 @@ type Props = {
   children: ReactNode
 }
 
-export default function ProfileRoot({ children }: Props) {
+export default function Root({ children }: Props) {
   const router = useRouter()
   const params = useSearchParams()
   const opened = params.get("modal") === "auth"
 
   useEffect(() => {
     if (opened) {
-      const url = new URL(window.location.href)
+      const url = new URL(location.href)
       url.searchParams.delete("modal")
       router.replace(url.href)
     }

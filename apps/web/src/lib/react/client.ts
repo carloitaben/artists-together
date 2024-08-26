@@ -195,16 +195,6 @@ export function subscribeOnce() {
   return () => {}
 }
 
-/**
- * Returns a `boolean` indicating whether React hydrated the page.
- *
- * @example
- * Basic usage
- *
- * ```ts
- * const hydrated = useHydrated()
- * ```
- */
 export function useHydrated() {
   return useSyncExternalStore(
     subscribeOnce,

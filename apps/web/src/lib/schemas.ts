@@ -35,7 +35,7 @@ export const monthEnumSchema = z.enum([
 /**
  * An integer, between 1 and 12, representing a month
  */
-export const monthNumberSchema = z
+export const monthNumberSchema = z.coerce
   .number()
   .min(1)
   .max(monthEnumSchema.options.length)

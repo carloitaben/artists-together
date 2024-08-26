@@ -1,6 +1,8 @@
 "use client"
 
 import { Toast, Toaster, createToaster } from "@ark-ui/react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect } from "react"
 import Icon from "./Icon"
 
 export const toaster = createToaster({
@@ -10,12 +12,32 @@ export const toaster = createToaster({
 })
 
 export default function Toasts() {
+  const router = useRouter()
+  const params = useSearchParams()
+
+  useEffect(() => {
+    const toast = params.get("toast")
+    const error = params.get("error")
+
+    if (!toast && !error) return
+
+    toaster.create({
+      title: toast || error || "Oops! Something went wrong…",
+      type: error ? "error" : "info",
+    })
+
+    const url = new URL(location.href)
+    url.searchParams.delete("toast")
+    url.searchParams.delete("error")
+    router.replace(url.href)
+  }, [params, router])
+
   return (
     <Toaster toaster={toaster}>
       {(toast) => (
         <Toast.Root
           key={toast.id}
-          className="bg-not-so-white text-gunpla-white-700 shadow-button selection:bg-gunpla-white-300 selection:text-gunpla-white-900 z-[--z-index] flex translate-y-[--y] items-center justify-center whitespace-nowrap rounded-full pl-6 text-sm opacity-[--opacity] transition-all"
+          className="z-[--z-index] flex translate-y-[--y] items-center justify-center whitespace-nowrap rounded-full bg-not-so-white pl-6 text-sm text-gunpla-white-700 opacity-[--opacity] shadow-button transition-all selection:bg-gunpla-white-300 selection:text-gunpla-white-900"
         >
           {toast.title ? <Toast.Title>{toast.title}</Toast.Title> : null}
           {toast.description ? (

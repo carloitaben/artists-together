@@ -1,10 +1,10 @@
 import { Dialog, Field, Fieldset, FileUpload } from "@ark-ui/react"
 import FileUploader from "~/components/FileUploader"
 import InlineTooltip from "~/components/InlineTooltip"
-import ProfileContainer from "./ProfileContainer"
-import ProfileTitle from "./ProfileTitle"
-import { sectionData } from "./lib"
+import DialogContainer from "../DialogContainer"
+import DialogTitle from "../DialogTitle"
 import Connections from "./Connections"
+import { sectionData } from "./lib"
 
 const array = Array.from(Array(3))
 
@@ -12,9 +12,9 @@ export default function ProfileSectionProfile() {
   const section = sectionData["profile"]
 
   return (
-    <ProfileContainer section="profile">
+    <DialogContainer id="profile">
       <Dialog.Title className="sr-only">{section.label}</Dialog.Title>
-      <ProfileTitle className="pb-6">Artist_00315</ProfileTitle>
+      <DialogTitle className="pb-6">Artist_00315</DialogTitle>
       <div className="grid grid-cols-3 gap-2 pb-3">
         <FileUpload.Root maxFiles={1}>
           <FileUpload.Label className="flex items-center gap-x-2 px-3.5 pb-1">
@@ -51,6 +51,6 @@ export default function ProfileSectionProfile() {
           </FileUpload.Root>
         ))}
       </Fieldset.Root>
-    </ProfileContainer>
+    </DialogContainer>
   )
 }

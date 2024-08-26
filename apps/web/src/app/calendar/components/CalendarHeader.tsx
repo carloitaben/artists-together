@@ -3,7 +3,6 @@
 import dayjs from "dayjs"
 import Link from "next/link"
 import { useSelectedLayoutSegments } from "next/navigation"
-import { $path } from "next-typesafe-url"
 import { monthEnumSchema, monthNumberSchema } from "~/lib/schemas"
 import Button from "~/components/Button"
 import Icon from "~/components/Icon"
@@ -39,23 +38,14 @@ export default function CalendarHeader() {
 
   function move(sign: 1 | -1) {
     if (mode === "year") {
-      return $path({
-        route: "/calendar/[year]",
-        routeParams: {
-          year: dayjs(date).add(1, "year").year(),
-        },
-      })
+      const year = dayjs(date).add(1, "year").year()
+      return `/calendar/${year}`
     }
 
     const target = dayjs(date).add(sign, "month")
-
-    return $path({
-      route: "/calendar/[year]/[month]",
-      routeParams: {
-        year: target.year(),
-        month: monthNumberSchema.parse(target.month() + 1),
-      },
-    })
+    const year = target.year()
+    const month = monthNumberSchema.parse(target.month() + 1)
+    return `/calendar/${year}/${month}`
   }
 
   return (

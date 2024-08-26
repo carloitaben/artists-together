@@ -1,19 +1,28 @@
 import dayjs from "dayjs"
-import type { InferPagePropsType } from "next-typesafe-url"
-import { withParamValidation } from "next-typesafe-url/app/hoc"
-import { monthEnumSchema } from "~/lib/schemas"
-import type { RouteType } from "./routeType"
-import { Route } from "./routeType"
-import CalendarCell from "../../components/CalendarCell"
+import { z } from "zod"
+import type { ReadonlyURLSearchParams } from "next/navigation"
+import { monthEnumSchema, monthSchema } from "~/lib/schemas"
+import CalendarCell from "./components/CalendarCell"
 
-type Props = InferPagePropsType<RouteType>
+const paramsSchema = z.object({
+  year: z.coerce.number().min(1970),
+  month: monthSchema,
+})
 
-function Page({ routeParams }: Props) {
+type Params = z.output<typeof paramsSchema>
+
+type Props = {
+  params: Params
+  searchParams: ReadonlyURLSearchParams
+}
+
+export default function Page({ params }: Props) {
+  const parsedParams = paramsSchema.parse(params)
   const monthIndex = monthEnumSchema.options.findIndex(
-    (month) => month === routeParams.month,
+    (month) => month === parsedParams.month,
   )
 
-  const date = dayjs().set("year", routeParams.year).set("month", monthIndex)
+  const date = dayjs().set("year", parsedParams.year).set("month", monthIndex)
 
   return (
     <main>
@@ -28,5 +37,3 @@ function Page({ routeParams }: Props) {
     </main>
   )
 }
-
-export default withParamValidation(Page, Route)

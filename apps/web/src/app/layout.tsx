@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 import { cx } from "cva"
 import { WEB_URL } from "@artists-together/core/constants"
 import { HintsContextProvider } from "~/lib/headers/server"
+import { Auth } from "~/components/Auth"
 import Footer from "~/components/Footer"
 import Theme from "~/components/Theme"
 import Sidebar from "~/components/Sidebar"
@@ -71,10 +72,12 @@ export default function Layout({ children }: Props) {
       <HintsContextProvider>
         <Theme theme="arpeggio-black" asChild>
           <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
-            <Sidebar />
-            {children}
-            <Footer />
-            <Toasts />
+            <Auth.Root>
+              <Sidebar />
+              {children}
+              <Footer />
+              <Toasts />
+            </Auth.Root>
           </body>
         </Theme>
       </HintsContextProvider>

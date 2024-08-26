@@ -1,6 +1,6 @@
 import { Field, Fieldset } from "@ark-ui/react"
-import ProfileContainer from "./ProfileContainer"
-import ProfileTitle from "./ProfileTitle"
+import DialogContainer from "../DialogContainer"
+import DialogTitle from "../DialogTitle"
 import { sectionData } from "./lib"
 
 const array = Array.from(Array(5))
@@ -9,8 +9,8 @@ export default function ProfileSectionSocialMedia() {
   const section = sectionData["social-media"]
 
   return (
-    <ProfileContainer section="social-media">
-      <ProfileTitle className="pb-6">{section.label}</ProfileTitle>
+    <DialogContainer id="social-media">
+      <DialogTitle className="pb-6">{section.label}</DialogTitle>
       <form>
         <Fieldset.Root>
           <Fieldset.Legend className="px-3.5 pb-1">Links</Fieldset.Legend>
@@ -27,7 +27,7 @@ export default function ProfileSectionSocialMedia() {
           ))}
         </Fieldset.Root>
       </form>
-    </ProfileContainer>
+    </DialogContainer>
   )
 }
 
@@ -124,4 +124,3 @@ export default function ProfileSectionSocialMedia() {
 // }
 
 // export default forwardRef(ProfileSocialMedia)
-

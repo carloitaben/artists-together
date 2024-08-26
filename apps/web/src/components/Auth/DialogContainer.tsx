@@ -2,7 +2,8 @@ import type { HTMLArkProps } from "@ark-ui/react"
 import { ark } from "@ark-ui/react"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
-import type { Section } from "./lib"
+import type { ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 
 const padding = {
   x: "px-12",
@@ -24,22 +25,19 @@ const variants = cva({
   },
 })
 
-type Props = HTMLArkProps<"div"> &
-  VariantProps<typeof variants> & {
-    section: Section
-  }
+type Props = HTMLArkProps<"div"> & VariantProps<typeof variants>
 
-export default function ProfileContainer({
-  className,
-  section,
-  padding,
-  ...props
-}: Props) {
+function DialogContainer(
+  { className, padding, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<typeof ark.div>>,
+) {
   return (
     <ark.div
-      id={section}
-      className={variants({ className, padding })}
       {...props}
+      ref={ref}
+      className={variants({ className, padding })}
     />
   )
 }
+
+export default forwardRef(DialogContainer)
