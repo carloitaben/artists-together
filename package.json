@@ -1,6 +1,7 @@
 {
   "name": "artists-together",
   "private": true,
+  "packageManager": "pnpm@9.7.0",
   "engines": {
     "node": ">=18",
     "pnpm": ">=8"
