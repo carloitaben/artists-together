@@ -110,20 +110,6 @@ async function bootstrapRulesChannel(client: Client) {
       }),
     ],
   })
-
-  const unlockServerMessage = await rulesChannel.send({
-    embeds: [
-      new EmbedBuilder({
-        color: 0x024456,
-        description:
-          `**If you're an artist, introduce yourself in ${introductionsChannel} to get the role!**` +
-          "\n" +
-          "React with 🔓 to agree to the rules and get access to the rest of the channels.",
-      }),
-    ],
-  })
-
-  await unlockServerMessage.react("🔓")
 }
 
 async function bootstrapAboutChannel(client: Client) {
