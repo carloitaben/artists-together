@@ -14,8 +14,6 @@ export const secret = {
   OAUTH_TWITCH_SECRET: new sst.Secret("OAuthTwitchSecret"),
 }
 
-export const allSecrets = Object.values(secret)
-
 export const environment = Object.assign(
   Object.fromEntries(
     Object.entries(secret).map(([key, secret]) => [key, secret.value])

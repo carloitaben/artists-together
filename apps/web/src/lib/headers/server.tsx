@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 import { cache } from "react"
 import { headers } from "next/headers"
 import { z } from "zod"
+import { isbot } from "isbot"
 import { HintsContextProvider as HintsContextProviderClient } from "./client"
 
 function getTemperatureUnit(locale: string) {
@@ -28,8 +29,14 @@ function getHourFormat(locale: string) {
   return dateTimeFormat.resolvedOptions().hour12 ? "12" : "24"
 }
 
+export const bot = cache(() => {
+  const readonlyHeaders = headers()
+  return isbot(readonlyHeaders.get("User-Agent"))
+})
+
 export const hints = cache(() => {
   const readonlyHeaders = headers()
+  const isBot = bot()
   const negotiator = new Negotiator({
     headers: Object.fromEntries(readonlyHeaders.entries()),
   })
@@ -38,6 +45,7 @@ export const hints = cache(() => {
 
   return {
     locale,
+    isBot,
     temperatureUnit: getTemperatureUnit(locale),
     hourFormat: getHourFormat(locale),
     saveData: readonlyHeaders.get("Save-Data") === "on",

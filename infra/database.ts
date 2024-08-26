@@ -8,11 +8,11 @@ new sst.x.DevCommand("Database", {
   environment,
 })
 
-new sst.x.DevCommand("Database Studio", {
-  dev: {
-    url: "https://local.drizzle.studio",
-    command: "pnpm -F db studio",
-    autostart: true,
-  },
-  environment,
-})
+// new sst.x.DevCommand("Database Studio", {
+//   dev: {
+//     url: "https://local.drizzle.studio",
+//     command: "pnpm -F db studio",
+//     autostart: true,
+//   },
+//   environment,
+// })
