@@ -1,40 +1,12 @@
-import type { IconName } from "~/lib/icons"
+import type { Transition, Variants } from "framer-motion"
 
-export type Route = {
-  label: string
-  icon: IconName
-  href: string
-  end?: boolean
-  disabled?: boolean
+export const scalePresenceVariants: Variants = {
+  hide: {
+    scale: 0,
+    opacity: 0,
+  },
+  show: {
+    scale: 1,
+    opacity: 1,
+  },
 }
-
-export const routes = [
-  {
-    label: "Home",
-    icon: "Home",
-    href: "/",
-  },
-  {
-    label: "About",
-    icon: "Help",
-    href: "/about",
-  },
-  {
-    label: "Artists Lounge",
-    icon: "Diversity",
-    href: "/lounge",
-    disabled: true,
-  },
-  {
-    label: "Artist Raid Train",
-    icon: "Train",
-    href: "/art",
-    disabled: true,
-  },
-  {
-    label: "Calendar",
-    icon: "Calendar",
-    href: "/calendar",
-    end: false,
-  },
-] satisfies Route[]

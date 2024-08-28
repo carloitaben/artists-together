@@ -5,7 +5,7 @@ import { cva } from "cva"
 import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
 
-export const variants = cva({
+const variants = cva({
   base: "rounded-full transition active:scale-95 disabled:active:scale-100",
   variants: {
     color: {

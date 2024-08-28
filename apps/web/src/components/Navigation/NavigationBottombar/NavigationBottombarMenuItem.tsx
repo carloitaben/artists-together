@@ -1,25 +1,19 @@
+import type { HTMLArkProps } from "@ark-ui/react"
+import { ark } from "@ark-ui/react"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
-import type {
-  ComponentProps,
-  ComponentRef,
-  ForwardedRef,
-  ReactNode,
-} from "react"
+import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
-import Icon from "~/components/Icon"
-import type { IconName } from "~/lib/icons"
 
-const item = cva({
-  base: "flex h-12 items-center rounded-2xl py-3 gap-5 min-w-44",
+const variants = cva({
+  base: [
+    "flex h-12 items-center rounded-4 py-3 gap-5 min-w-44 text-gunpla-white-50 bg-arpeggio-black-900 [&_svg]:size-6 [&_svg]:flex-none",
+    "aria-[current='page']:text-arpeggio-black-900 aria-[current='page']:bg-arpeggio-black-300",
+  ],
   variants: {
-    revert: {
-      true: "justify-between flex-row-reverse pr-3 pl-4",
-      false: "justify-start pl-3 pr-4",
-    },
-    active: {
-      true: "text-arpeggio-black-900 bg-arpeggio-black-300",
-      false: "text-gunpla-white-50 bg-arpeggio-black-900",
+    justify: {
+      start: "justify-start pl-3 pr-4",
+      between: "justify-between pl-4 pr-3",
     },
     disabled: {
       true: "cursor-not-allowed",
@@ -27,27 +21,23 @@ const item = cva({
     },
   },
   defaultVariants: {
-    revert: false,
-    active: false,
     disabled: false,
+    justify: "start",
   },
 })
 
-type Props = Omit<ComponentProps<"span">, "children"> &
-  VariantProps<typeof item> & {
-    icon: IconName
-    children: ReactNode
-  }
+type Props = HTMLArkProps<"div"> & VariantProps<typeof variants>
 
 function BottombarMenuItem(
-  { className, icon, children, revert, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<"span">>,
+  { className, disabled, justify, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<typeof ark.div>>,
 ) {
   return (
-    <span {...props} ref={ref} className={item({ className, revert })}>
-      <Icon src={icon} alt="" className="size-6 flex-none" />
-      <span className="truncate">{children}</span>
-    </span>
+    <ark.div
+      {...props}
+      ref={ref}
+      className={variants({ className, justify, disabled })}
+    />
   )
 }
 

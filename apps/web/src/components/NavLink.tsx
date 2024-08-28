@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
-import { forwardRef } from "react"
+import { forwardRef, useCallback } from "react"
+import { anchor } from "./Anchor"
 
 type Props = Omit<ComponentProps<typeof Link>, "href"> & {
   href: string
@@ -17,14 +18,33 @@ type Props = Omit<ComponentProps<typeof Link>, "href"> & {
 }
 
 function NavLink(
-  { end = true, href, ...props }: Props,
+  { end = true, href, onClick, ...props }: Props,
   ref: ForwardedRef<ComponentRef<typeof Link>>,
 ) {
   const pathname = usePathname()
   const active = end ? pathname === href : pathname.startsWith(href)
   const activeProps = active ? ({ "aria-current": "page" } as const) : undefined
 
-  return <Link ref={ref} href={href} {...props} {...activeProps} />
+  const maybeScroll = useCallback<NonNullable<Props["onClick"]>>(
+    (event) => {
+      onClick?.(event)
+      if (active) {
+        event.preventDefault()
+        anchor(event, "#root")
+      }
+    },
+    [active, onClick],
+  )
+
+  return (
+    <Link
+      ref={ref}
+      href={href}
+      onClick={maybeScroll}
+      {...props}
+      {...activeProps}
+    />
+  )
 }
 
 export default forwardRef(NavLink)

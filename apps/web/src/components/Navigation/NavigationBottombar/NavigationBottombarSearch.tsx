@@ -1,6 +1,12 @@
 import { cx } from "cva"
 import { motion } from "framer-motion"
-import type { Dispatch, MutableRefObject, SetStateAction } from "react"
+import type {
+  ComponentRef,
+  Dispatch,
+  ForwardedRef,
+  SetStateAction,
+} from "react"
+import { forwardRef } from "react"
 import Icon from "~/components/Icon"
 import { colors } from "~/../tailwind.config"
 
@@ -9,27 +15,37 @@ type Props = {
   setSearchbarFocus: Dispatch<SetStateAction<boolean>>
 }
 
-export default function NavigationBottombarSearch({
-  searchbarFocus,
-  setSearchbarFocus,
-}: Props) {
+function NavigationBottombarSearch(
+  { searchbarFocus, setSearchbarFocus }: Props,
+  ref: ForwardedRef<ComponentRef<typeof motion.form>>,
+) {
   return (
     <motion.form
       layout
+      ref={ref}
       onFocus={() => setSearchbarFocus(true)}
       onBlur={() => setSearchbarFocus(false)}
       className={cx(
         searchbarFocus ? "flex-1" : "w-12 flex-none",
         "relative overflow-hidden",
       )}
-      initial={false}
+      initial={{
+        opacity: 0,
+        scale: 0,
+      }}
       animate={{
+        scale: 1,
+        opacity: 1,
         backgroundColor: searchbarFocus
           ? colors["gunpla-white"]["50"]
           : colors["arpeggio-black"]["800"],
         color: searchbarFocus
           ? colors["arpeggio-black"]["800"]
           : colors["gunpla-white"]["50"],
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0,
       }}
       style={{
         borderRadius: 16,
@@ -38,7 +54,7 @@ export default function NavigationBottombarSearch({
     >
       <motion.input
         layout="position"
-        placeholder="Hola si busca algo"
+        placeholder="Search"
         className={cx(
           "size-full min-w-[--min-w] bg-transparent py-4 pl-4 pr-12 caret-gunpla-white-700 placeholder:text-gunpla-white-300 focus:outline-none",
           !searchbarFocus && "cursor-pointer",
@@ -66,3 +82,5 @@ export default function NavigationBottombarSearch({
     </motion.form>
   )
 }
+
+export default forwardRef(NavigationBottombarSearch)

@@ -62,10 +62,11 @@ export default function Layout({ children }: Props) {
   return (
     <html
       lang="en"
+      id="root"
       className={cx(
         inter.variable,
         fraunces.variable,
-        "relative min-h-full font-inter antialiased",
+        "relative min-h-full scroll-p-0 font-inter antialiased",
         "bg-arpeggio-black-900 text-gunpla-white-50 selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900",
       )}
     >

@@ -1,26 +1,26 @@
 import { Menu } from "@ark-ui/react"
 import { cx } from "cva"
 import { AnimatePresence, motion } from "framer-motion"
+import type { Dispatch, SetStateAction } from "react"
+import { routes } from "~/lib/routes"
+import { useRoute } from "~/lib/react/client"
 import Icon from "~/components/Icon"
 import NavLink from "~/components/NavLink"
-import { routes } from "../lib"
 import NavigationBottombarMenuItem from "./NavigationBottombarMenuItem"
-import { usePathname } from "next/navigation"
 
 type Props = {
   searchbarFocus: boolean
+  onOpenChange: Dispatch<SetStateAction<boolean>>
 }
 
-export default function NavigationBottombarMenu({ searchbarFocus }: Props) {
-  const pathname = usePathname()
-  const route = routes.find((route) => route.href === pathname)
-
-  if (!route) {
-    throw Error("TODO: handle this")
-  }
+export default function NavigationBottombarMenu({
+  searchbarFocus,
+  onOpenChange,
+}: Props) {
+  const route = useRoute()
 
   return (
-    <Menu.Root>
+    <Menu.Root onOpenChange={(context) => onOpenChange(context.open)}>
       <Menu.Trigger asChild>
         <motion.button
           layout
@@ -96,14 +96,15 @@ export default function NavigationBottombarMenu({ searchbarFocus }: Props) {
           </motion.div>
         </motion.button>
       </Menu.Trigger>
-      <Menu.Content className="fixed bottom-16 left-2">
+      <Menu.Content className="fixed bottom-16 left-2 space-y-2 focus:outline-none">
         {routes.map((route) => (
           <Menu.Item key={route.href} value={route.href} asChild>
-            <NavLink href={route.href} end={route.end}>
-              <NavigationBottombarMenuItem icon={route.icon}>
-                {route.label}
-              </NavigationBottombarMenuItem>
-            </NavLink>
+            <NavigationBottombarMenuItem asChild>
+              <NavLink href={route.href} end={route.end}>
+                <Icon src={route.icon} alt="" />
+                <span className="truncate">{route.label}</span>
+              </NavLink>
+            </NavigationBottombarMenuItem>
           </Menu.Item>
         ))}
       </Menu.Content>

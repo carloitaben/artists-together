@@ -1,8 +1,9 @@
+import { routes } from "~/lib/routes"
 import { hints } from "~/lib/headers/server"
 import { Auth } from "~/components/Auth"
 import NavLink from "~/components/NavLink"
 import Icon from "~/components/Icon"
-import { routes } from "../lib"
+
 import NavigationSidebarTooltip from "./NavigationSidebarTooltip"
 
 export default function NavigationSidebar() {

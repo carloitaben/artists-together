@@ -15,6 +15,8 @@ import {
 import type { ScreensConfig } from "tailwindcss/types/config"
 import type { Screen } from "~/lib/tailwind"
 import { screens } from "~/../tailwind.config"
+import { usePathname } from "next/navigation"
+import { routes, type Route } from "../routes"
 
 export function createSafeContext<T>(displayName: string, defaultValue?: T) {
   const Context = createContext<T | null>(defaultValue || null)
@@ -201,4 +203,17 @@ export function useHydrated() {
     () => true,
     () => false,
   )
+}
+
+export function useRoute() {
+  const pathname = usePathname()
+  const route = routes.find((route) =>
+    route.end ? route.href === pathname : pathname.startsWith(route.href),
+  )
+
+  if (!route) {
+    throw Error(`Could not match any route to pathname "${pathname}"`)
+  }
+
+  return route
 }
