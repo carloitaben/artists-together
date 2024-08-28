@@ -1,4 +1,5 @@
 import { cx } from "cva"
+import type { Variants } from "framer-motion"
 import { motion } from "framer-motion"
 import type {
   ComponentRef,
@@ -9,10 +10,23 @@ import type {
 import { forwardRef } from "react"
 import Icon from "~/components/Icon"
 import { colors } from "~/../tailwind.config"
+import { scalePresenceVariants } from "../lib"
 
 type Props = {
   searchbarFocus: boolean
   setSearchbarFocus: Dispatch<SetStateAction<boolean>>
+}
+
+const variants: Variants = {
+  ...scalePresenceVariants,
+  closed: {
+    backgroundColor: colors["arpeggio-black"]["800"],
+    color: colors["arpeggio-black"]["50"],
+  },
+  opened: {
+    backgroundColor: colors["arpeggio-black"]["50"],
+    color: colors["arpeggio-black"]["800"],
+  },
 }
 
 function NavigationBottombarSearch(
@@ -25,28 +39,14 @@ function NavigationBottombarSearch(
       ref={ref}
       onFocus={() => setSearchbarFocus(true)}
       onBlur={() => setSearchbarFocus(false)}
+      initial="hide"
+      animate={["show", searchbarFocus ? "opened" : "closed"]}
+      exit="hide"
+      variants={variants}
       className={cx(
         searchbarFocus ? "flex-1" : "w-12 flex-none",
         "relative overflow-hidden",
       )}
-      initial={{
-        opacity: 0,
-        scale: 0,
-      }}
-      animate={{
-        scale: 1,
-        opacity: 1,
-        backgroundColor: searchbarFocus
-          ? colors["gunpla-white"]["50"]
-          : colors["arpeggio-black"]["800"],
-        color: searchbarFocus
-          ? colors["arpeggio-black"]["800"]
-          : colors["gunpla-white"]["50"],
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0,
-      }}
       style={{
         borderRadius: 16,
         boxShadow: "0px 4px 8px rgba(11, 14, 30, 0.08)",

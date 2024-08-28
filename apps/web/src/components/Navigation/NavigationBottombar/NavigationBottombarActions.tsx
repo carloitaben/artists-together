@@ -9,6 +9,7 @@ import {
 import { motion } from "framer-motion"
 import Icon from "~/components/Icon"
 import NavigationBottombarMenuItem from "./NavigationBottombarMenuItem"
+import { scalePresenceVariants } from "../lib"
 
 type Props = {
   onOpenChange: Dispatch<SetStateAction<boolean>>
@@ -23,18 +24,10 @@ function NavigationBottombarActions(
       <Menu.Trigger asChild>
         <motion.button
           ref={ref}
-          initial={{
-            opacity: 0,
-            scale: 0,
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
-          exit={{
-            opacity: 0,
-            scale: 0,
-          }}
+          initial="hide"
+          animate="show"
+          exit="hide"
+          variants={scalePresenceVariants}
           className="grid size-12 place-items-center overflow-hidden bg-arpeggio-black-800 text-gunpla-white-50"
           style={{
             borderRadius: 16,
