@@ -1,5 +1,5 @@
 import { cx } from "cva"
-import type { Variants } from "framer-motion"
+import type { Transition, Variants } from "framer-motion"
 import { motion } from "framer-motion"
 import type {
   ComponentRef,
@@ -10,7 +10,7 @@ import type {
 import { forwardRef } from "react"
 import Icon from "~/components/Icon"
 import { colors } from "~/../tailwind.config"
-import { scalePresenceVariants } from "../lib"
+import { scalePresenceVariants, spring } from "../lib"
 
 type Props = {
   searchbarFocus: boolean
@@ -29,6 +29,18 @@ const variants: Variants = {
   },
 }
 
+const transition: Transition = {
+  ...spring,
+  backgroundColor: {
+    type: "tween",
+    duration: 0.2,
+  },
+  color: {
+    type: "tween",
+    duration: 0.2,
+  },
+}
+
 function NavigationBottombarSearch(
   { searchbarFocus, setSearchbarFocus }: Props,
   ref: ForwardedRef<ComponentRef<typeof motion.form>>,
@@ -37,12 +49,16 @@ function NavigationBottombarSearch(
     <motion.form
       layout
       ref={ref}
+      action={(formData) => {
+        console.log(formData.get("q")?.toString())
+      }}
       onFocus={() => setSearchbarFocus(true)}
       onBlur={() => setSearchbarFocus(false)}
       initial="hide"
       animate={["show", searchbarFocus ? "opened" : "closed"]}
       exit="hide"
       variants={variants}
+      transition={transition}
       className={cx(
         searchbarFocus ? "flex-1" : "w-12 flex-none",
         "relative overflow-hidden",
@@ -53,6 +69,8 @@ function NavigationBottombarSearch(
       }}
     >
       <motion.input
+        name="q"
+        type="text"
         layout="position"
         placeholder="Search"
         className={cx(
@@ -60,6 +78,18 @@ function NavigationBottombarSearch(
           !searchbarFocus && "cursor-pointer",
         )}
         initial={false}
+        onKeyDown={(event) => {
+          switch (event.key) {
+            case "Escape":
+              return event.currentTarget.blur()
+            case "Enter":
+              event.currentTarget.blur()
+              return event.currentTarget.form?.requestSubmit()
+          }
+        }}
+        onFocus={(event) => {
+          event.currentTarget.select()
+        }}
         animate={{
           opacity: searchbarFocus ? 1 : 0,
           transition: {

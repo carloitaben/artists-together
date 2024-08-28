@@ -9,7 +9,7 @@ import {
 import { motion } from "framer-motion"
 import Icon from "~/components/Icon"
 import NavigationBottombarMenuItem from "./NavigationBottombarMenuItem"
-import { scalePresenceVariants } from "../lib"
+import { scalePresenceVariants, spring } from "../lib"
 
 type Props = {
   onOpenChange: Dispatch<SetStateAction<boolean>>
@@ -28,6 +28,7 @@ function NavigationBottombarActions(
           animate="show"
           exit="hide"
           variants={scalePresenceVariants}
+          transition={spring}
           className="grid size-12 place-items-center overflow-hidden bg-arpeggio-black-800 text-gunpla-white-50"
           style={{
             borderRadius: 16,

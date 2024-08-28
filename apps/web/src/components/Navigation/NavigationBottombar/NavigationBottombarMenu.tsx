@@ -1,16 +1,22 @@
 import { Menu } from "@ark-ui/react"
 import { cx } from "cva"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion, type Transition } from "framer-motion"
 import type { Dispatch, SetStateAction } from "react"
 import { routes } from "~/lib/routes"
 import { useRoute } from "~/lib/react/client"
 import Icon from "~/components/Icon"
 import NavLink from "~/components/NavLink"
 import NavigationBottombarMenuItem from "./NavigationBottombarMenuItem"
+import { spring } from "../lib"
 
 type Props = {
   searchbarFocus: boolean
   onOpenChange: Dispatch<SetStateAction<boolean>>
+}
+
+const transition: Transition = {
+  type: "spring",
+  duration: 0.4,
 }
 
 export default function NavigationBottombarMenu({
@@ -28,6 +34,7 @@ export default function NavigationBottombarMenu({
             searchbarFocus ? "w-12 flex-none" : "flex-1",
             "overflow-hidden bg-arpeggio-black-800 text-gunpla-white-50 [text-align:unset]",
           )}
+          transition={spring}
           style={{
             borderRadius: 16,
             boxShadow: "0px 4px 8px rgba(11, 14, 30, 0.08)",
@@ -45,14 +52,17 @@ export default function NavigationBottombarMenu({
                   initial="hide"
                   animate="show"
                   exit="hide"
+                  transition={transition}
                   variants={{
                     hide: {
                       scale: 0,
                       opacity: 0,
+                      filter: "blur(8px)",
                     },
                     show: {
                       scale: 1,
                       opacity: 1,
+                      filter: "blur(0px)",
                     },
                   }}
                 >
@@ -65,6 +75,7 @@ export default function NavigationBottombarMenu({
                   initial="hide"
                   animate="show"
                   exit="hide"
+                  transition={transition}
                   variants={{
                     hide: {
                       opacity: 0,
@@ -79,12 +90,15 @@ export default function NavigationBottombarMenu({
                     initial="hide"
                     animate="show"
                     exit="hide"
+                    transition={transition}
                     variants={{
                       hide: {
                         scale: 0,
+                        filter: "blur(8px)",
                       },
                       show: {
                         scale: 1,
+                        filter: "blur(0px)",
                       },
                     }}
                   >

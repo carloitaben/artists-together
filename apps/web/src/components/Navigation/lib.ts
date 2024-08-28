@@ -1,5 +1,10 @@
 import type { Transition, Variants } from "framer-motion"
 
+export const spring: Transition = {
+  type: "spring",
+  bounce: 0.275,
+}
+
 export const scalePresenceVariants: Variants = {
   hide: {
     scale: 0,
