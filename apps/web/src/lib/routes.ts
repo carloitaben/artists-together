@@ -23,6 +23,7 @@ export const routes: Route[] = [
     icon: "Help",
     href: "/about",
     end: true,
+    search: true,
     actions: ["foo"],
   },
   {
@@ -39,7 +40,6 @@ export const routes: Route[] = [
     href: "/art",
     disabled: true,
     end: true,
-    search: true,
     actions: ["foo"],
   },
   {
