@@ -2,10 +2,10 @@ import { hints } from "~/lib/headers/server"
 import { Auth } from "~/components/Auth"
 import NavLink from "~/components/NavLink"
 import Icon from "~/components/Icon"
-import SidebarTooltip from "./SidebarTooltip"
-import { routes } from "./lib"
+import { routes } from "../lib"
+import NavigationSidebarTooltip from "./NavigationSidebarTooltip"
 
-export default function Sidebar() {
+export default function NavigationSidebar() {
   const { saveData } = hints()
 
   return (
@@ -14,7 +14,7 @@ export default function Sidebar() {
       className="fixed inset-y-0 left-0 hidden w-16 place-items-center gap-y-4 bg-arpeggio-black-900/75 px-1 py-2 backdrop-blur-1 sm:grid"
     >
       <ul>
-        <SidebarTooltip label="Your profile">
+        <NavigationSidebarTooltip label="Your profile">
           <Auth.Trigger className="group block size-14 p-1 text-theme-800 hover:text-theme-800 aria-[current='page']:text-theme-300">
             <span className="grid size-12 place-items-center rounded-2 group-hover:bg-theme-300 group-aria-[current='page']:group-hover:text-theme-800">
               <Icon
@@ -24,9 +24,9 @@ export default function Sidebar() {
               />
             </span>
           </Auth.Trigger>
-        </SidebarTooltip>
+        </NavigationSidebarTooltip>
         {routes.map((route) => (
-          <SidebarTooltip
+          <NavigationSidebarTooltip
             key={route.href}
             label={route.label}
             disabled={route.disabled}
@@ -45,7 +45,7 @@ export default function Sidebar() {
                 />
               </span>
             </NavLink>
-          </SidebarTooltip>
+          </NavigationSidebarTooltip>
         ))}
       </ul>
     </nav>

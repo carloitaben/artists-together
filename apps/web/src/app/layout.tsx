@@ -5,9 +5,9 @@ import { cx } from "cva"
 import { WEB_URL } from "@artists-together/core/constants"
 import { HintsContextProvider } from "~/lib/headers/server"
 import { Auth } from "~/components/Auth"
+import Navigation from "~/components/Navigation"
 import Footer from "~/components/Footer"
 import Theme from "~/components/Theme"
-import Sidebar from "~/components/Sidebar"
 import "~/styles/index.css"
 import Toasts from "~/components/Toasts"
 
@@ -73,8 +73,7 @@ export default function Layout({ children }: Props) {
         <Theme theme="arpeggio-black" asChild>
           <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
             <Auth.Root>
-              <Sidebar />
-              {children}
+              <Navigation>{children}</Navigation>
               <Footer />
               <Toasts />
             </Auth.Root>

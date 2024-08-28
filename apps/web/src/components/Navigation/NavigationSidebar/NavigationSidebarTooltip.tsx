@@ -24,7 +24,11 @@ type Props = {
   label: string
 }
 
-export default function SidebarTooltip({ children, disabled, label }: Props) {
+export default function NavigationSidebarTooltip({
+  children,
+  disabled,
+  label,
+}: Props) {
   const [rotate, setRotate] = useState(angle(Math.random()))
 
   return (

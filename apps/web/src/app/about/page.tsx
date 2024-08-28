@@ -8,6 +8,7 @@ import Marquee from "~/components/Marquee"
 import Icon from "~/components/Icon"
 import Lottie from "~/components/Lottie"
 
+
 const Stars = lazy(() => import("./components/Stars"))
 
 export const metadata: Metadata = {
