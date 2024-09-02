@@ -4,7 +4,7 @@ import { isRedirectError } from "next/dist/client/components/redirect"
 import { redirect } from "next/navigation"
 import type { NextRequest } from "next/server"
 import { z } from "zod"
-import { parseSearchParams } from "~/lib/params"
+import { parseSearchParams } from "~/lib/server"
 import { authenticate, oauthCookie } from "~/services/auth/server"
 
 const searchParams = z.union([
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
     const twitchUser = await fetch("https://api.twitch.tv/helix/users", {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
-        "Client-Id": import.meta.env.TWITCH_OAUTH_ID || "",
+        "Client-Id": process.env.OAUTH_TWITCH_ID || "",
       },
     })
       .then((response) => response.json())

@@ -8,7 +8,7 @@ import type { NextRequest } from "next/server"
 import { z } from "zod"
 import { oauthCookie } from "~/services/auth/server"
 import { hints } from "~/lib/headers/server"
-import { parseSearchParams } from "~/lib/params"
+import { parseSearchParams } from "~/lib/server"
 
 const searchParams = z.union([
   z.object({
@@ -141,7 +141,7 @@ export async function GET(request: NextRequest) {
     )
 
     return redirect(
-      `${cookie.data.pathname}?toast=Logged+in+as+${user.username}`,
+      `${cookie.data.pathname}?toast=Logged+in+as+%40${user.username}`,
     )
   } catch (error) {
     if (isRedirectError(error)) {

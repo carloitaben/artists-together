@@ -19,7 +19,7 @@ export default function Toasts() {
     const toast = params.get("toast")
     const error = params.get("error")
 
-    if (!toast && !error) return
+    if (!toast && error === null) return
 
     toaster.create({
       title: toast || error || "Oops! Something went wrong…",

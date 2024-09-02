@@ -47,13 +47,13 @@ declare module "lucia" {
 
 export const provider = {
   discord: new Discord(
-    String(process.env.DISCORD_OAUTH_ID),
-    String(process.env.DISCORD_OAUTH_SECRET),
+    String(process.env.OAUTH_DISCORD_ID),
+    String(process.env.OAUTH_DISCORD_SECRET),
     new URL("/api/auth/callback/discord", WEB_URL).toString()
   ),
   twitch: new Twitch(
-    String(process.env.TWITCH_OAUTH_ID),
-    String(process.env.TWITCH_OAUTH_SECRET),
+    String(process.env.OAUTH_TWITCH_ID),
+    String(process.env.OAUTH_TWITCH_SECRET),
     new URL("/api/auth/callback/twitch", WEB_URL).toString()
   ),
 }

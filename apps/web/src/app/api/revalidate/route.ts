@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { z } from "zod"
-import { parseSearchParams } from "~/lib/params"
+import { parseSearchParams } from "~/lib/server"
 
 const searchParams = z.object({
   token: z

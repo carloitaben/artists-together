@@ -16,7 +16,7 @@ import type { ScreensConfig } from "tailwindcss/types/config"
 import type { Screen } from "~/lib/tailwind"
 import { screens } from "~/../tailwind.config"
 import { usePathname } from "next/navigation"
-import { routes, type Route } from "../routes"
+import { routes } from "../routes"
 
 export function createSafeContext<T>(displayName: string, defaultValue?: T) {
   const Context = createContext<T | null>(defaultValue || null)
@@ -147,23 +147,32 @@ const resizeObserver =
         })
       })
 
+export function measure<T extends Element = Element>(
+  target: T,
+  callback: MeasureCallback,
+  options?: ResizeObserverOptions,
+) {
+  if (!resizeObserver) {
+    return () => {}
+  }
+
+  resizeObserverCallbacks.set(target, callback)
+  resizeObserver.observe(target, options)
+
+  return () => {
+    resizeObserverCallbacks.delete(target)
+    resizeObserver.unobserve(target)
+  }
+}
+
 export function useOnMeasure<T extends Element = Element>(
   ref: RefObject<T>,
   callback: MeasureCallback,
   options?: ResizeObserverOptions,
 ) {
   useEffect(() => {
-    const target = ref.current
-
-    if (!target) return
-    if (!resizeObserver) return
-
-    resizeObserverCallbacks.set(target, callback)
-    resizeObserver.observe(target, options)
-
-    return () => {
-      resizeObserverCallbacks.delete(target)
-      resizeObserver.unobserve(target)
+    if (ref.current) {
+      return measure(ref.current, callback, options)
     }
   }, [callback, options, ref])
 }
