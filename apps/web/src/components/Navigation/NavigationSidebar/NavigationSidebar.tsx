@@ -26,28 +26,31 @@ export default function NavigationSidebar() {
             </span>
           </Auth.Trigger>
         </NavigationSidebarTooltip>
-        {routes.map((route) => (
-          <NavigationSidebarTooltip
-            key={route.href}
-            label={route.label}
-            disabled={route.disabled}
-          >
-            <NavLink
-              className="group block size-14 p-1 text-theme-800 hover:text-theme-800 aria-[current='page']:text-theme-300"
-              prefetch={!saveData}
-              href={route.href}
-              end={route.end}
+        {routes.map((route) => {
+          const Element = route.disabled ? "button" : NavLink
+          return (
+            <NavigationSidebarTooltip
+              key={route.href}
+              label={route.label}
+              disabled={route.disabled}
             >
-              <span className="grid size-12 place-items-center rounded-2 group-hover:bg-theme-300 group-aria-[current='page']:group-hover:text-theme-800">
-                <Icon
-                  src={route.icon}
-                  alt={route.label}
-                  className="size-6 text-current"
-                />
-              </span>
-            </NavLink>
-          </NavigationSidebarTooltip>
-        ))}
+              <Element
+                className="group block size-14 p-1 text-theme-800 hover:text-theme-800 aria-[current='page']:text-theme-300"
+                prefetch={!saveData}
+                href={route.disabled ? "" : route.href}
+                end={route.end}
+              >
+                <span className="grid size-12 place-items-center rounded-2 group-hover:bg-theme-300 group-aria-[current='page']:group-hover:text-theme-800">
+                  <Icon
+                    src={route.icon}
+                    alt={route.label}
+                    className="size-6 text-current"
+                  />
+                </span>
+              </Element>
+            </NavigationSidebarTooltip>
+          )
+        })}
       </ul>
     </nav>
   )
