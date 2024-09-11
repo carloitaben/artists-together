@@ -10,7 +10,7 @@ importers:
     devDependencies:
       sst:
         specifier: latest
-        version: 3.0.91
+        version: 3.1.2
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -20,9 +20,6 @@ importers:
       '@artists-together/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@artists-together/db':
-        specifier: workspace:*
-        version: link:../../packages/db
       dayjs:
         specifier: ^1.11.10
         version: 1.11.12
@@ -33,9 +30,9 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
     devDependencies:
-      '@artists-together/ts':
+      '@artists-together/config':
         specifier: workspace:*
-        version: link:../../packages/ts
+        version: link:../../packages/config
       '@types/node':
         specifier: ^20.12.10
         version: 20.12.14
@@ -54,49 +51,31 @@ importers:
 
   apps/functions:
     dependencies:
-      '@artists-together/auth':
-        specifier: workspace:*
-        version: link:../../packages/auth
       '@artists-together/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@artists-together/db':
-        specifier: workspace:*
-        version: link:../../packages/db
-      '@artists-together/kv':
-        specifier: workspace:*
-        version: link:../../packages/kv
       zod:
         specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
-      '@artists-together/ts':
+      '@artists-together/config':
         specifier: workspace:*
-        version: link:../../packages/ts
+        version: link:../../packages/config
       '@types/aws-lambda':
         specifier: ^8.10
         version: 8.10.143
       sst:
         specifier: latest
-        version: 3.0.91
+        version: 3.1.2
 
   apps/web:
     dependencies:
       '@ark-ui/react':
         specifier: ^3.2.1
         version: 3.8.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@artists-together/auth':
-        specifier: workspace:*
-        version: link:../../packages/auth
       '@artists-together/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@artists-together/db':
-        specifier: workspace:*
-        version: link:../../packages/db
-      '@artists-together/kv':
-        specifier: workspace:*
-        version: link:../../packages/kv
       '@conform-to/react':
         specifier: ^1.1.4
         version: 1.1.5(react@18.3.1)
@@ -106,6 +85,9 @@ importers:
       '@react-three/fiber':
         specifier: ^8.17.5
         version: 8.17.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.167.1)
+      arctic:
+        specifier: 2.0.0-next.5
+        version: 2.0.0-next.5
       aws4fetch:
         specifier: ^1.0.19
         version: 1.0.19
@@ -206,9 +188,6 @@ importers:
 
   apps/wss:
     dependencies:
-      '@artists-together/auth':
-        specifier: workspace:*
-        version: link:../../packages/auth
       '@artists-together/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -216,103 +195,57 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
-      '@artists-together/ts':
+      '@artists-together/config':
         specifier: workspace:*
-        version: link:../../packages/ts
+        version: link:../../packages/config
       bun-types:
         specifier: ^1.1.7
         version: 1.1.24
 
-  packages/auth:
-    dependencies:
-      '@artists-together/core':
-        specifier: workspace:*
-        version: link:../core
-      '@artists-together/db':
-        specifier: workspace:*
-        version: link:../db
-      '@lucia-auth/adapter-drizzle':
-        specifier: ^1.0.7
-        version: 1.1.0(drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240815.0)(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1))(lucia@3.2.0)
-      '@lucia-auth/adapter-sqlite':
-        specifier: ^3.0.0
-        version: 3.0.2(lucia@3.2.0)
-      arctic:
-        specifier: ^1.2.1
-        version: 1.9.2
-      lucia:
-        specifier: ^3.0.1
-        version: 3.2.0
-      oslo:
-        specifier: ^1.1.3
-        version: 1.2.1
-    devDependencies:
-      '@artists-together/ts':
-        specifier: workspace:*
-        version: link:../ts
-      '@types/node':
-        specifier: ^20.12.10
-        version: 20.12.14
-      typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
+  packages/config: {}
 
   packages/core:
     dependencies:
-      '@artists-together/db':
-        specifier: workspace:*
-        version: link:../db
       '@discordjs/core':
-        specifier: ^1.2.0
-        version: 1.2.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        specifier: ^2.0.0
+        version: 2.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@discordjs/rest':
-        specifier: ^2.3.0
-        version: 2.3.0
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
-    devDependencies:
-      '@artists-together/ts':
-        specifier: workspace:*
-        version: link:../ts
-      '@types/node':
-        specifier: ^20.12.10
-        version: 20.12.14
-      typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
-
-  packages/db:
-    dependencies:
+        specifier: ^2.4.0
+        version: 2.4.0
       '@libsql/client':
-        specifier: ^0.8.1
-        version: 0.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        specifier: ^0.10.0
+        version: 0.10.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1)
+        version: 0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.10.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1)
       drizzle-zod:
         specifier: ^0.5.1
-        version: 0.5.1(drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1))(zod@3.23.8)
+        version: 0.5.1(drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.10.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1))(zod@3.23.8)
+      lucia:
+        specifier: 0.0.0-remove-adapter-package.20240719033400
+        version: 0.0.0-remove-adapter-package.20240719033400
+      oslo:
+        specifier: ^1.2.1
+        version: 1.2.1
       zod:
         specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
-      '@artists-together/ts':
+      '@artists-together/config':
         specifier: workspace:*
-        version: link:../ts
+        version: link:../config
       '@types/node':
         specifier: ^20.12.10
         version: 20.12.14
       drizzle-kit:
-        specifier: ^0.24.0
-        version: 0.24.0
+        specifier: ^0.24.2
+        version: 0.24.2
+      prettier:
+        specifier: ^3.2.5
+        version: 3.3.3
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
-
-  packages/kv: {}
-
-  packages/ts: {}
 
 packages:
 
@@ -484,9 +417,13 @@ packages:
     resolution: {integrity: sha512-mLcTACtXUuVgutoznkh6hS3UFqYirDYAg5Dc1m8xn6OvPjetnUlf/xjtqnnc47OwWdaoCQnHmHh9KofhD6uRqw==}
     engines: {node: '>=18'}
 
-  '@discordjs/core@1.2.0':
-    resolution: {integrity: sha512-Swnw6OJXkY+n+Kh/HjAsC52poaxSRRr+vFO7EzPtKJ7MF+3KyhfvsN2r4bH5NTvossoHPExw3Pcq+9pKwmK8/Q==}
+  '@discordjs/collection@2.1.1':
+    resolution: {integrity: sha512-LiSusze9Tc7qF03sLCujF5iZp7K+vRNEDBZ86FT9aQAv3vxMLihUvKvpsCWiQ2DJq1tVckopKm1rxomgNUc9hg==}
     engines: {node: '>=18'}
+
+  '@discordjs/core@2.0.0':
+    resolution: {integrity: sha512-N5PaTaEsEJyX9/KpcRN4+Jzc2qWvi55DVD2U6PXlbK1+C1du+B7yC4ey5yNeI2lG8k4vha3iGPR0LPemUkvIZA==}
+    engines: {node: '>=20'}
 
   '@discordjs/formatters@0.4.0':
     resolution: {integrity: sha512-fJ06TLC1NiruF35470q3Nr1bi95BdvKFAF+T5bNfZJ4bNdqZ3VZ+Ttg6SThqTxm6qumSG3choxLBHMC69WXNXQ==}
@@ -496,20 +433,28 @@ packages:
     resolution: {integrity: sha512-C1kAJK8aSYRv3ZwMG8cvrrW4GN0g5eMdP8AuN8ODH5DyOCbHgJspze1my3xHOAgwLJdKUbWNVyAeJ9cEdduqIg==}
     engines: {node: '>=16.11.0'}
 
+  '@discordjs/rest@2.4.0':
+    resolution: {integrity: sha512-Xb2irDqNcq+O8F0/k/NaDp7+t091p+acb51iA4bCKfIn+WFWd6HrNvcsSbMMxIR9NjcMZS6NReTKygqiQN+ntw==}
+    engines: {node: '>=18'}
+
   '@discordjs/util@1.1.0':
     resolution: {integrity: sha512-IndcI5hzlNZ7GS96RV3Xw1R2kaDuXEp7tRIy/KlhidpN/BQ1qh1NZt3377dMLTa44xDUNKT7hnXkA/oUAzD/lg==}
     engines: {node: '>=16.11.0'}
 
-  '@discordjs/ws@1.1.0':
-    resolution: {integrity: sha512-O97DIeSvfNTn5wz5vaER6ciyUsr7nOqSEtsLoMhhIgeFkhnxLRqSr00/Fpq2/ppLgjDGLbQCDzIK7ilGoB/M7A==}
-    engines: {node: '>=16.11.0'}
+  '@discordjs/util@1.1.1':
+    resolution: {integrity: sha512-eddz6UnOBEB1oITPinyrB2Pttej49M9FZQY8NxgEvc3tq6ZICZ19m70RsmzRdDHk80O9NoYN/25AqJl8vPVf/g==}
+    engines: {node: '>=18'}
 
   '@discordjs/ws@1.1.1':
     resolution: {integrity: sha512-PZ+vLpxGCRtmr2RMkqh8Zp+BenUaJqlS6xhgWKEZcgC/vfHLEzpHtKkB0sl3nZWpwtcKk6YWy+pU3okL2I97FA==}
     engines: {node: '>=16.11.0'}
 
-  '@drizzle-team/brocli@0.8.2':
-    resolution: {integrity: sha512-zTrFENsqGvOkBOuHDC1pXCkDXNd2UhP4lI3gYGhQ1R1SPeAAfqzPsV1dcpMy4uNU6kB5VpU5NGhvwxVNETR02A==}
+  '@discordjs/ws@2.0.0':
+    resolution: {integrity: sha512-VSVFMOFE+G9bp/2+4e/lFySIU+urxW8NPRXPsKLbP9AUl1MvQxoUVIUfPjZkUP23jjQh+AvWWm6vaA0A5Rb2Rg==}
+    engines: {node: '>=20'}
+
+  '@drizzle-team/brocli@0.10.1':
+    resolution: {integrity: sha512-AHy0vjc+n/4w/8Mif+w86qpppHuF3AyXbcWW+R/W7GNA3F5/p2nuhlkCJaTXSLZheB4l1rtHzOfr9A7NwoR/Zg==}
 
   '@emnapi/core@0.45.0':
     resolution: {integrity: sha512-DPWjcUDQkCeEM4VnljEOEcXdAD7pp8zSZsgOujk/LGIwCXWbXJngin+MO4zbH429lzeC3WbYLGjE2MaUOwzpyw==}
@@ -864,19 +809,29 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@libsql/client@0.8.1':
-    resolution: {integrity: sha512-xGg0F4iTDFpeBZ0r4pA6icGsYa5rG6RAG+i/iLDnpCAnSuTqEWMDdPlVseiq4Z/91lWI9jvvKKiKpovqJ1kZWA==}
+  '@libsql/client@0.10.0':
+    resolution: {integrity: sha512-2ERn08T4XOVx34yBtUPq0RDjAdd9TJ5qNH/izugr208ml2F94mk92qC64kXyDVQINodWJvp3kAdq6P4zTtCZ7g==}
 
-  '@libsql/core@0.8.1':
-    resolution: {integrity: sha512-u6nrj6HZMTPsgJ9EBhLzO2uhqhlHQJQmVHV+0yFLvfGf3oSP8w7TjZCNUgu1G8jHISx6KFi7bmcrdXW9lRt++A==}
+  '@libsql/core@0.10.0':
+    resolution: {integrity: sha512-rqynAXGaiSpTsykOZdBtI1N4z4O+KZ6mt33K/aHeXAY0gSIfK/ctxuWa0Y1Bjo4FMz1idBTCXz4Ps5kITOvZZw==}
 
   '@libsql/darwin-arm64@0.3.19':
     resolution: {integrity: sha512-rmOqsLcDI65zzxlUOoEiPJLhqmbFsZF6p4UJQ2kMqB+Kc0Rt5/A1OAdOZ/Wo8fQfJWjR1IbkbpEINFioyKf+nQ==}
     cpu: [arm64]
     os: [darwin]
 
+  '@libsql/darwin-arm64@0.4.1':
+    resolution: {integrity: sha512-XICT9/OyU8Aa9Iv1xZIHgvM09n/1OQUk3VC+s5uavzdiGHrDMkOWzN47JN7/FiMa/NWrcgoEiDMk3+e7mE53Ig==}
+    cpu: [arm64]
+    os: [darwin]
+
   '@libsql/darwin-x64@0.3.19':
     resolution: {integrity: sha512-q9O55B646zU+644SMmOQL3FIfpmEvdWpRpzubwFc2trsa+zoBlSkHuzU9v/C+UNoPHQVRMP7KQctJ455I/h/xw==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@libsql/darwin-x64@0.4.1':
+    resolution: {integrity: sha512-pSKxhRrhu4SsTD+IBRZXcs1SkwMdeAG1tv6Z/Ctp/sOEYrgkU8MDKLqkOr9NsmwpK4S0+JdwjkLMyhTkct/5TQ==}
     cpu: [x64]
     os: [darwin]
 
@@ -894,8 +849,18 @@ packages:
     cpu: [arm64]
     os: [linux]
 
+  '@libsql/linux-arm64-gnu@0.4.1':
+    resolution: {integrity: sha512-9lpvb24tO2qZd9nq5dlq3ESA3hSKYWBIK7lJjfiCM6f7a70AUwBY9QoPJV9q4gILIyVnR1YBGrlm50nnb+dYgw==}
+    cpu: [arm64]
+    os: [linux]
+
   '@libsql/linux-arm64-musl@0.3.19':
     resolution: {integrity: sha512-VEZtxghyK6zwGzU9PHohvNxthruSxBEnRrX7BSL5jQ62tN4n2JNepJ6SdzXp70pdzTfwroOj/eMwiPt94gkVRg==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@libsql/linux-arm64-musl@0.4.1':
+    resolution: {integrity: sha512-lyxi+lFxE+NcBRDMQCxCtDg3c4WcKAbc9u63d5+B23Vm+UgphD9XY4seu+tGrBy1MU2tuNVix7r9S7ECpAaVrA==}
     cpu: [arm64]
     os: [linux]
 
@@ -904,8 +869,18 @@ packages:
     cpu: [x64]
     os: [linux]
 
+  '@libsql/linux-x64-gnu@0.4.1':
+    resolution: {integrity: sha512-psvuQ3UFBEmDFV8ZHG+WkUHIJiWv+elZ+zIPvOVedlIKdxG1O+8WthWUAhFHOGnbiyzc4sAZ4c3de1oCvyHxyQ==}
+    cpu: [x64]
+    os: [linux]
+
   '@libsql/linux-x64-musl@0.3.19':
     resolution: {integrity: sha512-BLsXyJaL8gZD8+3W2LU08lDEd9MIgGds0yPy5iNPp8tfhXx3pV/Fge2GErN0FC+nzt4DYQtjL+A9GUMglQefXQ==}
+    cpu: [x64]
+    os: [linux]
+
+  '@libsql/linux-x64-musl@0.4.1':
+    resolution: {integrity: sha512-PDidJ3AhGDqosGg3OAZzGxMFIbnuOALya4BoezJKl667AFv3x7BBQ30H81Mngsq3Fh8RkJkXSdWfL91+Txb1iA==}
     cpu: [x64]
     os: [linux]
 
@@ -914,23 +889,10 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@lucia-auth/adapter-drizzle@1.1.0':
-    resolution: {integrity: sha512-iCTnZWvfI5lLZOdUHZYiXA1jaspIFEeo2extLxQ3DjP3uOVys7IPwBi7zezLIRu9dhro4H4Kji+7gSYyjcef2A==}
-    peerDependencies:
-      drizzle-orm: '>= 0.29 <1'
-      lucia: 3.x
-
-  '@lucia-auth/adapter-sqlite@3.0.2':
-    resolution: {integrity: sha512-UlXpF+2UoFEdm1AsriJii5BOARwqko6SX29rQ8T8Za7rnjj9KLXLaRVQUgBhGmggAyvzCtguJ2+XOZDsfWm6Sw==}
-    peerDependencies:
-      '@libsql/client': ^0.3.0
-      better-sqlite3: 8.x - 11.x
-      lucia: 3.x
-    peerDependenciesMeta:
-      '@libsql/client':
-        optional: true
-      better-sqlite3:
-        optional: true
+  '@libsql/win32-x64-msvc@0.4.1':
+    resolution: {integrity: sha512-IdODVqV/PrdOnHA/004uWyorZQuRsB7U7bCRCE3vXgABj3eJLJGc6cv2C6ksEaEoVxJbD8k53H4VVAGrtYwXzQ==}
+    cpu: [x64]
+    os: [win32]
 
   '@neon-rs/load@0.0.4':
     resolution: {integrity: sha512-kTPhdZyTQxB+2wpiRcFWrDcejc4JI6tkPuS7UZCG4l6Zvc5kU/gGQ/ozvHTh1XR5tS+UlfAfGuPajjzQjCiHCw==}
@@ -1180,6 +1142,21 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@oslojs/asn1@0.2.2':
+    resolution: {integrity: sha512-/c7DTaOdmk3Xb482b4CFnPdWLo5e2WQuozhc89KVb91kohA+VvVNTd9IPyLsZpDUf9u3iwP4HcuMEXBcYmGFnQ==}
+
+  '@oslojs/binary@0.2.3':
+    resolution: {integrity: sha512-pBJvvl5wpBBmkbP8cMZvPXzxPd7WN+NDBHPEg2N6WTDSnYCCPmqghIz6W+Cw16hhAju9wgmOeHryjHFbNezr1w==}
+
+  '@oslojs/crypto@0.6.0':
+    resolution: {integrity: sha512-MAwQt2BwW/oLvYaX1SuVHBqBXV+3CsF7ied23LDqeVeesFTPxLLIqW6pbQ6SMUPnGEJXQx4OTfm2BYSLLvp5Hg==}
+
+  '@oslojs/encoding@0.3.0':
+    resolution: {integrity: sha512-i374LSDXuo2l+waPlejutIkw1zOA1wWxpvaXwQgyGsr5eZwX29hH1KIKFopPTriR4DKH+7nL7c5wNx16a/6voQ==}
+
+  '@oslojs/oauth2@0.5.0':
+    resolution: {integrity: sha512-t70+e4EgnzTbU4MrUWXzqWN2A6RJrlSSvwwuBv6E0Ap6/nsIXrjsdRWeTcSvvXTcC6fi0YdWaqEWLipcEm2Cgw==}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -1531,6 +1508,10 @@ packages:
     resolution: {integrity: sha512-J7T3gUr3Wz0l7Ni1f9upgBZ7+J22/Q1B7dl0X6fG+fTsD+H+31DIosMHj4Um1dWQwqbcQ3oQf+YS2foYkDc9cQ==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
+  '@vladfrangu/async_event_emitter@2.4.6':
+    resolution: {integrity: sha512-RaI5qZo6D2CVS6sTHFKg1v5Ohq/+Bo2LZ5gzUEwZ/WkHhwtGTCB/sVLw8ijOkAUxasZ+WshN/Rzj4ywsABJ5ZA==}
+    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
+
   '@webgpu/types@0.1.44':
     resolution: {integrity: sha512-JDpYJN5E/asw84LTYhKyvPpxGnD+bAKPtpW9Ilurf7cZpxaTbxkQcGwOd7jgB9BPBrTYQ+32ufo4HiuomTjHNQ==}
 
@@ -1771,8 +1752,8 @@ packages:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
 
-  arctic@1.9.2:
-    resolution: {integrity: sha512-VTnGpYx+ypboJdNrWnK17WeD7zN/xSCHnpecd5QYsBfVZde/5i+7DJ1wrf/ioSDMiEjagXmyNWAE3V2C9f1hNg==}
+  arctic@2.0.0-next.5:
+    resolution: {integrity: sha512-5d2miFSz5v1rTD+OOS5vmzqwgdWXFRJrnjVV0WxfDaADmt0afpjHAOGN5kaNQoHMsEJs+gCidGM92VNhIf6Hng==}
 
   arg@4.1.3:
     resolution: {integrity: sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==}
@@ -2023,6 +2004,9 @@ packages:
   discord-api-types@0.37.83:
     resolution: {integrity: sha512-urGGYeWtWNYMKnYlZnOnDHm8fVRffQs3U0SpE8RHeiuLKb/u92APS8HoQnPTFbnXmY1vVnXjXO4dOxcAn3J+DA==}
 
+  discord-api-types@0.37.97:
+    resolution: {integrity: sha512-No1BXPcVkyVD4ZVmbNgDKaBoqgeQ+FJpzZ8wqHkfmBnTZig1FcH3iPPersiK1TUIAzgClh2IvOuVUYfcWLQAOA==}
+
   discord.js@14.15.3:
     resolution: {integrity: sha512-/UJDQO10VuU6wQPglA4kz2bw2ngeeSbogiIPx/TsnctfzV/tNf+q+i1HlgtX1OGpeOBpJH9erZQNO5oRM2uAtQ==}
     engines: {node: '>=16.11.0'}
@@ -2050,8 +2034,8 @@ packages:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
-  drizzle-kit@0.24.0:
-    resolution: {integrity: sha512-rUl5Rf5HLOVkAwHEVEi8xgulIRWzoys0q77RHGCxv5e9v8AI3JGFg7Ug5K1kn513RwNZbuNJMUKOXo0j8kPRgg==}
+  drizzle-kit@0.24.2:
+    resolution: {integrity: sha512-nXOaTSFiuIaTMhS8WJC2d4EBeIcN9OSt2A2cyFbQYBAZbi7lRsVGJNqDpEwPqYfJz38yxbY/UtbvBBahBfnExQ==}
     hasBin: true
 
   drizzle-orm@0.33.0:
@@ -2712,6 +2696,11 @@ packages:
     cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
+  libsql@0.4.1:
+    resolution: {integrity: sha512-qZlR9Yu1zMBeLChzkE/cKfoKV3Esp9cn9Vx5Zirn4AVhDWPcjYhKwbtJcMuHehgk3mH+fJr9qW+3vesBWbQpBg==}
+    cpu: [x64, arm64, wasm32]
+    os: [darwin, linux, win32]
+
   lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
     engines: {node: '>=10'}
@@ -2743,16 +2732,16 @@ packages:
   lottie-web@5.12.2:
     resolution: {integrity: sha512-uvhvYPC8kGPjXT3MyKMrL3JitEAmDMp30lVkuq/590Mw9ok6pWcFCwXJveo0t5uqYw1UREQHofD+jVpdjBv8wg==}
 
-  lru-cache@10.2.2:
-    resolution: {integrity: sha512-9hp3Vp2/hFQUiIwKo8XCeFVnrg8Pk3TYNPIR7tJADKi5YfcF7vEaK7avFHTlSy3kOKYaJQaalfEo6YuXdceBOQ==}
-    engines: {node: 14 || >=16.14}
+  lru-cache@10.4.3:
+    resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
   lru-cache@6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  lucia@3.2.0:
-    resolution: {integrity: sha512-eXMxXwk6hqtjRTj4W/x3EnTUtAztLPm0p2N2TEBMDEbakDLXiYnDQ9z/qahjPdPdhPguQc+vwO0/88zIWxlpuw==}
+  lucia@0.0.0-remove-adapter-package.20240719033400:
+    resolution: {integrity: sha512-llUqUqoQsD6zvdnw7YGU8jx7IMSwPGHsGi1DCPmNPMmBkfTlPem29lpIWKiAImmHmwhfNHkctuYQk5UgqLg4Qg==}
+    engines: {node: 20.x}
 
   magic-bytes.js@1.10.0:
     resolution: {integrity: sha512-/k20Lg2q8LE5xiaaSkMXk4sfvI+9EGEykFS4b0CHHGWqDYU0bGUFSwchNOMA56D7TCs9GwVTkqe9als1/ns8UQ==}
@@ -2911,9 +2900,6 @@ packages:
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
-
-  oslo@1.2.0:
-    resolution: {integrity: sha512-OoFX6rDsNcOQVAD2gQD/z03u4vEjWZLzJtwkmgfRF+KpQUXwdgEXErD7zNhyowmHwHefP+PM9Pw13pgpHMRlzw==}
 
   oslo@1.2.1:
     resolution: {integrity: sha512-HfIhB5ruTdQv0XX2XlncWQiJ5SIHZ7NHZhVyHth0CSZ/xzge00etRyYy/3wp/Dsu+PkxMC+6+B2lS/GcKoewkA==}
@@ -3252,33 +3238,33 @@ packages:
   split-type@0.3.4:
     resolution: {integrity: sha512-otEk9vnD8qwfLsk3Lx0gz+qRkNIJCx0mlyL47ImP/DjMuV39d75Lpfwjn9fHteDRz0aoOblSzQjSNT9+Sswxcg==}
 
-  sst-darwin-arm64@3.0.91:
-    resolution: {integrity: sha512-atT5eK/J3dhZTAJ0LlC7xKUrc1076nbMDFtnOrgjcX462A99Cy7adjLugu6vpB8ZpJST/wGJEo7A3Ikxipc/RA==}
+  sst-darwin-arm64@3.1.2:
+    resolution: {integrity: sha512-4rUeZdtPTWjHKCUJlx1Maj5TIQKGbYarL9hLG3ECidQ2ljTT0NbYHcO+MDUuu3Anoihz90uDrsiAvX3R9ULn0Q==}
     cpu: [arm64]
     os: [darwin]
 
-  sst-darwin-x64@3.0.91:
-    resolution: {integrity: sha512-idTdcXbQx2hFeAGFROteDP8fUpoGVxh5Tosdjb/k+5FYrd/FP4zncv5u+20sUy3yiGzmTvXJi+oi/yEbtXL7iQ==}
+  sst-darwin-x64@3.1.2:
+    resolution: {integrity: sha512-ufZwDYWpGfHvq3MhqaqKBn9YgyODHQ1WugCqQIbPGL84646joVIef42GW/rlnmzl61IsV9dle4623c0uKIaJIQ==}
     cpu: [x64]
     os: [darwin]
 
-  sst-linux-arm64@3.0.91:
-    resolution: {integrity: sha512-o0ihgZp5gXwf0+np5WVRtg+k2n4De48KBl+oXTlDwqNFQNYHAXp6YsUQ6YkZFeg87Urp0TWZWFsYUZ8LqxMSZg==}
+  sst-linux-arm64@3.1.2:
+    resolution: {integrity: sha512-KTAt7CJGfiuCGFrBQPuNdN+tzcjXRW8F2X2euWjavICFFP+T4AliaOsmEAsuAy5ELMsjcAtGGdqmrJlNuaDKsA==}
     cpu: [arm64]
     os: [linux]
 
-  sst-linux-x64@3.0.91:
-    resolution: {integrity: sha512-KCRz+7EJ5/hbb7PVIbex6tJPLNNjPGowsqlqhLT4t7Lh0z+NFrx20EGZdK1HIWjLerLFi2MalcfkJIIVwl7QDA==}
+  sst-linux-x64@3.1.2:
+    resolution: {integrity: sha512-yuoauPslgiwRvoAraWjB8czifeSfE7pELfAUA+oc3v4fxNHnSmu1EPVCO4f6HNTimBHJLJIehn5fg2OIiZ2yyg==}
     cpu: [x64]
     os: [linux]
 
-  sst-linux-x86@3.0.91:
-    resolution: {integrity: sha512-BjENDbNUyeoMXEqHJcK7iDUGfwrGeuL15ANSrDNSCejUpXpF3Rb+kgCvEdX9FcFkLZg6zbOEkfi3cZwbHp+6VA==}
+  sst-linux-x86@3.1.2:
+    resolution: {integrity: sha512-t3MEw1doX8h1rsaii2HsQ3r6Vo5Fb+8lWUMSNADSmkZbKy8ZUJiJJB8HJLOPqLRutf/Pt3q9iNLhvx6hrPpzYg==}
     cpu: [x86]
     os: [linux]
 
-  sst@3.0.91:
-    resolution: {integrity: sha512-OcfkdISCI7zF3V9foTLLCORw/liluktQaPEclIyirLhHEsT1zCUNAsz+Xynf09OIObast/FDZtJutEW2uBCkUQ==}
+  sst@3.1.2:
+    resolution: {integrity: sha512-FBcJRhbshtTUVtWSc3eGoji4n9YWxFtrkBXtc6rttXvq+SUz6spJu4EaCIVH0NRNmabmjAuVwurDk93O09TEvw==}
     hasBin: true
     peerDependencies:
       hono: 4.x
@@ -3474,6 +3460,10 @@ packages:
   undici@6.13.0:
     resolution: {integrity: sha512-Q2rtqmZWrbP8nePMq7mOJIN98M0fYvSgV89vwl/BQRT4mDOeY2GXZngfGpcBBhtky3woM7G24wZV3Q304Bv6cw==}
     engines: {node: '>=18.0'}
+
+  undici@6.19.8:
+    resolution: {integrity: sha512-U8uCCl2x9TK3WANvmBavymRzxbfFYG+tAu+fgx3zxQy3qdagQqBLwJVrdyO1TBfUXvfKveMKJZhpvUYoOjM+4g==}
+    engines: {node: '>=18.17'}
 
   uqr@0.1.2:
     resolution: {integrity: sha512-MJu7ypHq6QasgF5YRTjqscSzQp/W11zoUk6kvmlH+fmWEs63Y0Eib13hYFwAzagRJcVY8WVnlV+eBDUGMJ5IbA==}
@@ -4050,14 +4040,16 @@ snapshots:
 
   '@discordjs/collection@2.1.0': {}
 
-  '@discordjs/core@1.2.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@discordjs/collection@2.1.1': {}
+
+  '@discordjs/core@2.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
-      '@discordjs/rest': 2.3.0
-      '@discordjs/util': 1.1.0
-      '@discordjs/ws': 1.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@discordjs/rest': 2.4.0
+      '@discordjs/util': 1.1.1
+      '@discordjs/ws': 2.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@sapphire/snowflake': 3.5.3
-      '@vladfrangu/async_event_emitter': 2.2.4
-      discord-api-types: 0.37.83
+      '@vladfrangu/async_event_emitter': 2.4.6
+      discord-api-types: 0.37.97
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -4078,27 +4070,26 @@ snapshots:
       tslib: 2.6.2
       undici: 6.13.0
 
+  '@discordjs/rest@2.4.0':
+    dependencies:
+      '@discordjs/collection': 2.1.1
+      '@discordjs/util': 1.1.1
+      '@sapphire/async-queue': 1.5.3
+      '@sapphire/snowflake': 3.5.3
+      '@vladfrangu/async_event_emitter': 2.4.6
+      discord-api-types: 0.37.97
+      magic-bytes.js: 1.10.0
+      tslib: 2.6.3
+      undici: 6.19.8
+
   '@discordjs/util@1.1.0': {}
 
-  '@discordjs/ws@1.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
-    dependencies:
-      '@discordjs/collection': 2.1.0
-      '@discordjs/rest': 2.3.0
-      '@discordjs/util': 1.1.0
-      '@sapphire/async-queue': 1.5.2
-      '@types/ws': 8.5.10
-      '@vladfrangu/async_event_emitter': 2.2.4
-      discord-api-types: 0.37.83
-      tslib: 2.6.3
-      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
+  '@discordjs/util@1.1.1': {}
 
   '@discordjs/ws@1.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@discordjs/collection': 2.1.0
-      '@discordjs/rest': 2.3.0
+      '@discordjs/rest': 2.4.0
       '@discordjs/util': 1.1.0
       '@sapphire/async-queue': 1.5.3
       '@types/ws': 8.5.12
@@ -4110,7 +4101,22 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@drizzle-team/brocli@0.8.2': {}
+  '@discordjs/ws@2.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+    dependencies:
+      '@discordjs/collection': 2.1.1
+      '@discordjs/rest': 2.4.0
+      '@discordjs/util': 1.1.1
+      '@sapphire/async-queue': 1.5.3
+      '@types/ws': 8.5.12
+      '@vladfrangu/async_event_emitter': 2.4.6
+      discord-api-types: 0.37.97
+      tslib: 2.6.3
+      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@drizzle-team/brocli@0.10.1': {}
 
   '@emnapi/core@0.45.0':
     dependencies:
@@ -4353,25 +4359,31 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
     optional: true
 
-  '@libsql/client@0.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@libsql/client@0.10.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
-      '@libsql/core': 0.8.1
+      '@libsql/core': 0.10.0
       '@libsql/hrana-client': 0.6.2(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       js-base64: 3.7.5
-      libsql: 0.3.19
+      libsql: 0.4.1
       promise-limit: 2.7.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@libsql/core@0.8.1':
+  '@libsql/core@0.10.0':
     dependencies:
       js-base64: 3.7.5
 
   '@libsql/darwin-arm64@0.3.19':
     optional: true
 
+  '@libsql/darwin-arm64@0.4.1':
+    optional: true
+
   '@libsql/darwin-x64@0.3.19':
+    optional: true
+
+  '@libsql/darwin-x64@0.4.1':
     optional: true
 
   '@libsql/hrana-client@0.6.2(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
@@ -4397,26 +4409,32 @@ snapshots:
   '@libsql/linux-arm64-gnu@0.3.19':
     optional: true
 
+  '@libsql/linux-arm64-gnu@0.4.1':
+    optional: true
+
   '@libsql/linux-arm64-musl@0.3.19':
+    optional: true
+
+  '@libsql/linux-arm64-musl@0.4.1':
     optional: true
 
   '@libsql/linux-x64-gnu@0.3.19':
     optional: true
 
+  '@libsql/linux-x64-gnu@0.4.1':
+    optional: true
+
   '@libsql/linux-x64-musl@0.3.19':
+    optional: true
+
+  '@libsql/linux-x64-musl@0.4.1':
     optional: true
 
   '@libsql/win32-x64-msvc@0.3.19':
     optional: true
 
-  '@lucia-auth/adapter-drizzle@1.1.0(drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240815.0)(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1))(lucia@3.2.0)':
-    dependencies:
-      drizzle-orm: 0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1)
-      lucia: 3.2.0
-
-  '@lucia-auth/adapter-sqlite@3.0.2(lucia@3.2.0)':
-    dependencies:
-      lucia: 3.2.0
+  '@libsql/win32-x64-msvc@0.4.1':
+    optional: true
 
   '@neon-rs/load@0.0.4': {}
 
@@ -4592,6 +4610,21 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
+
+  '@oslojs/asn1@0.2.2':
+    dependencies:
+      '@oslojs/binary': 0.2.3
+
+  '@oslojs/binary@0.2.3': {}
+
+  '@oslojs/crypto@0.6.0':
+    dependencies:
+      '@oslojs/asn1': 0.2.2
+      '@oslojs/binary': 0.2.3
+
+  '@oslojs/encoding@0.3.0': {}
+
+  '@oslojs/oauth2@0.5.0': {}
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -5053,6 +5086,8 @@ snapshots:
   '@vladfrangu/async_event_emitter@2.2.4': {}
 
   '@vladfrangu/async_event_emitter@2.4.5': {}
+
+  '@vladfrangu/async_event_emitter@2.4.6': {}
 
   '@webgpu/types@0.1.44': {}
 
@@ -5572,9 +5607,11 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  arctic@1.9.2:
+  arctic@2.0.0-next.5:
     dependencies:
-      oslo: 1.2.0
+      '@oslojs/crypto': 0.6.0
+      '@oslojs/encoding': 0.3.0
+      '@oslojs/oauth2': 0.5.0
 
   arg@4.1.3:
     optional: true
@@ -5844,6 +5881,8 @@ snapshots:
 
   discord-api-types@0.37.83: {}
 
+  discord-api-types@0.37.97: {}
+
   discord.js@14.15.3(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       '@discordjs/builders': 1.8.2
@@ -5883,26 +5922,26 @@ snapshots:
 
   dotenv@16.4.5: {}
 
-  drizzle-kit@0.24.0:
+  drizzle-kit@0.24.2:
     dependencies:
-      '@drizzle-team/brocli': 0.8.2
+      '@drizzle-team/brocli': 0.10.1
       '@esbuild-kit/esm-loader': 2.6.5
       esbuild: 0.19.11
       esbuild-register: 3.5.0(esbuild@0.19.11)
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1):
+  drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.10.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240815.0
-      '@libsql/client': 0.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      '@libsql/client': 0.10.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@types/react': 18.3.3
       bun-types: 1.1.24
       react: 18.3.1
 
-  drizzle-zod@0.5.1(drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1))(zod@3.23.8):
+  drizzle-zod@0.5.1(drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.10.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1))(zod@3.23.8):
     dependencies:
-      drizzle-orm: 0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1)
+      drizzle-orm: 0.33.0(@cloudflare/workers-types@4.20240815.0)(@libsql/client@0.10.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.3)(bun-types@1.1.24)(react@18.3.1)
       zod: 3.23.8
 
   eastasianwidth@0.2.0: {}
@@ -6669,6 +6708,20 @@ snapshots:
       '@libsql/linux-x64-musl': 0.3.19
       '@libsql/win32-x64-msvc': 0.3.19
 
+  libsql@0.4.1:
+    dependencies:
+      '@neon-rs/load': 0.0.4
+      detect-libc: 2.0.2
+      libsql: 0.3.19
+    optionalDependencies:
+      '@libsql/darwin-arm64': 0.4.1
+      '@libsql/darwin-x64': 0.4.1
+      '@libsql/linux-arm64-gnu': 0.4.1
+      '@libsql/linux-arm64-musl': 0.4.1
+      '@libsql/linux-x64-gnu': 0.4.1
+      '@libsql/linux-x64-musl': 0.4.1
+      '@libsql/win32-x64-msvc': 0.4.1
+
   lilconfig@2.1.0: {}
 
   lilconfig@3.1.1: {}
@@ -6691,15 +6744,15 @@ snapshots:
 
   lottie-web@5.12.2: {}
 
-  lru-cache@10.2.2: {}
+  lru-cache@10.4.3: {}
 
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
 
-  lucia@3.2.0:
+  lucia@0.0.0-remove-adapter-package.20240719033400:
     dependencies:
-      oslo: 1.2.0
+      '@oslojs/encoding': 0.3.0
 
   magic-bytes.js@1.10.0: {}
 
@@ -6869,11 +6922,6 @@ snapshots:
       type-check: 0.4.0
       word-wrap: 1.2.5
 
-  oslo@1.2.0:
-    dependencies:
-      '@node-rs/argon2': 1.7.0
-      '@node-rs/bcrypt': 1.9.0
-
   oslo@1.2.1:
     dependencies:
       '@node-rs/argon2': 1.7.0
@@ -6905,7 +6953,7 @@ snapshots:
 
   path-scurry@1.11.1:
     dependencies:
-      lru-cache: 10.2.2
+      lru-cache: 10.4.3
       minipass: 7.1.2
 
   path-type@4.0.0: {}
@@ -7149,33 +7197,33 @@ snapshots:
 
   split-type@0.3.4: {}
 
-  sst-darwin-arm64@3.0.91:
+  sst-darwin-arm64@3.1.2:
     optional: true
 
-  sst-darwin-x64@3.0.91:
+  sst-darwin-x64@3.1.2:
     optional: true
 
-  sst-linux-arm64@3.0.91:
+  sst-linux-arm64@3.1.2:
     optional: true
 
-  sst-linux-x64@3.0.91:
+  sst-linux-x64@3.1.2:
     optional: true
 
-  sst-linux-x86@3.0.91:
+  sst-linux-x86@3.1.2:
     optional: true
 
-  sst@3.0.91:
+  sst@3.1.2:
     dependencies:
       '@aws-sdk/client-lambda': 3.478.0
       aws4fetch: 1.0.19
       jose: 5.2.3
       openid-client: 5.6.4
     optionalDependencies:
-      sst-darwin-arm64: 3.0.91
-      sst-darwin-x64: 3.0.91
-      sst-linux-arm64: 3.0.91
-      sst-linux-x64: 3.0.91
-      sst-linux-x86: 3.0.91
+      sst-darwin-arm64: 3.1.2
+      sst-darwin-x64: 3.1.2
+      sst-linux-arm64: 3.1.2
+      sst-linux-x64: 3.1.2
+      sst-linux-x86: 3.1.2
     transitivePeerDependencies:
       - aws-crt
 
@@ -7405,6 +7453,8 @@ snapshots:
   undici-types@6.19.8: {}
 
   undici@6.13.0: {}
+
+  undici@6.19.8: {}
 
   uqr@0.1.2: {}
 

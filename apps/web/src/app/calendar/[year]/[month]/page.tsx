@@ -1,12 +1,12 @@
 import dayjs from "dayjs"
 import { z } from "zod"
 import type { ReadonlyURLSearchParams } from "next/navigation"
-import { monthEnumSchema, monthSchema } from "~/lib/schemas"
+import { MonthEnum, Month } from "~/lib/schemas"
 import CalendarCell from "./components/CalendarCell"
 
 const paramsSchema = z.object({
   year: z.coerce.number().min(1970),
-  month: monthSchema,
+  month: Month,
 })
 
 type Params = z.output<typeof paramsSchema>
@@ -18,7 +18,7 @@ type Props = {
 
 export default function Page({ params }: Props) {
   const parsedParams = paramsSchema.parse(params)
-  const monthIndex = monthEnumSchema.options.findIndex(
+  const monthIndex = MonthEnum.options.findIndex(
     (month) => month === parsedParams.month,
   )
 

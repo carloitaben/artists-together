@@ -1,10 +1,4 @@
 function getWebURL() {
-  const external = process.env.WEB_URL || process.env.NEXT_PUBLIC_WEB_URL
-
-  if (external) {
-    return new URL(external)
-  }
-
   const vercel =
     process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
       ? process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL

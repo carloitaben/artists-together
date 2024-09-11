@@ -40,8 +40,8 @@ type Props = {
 export default function WidgetClockContent({ promise }: Props) {
   const data = use(promise)
   const now = useMemo(
-    () => dayjs().tz(data.locations.timezone),
-    [data.locations.timezone],
+    () => dayjs().tz(data.location.timezone),
+    [data.location.timezone],
   )
 
   const [timestamp, setTimestamp] = useState(now)
@@ -70,11 +70,11 @@ export default function WidgetClockContent({ promise }: Props) {
         hours.set(transformHours(hour))
       }
 
-      setTimestamp(dayjs().tz(data.locations.timezone))
+      setTimestamp(dayjs().tz(data.location.timezone))
     }, 1_000)
 
     return () => clearInterval(interval)
-  }, [now, hours, minutes, seconds, data.locations.timezone])
+  }, [now, hours, minutes, seconds, data.location.timezone])
 
   const hourFormat = user
     ? user.settingsFullHourFormat
@@ -127,7 +127,7 @@ export default function WidgetClockContent({ promise }: Props) {
           </div>
         </div>
         <div className="text-center scale:text-[2rem]/[2.125rem]">
-          {`${data.locations.city}, ${data.locations.country}`}
+          {`${data.location.city}, ${data.location.country}`}
         </div>
       </div>
       <div aria-hidden className="pointer-events-none">

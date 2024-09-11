@@ -1,6 +1,7 @@
 import { Menu } from "@ark-ui/react"
 import { cx } from "cva"
-import { AnimatePresence, motion, type Transition } from "framer-motion"
+import type { Transition } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import type { Dispatch, SetStateAction } from "react"
 import { routes } from "~/lib/routes"
 import { useRoute } from "~/lib/react/client"

@@ -1,15 +1,15 @@
 import "server-only"
-import { Tag } from "@artists-together/kv"
-import { db, liveUsers, sql } from "@artists-together/db"
+import { Tag } from "@artists-together/core/cache"
+import { database, liveUserTable, sql } from "@artists-together/core/database"
 import { cache } from "react"
 import { unstable_cache } from "next/cache"
 
 export const getRandomLiveUsers = cache(
   unstable_cache(
     async () =>
-      db
+      database
         .select()
-        .from(liveUsers)
+        .from(liveUserTable)
         .orderBy(sql`random()`)
         .limit(10)
         .execute(),

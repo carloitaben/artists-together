@@ -1,11 +1,15 @@
-import { provider } from "@artists-together/auth"
-import { db, eq, twitchMetadata, users } from "@artists-together/db"
+import {
+  database,
+  userTable,
+  eq,
+  TwitchMetadata,
+} from "@artists-together/core/database"
 import { isRedirectError } from "next/dist/client/components/redirect"
 import { redirect } from "next/navigation"
 import type { NextRequest } from "next/server"
 import { z } from "zod"
+import { authenticate, oauthCookie, provider } from "~/services/auth/server"
 import { parseSearchParams } from "~/lib/server"
-import { authenticate, oauthCookie } from "~/services/auth/server"
 
 const searchParams = z.union([
   z.object({
@@ -27,6 +31,8 @@ export async function GET(request: NextRequest) {
       statusText: "Missing or invalid oauth cookie",
     })
   }
+
+  oauthCookie.delete()
 
   const params = parseSearchParams(request.nextUrl.searchParams, {
     schema: searchParams,
@@ -51,7 +57,7 @@ export async function GET(request: NextRequest) {
 
   const auth = await authenticate()
 
-  if (!auth) {
+  if (!auth.user) {
     return redirect(`${cookie.data.pathname}?error`)
   }
 
@@ -67,16 +73,16 @@ export async function GET(request: NextRequest) {
       },
     })
       .then((response) => response.json())
-      .then(twitchMetadata.parse)
+      .then(TwitchMetadata.parse)
 
-    await db
-      .update(users)
+    await database
+      .update(userTable)
       .set({
         twitchId: twitchUser.id,
         twitchUsername: twitchUser.login,
         twitchMetadata: twitchUser,
       })
-      .where(eq(users.id, auth.user.id))
+      .where(eq(userTable.id, auth.user.id))
 
     return redirect(`${cookie.data.pathname}?modal=auth`)
   } catch (error) {

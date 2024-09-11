@@ -3,7 +3,7 @@
 import dayjs from "dayjs"
 import Link from "next/link"
 import { useSelectedLayoutSegments } from "next/navigation"
-import { monthEnumSchema, monthNumberSchema } from "~/lib/schemas"
+import { MonthEnum, MonthNumber } from "~/lib/schemas"
 import Button from "~/components/Button"
 import Icon from "~/components/Icon"
 import Container from "~/components/Container"
@@ -25,9 +25,7 @@ function useDate() {
     .set("year", parseInt(year))
     .set(
       "month",
-      month
-        ? monthEnumSchema.options.findIndex((m) => m === month)
-        : date.month(),
+      month ? MonthEnum.options.findIndex((m) => m === month) : date.month(),
     )
 }
 
@@ -44,7 +42,7 @@ export default function CalendarHeader() {
 
     const target = dayjs(date).add(sign, "month")
     const year = target.year()
-    const month = monthNumberSchema.parse(target.month() + 1)
+    const month = MonthNumber.parse(target.month() + 1)
     return `/calendar/${year}/${month}`
   }
 

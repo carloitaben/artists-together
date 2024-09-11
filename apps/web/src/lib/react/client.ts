@@ -12,10 +12,10 @@ import {
   useSyncExternalStore,
   useTransition,
 } from "react"
+import { usePathname } from "next/navigation"
 import type { ScreensConfig } from "tailwindcss/types/config"
 import type { Screen } from "~/lib/tailwind"
 import { screens } from "~/../tailwind.config"
-import { usePathname } from "next/navigation"
 import { routes } from "../routes"
 
 export function createSafeContext<T>(displayName: string, defaultValue?: T) {

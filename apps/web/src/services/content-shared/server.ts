@@ -1,6 +1,5 @@
 import "server-only"
-import { Tag } from "@artists-together/kv"
-import { db, contentShared, sql, users, eq } from "@artists-together/db"
+import { Tag } from "@artists-together/core/cache"
 import { cache } from "react"
 import { unstable_cache } from "next/cache"
 

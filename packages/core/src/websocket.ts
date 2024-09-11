@@ -1,5 +1,6 @@
 import type { SafeParseReturnType } from "zod"
 import { z } from "zod"
+import type { ValueOf } from "./types"
 
 export const CursorState = z.enum(["idle", "hover", "drag"])
 
@@ -16,7 +17,7 @@ export const Cursor = z
 
 export type Cursor = z.infer<typeof Cursor>
 
-const events = z.object({
+export const Events = z.object({
   /**
    * Events sent from the client to the server
    */
@@ -45,7 +46,7 @@ const events = z.object({
         z.object({
           cursor: Cursor,
           username: z.string(),
-        })
+        }),
       ),
     }),
     /**
@@ -58,7 +59,7 @@ const events = z.object({
   }),
 })
 
-type Events = z.infer<typeof events>
+export type Events = z.infer<typeof Events>
 
 const StringToJSON = z.string().transform((string, context) => {
   try {
@@ -73,8 +74,8 @@ const StringToJSON = z.string().transform((string, context) => {
   }
 })
 
-const ClientEvent = events.shape.client.keyof()
-const ServerEvent = events.shape.server.keyof()
+const ClientEvent = Events.shape.client.keyof()
+const ServerEvent = Events.shape.server.keyof()
 
 export type ClientEvent = z.infer<typeof ClientEvent>
 export type ServerEvent = z.infer<typeof ServerEvent>
@@ -82,46 +83,44 @@ export type ServerEvent = z.infer<typeof ServerEvent>
 export type ClientEventData<T extends ClientEvent> = Events["client"][T]
 export type ServerEventData<T extends ServerEvent> = Events["server"][T]
 
-export function packClientMessage<T extends ClientEvent>(
-  event: T,
-  data: ClientEventData<T>
-) {
-  const clientEvent = ClientEvent.parse(event)
-  return JSON.stringify([
-    event,
-    events.shape.client.shape[clientEvent].parse(data),
-  ])
-}
-
-export function packServerMessage<T extends ServerEvent>(
-  event: T,
-  data: ServerEventData<T>
-) {
-  const serverEvent = ServerEvent.parse(event)
-  return JSON.stringify([
-    event,
-    events.shape.server.shape[serverEvent].parse(data),
-  ])
-}
-
 const ClientMesageTuple = StringToJSON.pipe(
   z.tuple([ClientEvent, z.unknown()]).transform(([event, json]) => ({
     event,
-    payload: events.shape.client.shape[event].parse(json),
-  }))
+    payload: Events.shape.client.shape[event].parse(json),
+  })),
 )
 
 const ServerMesageTuple = StringToJSON.pipe(
   z.tuple([ServerEvent, z.unknown()]).transform(([event, json]) => ({
     event,
-    payload: events.shape.server.shape[event].parse(json),
-  }))
+    payload: Events.shape.server.shape[event].parse(json),
+  })),
 )
 
-type ValueOf<T> = T[keyof T]
+export function packClientMessage<T extends ClientEvent>(
+  event: T,
+  data: ClientEventData<T>,
+) {
+  const clientEvent = ClientEvent.parse(event)
+  return JSON.stringify([
+    event,
+    Events.shape.client.shape[clientEvent].parse(data),
+  ])
+}
+
+export function packServerMessage<T extends ServerEvent>(
+  event: T,
+  data: ServerEventData<T>,
+) {
+  const serverEvent = ServerEvent.parse(event)
+  return JSON.stringify([
+    event,
+    Events.shape.server.shape[serverEvent].parse(data),
+  ])
+}
 
 export function unpackClientMessage(
-  message: string | Buffer
+  message: string | Buffer,
 ): SafeParseReturnType<
   string | Buffer,
   ValueOf<{
@@ -132,12 +131,12 @@ export function unpackClientMessage(
   }>
 > {
   return ClientMesageTuple.safeParse(
-    typeof message === "string" ? message : message.toString()
+    typeof message === "string" ? message : message.toString(),
   ) as any
 }
 
 export function unpackServerMessage(
-  message: string | Buffer
+  message: string | Buffer,
 ): SafeParseReturnType<
   string | Buffer,
   ValueOf<{
@@ -148,6 +147,6 @@ export function unpackServerMessage(
   }>
 > {
   return ServerMesageTuple.safeParse(
-    typeof message === "string" ? message : message.toString()
+    typeof message === "string" ? message : message.toString(),
   ) as any
 }

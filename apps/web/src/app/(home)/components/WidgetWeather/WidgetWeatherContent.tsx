@@ -31,7 +31,7 @@ export default function WidgetWeatherContent({ promise }: Props) {
   return (
     <div className="flex size-full items-center justify-between font-fraunces font-light text-anamorphic-teal-700 [background:radial-gradient(484.75%_388.20%_at_76.54%_43.27%,#F4F4F4_0%,#50D5FF_100%)] scale:text-[2rem]/[2.375rem]">
       <div className="h-full scale:pb-[2.375rem] scale:pl-12 scale:pt-[2.625rem]">
-        <h6 className="scale:mb-5">{`${data.locations.city}, ${data.locations.country}`}</h6>
+        <h6 className="scale:mb-5">{`${data.location.city}, ${data.location.country}`}</h6>
         <span>
           Today <span className="font-fraunces-ampersand">&</span> Tomorrow
         </span>

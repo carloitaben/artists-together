@@ -70,6 +70,9 @@ export function createCookie<Name extends string, Schema extends ZodTypeAny>(
 
       return parsed
     },
+    delete() {
+      return cookies().delete(name)
+    },
   }
 }
 

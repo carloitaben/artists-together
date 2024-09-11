@@ -1,4 +1,4 @@
-import { db, eq, liveUsers } from "@artists-together/db"
+import { connect, eq, liveUsers } from "@artists-together/db"
 import { ROLES } from "@artists-together/core/discord"
 import { Activity, ActivityType, Presence } from "discord.js"
 import { registerEventHandler } from "~/lib/core"
@@ -23,6 +23,7 @@ function getValidStreamActivity(presence: Presence | null) {
 }
 
 registerEventHandler("ready", async (client) => {
+  const db = connect()
   const guild = await getGuild(client)
 
   guild.members.cache.forEach((member) => {

@@ -2,7 +2,7 @@ import { environment } from "./secret"
 
 new sst.x.DevCommand("Database", {
   dev: {
-    command: "pnpm -F db dev",
+    command: "pnpm -F core db:dev",
     autostart: true,
   },
   environment,

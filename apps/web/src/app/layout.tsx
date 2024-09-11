@@ -2,14 +2,14 @@ import font from "next/font/local"
 import type { Metadata } from "next"
 import type { ReactNode } from "react"
 import { cx } from "cva"
-import { WEB_URL } from "@artists-together/core/constants"
 import { HintsContextProvider } from "~/lib/headers/server"
+import { WEB_URL } from "~/lib/constants"
 import { Auth } from "~/components/Auth"
 import Navigation from "~/components/Navigation"
+import Toasts from "~/components/Toasts"
 import Footer from "~/components/Footer"
 import Theme from "~/components/Theme"
 import "~/styles/index.css"
-import Toasts from "~/components/Toasts"
 
 export const runtime = "edge"
 export const fetchCache = "default-no-store"
@@ -48,10 +48,6 @@ export const metadata: Metadata = {
     index: process.env.VERCEL_ENV === "production",
     follow: process.env.VERCEL_ENV === "production",
   },
-  // themeColor: [
-  //   { media: "(prefers-color-scheme: light)", color: "white" },
-  //   { media: "(prefers-color-scheme: dark)", color: "black" },
-  // ],
 }
 
 type Props = {

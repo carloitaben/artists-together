@@ -1,3 +1,3 @@
-import { InsertUser } from "@artists-together/db"
+import { UserTableInsert } from "@artists-together/core/database"
 
-export const updateSchema = InsertUser.partial()
+export const updateSchema = UserTableInsert.partial()

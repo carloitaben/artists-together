@@ -40,11 +40,11 @@ export default function NavigationBottombar() {
               setSearchbarFocus={setSearchbarFocus}
             />
           ) : null}
-          <NavigationBottombarMenu
-            searchbarFocus={searchbarFocus}
-            onOpenChange={setShowScrim}
-          />
         </AnimatePresence>
+        <NavigationBottombarMenu
+          searchbarFocus={searchbarFocus}
+          onOpenChange={setShowScrim}
+        />
       </motion.div>
     </>
   )

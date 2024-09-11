@@ -1,27 +1,29 @@
 "use server"
 
-import { generateState, lucia, provider } from "@artists-together/auth"
-import { db, eq, users } from "@artists-together/db"
+import { authenticator } from "@artists-together/core/auth"
+import { database, eq, userTable } from "@artists-together/core/database"
 import { parseWithZod } from "@conform-to/zod"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+import { generateState } from "arctic"
 import { geolocation } from "~/lib/headers/server"
 import { error } from "~/lib/server"
-import { authenticate, oauthCookie } from "./server"
+import { authenticate, oauthCookie, provider } from "./server"
 import { updateSchema } from "./shared"
 
 export async function login(pathname: string) {
   const auth = await authenticate()
 
-  if (auth) {
+  if (auth.session) {
     return error({ cause: "ALREADY_LOGGED_IN" })
   }
 
   const state = generateState()
   const geo = geolocation()
-  const url = await provider.discord.createAuthorizationURL(state, {
-    scopes: ["identify", "email"],
-  })
+  const url = provider.discord.createAuthorizationURL(state, [
+    "identify",
+    "email",
+  ])
 
   oauthCookie.set(
     {
@@ -32,22 +34,23 @@ export async function login(pathname: string) {
     { strict: true },
   )
 
-  return redirect(url.toString())
+  return redirect(url.href)
 }
 
 export async function logout() {
   const auth = await authenticate()
 
-  if (!auth) {
+  if (!auth.session) {
     return error({ cause: "UNAUTHORIZED" })
   }
 
-  await lucia.invalidateSession(auth.session.id)
-  const sessionCookie = lucia.createBlankSessionCookie()
+  await authenticator.invalidateSession(auth.session.id)
+  const sessionCookie = authenticator.createBlankSessionCookie()
+
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes,
+    sessionCookie.npmCookieOptions(),
   )
 }
 
@@ -64,7 +67,7 @@ export async function update(_: unknown, formData: FormData) {
 
   const auth = await authenticate()
 
-  if (!auth) {
+  if (!auth.user) {
     return submission.reply({
       formErrors: ["Unauthorized"],
     })
@@ -73,10 +76,10 @@ export async function update(_: unknown, formData: FormData) {
   console.log(`update user ${auth.user.id} with:`, submission.value)
 
   try {
-    await db
-      .update(users)
+    await database
+      .update(userTable)
       .set(submission.value)
-      .where(eq(users.id, auth.user.id))
+      .where(eq(userTable.id, auth.user.id))
   } catch (error) {
     console.error(error)
     return submission.reply({
@@ -93,9 +96,10 @@ export async function connectDiscord(pathname: string) {
   }
 
   const state = generateState()
-  const url = await provider.discord.createAuthorizationURL(state, {
-    scopes: ["identify", "email"],
-  })
+  const url = provider.discord.createAuthorizationURL(state, [
+    "identify",
+    "email",
+  ])
 
   oauthCookie.set(
     {
@@ -106,35 +110,35 @@ export async function connectDiscord(pathname: string) {
     { strict: true },
   )
 
-  return redirect(url.toString())
+  return redirect(url.href)
 }
 
 export async function unlinkDiscord() {
   const auth = await authenticate()
 
-  if (!auth) {
+  if (!auth.user) {
     return error({ cause: "UNAUTHORIZED" })
   }
 
-  await db
-    .update(users)
+  await database
+    .update(userTable)
     .set({
       discordId: null,
       discordUsername: null,
       discordMetadata: null,
     })
-    .where(eq(users.id, auth.user.id))
+    .where(eq(userTable.id, auth.user.id))
 }
 
 export async function connectTwitch(pathname: string) {
   const auth = await authenticate()
 
-  if (!auth) {
+  if (!auth.user) {
     return error({ cause: "UNAUTHORIZED" })
   }
 
   const state = generateState()
-  const url = await provider.twitch.createAuthorizationURL(state)
+  const url = provider.twitch.createAuthorizationURL(state, [])
 
   oauthCookie.set(
     {
@@ -145,22 +149,22 @@ export async function connectTwitch(pathname: string) {
     { strict: true },
   )
 
-  return redirect(url.toString())
+  return redirect(url.href)
 }
 
 export async function unlinkTwitch() {
   const auth = await authenticate()
 
-  if (!auth) {
+  if (!auth.user) {
     return error({ cause: "UNAUTHORIZED" })
   }
 
-  await db
-    .update(users)
+  await database
+    .update(userTable)
     .set({
       twitchId: null,
       twitchUsername: null,
       twitchMetadata: null,
     })
-    .where(eq(users.id, auth.user.id))
+    .where(eq(userTable.id, auth.user.id))
 }

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Library",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "lib": ["es2022"],
+    "module": "preserve",
+    "target": "es2022",
+    "jsx": "preserve",
+    "noEmit": true,
+    "allowJs": false
+  }
+}

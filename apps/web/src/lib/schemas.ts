@@ -1,23 +1,23 @@
 import { z } from "zod"
 
-const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()])
+const AnyJSONLiteral = z.union([z.string(), z.number(), z.boolean(), z.null()])
 
-type Literal = z.infer<typeof literalSchema>
+type AnyJSONLiteral = z.infer<typeof AnyJSONLiteral>
 
-type Json = Literal | { [key: string]: Json } | Json[]
+type AnyJSON = AnyJSONLiteral | { [key: string]: AnyJSON } | AnyJSON[]
 
-export const jsonSchema: z.ZodType<Json> = z.lazy(() =>
-  z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)]),
+export const AnyJSON: z.ZodType<AnyJSON> = z.lazy(() =>
+  z.union([AnyJSONLiteral, z.array(AnyJSON), z.record(AnyJSON)]),
 )
 
-export const pathnameSchema = z
+export const Pathname = z
   .string()
   .default("/")
   .refine((value) => value.startsWith("/"), {
     message: "Pathname must start with a /",
   })
 
-export const monthEnumSchema = z.enum([
+export const MonthEnum = z.enum([
   "january",
   "february",
   "march",
@@ -35,17 +35,17 @@ export const monthEnumSchema = z.enum([
 /**
  * An integer, between 1 and 12, representing a month
  */
-export const monthNumberSchema = z.coerce
+export const MonthNumber = z.coerce
   .number()
   .min(1)
-  .max(monthEnumSchema.options.length)
+  .max(MonthEnum.options.length)
   .transform((value, context) => {
-    const option = monthEnumSchema.options[value - 1]
+    const option = MonthEnum.options[value - 1]
 
     if (!option) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `No duplicates allowed.`,
+        message: `Out of range`,
       })
 
       return z.NEVER
@@ -58,7 +58,4 @@ export const monthNumberSchema = z.coerce
  * An integer, between 1 and 12, representing a month,
  * or a month name.
  */
-export const monthSchema = z.union([
-  monthEnumSchema,
-  z.coerce.number().pipe(monthNumberSchema),
-])
+export const Month = z.union([MonthEnum, z.coerce.number().pipe(MonthNumber)])

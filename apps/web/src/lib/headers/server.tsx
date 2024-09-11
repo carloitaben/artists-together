@@ -52,7 +52,7 @@ export const hints = cache(() => {
   } as const
 })
 
-export const geolocationSchema = z
+export const Geolocation = z
   .object({
     city: z.string(),
     country: z
@@ -66,12 +66,12 @@ export const geolocationSchema = z
   })
   .nullable()
 
-export type Geolocation = z.infer<typeof geolocationSchema>
+export type Geolocation = z.infer<typeof Geolocation>
 
 export const geolocation = cache(() => {
   const readonlyHeaders = headers()
 
-  const geolocation = geolocationSchema.safeParse({
+  const geolocation = Geolocation.safeParse({
     city: readonlyHeaders.get("x-vercel-ip-city"),
     country: readonlyHeaders.get("x-vercel-ip-country"),
     continent: readonlyHeaders.get("x-vercel-ip-continent"),

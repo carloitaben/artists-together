@@ -1,12 +1,20 @@
-import { lucia, generateId, provider } from "@artists-together/auth"
-import { dc, createDiscordClient, ROLES } from "@artists-together/core/discord"
-import { db, locations, users } from "@artists-together/db"
+import {
+  authenticator,
+  createSession,
+  generateIdFromEntropySize,
+} from "@artists-together/core/auth"
+import {
+  database,
+  userTable,
+  locationTable,
+} from "@artists-together/core/database"
+import { discord, createDiscord, ROLE } from "@artists-together/core/discord"
 import { isRedirectError } from "next/dist/client/components/redirect"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import type { NextRequest } from "next/server"
 import { z } from "zod"
-import { oauthCookie } from "~/services/auth/server"
+import { oauthCookie, provider } from "~/services/auth/server"
 import { hints } from "~/lib/headers/server"
 import { parseSearchParams } from "~/lib/server"
 
@@ -22,6 +30,7 @@ const searchParams = z.union([
 ])
 
 export async function GET(request: NextRequest) {
+  console.log(">>>> running route handler")
   const cookie = oauthCookie.get()
 
   if (!cookie.success) {
@@ -30,6 +39,8 @@ export async function GET(request: NextRequest) {
       statusText: "Missing or invalid oauth cookie",
     })
   }
+
+  oauthCookie.delete()
 
   const params = parseSearchParams(request.nextUrl.searchParams, {
     schema: searchParams,
@@ -57,17 +68,17 @@ export async function GET(request: NextRequest) {
       params.data.code,
     )
 
-    const discordUser = await createDiscordClient({
+    const discordUser = await createDiscord({
       authPrefix: "Bearer",
-      token: tokens.accessToken,
+      token: tokens.accessToken(),
     }).users.getCurrent(request)
 
-    const discordGuildMember = await dc.guilds
+    const discordGuildMember = await discord.guilds
       .getMember(String(process.env.DISCORD_SERVER_ID), discordUser.id)
       .catch(() => null)
 
     const shouldAddWebRole =
-      discordGuildMember && !discordGuildMember.roles.includes(ROLES.WEB)
+      discordGuildMember && !discordGuildMember.roles.includes(ROLE.WEB)
 
     const discordAvatarId = discordGuildMember?.avatar || discordUser.avatar
 
@@ -76,21 +87,26 @@ export async function GET(request: NextRequest) {
       ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordAvatarId}`
       : null
 
-    const user = await db
-      .insert(users)
+    const user = await database
+      .insert(userTable)
       .values({
-        id: generateId(15),
+        id: generateIdFromEntropySize(15),
         email: discordUser.email,
         avatar: discordAvatar,
         username: discordUser.username,
         discordId: discordUser.id,
         discordUsername: discordUser.username,
         discordMetadata: discordUser,
-        settingsFahrenheit: hints().temperatureUnit === "fahrenheit",
-        settingsFullHourFormat: hints().hourFormat === "24",
+        settings: {
+          fahrenheit: hints().temperatureUnit === "fahrenheit",
+          fullHourFormat: hints().hourFormat === "24",
+          shareCursor: true,
+          shareLocation: true,
+          shareStreaming: true,
+        },
       })
       .onConflictDoUpdate({
-        target: users.email,
+        target: userTable.email,
         set: {
           avatar: discordAvatar,
           discordId: discordUser.id,
@@ -105,25 +121,25 @@ export async function GET(request: NextRequest) {
       return redirect(`${cookie.data.pathname}?error`)
     }
 
-    const sessionCookiePromise = lucia
-      .createSession(user.id, {})
-      .then((session) => lucia.createSessionCookie(session.id))
+    const sessionCookiePromise = createSession(user.id).then((session) =>
+      authenticator.createSessionCookie(session.id, session.expiresAt),
+    )
 
     const maybeInsertGeolocationPromise =
       cookie.data.geolocation &&
-      db
-        .insert(locations)
+      database
+        .insert(locationTable)
         .values(cookie.data.geolocation)
-        .onConflictDoNothing({ target: locations.city })
+        .onConflictDoNothing({ target: locationTable.city })
         .catch(console.error)
 
     const maybeAddDiscordRolePromise =
       shouldAddWebRole &&
-      dc.guilds
+      discord.guilds
         .addRoleToMember(
           String(process.env.DISCORD_SERVER_ID),
           discordUser.id,
-          ROLES.WEB,
+          ROLE.WEB,
           { reason: "Linked Artists Together account" },
         )
         .catch(console.error)
@@ -137,7 +153,7 @@ export async function GET(request: NextRequest) {
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes,
+      sessionCookie.npmCookieOptions(),
     )
 
     return redirect(

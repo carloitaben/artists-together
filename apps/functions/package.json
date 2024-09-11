@@ -3,14 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@artists-together/auth": "workspace:*",
     "@artists-together/core": "workspace:*",
-    "@artists-together/db": "workspace:*",
-    "@artists-together/kv": "workspace:*",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@artists-together/ts": "workspace:*",
+    "@artists-together/config": "workspace:*",
     "@types/aws-lambda": "^8.10",
     "sst": "latest"
   }

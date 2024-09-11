@@ -1,7 +1,7 @@
 import type { AnimationConfigWithData } from "lottie-web"
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 import { Suspense, lazy } from "react"
-import { jsonSchema } from "~/lib/schemas"
+import { AnyJSON } from "~/lib/schemas"
 
 const LottieComponent = lazy(() => import("./LottieComponent"))
 
@@ -21,7 +21,7 @@ export default function Lottie({ src, fallback = null, ...props }: Props) {
         {...props}
         src={src()
           .then((module) => module.default)
-          .then(jsonSchema.parse)}
+          .then(AnyJSON.parse)}
       />
     </Suspense>
   )

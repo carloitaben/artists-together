@@ -1,14 +1,13 @@
 import "server-only"
 import { oneOf } from "@artists-together/core/utils"
 import {
-  db,
+  database,
   eq,
-  isNotNull,
-  locations,
-  SelectWeathers,
+  locationTable,
   sql,
-  weathers,
-} from "@artists-together/db"
+  weatherTable,
+  WeatherTableSelect,
+} from "@artists-together/core/database"
 import { cache } from "react"
 import { unstable_cache } from "next/cache"
 
@@ -102,7 +101,7 @@ function handleWeatherCode(code: number): {
   }
 }
 
-const SelectWeathersWithCodes = SelectWeathers.transform((data) =>
+const SelectWeathersWithCodes = WeatherTableSelect.transform((data) =>
   Object.assign(data, {
     todayWeatherCode: handleWeatherCode(data.todayWeatherCode),
     tomorrowWeatherCode: handleWeatherCode(data.tomorrowWeatherCode),
@@ -112,11 +111,10 @@ const SelectWeathersWithCodes = SelectWeathers.transform((data) =>
 export const getRandomLocationsWithWeather = cache(
   unstable_cache(
     async () =>
-      db
+      database
         .select()
-        .from(locations)
-        .leftJoin(weathers, eq(locations.city, weathers.city))
-        .where(isNotNull(weathers.updatedAt))
+        .from(locationTable)
+        .leftJoin(weatherTable, eq(locationTable.city, weatherTable.city))
         .orderBy(sql`random()`)
         .limit(10),
     [],
@@ -130,11 +128,7 @@ export const getRandomLocationWithWeather = cache(async () =>
   getRandomLocationsWithWeather()
     .then((data) => oneOf(data))
     .then((data) => ({
-      locations: data.locations,
+      location: data.location,
       weathers: SelectWeathersWithCodes.parse(data.weathers),
-    }))
-    .then((data) => {
-      console.log(">>>", data)
-      return data
-    }),
+    })),
 )

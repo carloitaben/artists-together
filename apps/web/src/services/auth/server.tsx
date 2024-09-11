@@ -1,20 +1,22 @@
 import "server-only"
-import type { AuthenticateResult } from "@artists-together/auth"
-import { lucia, authenticate as doAuthenticate } from "@artists-together/auth"
-import type { ReactNode } from "react"
+import {
+  authenticator,
+  authenticate as authenticateImpl,
+} from "@artists-together/core/auth"
+import { Discord, Twitch } from "arctic"
 import { cache } from "react"
 import { cookies } from "next/headers"
 import { z } from "zod"
-import { geolocationSchema } from "~/lib/headers/server"
+import { Geolocation } from "~/lib/headers/server"
 import { createCookie } from "~/lib/server"
-import { pathnameSchema } from "~/lib/schemas"
-import { AuthProvider as AuthProviderClient } from "./client"
+import { Pathname } from "~/lib/schemas"
+import { WEB_URL } from "~/lib/constants"
 
 export const oauthCookie = createCookie(
   "oauth",
   z.object({
-    geolocation: geolocationSchema,
-    pathname: pathnameSchema,
+    geolocation: Geolocation,
+    pathname: Pathname,
     state: z.string(),
   }),
   {
@@ -26,40 +28,20 @@ export const oauthCookie = createCookie(
   },
 )
 
-export const authenticate = cache(async (): Promise<AuthenticateResult> => {
-  const cookie = cookies().get(lucia.sessionCookieName)?.value
-  const result = await doAuthenticate(cookie)
-
-  // next.js throws when you attempt to set cookie when rendering page
-  try {
-    if (result?.session && result.session.fresh) {
-      const sessionCookie = lucia.createSessionCookie(result.session.id)
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes,
-      )
-    }
-
-    if (!result?.session) {
-      const sessionCookie = lucia.createBlankSessionCookie()
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes,
-      )
-    }
-  } catch {}
-
-  return result?.user && result?.session ? result : null
-})
-
-export async function AuthContext({ children }: { children: ReactNode }) {
-  const auth = await authenticate()
-
-  return (
-    <AuthProviderClient value={auth?.user || null}>
-      {children}
-    </AuthProviderClient>
-  )
+export const provider = {
+  discord: new Discord(
+    String(process.env.OAUTH_DISCORD_ID),
+    String(process.env.OAUTH_DISCORD_SECRET),
+    new URL("/api/auth/callback/discord", WEB_URL).href,
+  ),
+  twitch: new Twitch(
+    String(process.env.OAUTH_TWITCH_ID),
+    String(process.env.OAUTH_TWITCH_SECRET),
+    new URL("/api/auth/callback/twitch", WEB_URL).href,
+  ),
 }
+
+export const authenticate = cache(() => {
+  const cookie = cookies().get(authenticator.sessionCookieName)?.value ?? null
+  return authenticateImpl(cookie)
+})

@@ -11,13 +11,12 @@
   },
   "dependencies": {
     "@artists-together/core": "workspace:*",
-    "@artists-together/db": "workspace:*",
     "dayjs": "^1.11.10",
     "discord.js": "^14.15.2",
     "node-cron": "^3.0.3"
   },
   "devDependencies": {
-    "@artists-together/ts": "workspace:*",
+    "@artists-together/config": "workspace:*",
     "@types/node": "^20.12.10",
     "@types/node-cron": "^3.0.11",
     "bun-types": "^1.1.7",

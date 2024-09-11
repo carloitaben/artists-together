@@ -1,7 +1,0 @@
-{
-  "name": "@artists-together/ts",
-  "version": "1.0.0",
-  "private": true,
-  "sideEffects": false,
-  "type": "module"
-}
