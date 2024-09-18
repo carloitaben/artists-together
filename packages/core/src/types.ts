@@ -25,11 +25,37 @@ export type AnyToUnknown<T> = (0 extends 1 & T ? true : false) extends true
 /**
  * A type guard that ensures a given value matches the given `zod` schema.
  */
-export function assert<Schema extends ZodTypeAny>(
+export function is<Schema extends ZodTypeAny>(
   value: unknown,
   schema: Schema,
 ): value is output<Schema> {
   return schema.safeParse(value).success
+}
+
+export class AssertionError extends Error {
+  constructor(options?: ErrorOptions) {
+    super("Assertion failed.", options)
+    this.name = "AsyncContextInvariantError"
+  }
+}
+
+/**
+ * A type assertion that ensures a given value matches the given `zod` schema.
+ */
+export function assert<Schema extends ZodTypeAny>(
+  value: unknown,
+  schema: Schema,
+): asserts value is output<Schema> {
+  const result = schema.safeParse(value)
+
+  if (!result.success) {
+    throw new AssertionError({
+      cause: {
+        value,
+        error: result.error,
+      },
+    })
+  }
 }
 
 /**
