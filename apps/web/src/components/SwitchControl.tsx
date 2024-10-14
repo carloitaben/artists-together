@@ -1,4 +1,4 @@
-import { Switch } from "@ark-ui/react"
+import { Switch } from "@ark-ui/react/switch"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
 

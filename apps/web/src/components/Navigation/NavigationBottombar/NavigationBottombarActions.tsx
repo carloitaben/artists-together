@@ -1,4 +1,4 @@
-import { Menu } from "@ark-ui/react"
+import { Menu } from "@ark-ui/react/menu"
 import {
   forwardRef,
   type ComponentRef,

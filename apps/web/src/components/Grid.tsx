@@ -1,7 +1,7 @@
 "use client"
 
-import type { HTMLArkProps } from "@ark-ui/react"
-import { ark } from "@ark-ui/react"
+import type { HTMLArkProps } from "@ark-ui/react/factory"
+import { ark } from "@ark-ui/react/factory"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
 import type { ComponentRef, ForwardedRef } from "react"

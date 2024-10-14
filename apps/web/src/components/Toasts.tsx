@@ -1,6 +1,6 @@
 "use client"
 
-import { Toast, Toaster, createToaster } from "@ark-ui/react"
+import { Toast, Toaster, createToaster } from "@ark-ui/react/toast"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
 import Icon from "./Icon"

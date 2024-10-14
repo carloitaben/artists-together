@@ -1,4 +1,7 @@
-import { Dialog, Field, Fieldset, FileUpload } from "@ark-ui/react"
+import { Dialog } from "@ark-ui/react/dialog"
+import { Field } from "@ark-ui/react/field"
+import { Fieldset } from "@ark-ui/react/fieldset"
+import { FileUpload } from "@ark-ui/react/file-upload"
 import FileUploader from "~/components/FileUploader"
 import InlineTooltip from "~/components/InlineTooltip"
 import DialogContainer from "../DialogContainer"

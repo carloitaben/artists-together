@@ -1,8 +1,8 @@
 "use client"
 
 import SplitType from "split-type"
-import type { HTMLArkProps } from "@ark-ui/react"
-import { ark } from "@ark-ui/react"
+import type { HTMLArkProps } from "@ark-ui/react/factory"
+import { ark } from "@ark-ui/react/factory"
 import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef, useEffect } from "react"
 import { mergeRefs } from "react-merge-refs"

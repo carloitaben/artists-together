@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog } from "@ark-ui/react"
+import { Dialog } from "@ark-ui/react/dialog"
 import { useRouter, useSearchParams } from "next/navigation"
 import type { ReactNode } from "react"
 import { useEffect } from "react"

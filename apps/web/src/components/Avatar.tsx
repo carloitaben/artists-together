@@ -1,4 +1,4 @@
-import { Avatar as AvatarPrimitive } from "@ark-ui/react"
+import { Avatar as AvatarPrimitive } from "@ark-ui/react/avatar"
 import { cx } from "cva"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"

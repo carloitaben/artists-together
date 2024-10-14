@@ -1,5 +1,5 @@
 import { authenticator } from "@artists-together/core/auth"
-import { Dialog } from "@ark-ui/react"
+import { Dialog } from "@ark-ui/react/dialog"
 import type { ReactNode } from "react"
 import { cookies } from "next/headers"
 import { authenticate } from "~/services/auth/server"

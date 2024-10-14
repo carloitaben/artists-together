@@ -1,4 +1,4 @@
-import { Tooltip, type TooltipRootProps } from "@ark-ui/react"
+import { Tooltip, type TooltipRootProps } from "@ark-ui/react/tooltip"
 import { cx } from "cva"
 import type { ReactNode } from "react"
 import Icon from "~/components/Icon"

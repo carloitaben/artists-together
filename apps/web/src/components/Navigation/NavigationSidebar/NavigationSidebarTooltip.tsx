@@ -1,6 +1,6 @@
 "use client"
 
-import { Tooltip } from "@ark-ui/react"
+import { Tooltip } from "@ark-ui/react/tooltip"
 import type { ReactNode } from "react"
 import { useState } from "react"
 import type { Transition } from "framer-motion"

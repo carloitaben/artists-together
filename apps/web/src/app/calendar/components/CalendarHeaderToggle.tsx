@@ -1,4 +1,4 @@
-import { SegmentGroup } from "@ark-ui/react"
+import { SegmentGroup } from "@ark-ui/react/segment-group"
 import type { Dayjs } from "dayjs"
 import { motion } from "framer-motion"
 import Link from "next/link"

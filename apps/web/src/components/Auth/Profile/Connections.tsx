@@ -1,6 +1,6 @@
 "use client"
 
-import { Checkbox } from "@ark-ui/react"
+import { Checkbox } from "@ark-ui/react/checkbox"
 import type { IconName } from "~/lib/icons"
 import Icon from "~/components/Icon"
 

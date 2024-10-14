@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog } from "@ark-ui/react"
+import { Dialog } from "@ark-ui/react/dialog"
 import { usePathname } from "next/navigation"
 import { login } from "~/services/auth/actions"
 import Button from "~/components/Button"

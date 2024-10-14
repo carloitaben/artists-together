@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog } from "@ark-ui/react"
+import { Dialog } from "@ark-ui/react/dialog"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
 import { useHydrated } from "~/lib/react/client"

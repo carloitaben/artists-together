@@ -1,4 +1,5 @@
-import { Field, Fieldset } from "@ark-ui/react"
+import { Field } from "@ark-ui/react/field"
+import { Fieldset } from "@ark-ui/react/fieldset"
 import DialogContainer from "../DialogContainer"
 import DialogTitle from "../DialogTitle"
 import { sectionData } from "./lib"

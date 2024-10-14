@@ -1,5 +1,5 @@
-import type { HTMLArkProps } from "@ark-ui/react"
-import { ark } from "@ark-ui/react"
+import type { HTMLArkProps } from "@ark-ui/react/factory"
+import { ark } from "@ark-ui/react/factory"
 import { cx } from "cva"
 import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"

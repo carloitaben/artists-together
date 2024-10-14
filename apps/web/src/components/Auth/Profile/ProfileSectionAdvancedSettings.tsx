@@ -1,4 +1,4 @@
-import { Switch } from "@ark-ui/react"
+import { Switch } from "@ark-ui/react/switch"
 import SwitchControl from "~/components/SwitchControl"
 import InlineTooltip from "~/components/InlineTooltip"
 import DialogContainer from "../DialogContainer"

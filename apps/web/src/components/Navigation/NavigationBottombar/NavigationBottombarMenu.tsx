@@ -1,4 +1,4 @@
-import { Menu } from "@ark-ui/react"
+import { Menu } from "@ark-ui/react/menu"
 import { cx } from "cva"
 import type { Transition } from "framer-motion"
 import { AnimatePresence, motion } from "framer-motion"

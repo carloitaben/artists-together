@@ -1,7 +1,7 @@
 "use client"
 
-import type { HTMLArkProps } from "@ark-ui/react"
-import { ark } from "@ark-ui/react"
+import type { HTMLArkProps } from "@ark-ui/react/factory"
+import { ark } from "@ark-ui/react/factory"
 import { animate } from "framer-motion"
 import type { ComponentRef, ForwardedRef, MouseEvent } from "react"
 import { forwardRef, useCallback } from "react"

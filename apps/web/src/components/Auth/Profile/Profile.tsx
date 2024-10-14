@@ -1,4 +1,4 @@
-import { Dialog } from "@ark-ui/react"
+import { Dialog } from "@ark-ui/react/dialog"
 import { sections } from "./lib"
 import ProfileBanner from "./ProfileBanner"
 import ProfileTab from "./ProfileTab"

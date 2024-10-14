@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog } from "@ark-ui/react"
+import { Dialog } from "@ark-ui/react/dialog"
 import { logout } from "~/services/auth/actions"
 import { toaster } from "~/components/Toasts"
 import Button from "~/components/Button"
