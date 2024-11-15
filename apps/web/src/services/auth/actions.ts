@@ -1,25 +1,29 @@
 "use server"
 
-import { authenticator } from "@artists-together/core/auth"
 import { database, eq, userTable } from "@artists-together/core/database"
+import { invalidateSession } from "@artists-together/core/auth"
 import { parseWithZod } from "@conform-to/zod"
-import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { generateState } from "arctic"
 import { geolocation } from "~/lib/headers/server"
 import { error } from "~/lib/server"
-import { authenticate, oauthCookie, provider } from "./server"
+import {
+  authenticate,
+  deleteSessionTokenCookie,
+  oauthCookie,
+  provider,
+} from "./server"
 import { updateSchema } from "./shared"
 
 export async function login(pathname: string) {
   const auth = await authenticate()
 
-  if (auth.session) {
+  if (auth) {
     return error({ cause: "ALREADY_LOGGED_IN" })
   }
 
+  const geo = await geolocation()
   const state = generateState()
-  const geo = geolocation()
   const url = provider.discord.createAuthorizationURL(state, [
     "identify",
     "email",
@@ -40,18 +44,12 @@ export async function login(pathname: string) {
 export async function logout() {
   const auth = await authenticate()
 
-  if (!auth.session) {
+  if (!auth) {
     return error({ cause: "UNAUTHORIZED" })
   }
 
-  await authenticator.invalidateSession(auth.session.id)
-  const sessionCookie = authenticator.createBlankSessionCookie()
-
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.npmCookieOptions(),
-  )
+  await invalidateSession(auth.session.id)
+  await deleteSessionTokenCookie()
 }
 
 export async function update(_: unknown, formData: FormData) {
@@ -67,7 +65,7 @@ export async function update(_: unknown, formData: FormData) {
 
   const auth = await authenticate()
 
-  if (!auth.user) {
+  if (!auth) {
     return submission.reply({
       formErrors: ["Unauthorized"],
     })
@@ -75,17 +73,17 @@ export async function update(_: unknown, formData: FormData) {
 
   console.log(`update user ${auth.user.id} with:`, submission.value)
 
-  try {
-    await database
-      .update(userTable)
-      .set(submission.value)
-      .where(eq(userTable.id, auth.user.id))
-  } catch (error) {
-    console.error(error)
-    return submission.reply({
-      formErrors: ["Oops! Something went wrong…"],
-    })
-  }
+  // try {
+  //   await database
+  //     .update(userTable)
+  //     .set(submission.value)
+  //     .where(eq(userTable.id, auth.user.id))
+  // } catch (error) {
+  //   console.error(error)
+  //   return submission.reply({
+  //     formErrors: ["Oops! Something went wrong…"],
+  //   })
+  // }
 }
 
 export async function connectDiscord(pathname: string) {
@@ -116,7 +114,7 @@ export async function connectDiscord(pathname: string) {
 export async function unlinkDiscord() {
   const auth = await authenticate()
 
-  if (!auth.user) {
+  if (!auth) {
     return error({ cause: "UNAUTHORIZED" })
   }
 
@@ -133,7 +131,7 @@ export async function unlinkDiscord() {
 export async function connectTwitch(pathname: string) {
   const auth = await authenticate()
 
-  if (!auth.user) {
+  if (!auth) {
     return error({ cause: "UNAUTHORIZED" })
   }
 
@@ -155,7 +153,7 @@ export async function connectTwitch(pathname: string) {
 export async function unlinkTwitch() {
   const auth = await authenticate()
 
-  if (!auth.user) {
+  if (!auth) {
     return error({ cause: "UNAUTHORIZED" })
   }
 

@@ -7,7 +7,6 @@ export function createDiscord({
   ...options
 }: Partial<RESTOptions> & { token: string }) {
   const rest = new REST({
-    // @ts-expect-error why? :(
     makeRequest: globalThis.fetch,
     version: "10",
     ...options,

@@ -1,4 +1,4 @@
-import { sqliteTable, text, index } from "drizzle-orm/sqlite-core"
+import { sqliteTable, text, index, int } from "drizzle-orm/sqlite-core"
 import { relations } from "drizzle-orm"
 import { z } from "zod"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
@@ -53,7 +53,6 @@ export type TwitchMetadata = z.output<typeof TwitchMetadata>
 
 export const UserSettings = z.object({
   fullHourFormat: z.boolean().default(false),
-  shareLocation: z.boolean().default(true),
   shareStreaming: z.boolean().default(true),
   shareCursor: z.boolean().default(true),
   fahrenheit: z.boolean().default(false),
@@ -65,25 +64,19 @@ export const userTable = sqliteTable(
   "user",
   {
     ...timestamps,
-    id: text("id").unique().primaryKey(),
-    username: text("username").notNull().unique(),
-    pronouns: text("pronouns"),
-    avatar: text("avatar"),
-    email: text("email").unique(),
-    bio: text("bio"),
-    discordId: text("discord_id").unique(),
-    discordUsername: text("discord_username").unique(),
-    discordMetadata: text("discord_metadata", {
-      mode: "json",
-    }).$type<DiscordMetadata>(),
-    twitchId: text("twitch_id").unique(),
-    twitchUsername: text("twitch_username").unique(),
-    twitchMetadata: text("twitch_metadata", {
-      mode: "json",
-    }).$type<DiscordMetadata>(),
-    settings: text("settings", {
-      mode: "json",
-    }).$type<UserSettings>(),
+    id: int("id").primaryKey(),
+    username: text().notNull().unique(),
+    pronouns: text(),
+    avatar: text(),
+    email: text().unique(),
+    bio: text(),
+    discordId: text().unique(),
+    discordUsername: text().unique(),
+    discordMetadata: text({ mode: "json" }).$type<DiscordMetadata>(),
+    twitchId: text().unique(),
+    twitchUsername: text().unique(),
+    twitchMetadata: text({ mode: "json" }).$type<DiscordMetadata>(),
+    settings: text({ mode: "json" }).$type<UserSettings>(),
   },
   (table) => ({
     usernameIdx: index("username_idx").on(table.username),
@@ -107,30 +100,26 @@ export const UserTableSelect = createSelectSchema(userTable, {
   twitchMetadata: TwitchMetadata,
 })
 
-export type UserTableInsert = typeof userTable.$inferInsert
-
-export type UserTableSelect = typeof userTable.$inferSelect
+export type User = typeof userTable.$inferSelect
 
 export const userRelations = relations(userTable, ({ many }) => ({
   contentShared: many(contentSharedTable),
 }))
 
 export const liveUserTable = sqliteTable("live_user", {
-  discordId: text("discord_id")
+  discordId: text()
     .notNull()
     .references(() => userTable.discordId, { onDelete: "cascade" }),
-  url: text("url").notNull(),
+  url: text().notNull(),
 })
 
-export type LiveUserTableInsert = typeof liveUserTable.$inferInsert
-
-export type LiveUserTableSelect = typeof liveUserTable.$inferSelect
+export type LiveUser = typeof liveUserTable.$inferSelect
 
 export const contentSharedTable = sqliteTable("content_shared", {
-  userId: text("user_id")
+  userId: int()
     .notNull()
     .references(() => userTable.id, { onDelete: "cascade" }),
-  url: text("url").unique().primaryKey(),
+  url: text().unique().primaryKey(),
 })
 
 export const contentSharedRelations = relations(
@@ -143,27 +132,14 @@ export const contentSharedRelations = relations(
   }),
 )
 
-// export const InsertContentShared = createInsertSchema(contentSharedTable, {
-//   url: (schema) => schema.url.url(),
-// })
-
-// export const SelectContentShared = createSelectSchema(contentSharedTable, {
-//   url: (schema) => schema.url.url(),
-// })
-
-export type ContentSharedTableInsert = typeof contentSharedTable.$inferInsert
-
-export type ContentSharedTableSelect = typeof contentSharedTable.$inferSelect
+export type ContentShared = typeof contentSharedTable.$inferSelect
 
 export const sessionTable = sqliteTable("session", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
+  id: text().primaryKey(),
+  userId: int()
     .notNull()
     .references(() => userTable.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
+  expiresAt: timestamp().notNull(),
 })
 
-export type SessionTableInsert = typeof sessionTable.$inferInsert
-
-export type SessionTableSelect = typeof sessionTable.$inferSelect
+export type Session = typeof sessionTable.$inferSelect

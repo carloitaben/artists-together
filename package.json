@@ -1,8 +1,4 @@
 {
   "name": "artists-together",
-  "packageManager": "pnpm@9.12.1",
-  "devDependencies": {
-    "sst": "latest",
-    "typescript": "^5.5.4"
-  }
+  "packageManager": "pnpm@9.12.3"
 }

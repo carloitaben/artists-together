@@ -1,7 +1,6 @@
 import {
-  authenticator,
   createSession,
-  generateIdFromEntropySize,
+  generateSessionToken,
 } from "@artists-together/core/auth"
 import {
   database,
@@ -10,11 +9,16 @@ import {
 } from "@artists-together/core/database"
 import { discord, createDiscord, ROLE } from "@artists-together/core/discord"
 import { isRedirectError } from "next/dist/client/components/redirect"
-import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import type { NextRequest } from "next/server"
+import { unstable_after } from "next/server"
 import { z } from "zod"
-import { oauthCookie, provider } from "~/services/auth/server"
+import {
+  authenticate,
+  oauthCookie,
+  provider,
+  setSessionTokenCookie,
+} from "~/services/auth/server"
 import { hints } from "~/lib/headers/server"
 import { parseSearchParams } from "~/lib/server"
 
@@ -30,7 +34,6 @@ const searchParams = z.union([
 ])
 
 export async function GET(request: NextRequest) {
-  console.log(">>>> running route handler")
   const cookie = oauthCookie.get()
 
   if (!cookie.success) {
@@ -64,9 +67,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const tokens = await provider.discord.validateAuthorizationCode(
-      params.data.code,
-    )
+    const [tokens, auth, hintsStore] = await Promise.all([
+      provider.discord.validateAuthorizationCode(params.data.code),
+      authenticate(),
+      hints(),
+    ])
 
     const discordUser = await createDiscord({
       authPrefix: "Bearer",
@@ -90,7 +95,6 @@ export async function GET(request: NextRequest) {
     const user = await database
       .insert(userTable)
       .values({
-        id: generateIdFromEntropySize(15),
         email: discordUser.email,
         avatar: discordAvatar,
         username: discordUser.username,
@@ -98,8 +102,8 @@ export async function GET(request: NextRequest) {
         discordUsername: discordUser.username,
         discordMetadata: discordUser,
         settings: {
-          fahrenheit: hints().temperatureUnit === "fahrenheit",
-          fullHourFormat: hints().hourFormat === "24",
+          fahrenheit: hintsStore.temperatureUnit === "fahrenheit",
+          fullHourFormat: hintsStore.hourFormat === "24",
           shareCursor: true,
           shareLocation: true,
           shareStreaming: true,
@@ -121,40 +125,37 @@ export async function GET(request: NextRequest) {
       return redirect(`${cookie.data.pathname}?error`)
     }
 
-    const sessionCookiePromise = createSession(user.id).then((session) =>
-      authenticator.createSessionCookie(session.id, session.expiresAt),
-    )
+    if (!auth) {
+      const sessionToken = generateSessionToken()
+      const session = await createSession(sessionToken, user.id)
+      setSessionTokenCookie(sessionToken, session.expiresAt)
+    }
 
-    const maybeInsertGeolocationPromise =
-      cookie.data.geolocation &&
-      database
-        .insert(locationTable)
-        .values(cookie.data.geolocation)
-        .onConflictDoNothing({ target: locationTable.city })
-        .catch(console.error)
+    unstable_after(async () => {
+      const maybeInsertGeolocationPromise =
+        cookie.data.geolocation &&
+        database
+          .insert(locationTable)
+          .values(cookie.data.geolocation)
+          .onConflictDoNothing({ target: locationTable.city })
+          .catch(console.error)
 
-    const maybeAddDiscordRolePromise =
-      shouldAddWebRole &&
-      discord.guilds
-        .addRoleToMember(
-          String(process.env.DISCORD_SERVER_ID),
-          discordUser.id,
-          ROLE.WEB,
-          { reason: "Linked Artists Together account" },
-        )
-        .catch(console.error)
+      const maybeAddDiscordRolePromise =
+        shouldAddWebRole &&
+        discord.guilds
+          .addRoleToMember(
+            String(process.env.DISCORD_SERVER_ID),
+            discordUser.id,
+            ROLE.WEB,
+            { reason: "Linked Artists Together account" },
+          )
+          .catch(console.error)
 
-    const [sessionCookie] = await Promise.all([
-      sessionCookiePromise,
-      maybeInsertGeolocationPromise,
-      maybeAddDiscordRolePromise,
-    ])
-
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.npmCookieOptions(),
-    )
+      await Promise.all([
+        maybeInsertGeolocationPromise,
+        maybeAddDiscordRolePromise,
+      ])
+    })
 
     return redirect(
       `${cookie.data.pathname}?toast=Logged+in+as+%40${user.username}`,

@@ -1,11 +1,10 @@
-import { createClient } from "@libsql/client/web"
-import { drizzle } from "drizzle-orm/libsql"
+import { drizzle } from "drizzle-orm/libsql/web"
 
-const client = createClient({
-  url: process.env.DATABASE_URL || "http://127.0.0.1:8080",
-  authToken: process.env.DATABASE_AUTH_TOKEN || "",
-  intMode: "number",
-  fetch: globalThis.fetch,
+console.log("😈😈😈😈😈😈😈 database on client leaking all shit")
+
+export const database = drizzle({
+  connection: {
+    url: String(process.env.DATABASE_URL),
+    authToken: String(process.env.DATABASE_AUTH_TOKEN),
+  },
 })
-
-export const database = drizzle(client)

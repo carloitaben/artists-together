@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
 
   const auth = await authenticate()
 
-  if (!auth.user) {
+  if (!auth) {
     return redirect(`${cookie.data.pathname}?error`)
   }
 

@@ -1,15 +1,12 @@
 import "server-only"
-import {
-  authenticator,
-  authenticate as authenticateImpl,
-} from "@artists-together/core/auth"
+import { validateSessionToken } from "@artists-together/core/auth"
 import { Discord, Twitch } from "arctic"
 import { cache } from "react"
 import { cookies } from "next/headers"
 import { z } from "zod"
 import { Geolocation } from "~/lib/headers/server"
-import { createCookie } from "~/lib/server"
 import { Pathname } from "~/lib/schemas"
+import { createCookie } from "~/lib/server"
 import { WEB_URL } from "~/lib/constants"
 
 export const oauthCookie = createCookie(
@@ -28,6 +25,42 @@ export const oauthCookie = createCookie(
   },
 )
 
+export async function setSessionTokenCookie(token: string, expiresAt: Date) {
+  const cookiesStore = await cookies()
+
+  cookiesStore.set("session", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    expires: expiresAt,
+    path: "/",
+  })
+}
+
+export async function deleteSessionTokenCookie() {
+  const cookiesStore = await cookies()
+
+  cookiesStore.set("session", "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 0,
+    path: "/",
+  })
+}
+
+export const authenticate = cache(async () => {
+  const cookiesStore = await cookies()
+
+  const token = cookiesStore.get("session")?.value ?? null
+
+  if (token === null) {
+    return null
+  }
+
+  return validateSessionToken(token)
+})
+
 export const provider = {
   discord: new Discord(
     String(process.env.OAUTH_DISCORD_ID),
@@ -40,8 +73,3 @@ export const provider = {
     new URL("/api/auth/callback/twitch", WEB_URL).href,
   ),
 }
-
-export const authenticate = cache(() => {
-  const cookie = cookies().get(authenticator.sessionCookieName)?.value ?? null
-  return authenticateImpl(cookie)
-})

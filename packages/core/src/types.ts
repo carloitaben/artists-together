@@ -26,8 +26,8 @@ export type AnyToUnknown<T> = (0 extends 1 & T ? true : false) extends true
  * A type guard that ensures a given value matches the given `zod` schema.
  */
 export function is<Schema extends ZodTypeAny>(
-  value: unknown,
   schema: Schema,
+  value: unknown,
 ): value is output<Schema> {
   return schema.safeParse(value).success
 }

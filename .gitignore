@@ -4,8 +4,6 @@ node_modules
 *.local
 *.tsbuildinfo
 .local.db
-.vercel
-.sst
 .env
 .env.*
 !.env.example

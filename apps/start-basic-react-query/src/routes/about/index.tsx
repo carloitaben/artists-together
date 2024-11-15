@@ -1,0 +1,147 @@
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { createFileRoute, linkOptions } from "@tanstack/react-router"
+import { Suspense, lazy } from "react"
+import { hintsQueryOptions } from "~/lib/data"
+import AspectRatio from "~/components/AspectRatio"
+import Container from "~/components/Container"
+import Grid from "~/components/Grid"
+import Icon from "~/components/Icon"
+import Lottie from "~/components/Lottie"
+import Marquee from "~/components/Marquee"
+import TextAnimation from "./src/components/TextAnimation"
+
+const Stars = lazy(() => import("./src/components/Stars"))
+
+export const Route = createFileRoute("/about/")({
+  component: Component,
+  staticData: {
+    label: "About",
+    search: "Search something",
+    actions: [
+      {
+        label: "Twitch",
+        icon: "Twitch",
+        link: linkOptions({
+          href: "https://www.twitch.tv/artiststogether",
+        }),
+      },
+      {
+        label: "Discord",
+        icon: "Discord",
+        link: linkOptions({
+          href: "https://discord.gg/9Ayh9dvhHe",
+        }),
+      },
+      {
+        label: "Instagram",
+        icon: "Instagram",
+        link: linkOptions({
+          href: "https://www.instagram.com/artiststogether.online",
+        }),
+      },
+    ],
+  },
+})
+
+function Component() {
+  const hints = useSuspenseQuery(hintsQueryOptions)
+
+  return (
+    <>
+      {hints.data.saveData ? null : (
+        <Suspense>
+          <Stars />
+        </Suspense>
+      )}
+      <header>
+        <Container asChild>
+          <Grid className="min-h-screen place-items-center py-16">
+            <div className="col-span-2 col-start-2 w-full max-w-[37.5rem] sm:col-span-4 sm:col-start-3">
+              <AspectRatio.Root ratio={2 / 1}>
+                <AspectRatio.Content>
+                  <h2 className="sr-only">Artists Together</h2>
+                  {hints.data.saveData ? (
+                    <Icon src="Logo" alt="" className="size-full" />
+                  ) : (
+                    <>
+                      <noscript>
+                        <Icon src="Logo" alt="" className="size-full" />
+                      </noscript>
+                      <Lottie
+                        src={() => import("~/assets/lottie/logo-w.json")}
+                        autoplay
+                      />
+                    </>
+                  )}
+                </AspectRatio.Content>
+              </AspectRatio.Root>
+            </div>
+          </Grid>
+        </Container>
+      </header>
+      <main className="select-auto font-fraunces font-light scale:text-2xl scale:leading-[1.875rem] sm:scale:text-[4rem] sm:scale:leading-[4.9375rem]">
+        <Container asChild>
+          <TextAnimation asChild>
+            <Grid className="min-h-screen items-center">
+              <h2 className="col-span-4 sm:col-span-7 sm:col-start-2">
+                Artists Together is an online, worldwide
+                <br />
+                inclusive community for all kinds of artists
+                <br />
+                and skill levels.
+              </h2>
+            </Grid>
+          </TextAnimation>
+        </Container>
+        <Container asChild>
+          <TextAnimation asChild>
+            <Grid className="min-h-screen items-center">
+              <h3 className="col-span-4 sm:col-span-5 sm:col-start-4">
+                We want to give artists from around
+                <br />
+                the globe a place to share, learn
+                <br />
+                and talk with other creative folks.
+              </h3>
+            </Grid>
+          </TextAnimation>
+        </Container>
+        <div className="relative grid min-h-screen items-center">
+          <Marquee>
+            drawing, modelling, refurbishing, sculpting, composing, filming,
+            writing, singing, building,
+          </Marquee>
+          <Grid aria-hidden className="pointer-events-none absolute inset-0">
+            <div className="col-span-1 h-full bg-gradient-to-r from-theme-900 to-transparent" />
+            <div className="col-span-1 col-end-9 h-full bg-gradient-to-l from-theme-900 to-transparent" />
+          </Grid>
+        </div>
+        <Container asChild>
+          <TextAnimation asChild>
+            <Grid className="min-h-screen items-center">
+              <h4 className="col-span-4 sm:col-span-7 sm:col-start-2">
+                We celebrate creativity, diversity,
+                <br />
+                entertainment and learning.
+              </h4>
+            </Grid>
+          </TextAnimation>
+        </Container>
+        <Container asChild>
+          <TextAnimation asChild>
+            <Grid className="min-h-screen items-center">
+              <h5 className="col-span-4 sm:col-span-5 sm:col-start-4">
+                So, create, share and enjoy,
+                <br />
+                because we are glad to have you here.
+              </h5>
+            </Grid>
+          </TextAnimation>
+        </Container>
+        <Container className="grid h-screen items-center text-center scale:text-[2rem] sm:scale:text-[4rem]">
+          <h6>Artists, together.</h6>
+        </Container>
+      </main>
+    </>
+  )
+}

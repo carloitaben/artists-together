@@ -1,16 +1,17 @@
 import type { ServerWebSocket } from "bun"
+import { SuperHeaders } from "@mjackson/headers"
+import type { SessionValidationResult } from "@artists-together/core/auth"
+import { validateSessionToken } from "@artists-together/core/auth"
 import { unreachable } from "@artists-together/core/utils"
-import { authenticate } from "@artists-together/auth"
-import type { AuthenticateResult } from "@artists-together/auth"
-import type { Cursor, ServerEventData } from "@artists-together/core/ws"
+import type { Cursor, ServerEventData } from "@artists-together/core/websocket"
 import {
-  packServerMessage,
-  unpackClientMessage,
-} from "@artists-together/core/ws"
+  encodeServerMessage,
+  parseClientMessage,
+} from "@artists-together/core/websocket"
 
 type WebSocketData = {
   room?: string
-  auth: AuthenticateResult
+  auth: SessionValidationResult
   cursor: Cursor
 }
 
@@ -44,11 +45,23 @@ function getRoomState(room: string) {
 const server = Bun.serve<WebSocketData>({
   port: process.env.PORT || 1999,
   async fetch(request, server) {
-    const auth = await authenticate(request)
+    const headers = new SuperHeaders(request.headers)
+    const token = headers.cookie.get("session") ?? ""
+    // const auth = await validateSessionToken(token)
 
     const upgraded = server.upgrade<WebSocketData>(request, {
       data: {
-        auth,
+        // auth,
+        auth: {
+          session: {
+            id: Math.random().toString(),
+            expiresAt: new Date(),
+            userId: Math.random(),
+          },
+          user: {
+            username: Math.random().toString(),
+          },
+        },
         cursor: null,
       },
     })
@@ -72,14 +85,18 @@ const server = Bun.serve<WebSocketData>({
 
       server.publish(
         ws.data.room,
-        packServerMessage("room:update", getRoomState(ws.data.room))
+        encodeServerMessage("room:update", getRoomState(ws.data.room))
       )
     },
     async message(ws, message) {
-      const parsed = unpackClientMessage(message)
+      const parsed = parseClientMessage(message)
 
       if (!parsed.success) {
-        console.warn("Received invalid message", parsed.error)
+        console.warn("Received invalid message", {
+          error: parsed.error,
+          message,
+        })
+
         return ws.close(1009, parsed.error.message)
       }
 
@@ -97,7 +114,7 @@ const server = Bun.serve<WebSocketData>({
 
             server.publish(
               previous,
-              packServerMessage("room:update", getRoomState(previous))
+              encodeServerMessage("room:update", getRoomState(previous))
             )
           }
 
@@ -106,11 +123,13 @@ const server = Bun.serve<WebSocketData>({
           ws.subscribe(ws.data.room)
           update(ws)
 
-          ws.send(packServerMessage("room:update", getRoomState(ws.data.room)))
+          ws.send(
+            encodeServerMessage("room:update", getRoomState(ws.data.room))
+          )
 
           server.publish(
             ws.data.room,
-            packServerMessage("room:update", getRoomState(ws.data.room))
+            encodeServerMessage("room:update", getRoomState(ws.data.room))
           )
           break
         case "cursor:update":
@@ -119,7 +138,7 @@ const server = Bun.serve<WebSocketData>({
             update(ws)
             server.publish(
               ws.data.room,
-              packServerMessage("cursor:update", {
+              encodeServerMessage("cursor:update", {
                 cursor: parsed.data.payload,
                 username: ws.data.auth.user.username,
               })

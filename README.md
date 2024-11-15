@@ -12,14 +12,8 @@ Artists Together is an online, worldwide inclusive community for all kinds of ar
 | App     | [`bot-twitch`](apps/bot-twitch/README.md)   |
 | App     | [`web`](apps/web/README.md)                 |
 | App     | [`wss`](apps/wss/README.md)                 |
-| Package | [`auth`](packages/auth/README.md)           |
+| Package | [`config`](packages/config/README.md)       |
 | Package | [`core`](packages/core/README.md)           |
-| Package | [`db`](packages/db/README.md)               |
-| Package | [`ts`](packages/ts/README.md)               |
-
-## Contributing
-
-New contributors welcome! Check out our [contributors guide](CONTRIBUTING.md) for ways to get started.
 
 ## License
 

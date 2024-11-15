@@ -5,31 +5,30 @@
   "private": true,
   "sideEffects": false,
   "exports": {
-    "./*": [
-      "./src/*/index.ts",
-      "./src/*.ts"
-    ]
+    "./database": "./src/database/index.ts",
+    "./*": "./src/*.ts"
   },
   "scripts": {
-    "db:dev": "sqld",
+    "db:dev": "mkdir -p .db && turso dev --db-file .db/db.db",
     "db:push": "drizzle-kit push",
-    "db:clean": "rm -r data.sqld",
+    "db:clean": "rm -rf .db",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@discordjs/core": "^2.0.0",
     "@discordjs/rest": "^2.4.0",
-    "@libsql/client": "^0.10.0",
-    "drizzle-orm": "^0.33.0",
+    "@libsql/client": "^0.14.0",
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0",
+    "aws4fetch": "^1.0.20",
+    "drizzle-orm": "^0.36.0",
     "drizzle-zod": "^0.5.1",
-    "lucia": "0.0.0-remove-adapter-package.20240719033400",
-    "oslo": "^1.2.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@artists-together/config": "workspace:*",
-    "@types/node": "^20.12.10",
-    "drizzle-kit": "^0.24.2",
+    "@types/node": "^22.7.7",
+    "drizzle-kit": "^0.27.1",
     "prettier": "^3.2.5",
     "typescript": "^5.5.4"
   },
