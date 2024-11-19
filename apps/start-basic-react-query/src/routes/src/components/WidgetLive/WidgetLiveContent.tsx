@@ -1,5 +1,5 @@
 import { oneOf } from "@artists-together/core/utils"
-import { useInView } from "framer-motion"
+import { useInView } from "motion/react"
 import { use, useMemo, useRef } from "react"
 import type { getRandomLiveUsers } from "~/services/live-user/server"
 

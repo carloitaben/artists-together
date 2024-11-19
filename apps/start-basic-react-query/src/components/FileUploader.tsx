@@ -1,7 +1,7 @@
 // "use client"
 
 // import { FileUpload } from "@ark-ui/react/file-upload"
-// import { motion } from "framer-motion"
+// import { motion } from "motion/react"
 // import Icon from "./Icon"
 // import { useState } from "react"
 

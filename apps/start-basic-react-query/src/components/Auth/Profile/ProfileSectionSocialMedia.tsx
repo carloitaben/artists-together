@@ -35,7 +35,7 @@ export default function ProfileSectionSocialMedia() {
 // "use client"
 
 // import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
-// import { AnimatePresence, motion } from "framer-motion"
+// import { AnimatePresence, motion } from "motion/react"
 // import { forwardRef } from "react"
 // import type { IconName } from "~/lib/types/icons"
 // import Icon from "~/components/Icon"

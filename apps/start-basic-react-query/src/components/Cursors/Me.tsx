@@ -4,12 +4,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query"
-import {
-  AnimatePresence,
-  clamp,
-  useMotionValue,
-  useSpring,
-} from "framer-motion"
+import { AnimatePresence, clamp, useMotionValue, useSpring } from "motion/react"
 import { throttle } from "radashi"
 import { useEffect, useState } from "react"
 import { useScreen } from "~/lib/media"

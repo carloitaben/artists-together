@@ -6,7 +6,7 @@ import type {
   SetStateAction,
 } from "react"
 import { forwardRef } from "react"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import type { Action } from "~/lib/navigation"
 import Icon from "~/components/Icon"
 import NavigationBottombarMenuItem from "./NavigationBottombarMenuItem"

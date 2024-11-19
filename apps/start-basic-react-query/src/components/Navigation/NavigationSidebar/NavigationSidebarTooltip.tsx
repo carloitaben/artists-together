@@ -1,8 +1,8 @@
 import { Tooltip } from "@ark-ui/react/tooltip"
 import type { ReactNode } from "react"
 import { useState } from "react"
-import type { Transition } from "framer-motion"
-import { motion, mix } from "framer-motion"
+import type { Transition } from "motion/react"
+import { motion, mix } from "motion/react"
 import { cx } from "cva"
 
 let sign = 1

@@ -33,19 +33,4 @@
   * {
     -webkit-tap-highlight-color: transparent;
   }
-
-  /* TODO: move this to root when Tanner removes Html, Head and Body components */
-  html {
-    @apply theme-arpeggio-black relative min-h-full scroll-p-0 bg-arpeggio-black-900 font-inter text-gunpla-white-50 antialiased selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900;
-  }
-
-  /* TODO: move this to root when Tanner removes Html, Head and Body components */
-  body {
-    @apply size-full min-h-full min-w-fit text-sm sm:pl-16;
-  }
-
-  /* TODO: move this to root when Tanner removes Html, Head and Body components */
-  body #root {
-    @apply size-full min-w-fit;
-  }
 }

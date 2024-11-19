@@ -9,9 +9,9 @@ import Avatar from "~/components/Avatar"
 
 const className = {
   navLink:
-    "group block size-14 p-1 text-arpeggio-black-800 hover:text-theme-800 aria-[current='page']:text-theme-300",
+    "group block size-14 p-1 text-arpeggio-black-800 hover:text-theme-800 aria-[current='page']:text-theme-300 focus-visible:text-theme-800 aria-[current='page']:focus-visible:text-theme-800 focus:outline-none",
   iconWrapper:
-    "grid size-12 place-items-center rounded-2 group-hover:bg-theme-300 group-aria-[current='page']:group-hover:text-theme-800 *:size-6 *:text-current",
+    "grid size-12 place-items-center rounded-2 group-hover:bg-theme-300 group-aria-[current='page']:group-hover:text-theme-800 *:size-6 *:text-current group-focus-visible:bg-theme-300",
 }
 
 export default function NavigationSidebar() {
@@ -22,6 +22,7 @@ export default function NavigationSidebar() {
   return (
     <nav
       aria-label="Main Navigation"
+      role="navigation"
       className="fixed inset-y-0 left-0 hidden w-16 place-items-center gap-y-4 bg-arpeggio-black-900/75 px-1 py-2 backdrop-blur-1 sm:grid"
     >
       <ul>

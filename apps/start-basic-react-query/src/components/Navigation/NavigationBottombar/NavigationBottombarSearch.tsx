@@ -1,6 +1,6 @@
 import { cx } from "cva"
-import type { Transition, Variants } from "framer-motion"
-import { motion } from "framer-motion"
+import type { Transition, Variants } from "motion/react"
+import { motion } from "motion/react"
 import type {
   ComponentRef,
   Dispatch,

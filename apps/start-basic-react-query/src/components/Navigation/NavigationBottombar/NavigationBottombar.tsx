@@ -1,7 +1,7 @@
 import { useChildMatches } from "@tanstack/react-router"
 import type { CSSProperties } from "react"
 import { useRef, useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion } from "motion/react"
 import { useMeasure } from "~/lib/media"
 import Backdrop from "~/components/Backdrop"
 import NavigationBottombarMenu from "./NavigationBottombarMenu"

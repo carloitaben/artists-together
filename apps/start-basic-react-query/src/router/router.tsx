@@ -2,8 +2,8 @@ import { QueryClient } from "@tanstack/react-query"
 import { createRouter as createTanStackRouter } from "@tanstack/react-router"
 import { routerWithQueryClient } from "@tanstack/react-router-with-query"
 import type { Action } from "~/lib/navigation"
-import { NotFound } from "~/components/NotFound"
 import { toaster } from "~/components/Toasts"
+import NotFound from "~/components/NotFound"
 import { routeTree } from "./route-tree.gen"
 
 export function createRouter() {

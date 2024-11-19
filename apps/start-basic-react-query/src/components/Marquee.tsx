@@ -1,7 +1,7 @@
 import type { CSSProperties, ComponentProps, ComponentRef } from "react"
 import { startTransition, useEffect, useRef, useState } from "react"
 import { cx } from "cva"
-import { transform } from "framer-motion"
+import { transform } from "motion/react"
 
 const duration = transform([0, 100], ["0s", "30s"], {
   clamp: false,

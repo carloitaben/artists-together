@@ -1,6 +1,6 @@
 import type { CursorState } from "@artists-together/core/websocket"
-import type { MotionValue, Variants } from "framer-motion"
-import { motion } from "framer-motion"
+import type { MotionValue, Variants } from "motion/react"
+import { motion } from "motion/react"
 import Icon from "~/components/Icon"
 import Pill from "~/components/Pill"
 

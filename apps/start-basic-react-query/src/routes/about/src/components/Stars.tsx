@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { useScroll, motion, useSpring } from "framer-motion"
+import { useScroll, motion, useSpring } from "motion/react"
 import type { InstancedMesh } from "three"
 import { Object3D, Matrix4, Vector3, Color } from "three"
 import { Canvas, useFrame } from "@react-three/fiber"

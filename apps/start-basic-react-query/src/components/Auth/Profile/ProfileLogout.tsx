@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useDialogContext } from "@ark-ui/react/dialog"
 import { useForm } from "@conform-to/react"
 import { parseWithZod } from "@conform-to/zod"
-import { logout } from "~/services/auth/actions"
+import { $logout } from "~/services/auth/actions"
 import { toaster } from "~/components/Toasts"
 import { authenticateQueryOptions } from "~/lib/data"
 import { AuthFormSchema } from "~/lib/schemas"
@@ -17,7 +17,7 @@ export default function ProfileLogout() {
   })
 
   const loginMutation = useMutation({
-    mutationFn: logout,
+    mutationFn: $logout,
     async onSuccess() {
       await client.invalidateQueries({
         queryKey: authenticateQueryOptions.queryKey,

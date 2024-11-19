@@ -2,7 +2,7 @@ import image from "~/assets/images/404.png"
 import Image from "./Image"
 import Container from "./Container"
 
-export function NotFound() {
+export default function NotFound() {
   return (
     <Container className="h-dvh py-16 sm:py-4">
       <section className="relative grid h-full place-items-center">

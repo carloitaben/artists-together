@@ -1,5 +1,9 @@
-import { SESSION_COOKIE_NAME } from "@artists-together/core/auth"
+import {
+  SESSION_COOKIE_NAME,
+  validateSessionToken,
+} from "@artists-together/core/auth"
 import { Discord, Twitch } from "arctic"
+import type { HTTPEvent } from "vinxi/http"
 import { z } from "zod"
 import { WEB_URL } from "~/lib/constants"
 import { Geolocation, Pathname } from "~/lib/schemas"
@@ -45,8 +49,8 @@ export const provider = {
   ),
 }
 
-export async function authenticate(request: Request) {
-  const cookie = cookieSession.get(getEvent())
+export async function authenticate(event: HTTPEvent) {
+  const cookie = cookieSession.get(event)
 
   if (!cookie.success) {
     return null
@@ -55,11 +59,11 @@ export async function authenticate(request: Request) {
   const result = await validateSessionToken(cookie.data)
 
   if (!result) {
-    cookieSession.delete(getEvent())
+    cookieSession.delete(event)
     return null
   }
 
-  cookieSession.set(getEvent(), cookie.data, {
+  cookieSession.set(event, cookie.data, {
     expires: result.session.expiresAt,
   })
 

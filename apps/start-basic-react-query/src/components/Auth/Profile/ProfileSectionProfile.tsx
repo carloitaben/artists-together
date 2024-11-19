@@ -1,10 +1,11 @@
 import { Dialog } from "@ark-ui/react/dialog"
 import { Field } from "@ark-ui/react/field"
+import Image from "~/components/Image"
+import AspectRatio from "~/components/AspectRatio"
 import DialogTitle from "../DialogTitle"
 import Connections from "./Connections"
-import { sectionData } from "./lib"
-import Image from "~/components/Image"
 import ProfileDialogContainer from "./ProfileDialogContainer"
+import { sectionData } from "./lib"
 
 // const array = Array.from(Array(3))
 
@@ -18,10 +19,14 @@ export default function ProfileSectionProfile() {
       <div className="flex grid-cols-3 flex-col gap-3 pb-3 md:grid">
         <div>
           <div className="flex items-center gap-x-2 px-3.5 pb-1">Avatar</div>
-          <Image
-            className="grid aspect-square overflow-hidden rounded-4 bg-not-so-white object-cover"
-            alt="Your avatar"
-          />
+          <AspectRatio.Root ratio={1}>
+            <AspectRatio.Content asChild>
+              <Image
+                className="size-full overflow-hidden rounded-4 bg-not-so-white object-cover"
+                alt="Your avatar"
+              />
+            </AspectRatio.Content>
+          </AspectRatio.Root>
         </div>
         <Field.Root className="col-span-2 flex flex-col">
           <Field.Label className="flex flex-none items-center justify-between px-3.5 pb-1">

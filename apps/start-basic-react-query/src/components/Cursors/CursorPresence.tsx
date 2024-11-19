@@ -4,7 +4,7 @@ import type {
 } from "@artists-together/core/websocket"
 import { PerfectCursor } from "perfect-cursors"
 import { useCallback, useEffect, useState } from "react"
-import { useMotionTemplate, useMotionValue } from "framer-motion"
+import { useMotionTemplate, useMotionValue } from "motion/react"
 import type { SubscribeCallback } from "~/lib/websocket"
 import { ATTR_NAME_DATA_CURSOR_PRECISION } from "./CursorPrecision"
 import { useMeasure } from "./lib"

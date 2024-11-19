@@ -5,7 +5,7 @@ import { Dialog } from "@ark-ui/react/dialog"
 import { useForm } from "@conform-to/react"
 import { parseWithZod } from "@conform-to/zod"
 import { AuthFormSchema } from "~/lib/schemas"
-import { login } from "~/services/auth/actions"
+import { $login } from "~/services/auth/actions"
 import Button from "~/components/Button"
 import Icon from "~/components/Icon"
 import DialogContainer from "./DialogContainer"
@@ -16,7 +16,7 @@ export default function Login() {
     select: (state) => state.pathname,
   })
 
-  const serverFn = useServerFn(login)
+  const serverFn = useServerFn($login)
 
   const mutation = useMutation({
     mutationFn: serverFn,
@@ -30,7 +30,9 @@ export default function Login() {
     },
     async onSubmit(event, context) {
       event.preventDefault()
-      await mutation.mutateAsync(context.formData)
+      await mutation.mutateAsync({
+        data: context.formData,
+      })
     },
   })
 
@@ -50,7 +52,8 @@ export default function Login() {
       <form
         id={form.id}
         onSubmit={form.onSubmit}
-        action={login.url}
+        // TODO: This is currently broken
+        // action={$login.url}
         method="post"
         encType="multipart/form-data"
         className="flex justify-end"

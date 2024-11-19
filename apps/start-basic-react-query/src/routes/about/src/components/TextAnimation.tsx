@@ -4,8 +4,8 @@ import { ark } from "@ark-ui/react/factory"
 import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef, useEffect } from "react"
 import { mergeRefs } from "react-merge-refs"
-import type { Segment } from "framer-motion"
-import { useAnimate, useInView, useScroll, useSpring } from "framer-motion"
+import type { Segment } from "motion/react"
+import { useAnimate, useInView, useScroll, useSpring } from "motion/react"
 
 type Props = HTMLArkProps<"div">
 

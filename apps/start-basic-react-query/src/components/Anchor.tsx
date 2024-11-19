@@ -1,6 +1,6 @@
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
-import { animate } from "framer-motion"
+import { animate } from "motion/react"
 import type { ComponentRef, ForwardedRef, MouseEvent } from "react"
 import { forwardRef, useCallback } from "react"
 

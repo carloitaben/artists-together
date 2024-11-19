@@ -1,6 +1,6 @@
 import { SegmentGroup } from "@ark-ui/react/segment-group"
 import type { Dayjs } from "dayjs"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import Link from "next/link"
 import { startTransition, useOptimistic } from "react"
 import { MonthNumber } from "~/lib/schemas"
