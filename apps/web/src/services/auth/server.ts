@@ -50,11 +50,13 @@ export const provider = {
 }
 
 export async function authenticate(event: HTTPEvent) {
+  console.log("calling authenticate...")
   const cookie = cookieSession.get(event)
 
   if (!cookie.success) {
     return null
   }
+
 
   const result = await validateSessionToken(cookie.data)
 

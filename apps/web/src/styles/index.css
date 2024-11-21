@@ -38,6 +38,10 @@
     @apply cursor-none;
   }
 
+  html.cursor .tsqd-parent-container * {
+    @apply cursor-default;
+  }
+
   .font-serif-ampersand {
     font-variation-settings:
       "SOFT" 100,

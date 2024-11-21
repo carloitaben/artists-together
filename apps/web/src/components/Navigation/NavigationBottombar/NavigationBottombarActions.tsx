@@ -9,7 +9,7 @@ import { forwardRef } from "react"
 import { motion } from "motion/react"
 import type { Action } from "~/lib/navigation"
 import Icon from "~/components/Icon"
-import NavigationBottombarMenuItem from "./NavigationBottombarMenuItem"
+import NavigationBottombarMenuItem from "./NavigationBottombarMenuContentItem"
 import { scalePresenceVariants, spring } from "../lib"
 
 type Props = {

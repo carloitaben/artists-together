@@ -1,17 +1,11 @@
-import { useSuspenseQueries } from "@tanstack/react-query"
 import { Menu } from "@ark-ui/react/menu"
 import { cx } from "cva"
 import type { Transition } from "motion/react"
 import { AnimatePresence, motion } from "motion/react"
 import type { Dispatch, SetStateAction } from "react"
-import { authenticateQueryOptions } from "~/services/auth/queries"
-import { hintsQueryOptions } from "~/services/hints/queries"
-import { navigationEntries } from "~/lib/navigation"
 import Icon from "~/components/Icon"
-import NavLink from "~/components/NavLink"
-import NavigationBottombarMenuItem from "./NavigationBottombarMenuItem"
+import NavigationBottombarMenuContent from "./NavigationBottombarMenuContent"
 import { spring } from "../lib"
-import Avatar from "~/components/Avatar"
 
 type Props = {
   label: string
@@ -29,10 +23,6 @@ export default function NavigationBottombarMenu({
   searchbarFocus,
   onOpenChange,
 }: Props) {
-  const [auth, hints] = useSuspenseQueries({
-    queries: [authenticateQueryOptions, hintsQueryOptions],
-  })
-
   return (
     <Menu.Root onOpenChange={(context) => onOpenChange(context.open)}>
       <Menu.Trigger asChild>
@@ -118,48 +108,7 @@ export default function NavigationBottombarMenu({
           </motion.div>
         </motion.button>
       </Menu.Trigger>
-      <Menu.Content className="fixed bottom-16 left-2 space-y-2 focus:outline-none">
-        <Menu.Item value="auth" asChild>
-          <NavigationBottombarMenuItem asChild>
-            <NavLink
-              to="."
-              replace
-              search={(prev) => ({ ...prev, modal: "auth" })}
-            >
-              {auth.data ? (
-                <Avatar
-                  username={auth.data.user.username}
-                  src={auth.data.user.avatar}
-                />
-              ) : (
-                <Icon src="Face" alt="Log-in" />
-              )}
-              <span className="truncate">
-                {auth.data ? "Your profile" : "Log-in"}
-              </span>
-            </NavLink>
-          </NavigationBottombarMenuItem>
-        </Menu.Item>
-        {navigationEntries.map(([key, route]) => (
-          <Menu.Item
-            key={key}
-            value={route.link.to}
-            disabled={route.disabled}
-            asChild
-          >
-            <NavigationBottombarMenuItem disabled={route.disabled} asChild>
-              <NavLink
-                {...route.link}
-                disabled={route.disabled}
-                preload={hints.data.saveData ? "intent" : "render"}
-              >
-                <Icon src={route.icon} alt="" />
-                <span className="truncate">{route.label}</span>
-              </NavLink>
-            </NavigationBottombarMenuItem>
-          </Menu.Item>
-        ))}
-      </Menu.Content>
+      <NavigationBottombarMenuContent />
     </Menu.Root>
   )
 }

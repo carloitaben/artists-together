@@ -28,7 +28,7 @@ const variants = cva({
 
 type Props = HTMLArkProps<"div"> & VariantProps<typeof variants>
 
-function BottombarMenuItem(
+function NavigationBottombarMenuContentItem(
   { className, disabled, justify, ...props }: Props,
   ref: ForwardedRef<ComponentRef<typeof ark.div>>,
 ) {
@@ -41,4 +41,4 @@ function BottombarMenuItem(
   )
 }
 
-export default forwardRef(BottombarMenuItem)
+export default forwardRef(NavigationBottombarMenuContentItem)

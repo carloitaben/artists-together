@@ -1,5 +1,5 @@
 import { useSuspenseQueries } from "@tanstack/react-query"
-import { Link } from "@tanstack/react-router"
+import { Link, useLocation } from "@tanstack/react-router"
 import { authenticateQueryOptions } from "~/services/auth/queries"
 import { hintsQueryOptions } from "~/services/hints/queries"
 import { navigationEntries } from "~/lib/navigation"
@@ -20,6 +20,10 @@ export default function NavigationSidebar() {
     queries: [authenticateQueryOptions, hintsQueryOptions],
   })
 
+  const pathname = useLocation({
+    select: (state) => state.pathname,
+  })
+
   return (
     <nav
       aria-label="Main Navigation"
@@ -29,8 +33,8 @@ export default function NavigationSidebar() {
       <ul>
         <NavigationSidebarTooltip label={auth.data ? "Your profile" : "Log-in"}>
           <Link
-            to="."
             replace
+            to={pathname}
             search={(prev) => ({ ...prev, modal: "auth" })}
             className={className.navLink}
           >

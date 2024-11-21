@@ -1,4 +1,9 @@
-import { rootRouteId, useNavigate, useSearch } from "@tanstack/react-router"
+import {
+  rootRouteId,
+  useLocation,
+  useNavigate,
+  useSearch,
+} from "@tanstack/react-router"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { Dialog } from "@ark-ui/react/dialog"
 import { cx } from "cva"
@@ -10,6 +15,10 @@ import Login from "./Login"
 export default function Auth() {
   const auth = useSuspenseQuery(authenticateQueryOptions)
   const navigate = useNavigate()
+  const pathname = useLocation({
+    select: (state) => state.pathname,
+  })
+
   const open = useSearch({
     from: rootRouteId,
     select: ({ modal }) => modal === "auth",
@@ -22,8 +31,8 @@ export default function Auth() {
       onOpenChange={(details) => {
         if (!details.open) {
           navigate({
+            to: pathname,
             replace: true,
-            to: ".",
             search: (prev) => ({ ...prev, modal: undefined }),
           })
         }
