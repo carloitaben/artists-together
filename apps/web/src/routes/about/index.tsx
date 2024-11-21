@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, linkOptions } from "@tanstack/react-router"
 import { Suspense, lazy } from "react"
-import { hintsQueryOptions } from "~/lib/data"
+import { hintsQueryOptions } from "~/services/hints/queries"
 import AspectRatio from "~/components/AspectRatio"
 import Container from "~/components/Container"
 import Grid from "~/components/Grid"

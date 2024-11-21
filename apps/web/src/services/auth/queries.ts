@@ -1,12 +1,4 @@
 import { queryOptions } from "@tanstack/react-query"
-// import { $authenticate } from "~/services/auth/actions"
-// import { $hints } from "./server"
-
-export const hintsQueryOptions = queryOptions({
-  queryKey: ["hints"],
-  queryFn: () => ({}),
-  staleTime: Infinity,
-})
 
 export const authenticateQueryOptions = queryOptions({
   queryKey: ["auth"],

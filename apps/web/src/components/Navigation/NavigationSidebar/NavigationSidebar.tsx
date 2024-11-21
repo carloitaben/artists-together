@@ -1,6 +1,7 @@
 import { useSuspenseQueries } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
-import { authenticateQueryOptions, hintsQueryOptions } from "~/lib/data"
+import { authenticateQueryOptions } from "~/services/auth/queries"
+import { hintsQueryOptions } from "~/services/hints/queries"
 import { navigationEntries } from "~/lib/navigation"
 import NavLink from "~/components/NavLink"
 import Icon from "~/components/Icon"

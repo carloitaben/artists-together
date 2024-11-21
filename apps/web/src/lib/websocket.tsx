@@ -11,19 +11,20 @@ import {
 import {
   queryOptions,
   useQueryClient,
-  useSuspenseQuery,
+  useSuspenseQueries,
 } from "@tanstack/react-query"
 import { useLocation } from "@tanstack/react-router"
 import type { ReactNode } from "react"
 import { useCallback, useEffect, useState } from "react"
 import { PartySocket } from "partysocket"
+import { authenticateQueryOptions } from "~/services/auth/queries"
+import { hintsQueryOptions } from "~/services/hints/queries"
 import { createContextFactory } from "~/lib/react"
-import { hintsQueryOptions } from "~/lib/data"
 
 const [WebSocketContextProvider, useWebSocketContext] =
   createContextFactory<PartySocket | null>("WebSocketContext", null)
 
-const queue = new Map<ClientEvent, any>()
+const queue = new Map<ClientEvent, string>()
 
 export function webSocketQueryOptions<T extends ServerEvent>(
   event: T,
@@ -70,9 +71,11 @@ function NotifyLocationChange() {
 }
 
 export function WebSocket({ children }: { children: ReactNode }) {
-  const [webSocket, setWebSocket] = useState<PartySocket | null>(null)
-  const hints = useSuspenseQuery(hintsQueryOptions)
   const queryClient = useQueryClient()
+  const [webSocket, setWebSocket] = useState<PartySocket | null>(null)
+  const [auth, hints] = useSuspenseQueries({
+    queries: [authenticateQueryOptions, hintsQueryOptions],
+  })
 
   useEffect(() => {
     if (hints.data.saveData || hints.data.isBot) return
@@ -84,9 +87,9 @@ export function WebSocket({ children }: { children: ReactNode }) {
     })
 
     function onOpen() {
-      queue.forEach((data, event) => {
+      queue.forEach((message, event) => {
         if (webSocket.readyState === webSocket.OPEN) {
-          webSocket.send(JSON.stringify([event, data]))
+          webSocket.send(message)
           queue.delete(event)
         }
       })
@@ -98,8 +101,7 @@ export function WebSocket({ children }: { children: ReactNode }) {
       if (!parsed.success) {
         if (import.meta.env.DEV) {
           console.error(
-            "Error while unpacking WebSocket message:",
-            parsed.error,
+            `Error while unpacking WebSocket message: ${parsed.error}`,
           )
         }
 

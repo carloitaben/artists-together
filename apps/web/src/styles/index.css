@@ -33,4 +33,15 @@
   * {
     -webkit-tap-highlight-color: transparent;
   }
+
+  html.cursor * {
+    @apply cursor-none;
+  }
+
+  .font-serif-ampersand {
+    font-variation-settings:
+      "SOFT" 100,
+      "WONK" 100,
+      "opsz" 144;
+  }
 }

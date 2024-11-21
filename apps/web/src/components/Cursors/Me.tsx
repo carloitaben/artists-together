@@ -8,7 +8,7 @@ import { AnimatePresence, clamp, useMotionValue, useSpring } from "motion/react"
 import { throttle } from "radashi"
 import { useEffect, useState } from "react"
 import { useScreen } from "~/lib/media"
-import { authenticateQueryOptions } from "~/lib/data"
+import { authenticateQueryOptions } from "~/services/auth/queries"
 import { useWebSocket, webSocketQueryOptions } from "~/lib/websocket"
 import Cursor from "./Cursor"
 import {

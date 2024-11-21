@@ -93,7 +93,7 @@ const server = Bun.serve<WebSocketData>({
 
       if (!parsed.success) {
         console.warn("Received invalid message", {
-          error: parsed.error,
+          error: parsed.error.message,
           message,
         })
 
@@ -144,6 +144,9 @@ const server = Bun.serve<WebSocketData>({
               })
             )
           }
+          break
+        case "invalidate":
+          console.log("TODO: not implemented")
           break
         default:
           unreachable(parsed.data, "Unreachable event")

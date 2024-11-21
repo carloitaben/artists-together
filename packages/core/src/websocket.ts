@@ -128,17 +128,43 @@ export function encodeServerMessage<T extends ServerEvent>(
 }
 
 const EncodedClientMessage = AnyJSONString.pipe(
-  z.tuple([ClientEvent, z.unknown()]).transform(([event, json]) => ({
-    event,
-    payload: AnyJSONString.pipe(events.client[event]).parse(json),
-  })),
+  z.tuple([ClientEvent, z.unknown()]).transform(([event, json], context) => {
+    const payload = events.client[event].safeParse(json)
+
+    if (!payload.success) {
+      context.addIssue({
+        code: "custom",
+        message: payload.error.message,
+      })
+
+      return z.NEVER
+    }
+
+    return {
+      event,
+      payload: payload.data,
+    }
+  }),
 )
 
 const EncodedServerMessage = AnyJSONString.pipe(
-  z.tuple([ServerEvent, z.unknown()]).transform(([event, json]) => ({
-    event,
-    payload: AnyJSONString.pipe(events.server[event]).parse(json),
-  })),
+  z.tuple([ServerEvent, z.unknown()]).transform(([event, json], context) => {
+    const payload = events.server[event].safeParse(json)
+
+    if (!payload.success) {
+      context.addIssue({
+        code: "custom",
+        message: payload.error.message,
+      })
+
+      return z.NEVER
+    }
+
+    return {
+      event,
+      payload: payload.data,
+    }
+  }),
 )
 
 /**
