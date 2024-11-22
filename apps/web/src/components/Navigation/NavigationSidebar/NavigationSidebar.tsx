@@ -28,7 +28,7 @@ export default function NavigationSidebar() {
     <nav
       aria-label="Main Navigation"
       role="navigation"
-      className="fixed inset-y-0 left-0 hidden w-16 place-items-center gap-y-4 bg-arpeggio-black-900/75 px-1 py-2 backdrop-blur-1 sm:grid"
+      className="fixed inset-y-0 left-0 z-20 hidden w-16 place-items-center gap-y-4 bg-arpeggio-black-900/75 px-1 py-2 backdrop-blur-1 sm:grid"
     >
       <ul>
         <NavigationSidebarTooltip
@@ -56,6 +56,7 @@ export default function NavigationSidebar() {
         </NavigationSidebarTooltip>
         {navigationEntries.map(([key, route]) => (
           <NavigationSidebarTooltip
+            key={key}
             id={key}
             label={route.label}
             disabled={route.disabled}

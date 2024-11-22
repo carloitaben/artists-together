@@ -91,9 +91,7 @@ export default function CursorPresence({ cursor, username }: Props) {
         pc.prevPoint = [percentX, percentY]
       }
     })
-  }, [pc, queryClient, cursor, username])
-
-  console.log(username, state)
+  }, [pc, queryClient, cursor, username, measure])
 
   if (!state) return null
 

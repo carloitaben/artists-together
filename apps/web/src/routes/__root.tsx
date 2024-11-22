@@ -2,12 +2,13 @@ import {
   Outlet,
   ScrollRestoration,
   createRootRouteWithContext,
+  useLocation,
 } from "@tanstack/react-router"
 import { Meta, Scripts } from "@tanstack/start"
 import { zodSearchValidator } from "@tanstack/router-zod-adapter"
 import type { QueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
-import { lazy } from "react"
+import { lazy, useEffect } from "react"
 import { authenticateQueryOptions } from "~/services/auth/queries"
 import { hintsQueryOptions } from "~/services/hints/queries"
 import { seo } from "~/lib/seo"
@@ -120,6 +121,28 @@ function RootComponent() {
   )
 }
 
+function EnsureUppercaseSerifAmpersand() {
+  const pathname = useLocation({
+    select: (state) => state.pathname,
+  })
+
+  useEffect(() => {
+    document.querySelectorAll(".font-fraunces").forEach((element) => {
+      if (!element.textContent?.includes("&")) return
+      if (!element.querySelector(".font-serif-ampersand")) {
+        console.error(element)
+        throw Error(
+          `Found Fraunces ampersand without ".font-serif-ampersand" class on path "${pathname}".` +
+            "\n" +
+            "Check the browser console for more info.",
+        )
+      }
+    })
+  }, [pathname])
+
+  return null
+}
+
 function RootDocument({ children }: { children: ReactNode }) {
   return (
     <CursorPrecision name="root" asChild>
@@ -143,6 +166,7 @@ function RootDocument({ children }: { children: ReactNode }) {
           <Footer />
           <Toasts />
           <Auth />
+          {import.meta.dev ? <EnsureUppercaseSerifAmpersand /> : null}
           <QueryDevtools />
           <ScrollRestoration />
           <Scripts />
