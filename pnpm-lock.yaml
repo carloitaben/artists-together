@@ -265,6 +265,9 @@ importers:
       drizzle-orm:
         specifier: ^0.36.3
         version: 0.36.3(@cloudflare/workers-types@4.20240815.0)(@libsql/client-wasm@0.14.0)(@libsql/client@0.14.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.12)(bun-types@1.1.36)(react@18.3.1)
+      drizzle-seed:
+        specifier: ^0.1.1
+        version: 0.1.1(drizzle-orm@0.36.3(@cloudflare/workers-types@4.20240815.0)(@libsql/client-wasm@0.14.0)(@libsql/client@0.14.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.12)(bun-types@1.1.36)(react@18.3.1))
       drizzle-zod:
         specifier: ^0.5.1
         version: 0.5.1(drizzle-orm@0.36.3(@cloudflare/workers-types@4.20240815.0)(@libsql/client-wasm@0.14.0)(@libsql/client@0.14.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.12)(bun-types@1.1.36)(react@18.3.1))(zod@3.23.8)
@@ -3296,6 +3299,14 @@ packages:
       sqlite3:
         optional: true
 
+  drizzle-seed@0.1.1:
+    resolution: {integrity: sha512-hOIdjulFsxH9tUY3BWO6oPaTjQlNFhoqTgpgzKpBdAH3mXM7426WxKBSzu81fboG6GhjvQEJVDwkayui9HiRjw==}
+    peerDependencies:
+      drizzle-orm: '>=0.36.4'
+    peerDependenciesMeta:
+      drizzle-orm:
+        optional: true
+
   drizzle-zod@0.5.1:
     resolution: {integrity: sha512-C/8bvzUH/zSnVfwdSibOgFjLhtDtbKYmkbPbUCq46QZyZCH6kODIMSOgZ8R7rVjoI+tCj3k06MRJMDqsIeoS4A==}
     peerDependencies:
@@ -4400,6 +4411,7 @@ packages:
 
   libsql@0.4.6:
     resolution: {integrity: sha512-F5M+ltteK6dCcpjMahrkgT96uFJvVI8aQ4r9f2AzHQjC7BkAYtvfMSTWGvRBezRgMUIU2h1Sy0pF9nOGOD5iyA==}
+    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lilconfig@2.1.0:
@@ -5062,6 +5074,9 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  pure-rand@6.1.0:
+    resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
@@ -9220,6 +9235,12 @@ snapshots:
       bun-types: 1.1.36
       react: 18.3.1
 
+  drizzle-seed@0.1.1(drizzle-orm@0.36.3(@cloudflare/workers-types@4.20240815.0)(@libsql/client-wasm@0.14.0)(@libsql/client@0.14.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.12)(bun-types@1.1.36)(react@18.3.1)):
+    dependencies:
+      pure-rand: 6.1.0
+    optionalDependencies:
+      drizzle-orm: 0.36.3(@cloudflare/workers-types@4.20240815.0)(@libsql/client-wasm@0.14.0)(@libsql/client@0.14.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.12)(bun-types@1.1.36)(react@18.3.1)
+
   drizzle-zod@0.5.1(drizzle-orm@0.36.3(@cloudflare/workers-types@4.20240815.0)(@libsql/client-wasm@0.14.0)(@libsql/client@0.14.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.12)(bun-types@1.1.36)(react@18.3.1))(zod@3.23.8):
     dependencies:
       drizzle-orm: 0.36.3(@cloudflare/workers-types@4.20240815.0)(@libsql/client-wasm@0.14.0)(@libsql/client@0.14.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@types/react@18.3.12)(bun-types@1.1.36)(react@18.3.1)
@@ -11204,6 +11225,8 @@ snapshots:
       once: 1.4.0
 
   punycode@2.3.1: {}
+
+  pure-rand@6.1.0: {}
 
   queue-microtask@1.2.3: {}
 
