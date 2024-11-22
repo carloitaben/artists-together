@@ -1,15 +1,9 @@
-import type { ReactNode } from "react"
 import NavigationBottombar from "./NavigationBottombar"
 import NavigationSidebar from "./NavigationSidebar"
 
-type Props = {
-  children: ReactNode
-}
-
-export default function Navigation({ children }: Props) {
+export default function Navigation() {
   return (
     <>
-      {children}
       <NavigationBottombar />
       <NavigationSidebar />
     </>

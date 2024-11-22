@@ -12,14 +12,18 @@ import DialogContainer from "./DialogContainer"
 import DialogTitle from "./DialogTitle"
 
 export default function Login() {
+  const serverFn = useServerFn($login)
   const pathname = useLocation({
     select: (state) => state.pathname,
   })
 
-  const serverFn = useServerFn($login)
-
   const mutation = useMutation({
     mutationFn: serverFn,
+    onSuccess(data) {
+      if (typeof data === "string") {
+        window.location.href = data
+      }
+    },
   })
 
   const [form, fields] = useForm({
@@ -38,22 +42,21 @@ export default function Login() {
 
   return (
     <Dialog.Content className="space-y-4 focus:outline-none">
-      <DialogContainer>
-        <DialogTitle asChild>
-          <Dialog.Title className="mb-4 px-3 text-center sm:mb-5 sm:[text-align:unset]">
-            Welcome to <br className="sm:hidden" />
+      <DialogContainer className="px-8 pb-9 pt-7 md:px-[3.75rem] md:pb-12 md:pt-10">
+        <DialogTitle padding={false} asChild>
+          <Dialog.Title className="mb-4 text-center md:mb-5 md:[text-align:unset]">
+            Welcome to <br className="md:hidden" />
             Artists Together
           </Dialog.Title>
         </DialogTitle>
-        <Dialog.Description className="px-3.5 text-xs sm:text-base">
+        <Dialog.Description className="text-xs md:text-sm">
           We will be using Discord to manage your Artists Together account.
         </Dialog.Description>
       </DialogContainer>
       <form
         id={form.id}
         onSubmit={form.onSubmit}
-        // TODO: This is currently broken
-        // action={$login.url}
+        action={$login.url}
         method="post"
         encType="multipart/form-data"
         className="flex justify-end"
@@ -64,12 +67,13 @@ export default function Login() {
           value={pathname}
           disabled={mutation.isPending}
           color={false}
-          className="bg-[#5865F2] text-gunpla-white-50 selection:bg-gunpla-white-50 selection:text-[#5865F2]"
+          padding={false}
+          className="bg-[#5865F2] px-4 text-gunpla-white-50 selection:bg-gunpla-white-50 selection:text-[#5865F2]"
         >
           <Icon
             src="Discord"
             alt=""
-            className="flex h-3 w-4 items-center justify-center sm:h-[1.125rem] sm:w-6"
+            className="flex size-5 items-center justify-center md:size-6"
           />
           Log-in with Discord
         </Button>

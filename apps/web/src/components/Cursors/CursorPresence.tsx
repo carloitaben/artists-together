@@ -2,12 +2,13 @@ import type {
   CursorState,
   Cursor as CursorType,
 } from "@artists-together/core/websocket"
+import { QueryObserver, useQueryClient } from "@tanstack/react-query"
 import { PerfectCursor } from "perfect-cursors"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useMotionTemplate, useMotionValue } from "motion/react"
-import type { SubscribeCallback } from "~/lib/websocket"
-import { ATTR_NAME_DATA_CURSOR_PRECISION } from "./CursorPrecision"
+import { webSocketQueryOptions } from "~/lib/websocket"
 import { useMeasure } from "./lib"
+import { ATTR_NAME_DATA_CURSOR_PRECISION } from "./CursorPrecision"
 import Cursor from "./Cursor"
 
 type Props = {
@@ -17,6 +18,7 @@ type Props = {
 
 export default function CursorPresence({ cursor, username }: Props) {
   const [state, setState] = useState<CursorState>()
+  const queryClient = useQueryClient()
   const measure = useMeasure()
   const x = useMotionValue(cursor?.x || 0)
   const y = useMotionValue(cursor?.y || 0)
@@ -33,47 +35,6 @@ export default function CursorPresence({ cursor, username }: Props) {
       }),
   )
 
-  const onCursorUpdate = useCallback<SubscribeCallback<"cursor:update">>(
-    (payload) => {
-      if (payload.username !== username) return
-      if (!payload.cursor) return setState(undefined)
-
-      setState(payload.cursor.state)
-
-      const selector = `[${ATTR_NAME_DATA_CURSOR_PRECISION}="${payload.cursor.target}"]`
-
-      const rect = measure(
-        selector,
-        () => document.querySelector(selector) || document.documentElement,
-      )
-
-      const percentX =
-        ((rect.x +
-          document.documentElement.scrollLeft +
-          payload.cursor.x * rect.width) /
-          document.documentElement.offsetWidth) *
-        100
-
-      const percentY =
-        ((rect.y +
-          document.documentElement.scrollTop +
-          payload.cursor.y * rect.height) /
-          document.documentElement.offsetHeight) *
-        100
-
-      if (pc.prevPoint) {
-        pc.addPoint([percentX, percentY])
-      } else {
-        pc.prevPoint = [percentX, percentY]
-      }
-    },
-    [measure, pc, username],
-  )
-
-  useEffect(() => {
-    onCursorUpdate({ cursor, username })
-  }, [cursor, onCursorUpdate, username])
-
   useEffect(() => {
     if (!state) {
       pc.dispose()
@@ -82,7 +43,57 @@ export default function CursorPresence({ cursor, username }: Props) {
     }
   }, [pc, state])
 
-  // useWebSocketEvent("cursor:update", onCursorUpdate)
+  useEffect(() => {
+    const observer = new QueryObserver(
+      queryClient,
+      webSocketQueryOptions("cursor:update", {
+        cursor,
+        username,
+      }),
+    )
+
+    return observer.subscribe((context) => {
+      if (!context.data) return
+      if (context.data.username !== username) return
+      if (!context.data.cursor) return setState(undefined)
+
+      setState(context.data.cursor.state)
+
+      const selector = `[${ATTR_NAME_DATA_CURSOR_PRECISION}="${context.data.cursor.target}"]`
+
+      const rect = measure(
+        selector,
+        () => document.querySelector(selector) || document.documentElement,
+      )
+
+      console.log("measured rect for", context.data.cursor.target, {
+        x: context.data.cursor.x,
+        y: context.data.cursor.y,
+      })
+
+      const percentX =
+        ((rect.x +
+          document.documentElement.scrollLeft +
+          context.data.cursor.x * rect.width) /
+          document.documentElement.offsetWidth) *
+        100
+
+      const percentY =
+        ((rect.y +
+          document.documentElement.scrollTop +
+          context.data.cursor.y * rect.height) /
+          document.documentElement.offsetHeight) *
+        100
+
+      if (pc.prevPoint) {
+        pc.addPoint([percentX, percentY])
+      } else {
+        pc.prevPoint = [percentX, percentY]
+      }
+    })
+  }, [pc, queryClient, cursor, username])
+
+  console.log(username, state)
 
   if (!state) return null
 

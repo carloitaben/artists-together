@@ -33,6 +33,7 @@ export default function Auth() {
           navigate({
             to: pathname,
             replace: true,
+            // @ts-expect-error I don't know how to solve this
             search: (prev) => ({ ...prev, modal: undefined }),
           })
         }

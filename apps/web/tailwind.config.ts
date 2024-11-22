@@ -1,3 +1,4 @@
+import pluginScrollbar from "tailwind-scrollbar"
 import type { Config } from "tailwindcss"
 import type {
   ScreensConfig,
@@ -277,5 +278,11 @@ export default {
     blur: ({ theme }) => theme("spacing"),
     backdropBlur: ({ theme }) => theme("spacing"),
   },
-  plugins: [pluginTheme, pluginScale, pluginSubgrid, pluginAnimation],
+  plugins: [
+    pluginTheme,
+    pluginScale,
+    pluginSubgrid,
+    pluginAnimation,
+    pluginScrollbar,
+  ],
 } satisfies Config

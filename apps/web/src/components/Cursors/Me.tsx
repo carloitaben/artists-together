@@ -61,7 +61,7 @@ export default function Me() {
     const notify = throttle(
       { interval: alone ? 5_000 : 80 },
       (event: MouseEvent, state?: CursorState) => {
-        if (!auth.data?.user || !sm) return
+        if (!auth.data || !sm) return
 
         if (!state) {
           return webSocket.send("cursor:update", null)
@@ -86,7 +86,9 @@ export default function Me() {
 
         const rect = measure(targetAttribute, () => target)
         const x = limit((event.clientX - rect.x) / rect.width)
-        const y = limit((event.clientY - rect.y) / rect.height)
+        const y = limit(
+          (event.clientY - rect.y + target.scrollTop) / rect.height,
+        )
 
         webSocket.send("cursor:update", {
           x,
@@ -150,7 +152,7 @@ export default function Me() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 isolate z-[100] size-full select-none overflow-hidden"
+      className="pointer-events-none fixed inset-0 isolate z-[999] size-full select-none overflow-hidden"
     >
       <AnimatePresence initial={false}>
         {render ? <Cursor state={state} x={x} y={y} scale={scale} /> : null}

@@ -1,13 +1,12 @@
 import type { SessionValidationResult } from "@artists-together/core/auth"
 import { invalidateSession } from "@artists-together/core/auth"
 import { createServerFn } from "@tanstack/start"
-import { redirect } from "@tanstack/react-router"
 import { parseWithZod } from "@conform-to/zod"
+import { getEvent } from "vinxi/http"
 import { generateState } from "arctic"
 import { AuthFormSchema } from "~/lib/schemas"
-import { getGeolocation } from "~/lib/server"
+import { $hints } from "~/services/hints/server"
 import { authenticate, cookieOauth, cookieSession, provider } from "./server"
-import { getEvent, sendRedirect } from "vinxi/http"
 
 export const $authenticate = createServerFn({ method: "GET" }).handler(
   async (): Promise<SessionValidationResult> => {
@@ -24,33 +23,38 @@ export const $login = createServerFn({ method: "POST" })
     })
 
     if (form.status !== "success") {
-      return
+      return form.reply()
     }
 
-    if (cookieSession.has(getEvent())) {
-      return
+    const event = getEvent()
+
+    if (cookieSession.has(event)) {
+      return form.reply({
+        formErrors: ["Already logged in"],
+      })
     }
 
-    const geolocation = getGeolocation()
+    const hints = await $hints()
     const state = generateState()
     const url = provider.discord.createAuthorizationURL(state, [
       "identify",
       "email",
     ])
 
-    cookieOauth.set(getEvent(), {
+    cookieOauth.set(event, {
+      fahrenheit: hints.temperatureUnit === "fahrenheit",
+      fullHourFormat: hints.hourFormat === "24",
       pathname: form.value.pathname,
-      geolocation,
+      geolocation: hints.geolocation,
       state,
     })
 
+    // TODO: External redirects are currently not supported by Start
     // throw redirect({
     //   to: url.href,
     // })
 
-    // TODO: I'm testing here if sendRedirect works without JS. It should,
-    // as it's a hard redirect and it doesn't depend on Router
-    return sendRedirect(url.href)
+    return url.href
   })
 
 export const $logout = createServerFn({ method: "POST" })
@@ -68,7 +72,7 @@ export const $logout = createServerFn({ method: "POST" })
     const auth = await authenticate(event)
 
     if (!auth) {
-      return
+      throw Error("Unauthorized")
     }
 
     invalidateSession(auth.session.id)
@@ -90,32 +94,6 @@ export const $unlinkDiscord = createServerFn({ method: "GET" }).handler(
 export const $unlinkTwitch = createServerFn({ method: "GET" }).handler(
   async () => {},
 )
-
-// export async function login(pathname: string) {
-//   const auth = await authenticate()
-
-//   if (auth) {
-//     return error({ cause: "ALREADY_LOGGED_IN" })
-//   }
-
-//   const geo = await geolocation()
-//   const state = generateState()
-//   const url = provider.discord.createAuthorizationURL(state, [
-//     "identify",
-//     "email",
-//   ])
-
-//   oauthCookie.set(
-//     {
-//       geolocation: geo,
-//       pathname,
-//       state,
-//     },
-//     { strict: true },
-//   )
-
-//   return redirect(url.href)
-// }
 
 // export async function logout() {
 //   const auth = await authenticate()

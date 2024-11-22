@@ -29,7 +29,7 @@ export default function ProfileLogout() {
       })
     },
   })
-
+  
   const [form, fields] = useForm({
     onValidate({ formData }) {
       return parseWithZod(formData, {
@@ -38,8 +38,10 @@ export default function ProfileLogout() {
     },
     async onSubmit(event, context) {
       event.preventDefault()
-      await loginMutation.mutateAsync(context.formData)
       dialog.setOpen(false)
+      await loginMutation.mutateAsync({
+        data: context.formData,
+      })
     },
   })
 

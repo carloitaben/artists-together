@@ -1,22 +1,17 @@
-// import { useEffect } from "react"
-// import { useWebSocketDispatch, useWebSocketPayload } from "~/hooks/ws"
-// import { useHandle } from "~/services/handle"
-// import { useUser } from "~/hooks/loaders"
-// import CursorPresence from "./CursorPresence"
+import { useSuspenseQueries } from "@tanstack/react-query"
+import { webSocketQueryOptions } from "~/lib/websocket"
+import { authenticateQueryOptions } from "~/services/auth/queries"
+import CursorPresence from "./CursorPresence"
 
 export default function CursorPresenceRoom() {
-  // const dispatch = useWebSocketDispatch()
-  // const handle = useHandle()
-  // const user = useUser()
-  // const room = useWebSocketPayload("room:update", { count: 0, members: [] })
+  const [auth, room] = useSuspenseQueries({
+    queries: [
+      authenticateQueryOptions,
+      webSocketQueryOptions("room:update", { count: 0, members: [] }),
+    ],
+  })
 
-  // useEffect(() => {
-  //   if (!handle) return
-  //   dispatch("room:update", { room: handle.name() })
-  // }, [dispatch, handle])
-
-  // return room.members
-  //   .filter((member) => member.username !== user?.username)
-  //   .map((member) => <CursorPresence key={member.username} {...member} />)
-  return null
+  return room.data.members
+    .filter((member) => member.username !== auth.data?.user.username)
+    .map((member) => <CursorPresence key={member.username} {...member} />)
 }

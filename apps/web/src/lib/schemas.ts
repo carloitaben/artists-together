@@ -1,12 +1,9 @@
 import { fallback } from "@tanstack/router-zod-adapter"
 import { z } from "zod"
 
-export const Pathname = z
-  .string()
-  .default("/")
-  .refine((value) => value.startsWith("/"), {
-    message: "Pathname must start with a /",
-  })
+export const Pathname = z.string().refine((value) => value.startsWith("/"), {
+  message: "Pathname must start with a /",
+})
 
 export const Geolocation = z
   .object({

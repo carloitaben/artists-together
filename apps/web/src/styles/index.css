@@ -42,6 +42,10 @@
     @apply cursor-default;
   }
 
+  img {
+    @apply select-none;
+  }
+
   .font-serif-ampersand {
     font-variation-settings:
       "SOFT" 100,

@@ -18,10 +18,11 @@ import inter from "~/assets/fonts/inter.woff2"
 import fraunces from "~/assets/fonts/fraunces.woff2"
 import NotFound from "~/components/NotFound"
 import Navigation from "~/components/Navigation"
-import Cursors from "~/components/Cursors"
+import Cursors, { CursorPrecision } from "~/components/Cursors"
 import Footer from "~/components/Footer"
 import Toasts from "~/components/Toasts"
 import Auth from "~/components/Auth"
+import { cx } from "cva"
 
 const QueryDevtools = import.meta.env.PROD
   ? () => null
@@ -121,27 +122,32 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="en"
-      className="theme-arpeggio-black relative min-h-full scroll-p-0 bg-arpeggio-black-900 font-inter text-gunpla-white-50 antialiased selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900"
-    >
-      <head>
-        <Meta />
-      </head>
-      <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
-        <Navigation>
+    <CursorPrecision name="root" asChild>
+      <html
+        lang="en"
+        className={cx(
+          "relative min-h-full scroll-p-0 font-inter antialiased",
+          "theme-arpeggio-black bg-arpeggio-black-900 text-gunpla-white-50",
+          "selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900",
+        )}
+      >
+        <head>
+          <Meta />
+        </head>
+        <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
+          <Navigation />
           <WebSocket>
             {children}
             <Cursors />
           </WebSocket>
-        </Navigation>
-        <Footer />
-        <Toasts />
-        <Auth />
-        <QueryDevtools />
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
+          <Footer />
+          <Toasts />
+          <Auth />
+          <QueryDevtools />
+          <ScrollRestoration />
+          <Scripts />
+        </body>
+      </html>
+    </CursorPrecision>
   )
 }

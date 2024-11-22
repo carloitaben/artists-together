@@ -1,11 +1,12 @@
+import "dotenv-mono/load"
 import { defineConfig } from "drizzle-kit"
 
 export default defineConfig({
   dialect: "turso",
-  schema: "src/database/schema/*.ts",
+  schema: "src/database/schema/*",
   strict: true,
   dbCredentials: {
     url: String(process.env.DATABASE_URL),
-    authToken: String(process.env.DATABASE_TOKEN),
+    authToken: process.env.DATABASE_TOKEN || undefined,
   },
 })

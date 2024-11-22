@@ -41,7 +41,7 @@ export default function Toasts() {
   }, [navigate, search.error, search.toast])
 
   return (
-    <Toaster toaster={toaster}>
+    <Toaster toaster={toaster} className="!z-[100]">
       {(toast) => (
         <Toast.Root
           key={toast.id}

@@ -11,13 +11,12 @@ import {
 import {
   queryOptions,
   useQueryClient,
-  useSuspenseQueries,
+  useSuspenseQuery,
 } from "@tanstack/react-query"
 import { useLocation } from "@tanstack/react-router"
 import type { ReactNode } from "react"
 import { useCallback, useEffect, useState } from "react"
 import { PartySocket } from "partysocket"
-import { authenticateQueryOptions } from "~/services/auth/queries"
 import { hintsQueryOptions } from "~/services/hints/queries"
 import { createContextFactory } from "~/lib/react"
 
@@ -71,11 +70,9 @@ function NotifyLocationChange() {
 }
 
 export function WebSocket({ children }: { children: ReactNode }) {
-  const queryClient = useQueryClient()
   const [webSocket, setWebSocket] = useState<PartySocket | null>(null)
-  const [auth, hints] = useSuspenseQueries({
-    queries: [authenticateQueryOptions, hintsQueryOptions],
-  })
+  const queryClient = useQueryClient()
+  const hints = useSuspenseQuery(hintsQueryOptions)
 
   useEffect(() => {
     if (hints.data.saveData || hints.data.isBot) return

@@ -3,6 +3,7 @@ import { cx } from "cva"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
 import Icon from "./Icon"
+import Image from "./Image"
 
 type Props = ComponentProps<typeof AvatarPrimitive.Root> & {
   username: string
@@ -19,15 +20,18 @@ function Avatar(
       className={cx(className, "relative overflow-hidden rounded-full")}
       {...props}
     >
-      <AvatarPrimitive.Fallback className="absolute inset-0 size-full" asChild>
-        <Icon src="Face" alt={username} />
+      <AvatarPrimitive.Fallback className="absolute inset-0 size-full">
+        <Icon src="Face" alt={username} className="size-full" />
       </AvatarPrimitive.Fallback>
       {src ? (
-        <AvatarPrimitive.Image
-          src={src}
-          alt="avatar"
-          className="absolute inset-0 size-full object-cover"
-        />
+        <AvatarPrimitive.Image asChild>
+          <Image
+            src={src}
+            alt={username}
+            loading="eager"
+            className="absolute inset-0 size-full object-cover"
+          />
+        </AvatarPrimitive.Image>
       ) : null}
     </AvatarPrimitive.Root>
   )

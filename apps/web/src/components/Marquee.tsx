@@ -1,5 +1,10 @@
-import type { CSSProperties, ComponentProps, ComponentRef } from "react"
-import { startTransition, useEffect, useRef, useState } from "react"
+import type {
+  CSSProperties,
+  ComponentProps,
+  ComponentRef,
+  ForwardedRef,
+} from "react"
+import { startTransition, forwardRef, useEffect, useRef, useState } from "react"
 import { cx } from "cva"
 import { transform } from "motion/react"
 
@@ -21,12 +26,15 @@ type Props = ComponentProps<"div"> & {
   children: string
 }
 
-export default function Marquee({ children, className, ...props }: Props) {
+function Marquee(
+  { children, className, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<"div">>,
+) {
   const [shadows, setShadows] = useState<string>()
-  const ref = useRef<ComponentRef<"span">>(null)
+  const innerRef = useRef<ComponentRef<"span">>(null)
 
   useEffect(() => {
-    if (!ref.current) return
+    if (!innerRef.current) return
 
     const observer = new ResizeObserver((entries) =>
       entries.forEach((entry) => {
@@ -39,7 +47,7 @@ export default function Marquee({ children, className, ...props }: Props) {
       }),
     )
 
-    observer.observe(ref.current)
+    observer.observe(innerRef.current)
     return () => observer.disconnect()
   }, [])
 
@@ -51,12 +59,13 @@ export default function Marquee({ children, className, ...props }: Props) {
   return (
     <div
       {...props}
+      ref={ref}
       aria-label={children}
       className={cx(className, "w-full overflow-hidden whitespace-nowrap")}
     >
       <span
         aria-hidden
-        ref={ref}
+        ref={innerRef}
         style={style}
         className={cx(
           "pointer-events-none inline-block select-none",
@@ -69,3 +78,5 @@ export default function Marquee({ children, className, ...props }: Props) {
     </div>
   )
 }
+
+export default forwardRef(Marquee)

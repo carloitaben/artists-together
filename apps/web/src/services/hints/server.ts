@@ -1,7 +1,8 @@
-import { createServerFn } from "@tanstack/start"
-import { getHeaders } from "vinxi/http"
-import { isbot } from "isbot"
 import Negotiator from "negotiator"
+import { createServerFn } from "@tanstack/start"
+import { getHeader, getHeaders } from "vinxi/http"
+import { isbot } from "isbot"
+import { Geolocation } from "~/lib/schemas"
 
 function getTemperatureUnit(locale: string) {
   switch (locale) {
@@ -25,7 +26,21 @@ function getHourFormat(locale: string) {
   return dateTimeFormat.resolvedOptions().hour12 ? "12" : "24"
 }
 
+function getGeolocation() {
+  const geolocation = Geolocation.safeParse({
+    city: getHeader("x-vercel-ip-city"),
+    country: getHeader("x-vercel-ip-country"),
+    continent: getHeader("x-vercel-ip-continent"),
+    latitude: getHeader("x-vercel-ip-latitude"),
+    longitude: getHeader("x-vercel-ip-longitude"),
+    timezone: getHeader("x-vercel-ip-timezone"),
+  })
+
+  return geolocation.success ? geolocation.data : null
+}
+
 export const $hints = createServerFn({ method: "GET" }).handler(async () => {
+  const geolocation = getGeolocation()
   const headers = getHeaders()
   const negotiator = new Negotiator({ headers })
   const locale = negotiator.language() || "en-US"
@@ -34,6 +49,7 @@ export const $hints = createServerFn({ method: "GET" }).handler(async () => {
   return {
     locale,
     isBot,
+    geolocation,
     temperatureUnit: getTemperatureUnit(locale),
     hourFormat: getHourFormat(locale),
     saveData: headers["save-data"] === "on",

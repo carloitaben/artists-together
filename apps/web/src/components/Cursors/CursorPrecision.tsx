@@ -1,14 +1,10 @@
-import type {
-  ComponentProps,
-  ComponentRef,
-  ForwardedRef,
-  ReactElement,
-} from "react"
-import { cloneElement, createContext, forwardRef, useContext } from "react"
+import type { HTMLArkProps } from "@ark-ui/react/factory"
+import { ark } from "@ark-ui/react/factory"
+import type { ComponentRef, ForwardedRef } from "react"
+import { createContext, forwardRef, useContext } from "react"
 
-type Props = Omit<ComponentProps<"div">, "children"> & {
+type Props = HTMLArkProps<"div"> & {
   name: string
-  children: ReactElement
 }
 
 export const ATTR_NAME_DATA_CURSOR_PRECISION = "data-precision"
@@ -21,21 +17,18 @@ const CursorPrecisionContext = createContext<string | null>(null)
 CursorPrecisionContext.displayName = "CursorPrecisionContext"
 
 function CursorPrecision(
-  { name, children, ...props }: Props,
+  { name, ...props }: Props,
   ref: ForwardedRef<ComponentRef<"div">>,
 ) {
   const scope = useContext(CursorPrecisionContext)
   const scopedName = scope ? `${scope}.${name}` : name
+  const attrs = {
+    [ATTR_NAME_DATA_CURSOR_PRECISION]: scopedName,
+  }
 
   return (
     <CursorPrecisionContext.Provider value={name}>
-      {cloneElement(
-        children,
-        Object.assign(props, {
-          ref,
-          [ATTR_NAME_DATA_CURSOR_PRECISION]: scopedName,
-        }),
-      )}
+      <ark.div ref={ref} {...props} {...attrs} />
     </CursorPrecisionContext.Provider>
   )
 }

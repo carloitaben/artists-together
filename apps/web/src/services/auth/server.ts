@@ -6,35 +6,36 @@ import { Discord, Twitch } from "arctic"
 import type { HTTPEvent } from "vinxi/http"
 import { z } from "zod"
 import { WEB_URL } from "~/lib/constants"
-import { Geolocation, Pathname } from "~/lib/schemas"
-import { createCookie } from "~/lib/server"
+import { AuthFormSchema, Geolocation } from "~/lib/schemas"
+import { Cookie } from "~/lib/server"
 
-export const cookieSession = createCookie({
-  name: SESSION_COOKIE_NAME,
-  schema: z.string().min(1),
-  options: {
+export const cookieSession = new Cookie(
+  SESSION_COOKIE_NAME,
+  z.string().min(1),
+  {
     httpOnly: true,
     sameSite: "lax",
     secure: import.meta.env.PROD,
     path: "/",
   },
-})
+)
 
-export const cookieOauth = createCookie({
-  name: "oauth",
-  schema: z.object({
+export const cookieOauth = new Cookie(
+  "oauth",
+  AuthFormSchema.extend({
     geolocation: Geolocation,
-    pathname: Pathname,
+    fahrenheit: z.boolean(),
+    fullHourFormat: z.boolean(),
     state: z.string(),
   }),
-  options: {
+  {
     httpOnly: true,
     sameSite: "lax",
     secure: import.meta.env.PROD,
     path: "/",
     maxAge: 60 * 10,
   },
-})
+)
 
 export const provider = {
   discord: new Discord(
@@ -50,13 +51,11 @@ export const provider = {
 }
 
 export async function authenticate(event: HTTPEvent) {
-  console.log("calling authenticate...")
   const cookie = cookieSession.get(event)
 
   if (!cookie.success) {
     return null
   }
-
 
   const result = await validateSessionToken(cookie.data)
 

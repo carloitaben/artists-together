@@ -1,3 +1,4 @@
+import "dotenv-mono/load"
 import type { ServerWebSocket } from "bun"
 import { SuperHeaders } from "@mjackson/headers"
 import type { SessionValidationResult } from "@artists-together/core/auth"
@@ -46,22 +47,12 @@ const server = Bun.serve<WebSocketData>({
   port: process.env.PORT || 1999,
   async fetch(request, server) {
     const headers = new SuperHeaders(request.headers)
-    const token = headers.cookie.get("session") ?? ""
-    // const auth = await validateSessionToken(token)
+    const token = decodeURIComponent(headers.cookie.get("session") ?? "")
+    const auth = await validateSessionToken(token)
 
     const upgraded = server.upgrade<WebSocketData>(request, {
       data: {
-        // auth,
-        auth: {
-          session: {
-            id: Math.random().toString(),
-            expiresAt: new Date(),
-            userId: Math.random(),
-          },
-          user: {
-            username: Math.random().toString(),
-          },
-        },
+        auth,
         cursor: null,
       },
     })

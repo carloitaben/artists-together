@@ -1,6 +1,7 @@
 import type { RESTOptions } from "@discordjs/rest"
 import { REST } from "@discordjs/rest"
 import { API } from "@discordjs/core/http-only"
+import "./server-only"
 
 export function createDiscord({
   token,

@@ -5,8 +5,26 @@ type Props = Omit<ComponentProps<"img">, "alt"> & {
   alt: string
 }
 
-function Image(props: Props, ref: ForwardedRef<ComponentRef<"img">>) {
-  return <img {...props} alt={props.alt} ref={ref} />
+function Image(
+  {
+    alt,
+    draggable = false,
+    decoding = "async",
+    loading = "lazy",
+    ...props
+  }: Props,
+  ref: ForwardedRef<ComponentRef<"img">>,
+) {
+  return (
+    <img
+      {...props}
+      alt={alt}
+      ref={ref}
+      draggable={false}
+      decoding={decoding}
+      loading={loading}
+    />
+  )
 }
 
 export default forwardRef(Image)

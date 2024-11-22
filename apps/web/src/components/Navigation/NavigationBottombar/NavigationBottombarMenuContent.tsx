@@ -25,6 +25,7 @@ export default function NavigationBottombarMenuContent() {
           <NavLink
             to={pathname}
             replace
+            // @ts-expect-error I don't know how to solve this
             search={(prev) => ({ ...prev, modal: "auth" })}
           >
             {auth.data ? (

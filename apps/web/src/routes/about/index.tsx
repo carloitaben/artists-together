@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, linkOptions } from "@tanstack/react-router"
 import { Suspense, lazy } from "react"
 import { hintsQueryOptions } from "~/services/hints/queries"
+import { CursorPrecision } from "~/components/Cursors"
 import AspectRatio from "~/components/AspectRatio"
 import Container from "~/components/Container"
 import Grid from "~/components/Grid"
@@ -57,24 +58,26 @@ function Component() {
         <Container asChild>
           <Grid className="min-h-screen place-items-center py-16">
             <div className="col-span-2 col-start-2 w-full max-w-[37.5rem] sm:col-span-4 sm:col-start-3">
-              <AspectRatio.Root ratio={2 / 1}>
-                <AspectRatio.Content>
-                  <h2 className="sr-only">Artists Together</h2>
-                  {hints.data.saveData ? (
-                    <Icon src="Logo" alt="" className="size-full" />
-                  ) : (
-                    <>
-                      <noscript>
-                        <Icon src="Logo" alt="" className="size-full" />
-                      </noscript>
-                      <Lottie
-                        src={() => import("~/assets/lottie/logo-w.json")}
-                        autoplay
-                      />
-                    </>
-                  )}
-                </AspectRatio.Content>
-              </AspectRatio.Root>
+              <CursorPrecision name="logo" asChild>
+                <AspectRatio.Root ratio={2 / 1}>
+                  <AspectRatio.Content>
+                    <h2 className="sr-only">Artists Together</h2>
+                    {hints.data.saveData ? (
+                      <Icon src="Logo" alt="" className="size-full" />
+                    ) : (
+                      <>
+                        <noscript>
+                          <Icon src="Logo" alt="" className="size-full" />
+                        </noscript>
+                        <Lottie
+                          src={() => import("~/assets/lottie/logo-w.json")}
+                          autoplay
+                        />
+                      </>
+                    )}
+                  </AspectRatio.Content>
+                </AspectRatio.Root>
+              </CursorPrecision>
             </div>
           </Grid>
         </Container>

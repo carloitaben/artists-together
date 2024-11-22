@@ -6,25 +6,38 @@ import DialogTitle from "../DialogTitle"
 import Connections from "./Connections"
 import ProfileDialogContainer from "./ProfileDialogContainer"
 import { sectionData } from "./lib"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { authenticateQueryOptions } from "~/services/auth/queries"
+import Icon from "~/components/Icon"
 
 // const array = Array.from(Array(3))
 
 export default function ProfileSectionProfile() {
+  const auth = useSuspenseQuery(authenticateQueryOptions)
   const section = sectionData["profile"]
+
+  if (!auth.data) return null
 
   return (
     <ProfileDialogContainer id="profile">
       <Dialog.Title className="sr-only">{section.label}</Dialog.Title>
-      <DialogTitle className="pb-6">Artist_00315</DialogTitle>
+      <DialogTitle className="pb-6">{auth.data.user.username}</DialogTitle>
       <div className="flex grid-cols-3 flex-col gap-3 pb-3 md:grid">
         <div>
           <div className="flex items-center gap-x-2 px-3.5 pb-1">Avatar</div>
           <AspectRatio.Root ratio={1}>
-            <AspectRatio.Content asChild>
-              <Image
-                className="size-full overflow-hidden rounded-4 bg-not-so-white object-cover"
-                alt="Your avatar"
-              />
+            <AspectRatio.Content className="overflow-hidden rounded-4 bg-not-so-white">
+              {auth.data.user.avatar ? (
+                <Image
+                  className="size-full object-cover"
+                  alt="Your avatar"
+                  src={auth.data.user.avatar}
+                />
+              ) : (
+                <div className="grid size-full place-items-center">
+                  <Icon src="Face" alt="Your avatar" className="size-6" />
+                </div>
+              )}
             </AspectRatio.Content>
           </AspectRatio.Root>
         </div>
@@ -39,7 +52,7 @@ export default function ProfileSectionProfile() {
           </Field.Label>
           <Field.Textarea
             placeholder="Hello! I am a creative person!"
-            className="w-full flex-1 resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3.5 py-2.5 placeholder:text-gunpla-white-300"
+            className="scrollbar-none w-full flex-1 resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3.5 py-2.5 placeholder:text-gunpla-white-300"
           />
         </Field.Root>
       </div>

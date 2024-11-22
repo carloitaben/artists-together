@@ -31,10 +31,14 @@ export default function NavigationSidebar() {
       className="fixed inset-y-0 left-0 hidden w-16 place-items-center gap-y-4 bg-arpeggio-black-900/75 px-1 py-2 backdrop-blur-1 sm:grid"
     >
       <ul>
-        <NavigationSidebarTooltip label={auth.data ? "Your profile" : "Log-in"}>
+        <NavigationSidebarTooltip
+          id="auth"
+          label={auth.data ? "Your profile" : "Log-in"}
+        >
           <Link
             replace
             to={pathname}
+            // @ts-expect-error I don't know how to solve this
             search={(prev) => ({ ...prev, modal: "auth" })}
             className={className.navLink}
           >
@@ -52,7 +56,7 @@ export default function NavigationSidebar() {
         </NavigationSidebarTooltip>
         {navigationEntries.map(([key, route]) => (
           <NavigationSidebarTooltip
-            key={key}
+            id={key}
             label={route.label}
             disabled={route.disabled}
           >

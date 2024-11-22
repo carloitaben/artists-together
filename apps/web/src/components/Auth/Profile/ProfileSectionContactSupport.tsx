@@ -64,7 +64,7 @@ function ContactSupportForm() {
           <Field.Textarea
             name={fields.message.name}
             placeholder="Your message"
-            className="h-[9.25rem] w-full resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3.5 py-2.5 placeholder:text-gunpla-white-300"
+            className="scrollbar-none h-[9.25rem] w-full resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3.5 py-2.5 placeholder:text-gunpla-white-300"
           />
         </Field.Root>
         <div className="pointer-events-none absolute bottom-0 right-0">

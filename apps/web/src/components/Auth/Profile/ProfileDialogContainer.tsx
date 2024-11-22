@@ -15,9 +15,14 @@ function ProfileDialogContainer(
   const section = sectionData[props.id]
 
   return (
-    <DialogContainer {...props} ref={ref}>
+    <DialogContainer
+      {...props}
+      ref={ref}
+      padding="y"
+      className="flex pr-8 md:block md:px-12"
+    >
       <div className="relative w-12">
-        <div className="sticky top-0 grid size-12 place-items-center">
+        <div className="sticky top-0 grid size-12 place-items-center md:hidden">
           <Icon src={section.icon} alt="" className="size-5" />
         </div>
       </div>
