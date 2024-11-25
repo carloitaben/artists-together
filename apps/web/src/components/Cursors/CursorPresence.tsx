@@ -107,8 +107,10 @@ function CursorPresence(
           ref={ref}
           state={state}
           username={username}
-          x={percentX}
-          y={percentY}
+          style={{
+            x: percentX,
+            y: percentY,
+          }}
         />
       ) : null}
     </AnimatePresence>

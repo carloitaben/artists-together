@@ -138,9 +138,7 @@ export default function Me() {
           position="fixed"
           className="isolate z-[999]"
           state={state}
-          scale={scale}
-          x={x}
-          y={y}
+          style={{ scale, x, y }}
         />
       ) : null}
     </AnimatePresence>

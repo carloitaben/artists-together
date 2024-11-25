@@ -1,7 +1,7 @@
 import type { CursorState } from "@artists-together/core/websocket"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
-import type { MotionValue, Variants } from "motion/react"
+import type { Variants } from "motion/react"
 import { motion } from "motion/react"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
@@ -21,9 +21,6 @@ const variants = cva({
 type Props = ComponentProps<typeof motion.div> &
   VariantProps<typeof variants> & {
     state: CursorState
-    x: MotionValue
-    y: MotionValue
-    scale?: MotionValue
     username?: string
   }
 
@@ -47,7 +44,14 @@ const motionVariants: Variants = {
 }
 
 function Cursor(
-  { state, username, scale, x, y, className, position, ...props }: Props,
+  {
+    state,
+    username,
+    className,
+    position,
+    style: { scale, ...style } = {},
+    ...props
+  }: Props,
   ref: ForwardedRef<ComponentRef<typeof motion.div>>,
 ) {
   return (
@@ -58,8 +62,8 @@ function Cursor(
       initial="hide"
       animate={["show", state]}
       exit="hide"
-      style={{ x, y }}
       ref={ref}
+      style={style}
     >
       <motion.div
         className="inline-flex items-start"
