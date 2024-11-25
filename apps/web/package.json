@@ -33,6 +33,7 @@
     "radashi": "^12.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-error-boundary": "^4.1.2",
     "react-merge-refs": "^2.1.1",
     "split-type": "^0.3.4",
     "three": "^0.170.0",

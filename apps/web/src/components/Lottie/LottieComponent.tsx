@@ -23,33 +23,43 @@ function LottieComponent(
   ref: ForwardedRef<AnimationItem | undefined>,
 ) {
   const innerRef = useRef<ComponentRef<"div">>(null)
+  const [animationData, setAnimationData] = useState<unknown>()
   const [animation, setAnimation] = useState<AnimationItem>()
 
   useImperativeHandle(ref, () => animation, [animation])
 
   useEffect(() => {
-    src
-      .then((animationData) => {
-        if (!innerRef.current) return
+    let unmounting = false
 
-        const animation = lottie.loadAnimation({
-          animationData,
-          container: innerRef.current,
-          autoplay,
-          loop,
-        })
-
-        setAnimation(animation)
-      })
-      .catch(console.error)
+    src.then((data) => {
+      if (!unmounting) {
+        setAnimationData(data)
+      }
+    })
 
     return () => {
-      setAnimation((animation) => {
-        animation?.destroy()
-        return undefined
-      })
+      unmounting = true
     }
-  }, [autoplay, loop, src])
+  }, [src])
+
+  useEffect(() => {
+    if (!animationData) return
+    if (!innerRef.current) return
+
+    const animation = lottie.loadAnimation({
+      animationData,
+      container: innerRef.current,
+      autoplay,
+      loop,
+    })
+
+    setAnimation(animation)
+
+    return () => {
+      animation.destroy()
+      setAnimation(undefined)
+    }
+  }, [animationData, autoplay, loop])
 
   return (
     <div

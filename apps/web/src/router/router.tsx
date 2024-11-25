@@ -9,6 +9,9 @@ import { routeTree } from "./route-tree.gen"
 export function createRouter() {
   const queryClient = new QueryClient({
     defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+      },
       mutations: {
         onError(error) {
           if (import.meta.env.DEV) {

@@ -3,6 +3,7 @@ import { useScroll, motion, useSpring } from "motion/react"
 import type { InstancedMesh } from "three"
 import { Object3D, Matrix4, Vector3, Color } from "three"
 import { Canvas, useFrame } from "@react-three/fiber"
+import { useMediaQuery } from "~/lib/media"
 
 const COUNT = 500
 const XY_BOUNDS = 40
@@ -12,6 +13,7 @@ const MAX_SCALE_FACTOR = 50
 
 function Scene() {
   const ref = useRef<InstancedMesh>(null)
+  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion)")
 
   useEffect(() => {
     if (!ref.current) return
@@ -41,7 +43,7 @@ function Scene() {
   useFrame((_, delta) => {
     if (!ref.current) return
 
-    const velocity = Math.abs(y.getVelocity() / 3)
+    const velocity = prefersReducedMotion ? 0 : Math.abs(y.getVelocity() / 3)
 
     for (let i = 0; i < COUNT; i++) {
       ref.current.getMatrixAt(i, temp)

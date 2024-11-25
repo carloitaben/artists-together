@@ -10,5 +10,4 @@ export const authenticateQueryOptions = queryOptions({
     // Query wants serializable values so we have to do this temporary check
     return auth ? auth : null
   },
-  staleTime: Infinity,
 })

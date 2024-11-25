@@ -1,30 +1,30 @@
 import type { CursorState } from "@artists-together/core/websocket"
-import {
-  QueryObserver,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query"
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query"
 import { AnimatePresence, clamp, useMotionValue, useSpring } from "motion/react"
 import { throttle } from "radashi"
 import { useEffect, useState } from "react"
 import { useScreen } from "~/lib/media"
 import { authenticateQueryOptions } from "~/services/auth/queries"
 import { useWebSocket, webSocketQueryOptions } from "~/lib/websocket"
-import Cursor from "./Cursor"
 import {
   ATTR_NAME_DATA_CURSOR_PRECISION,
   ATTR_NAME_DATA_CURSOR_PRECISION_SELECTOR,
 } from "./CursorPrecision"
-import { measure } from "./lib"
+import Cursor from "./Cursor"
 
 const limit = clamp.bind(null, 0, 1)
 
 export default function Me() {
   const [state, setState] = useState<CursorState>()
-  const [alone, setAlone] = useState(true)
   const auth = useSuspenseQuery(authenticateQueryOptions)
-  const queryClient = useQueryClient()
   const webSocket = useWebSocket()
+  const alone = useQuery({
+    ...webSocketQueryOptions("room:update", {
+      count: 0,
+      members: [],
+    }),
+    select: (data) => data.count < 2,
+  })
 
   const sm = useScreen("sm")
   const hasCursor = useScreen("cursor")
@@ -36,22 +36,6 @@ export default function Me() {
   const render = state && hasCursor
 
   useEffect(() => {
-    const observer = new QueryObserver(
-      queryClient,
-      webSocketQueryOptions("room:update", {
-        count: 0,
-        members: [],
-      }),
-    )
-
-    return observer.subscribe((context) => {
-      if (context.data) {
-        setAlone(context.data.count < 2)
-      }
-    })
-  }, [queryClient, webSocket])
-
-  useEffect(() => {
     if (!hasCursor) {
       return document.documentElement.classList.remove("cursor")
     }
@@ -59,7 +43,7 @@ export default function Me() {
     document.documentElement.classList.add("cursor")
 
     const notify = throttle(
-      { interval: alone ? 5_000 : 80 },
+      { interval: alone.data ? 5_000 : 250 },
       (event: MouseEvent, state?: CursorState) => {
         if (!auth.data || !sm) return
 
@@ -84,11 +68,9 @@ export default function Me() {
           )
         }
 
-        const rect = measure(targetAttribute, () => target)
+        const rect = target.getBoundingClientRect()
         const x = limit((event.clientX - rect.x) / rect.width)
-        const y = limit(
-          (event.clientY - rect.y + target.scrollTop) / rect.height,
-        )
+        const y = limit((event.clientY - rect.y) / rect.height)
 
         webSocket.send("cursor:update", {
           x,
@@ -108,7 +90,7 @@ export default function Me() {
 
     function onMouseLeave(event: MouseEvent) {
       setState(undefined)
-      notify(event)
+      notify.trigger(event)
     }
 
     function onMouseMove(event: MouseEvent) {
@@ -126,7 +108,7 @@ export default function Me() {
 
     function onMouseDown(event: MouseEvent) {
       scale.set(0.9)
-      notify(event, state)
+      notify.trigger(event, state)
     }
 
     function onMouseUp(event: MouseEvent) {
@@ -147,16 +129,20 @@ export default function Me() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [hasCursor, sm, scale, state, x, y, alone, auth.data?.user, webSocket])
+  }, [hasCursor, sm, scale, state, x, y, alone.data, webSocket, auth.data])
 
   return (
-    <div
-      aria-hidden
-      className="pointer-events-none fixed inset-0 isolate z-[999] size-full select-none overflow-hidden"
-    >
-      <AnimatePresence initial={false}>
-        {render ? <Cursor state={state} x={x} y={y} scale={scale} /> : null}
-      </AnimatePresence>
-    </div>
+    <AnimatePresence initial={false}>
+      {render ? (
+        <Cursor
+          position="fixed"
+          className="isolate z-[999]"
+          state={state}
+          scale={scale}
+          x={x}
+          y={y}
+        />
+      ) : null}
+    </AnimatePresence>
   )
 }

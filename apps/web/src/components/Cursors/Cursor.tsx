@@ -1,18 +1,33 @@
 import type { CursorState } from "@artists-together/core/websocket"
+import type { VariantProps } from "cva"
+import { cva } from "cva"
 import type { MotionValue, Variants } from "motion/react"
 import { motion } from "motion/react"
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 import Icon from "~/components/Icon"
 import Pill from "~/components/Pill"
 
-type Props = {
-  state: CursorState
-  x: MotionValue
-  y: MotionValue
-  scale?: MotionValue
-  username?: string
-}
+const variants = cva({
+  base: "pointer-events-none inset-0 size-full select-none",
+  variants: {
+    position: {
+      absolute: "absolute",
+      fixed: "fixed",
+    },
+  },
+})
 
-const variants: Variants = {
+type Props = ComponentProps<typeof motion.div> &
+  VariantProps<typeof variants> & {
+    state: CursorState
+    x: MotionValue
+    y: MotionValue
+    scale?: MotionValue
+    username?: string
+  }
+
+const motionVariants: Variants = {
   hide: {
     scale: 0,
     transition: {
@@ -31,18 +46,24 @@ const variants: Variants = {
   },
 }
 
-export default function Cursor({ state, username, scale, x, y }: Props) {
+function Cursor(
+  { state, username, scale, x, y, className, position, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<typeof motion.div>>,
+) {
   return (
     <motion.div
-      className="absolute inset-0 size-full"
+      {...props}
+      aria-hidden
+      className={variants({ className, position })}
       initial="hide"
       animate={["show", state]}
       exit="hide"
       style={{ x, y }}
+      ref={ref}
     >
       <motion.div
         className="inline-flex items-start"
-        variants={variants}
+        variants={motionVariants}
         style={{ scale }}
       >
         <Icon src="CursorIdle" alt="" className="size-8 drop-shadow-cursor" />
@@ -59,3 +80,5 @@ export default function Cursor({ state, username, scale, x, y }: Props) {
     </motion.div>
   )
 }
+
+export default forwardRef(Cursor)

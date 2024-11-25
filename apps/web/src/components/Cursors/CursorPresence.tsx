@@ -4,10 +4,11 @@ import type {
 } from "@artists-together/core/websocket"
 import { QueryObserver, useQueryClient } from "@tanstack/react-query"
 import { PerfectCursor } from "perfect-cursors"
-import { useEffect, useState } from "react"
-import { useMotionTemplate, useMotionValue } from "motion/react"
+import { forwardRef, useEffect, useState } from "react"
+import type { ComponentRef, ForwardedRef } from "react"
+import type { Spring } from "motion/react"
+import { AnimatePresence, useMotionTemplate, useSpring } from "motion/react"
 import { webSocketQueryOptions } from "~/lib/websocket"
-import { useMeasure } from "./lib"
 import { ATTR_NAME_DATA_CURSOR_PRECISION } from "./CursorPrecision"
 import Cursor from "./Cursor"
 
@@ -16,12 +17,19 @@ type Props = {
   cursor: CursorType
 }
 
-export default function CursorPresence({ cursor, username }: Props) {
+const spring: Spring = {
+  type: "spring",
+  mass: 0.15,
+}
+
+function CursorPresence(
+  { cursor, username }: Props,
+  ref: ForwardedRef<ComponentRef<typeof Cursor>>,
+) {
   const [state, setState] = useState<CursorState>()
   const queryClient = useQueryClient()
-  const measure = useMeasure()
-  const x = useMotionValue(cursor?.x || 0)
-  const y = useMotionValue(cursor?.y || 0)
+  const x = useSpring(cursor?.x || 0, spring)
+  const y = useSpring(cursor?.y || 0, spring)
   const percentX = useMotionTemplate`${x}%`
   const percentY = useMotionTemplate`${y}%`
 
@@ -44,44 +52,43 @@ export default function CursorPresence({ cursor, username }: Props) {
   }, [pc, state])
 
   useEffect(() => {
-    const observer = new QueryObserver(
-      queryClient,
-      webSocketQueryOptions("cursor:update", {
+    const observer = new QueryObserver(queryClient, {
+      ...webSocketQueryOptions("cursor:update", {
         cursor,
         username,
       }),
-    )
+      select: (data) => (data.username === username ? data.cursor : null),
+    })
 
     return observer.subscribe((context) => {
-      if (!context.data) return
-      if (context.data.username !== username) return
-      if (!context.data.cursor) return setState(undefined)
+      if (!context.data) return setState(undefined)
 
-      setState(context.data.cursor.state)
+      setState(context.data.state)
 
-      const selector = `[${ATTR_NAME_DATA_CURSOR_PRECISION}="${context.data.cursor.target}"]`
+      const selector = `[${ATTR_NAME_DATA_CURSOR_PRECISION}="${context.data.target}"]`
+      const element = document.querySelector(selector)
 
-      const rect = measure(
-        selector,
-        () => document.querySelector(selector) || document.documentElement,
-      )
+      if (!element) {
+        if (import.meta.env.DEV) {
+          throw Error(`Could not find cursor target "${context.data.target}"`)
+        }
 
-      console.log("measured rect for", context.data.cursor.target, {
-        x: context.data.cursor.x,
-        y: context.data.cursor.y,
-      })
+        return
+      }
+
+      const rect = element.getBoundingClientRect()
 
       const percentX =
         ((rect.x +
           document.documentElement.scrollLeft +
-          context.data.cursor.x * rect.width) /
+          context.data.x * rect.width) /
           document.documentElement.offsetWidth) *
         100
 
       const percentY =
         ((rect.y +
           document.documentElement.scrollTop +
-          context.data.cursor.y * rect.height) /
+          context.data.y * rect.height) /
           document.documentElement.offsetHeight) *
         100
 
@@ -91,9 +98,21 @@ export default function CursorPresence({ cursor, username }: Props) {
         pc.prevPoint = [percentX, percentY]
       }
     })
-  }, [pc, queryClient, cursor, username, measure])
+  }, [pc, queryClient, cursor, username])
 
-  if (!state) return null
-
-  return <Cursor state={state} username={username} x={percentX} y={percentY} />
+  return (
+    <AnimatePresence>
+      {state ? (
+        <Cursor
+          ref={ref}
+          state={state}
+          username={username}
+          x={percentX}
+          y={percentY}
+        />
+      ) : null}
+    </AnimatePresence>
+  )
 }
+
+export default forwardRef(CursorPresence)

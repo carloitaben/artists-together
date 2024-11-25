@@ -32,7 +32,6 @@ export function webSocketQueryOptions<T extends ServerEvent>(
   return queryOptions({
     initialData,
     queryKey: [`ws:${event}`],
-    staleTime: Infinity,
   })
 }
 

@@ -5,6 +5,7 @@ import type {
   ReactNode,
 } from "react"
 import { Suspense, lazy, forwardRef } from "react"
+import { ErrorBoundary } from "react-error-boundary"
 import type LottieComponent from "./LottieComponent"
 import ClientOnly from "../ClientOnly"
 
@@ -16,20 +17,23 @@ type Props = Omit<ComponentProps<typeof LottieComponent>, "src"> & {
    */
   src: () => Promise<{ default: unknown }>
   fallback?: ReactNode
+  errorFallback?: ReactNode
 }
 
 function Lottie(
-  { src, fallback = null, ...props }: Props,
+  { src, fallback = null, errorFallback = fallback, ...props }: Props,
   ref: ForwardedRef<ComponentRef<typeof LottieComponent>>,
 ) {
   return (
     <Suspense fallback={fallback}>
       <ClientOnly fallback={fallback}>
-        <LazyLottieComponent
-          {...props}
-          ref={ref}
-          src={src().then((module) => module.default)}
-        />
+        <ErrorBoundary fallback={errorFallback}>
+          <LazyLottieComponent
+            {...props}
+            ref={ref}
+            src={src().then((module) => module.default)}
+          />
+        </ErrorBoundary>
       </ClientOnly>
     </Suspense>
   )

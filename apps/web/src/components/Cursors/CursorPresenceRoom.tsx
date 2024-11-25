@@ -7,7 +7,10 @@ export default function CursorPresenceRoom() {
   const [auth, room] = useSuspenseQueries({
     queries: [
       authenticateQueryOptions,
-      webSocketQueryOptions("room:update", { count: 0, members: [] }),
+      webSocketQueryOptions("room:update", {
+        count: 0,
+        members: [],
+      }),
     ],
   })
 
