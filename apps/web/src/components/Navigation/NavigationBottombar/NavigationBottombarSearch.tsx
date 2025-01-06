@@ -7,12 +7,12 @@ import type {
   ForwardedRef,
   SetStateAction,
 } from "react"
-import { forwardRef } from "react"
 import Icon from "~/components/Icon"
 import { colors } from "~/../tailwind.config"
 import { scalePresenceVariants, spring } from "../lib"
 
 type Props = {
+  ref?: ForwardedRef<ComponentRef<typeof motion.form>>
   placeholder: string
   searchbarFocus: boolean
   setSearchbarFocus: Dispatch<SetStateAction<boolean>>
@@ -42,10 +42,12 @@ const transition: Transition = {
   },
 }
 
-function NavigationBottombarSearch(
-  { placeholder, searchbarFocus, setSearchbarFocus }: Props,
-  ref: ForwardedRef<ComponentRef<typeof motion.form>>,
-) {
+export default function NavigationBottombarSearch({
+  ref,
+  placeholder,
+  searchbarFocus,
+  setSearchbarFocus,
+}: Props) {
   return (
     <motion.form
       layout
@@ -115,5 +117,3 @@ function NavigationBottombarSearch(
     </motion.form>
   )
 }
-
-export default forwardRef(NavigationBottombarSearch)

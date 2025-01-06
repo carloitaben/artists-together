@@ -5,7 +5,6 @@ import {
   useLocation,
 } from "@tanstack/react-router"
 import { Meta, Scripts } from "@tanstack/start"
-import { zodSearchValidator } from "@tanstack/router-zod-adapter"
 import type { QueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { lazy, useEffect } from "react"
@@ -48,7 +47,7 @@ window.$RefreshSig$ = () => (type) => type`,
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
-  validateSearch: zodSearchValidator(RootSearchParams),
+  validateSearch: RootSearchParams,
   async beforeLoad({ context }) {
     await Promise.all([
       context.queryClient.ensureQueryData(hintsQueryOptions),

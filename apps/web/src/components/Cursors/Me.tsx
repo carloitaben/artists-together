@@ -1,4 +1,7 @@
-import type { CursorState } from "@artists-together/core/websocket"
+import type {
+  CursorState,
+  CursorUpdates,
+} from "@artists-together/core/websocket"
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query"
 import { AnimatePresence, clamp, useMotionValue, useSpring } from "motion/react"
 import { throttle } from "radashi"
@@ -6,6 +9,7 @@ import { useEffect, useState } from "react"
 import { useScreen } from "~/lib/media"
 import { authenticateQueryOptions } from "~/services/auth/queries"
 import { useWebSocket, webSocketQueryOptions } from "~/lib/websocket"
+import { useMeasurePrecisionArea } from "./hooks"
 import {
   ATTR_NAME_DATA_CURSOR_PRECISION,
   ATTR_NAME_DATA_CURSOR_PRECISION_SELECTOR,
@@ -18,6 +22,7 @@ export default function Me() {
   const [state, setState] = useState<CursorState>()
   const auth = useSuspenseQuery(authenticateQueryOptions)
   const webSocket = useWebSocket()
+  const measure = useMeasurePrecisionArea()
   const alone = useQuery({
     ...webSocketQueryOptions("room:update", {
       count: 0,
@@ -42,13 +47,34 @@ export default function Me() {
 
     document.documentElement.classList.add("cursor")
 
+    let updates: CursorUpdates = []
+    let timestamp = Date.now()
+
     const notify = throttle(
-      { interval: alone.data ? 5_000 : 250 },
+      {
+        interval: alone.data ? 5_000 : 1_000,
+      },
+      () => {
+        webSocket.send("cursor:update", updates)
+        updates = []
+      },
+    )
+
+    const update = throttle(
+      {
+        interval: alone.data ? 5_000 : 60,
+      },
       (event: MouseEvent, state?: CursorState) => {
         if (!auth.data || !sm) return
 
+        const now = Date.now()
+        const delta = now - timestamp
+        timestamp = now
+
         if (!state) {
-          return webSocket.send("cursor:update", null)
+          alone.data ? (updates = [[delta, null]]) : updates.push([delta, null])
+
+          return notify()
         }
 
         const target =
@@ -68,16 +94,39 @@ export default function Me() {
           )
         }
 
-        const rect = target.getBoundingClientRect()
+        const rect = measure({
+          element: target,
+          attribute: targetAttribute,
+        })
+
+        if (!rect) {
+          const error = new Error(
+            `Could not measure target ${ATTR_NAME_DATA_CURSOR_PRECISION}`,
+          )
+
+          if (import.meta.env.DEV) {
+            throw error
+          } else {
+            return console.error(error)
+          }
+        }
+
         const x = limit((event.clientX - rect.x) / rect.width)
         const y = limit((event.clientY - rect.y) / rect.height)
 
-        webSocket.send("cursor:update", {
-          x,
-          y,
-          state,
-          target: targetAttribute,
-        })
+        const cursorUpdate: CursorUpdates[number] = [
+          delta,
+          {
+            x,
+            y,
+            state,
+            target: targetAttribute,
+          },
+        ]
+
+        alone.data ? (updates = [cursorUpdate]) : updates.push(cursorUpdate)
+
+        return notify()
       },
     )
 
@@ -85,12 +134,12 @@ export default function Me() {
       x.jump(event.clientX)
       y.jump(event.clientY)
       setState("idle")
-      notify(event, "idle")
+      update.trigger(event, "idle")
     }
 
     function onMouseLeave(event: MouseEvent) {
       setState(undefined)
-      notify.trigger(event)
+      update.trigger(event)
     }
 
     function onMouseMove(event: MouseEvent) {
@@ -98,22 +147,22 @@ export default function Me() {
         x.jump(event.clientX)
         y.jump(event.clientY)
         setState("idle")
-        return notify(event, "idle")
+        return update(event, "idle")
       }
 
       x.set(event.clientX)
       y.set(event.clientY)
-      notify(event, state)
+      update(event, state)
     }
 
     function onMouseDown(event: MouseEvent) {
       scale.set(0.9)
-      notify.trigger(event, state)
+      update.trigger(event, state)
     }
 
     function onMouseUp(event: MouseEvent) {
       scale.set(1)
-      notify(event, state)
+      update.trigger(event, state)
     }
 
     document.documentElement.addEventListener("mouseenter", onMouseEnter)
@@ -129,7 +178,18 @@ export default function Me() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [hasCursor, sm, scale, state, x, y, alone.data, webSocket, auth.data])
+  }, [
+    hasCursor,
+    sm,
+    scale,
+    state,
+    x,
+    y,
+    alone.data,
+    webSocket,
+    auth.data,
+    measure,
+  ])
 
   return (
     <AnimatePresence initial={false}>

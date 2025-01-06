@@ -1,20 +1,14 @@
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
-import type { ComponentRef, ForwardedRef } from "react"
-import { forwardRef } from "react"
 import { cx } from "cva"
 
 type Props = HTMLArkProps<"div"> & {
   ratio: number
 }
 
-function Root(
-  { className, ratio, style, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<"div">>,
-) {
+export default function Root({ className, ratio, style, ...props }: Props) {
   return (
     <ark.div
-      ref={ref}
       className={cx("relative w-full", className)}
       style={{ ...style, paddingBottom: `${100 / ratio}%` }}
       {...props}
@@ -22,4 +16,3 @@ function Root(
   )
 }
 
-export default forwardRef(Root)

@@ -5,10 +5,12 @@ import {
   useEffect,
   useState,
   useSyncExternalStore,
+  useTransition,
 } from "react"
 import type { ScreensConfig } from "tailwindcss/types/config"
 import { screens } from "~/../tailwind.config"
 import type { Screen } from "./tailwind"
+import { noop } from "@artists-together/core/utils"
 
 function getScreenMediaQuery(screen: Screen) {
   const config = screens[screen] as string | ScreensConfig
@@ -32,40 +34,17 @@ function getScreenMediaQuery(screen: Screen) {
   throw Error(`Unhandled screen: ${screen}`)
 }
 
-function subscribe(query: string, callback: VoidFunction) {
-  const mql = window.matchMedia(query)
-
-  mql.addEventListener("change", callback, {
-    passive: true,
-  })
-
-  return () => {
-    mql.removeEventListener("change", callback)
-  }
-}
-
-/**
- * Subscribes to a CSS media query and returns a boolean
- * indicating whether the media query matches.
- *
- * On server-side rendering, this hook returns `null`.
- *
- * @example
- * Basic usage
- *
- * ```ts
- * const matches = useMediaQuery("(min-width: 640px)")
- * //    ^? boolean | null
- * ```
- *
- * Conditionally rendering elements with this hook
- * may cause cumulative layout shift and content flashes,
- * as media query APIs are only available client-side.
- * Prefer using the `display` CSS property when possible.
- */
 export function useMediaQuery(query: string) {
   const subscription = useCallback(
-    (callback: VoidFunction) => subscribe(query, callback),
+    (callback: VoidFunction) => {
+      const mediaQueryList = matchMedia(query)
+
+      mediaQueryList.addEventListener("change", callback, {
+        passive: true,
+      })
+
+      return () => mediaQueryList.removeEventListener("change", callback)
+    },
     [query],
   )
 
@@ -76,25 +55,6 @@ export function useMediaQuery(query: string) {
   )
 }
 
-/**
- * Subscribes to a screen from the Tailwind config file and returns a boolean
- * indicating whether the screen media query matches.
- *
- * On server-side rendering, this hook returns `null`.
- *
- * @example
- * Basic usage
- *
- * ```ts
- * const md = useScreen("md")
- * //    ^? boolean | null
- * ```
- *
- * Conditionally rendering elements with this hook
- * may cause cumulative layout shift and content flashes,
- * as media query APIs are only available client-side.
- * Prefer using the `display` CSS property when possible.
- */
 export function useScreen(screen: Screen) {
   return useMediaQuery(getScreenMediaQuery(screen))
 }
@@ -105,107 +65,51 @@ export type MeasureResult = Omit<DOMRectReadOnly, "toJSON"> & {
 
 export type MeasureCallback = (rect: MeasureResult) => void
 
-const resizeObserverCallbacks = new Map<Element, MeasureCallback>()
+const resizeObserverCallbacks = new Map<Element, Set<MeasureCallback>>()
 
-const resizeObserver =
+export const resizeObserver =
   typeof window === "undefined"
     ? undefined
     : new ResizeObserver((entries) => {
         entries.forEach((entry) => {
-          resizeObserverCallbacks.get(entry.target)?.(
-            Object.assign(entry.contentRect, { measured: true }),
-          )
+          const rect: MeasureResult = {
+            ...entry.contentRect,
+            measured: true,
+          }
+
+          resizeObserverCallbacks.get(entry.target)?.forEach((callback) => {
+            callback(rect)
+          })
         })
       })
 
-/**
- * Measures an element using a `ResizeObserver` and executes a given callback on resize.
- * On server-side rendering, this hook does not execute.
- *
- * @example
- * Basic usage
- *
- * ```tsx
- * const ref = useRef<ComponentRef<"div">>(null)
- *
- * useOnMeasure(ref, (rect) => {
- *   //               ^? MeasureResult | null
- * })
- *
- * return <div ref={ref} />
- * ```
- *
- * @example
- * Measuring browser-only globals
- *
- * For measuring browser-only globals like `document.documentElement`,
- * you can conditionally set the ref value to prevent server-side rendering errors.
- *
- * ```ts
- * const ref = useRef(
- *  typeof document === "undefined" ? null : document.documentElement
- * )
- *
- * useOnMeasure(ref, (rect) => {
- *   //               ^? MeasureResult | null
- * })
- * ```
- */
-export function useOnMeasure<T extends Element = Element>(
-  ref: RefObject<T>,
+export function onMeasure<T extends Element = Element>(
+  elementOrRef: RefObject<T> | T | null,
   callback: MeasureCallback,
   options?: ResizeObserverOptions,
 ) {
-  useEffect(() => {
-    const target = ref.current
+  const target =
+    elementOrRef && "current" in elementOrRef
+      ? elementOrRef.current
+      : elementOrRef
 
-    if (!target) return
-    if (!resizeObserver) return
+  if (!target) return noop
+  if (!resizeObserver) return noop
 
-    resizeObserverCallbacks.set(target, callback)
-    resizeObserver.observe(target, options)
-
-    return () => {
-      resizeObserverCallbacks.delete(target)
-      resizeObserver.unobserve(target)
-    }
-  }, [callback, options, ref])
+  const set = resizeObserverCallbacks.get(target) || new Set()
+  resizeObserverCallbacks.set(target, set.add(callback))
+  resizeObserver.observe(target, options)
+  return () => {
+    resizeObserverCallbacks.get(target)?.delete(callback)
+    resizeObserver.unobserve(target)
+  }
 }
 
-/**
- * Measures an element using a `ResizeObserver` and returns the latest `MeasureResult`.
- * On server-side rendering, the measured values are all `0`.
- *
- * @example
- * Basic usage
- *
- * ```tsx
- * const ref = useRef<ComponentRef<"div">>(null)
- * const refRect = useMeasure(ref)
- * //    ^? MeasureResult
- *
- * return <div ref={ref} />
- * ```
- *
- * @example
- * Measuring browser-only globals
- *
- * For measuring browser-only globals like `document.documentElement`,
- * you can conditionally set the ref value to prevent server-side rendering errors.
- *
- * ```ts
- * const ref = useRef(
- *   typeof document === "undefined" ? null : document.documentElement
- * )
- *
- * const refRect = useMeasure(ref)
- * //    ^? MeasureResult | null
- * ```
- */
 export function useMeasure<T extends Element = Element>(
-  ref: RefObject<T>,
+  elementOrRef: RefObject<T> | T | null,
   options?: ResizeObserverOptions,
 ) {
+  const [_, startTransition] = useTransition()
   const [entry, setEntry] = useState<MeasureResult>({
     bottom: 0,
     height: 0,
@@ -222,7 +126,9 @@ export function useMeasure<T extends Element = Element>(
     startTransition(() => setEntry(entry))
   }, [])
 
-  useOnMeasure(ref, callback, options)
+  useEffect(() => {
+    return onMeasure(elementOrRef, callback, options)
+  }, [elementOrRef, callback, options])
 
   return entry
 }

@@ -1,23 +1,5 @@
+import * as v from "valibot"
 import { createDiscord, discord, ROLE } from "@artists-together/core/discord"
-import { createAPIFileRoute } from "@tanstack/start/api"
-import { isRedirect } from "@tanstack/react-router"
-import {
-  createError,
-  getEvent,
-  getRequestURL,
-  send,
-  sendError,
-  sendRedirect,
-  sendWebResponse,
-  setResponseStatus,
-} from "vinxi/http"
-import { AuthEndpointSearchParams } from "~/lib/schemas"
-import {
-  authenticate,
-  cookieOauth,
-  cookieSession,
-  provider,
-} from "~/services/auth/server"
 import {
   database,
   locationTable,
@@ -27,45 +9,65 @@ import {
   createSession,
   generateSessionToken,
 } from "@artists-together/core/auth"
+import { createAPIFileRoute } from "@tanstack/start/api"
+import {
+  getEvent,
+  getRequestURL,
+  setResponseHeader,
+  setResponseStatus,
+} from "vinxi/http"
+import {
+  authenticate,
+  cookieOauth,
+  cookieSession,
+  provider,
+} from "~/services/auth/server"
+import { AuthEndpointSearchParams } from "~/lib/schemas"
 
 export const Route = createAPIFileRoute("/api/auth/callback/discord")({
   async GET() {
     const event = getEvent()
-    const cookie = cookieOauth.flash(event)
+    const cookie = cookieOauth.safeParse(event)
+    cookieOauth.delete(event)
 
     if (!cookie.success) {
       setResponseStatus(400)
       return new Response("Missing or invalid oauth cookie")
     }
 
-    const params = AuthEndpointSearchParams.safeParse(
+    const params = v.safeParse(
+      AuthEndpointSearchParams,
       Object.fromEntries(getRequestURL().searchParams),
     )
 
     if (!params.success) {
-      await sendRedirect(`${cookie.data.pathname}?error`)
-      return new Response()
+      setResponseStatus(307)
+      setResponseHeader("location", `${cookie.output.pathname}?error`)
+      return new Response("Invalid params")
     }
 
-    if ("error" in params.data) {
-      switch (params.data.error) {
+    if ("error" in params.output) {
+      switch (params.output.error) {
         case "access_denied":
-          await sendRedirect(`${cookie.data.pathname}?modal=auth`)
+          setResponseStatus(307)
+          setResponseHeader("location", `${cookie.output.pathname}?modal=auth`)
           return new Response()
         default:
-          await sendRedirect(`${cookie.data.pathname}?error`)
-          return new Response()
+          setResponseStatus(307)
+          setResponseHeader("location", `${cookie.output.pathname}?error`)
+          return new Response(params.output.error_description)
       }
     }
 
-    if (params.data.state !== cookie.data.state) {
-      await sendRedirect(`${cookie.data.pathname}?error`)
-      return new Response()
+    if (params.output.state !== cookie.output.state) {
+      setResponseStatus(307)
+      setResponseHeader("location", `${cookie.output.pathname}?error`)
+      return new Response("OAuth state mismatch")
     }
 
     try {
       const [tokens, auth] = await Promise.all([
-        provider.discord.validateAuthorizationCode(params.data.code),
+        provider.discord.validateAuthorizationCode(params.output.code, null),
         authenticate(event),
       ])
 
@@ -77,8 +79,13 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
       const discordUser = await discordUserClient.users.getCurrent()
 
       if (!discordUser.verified) {
-        await sendRedirect(`${cookie.data.pathname}?error`)
-        return new Response()
+        setResponseStatus(307)
+        setResponseHeader(
+          "location",
+          `${cookie.output.pathname}?error=Verify%20your%20Discord%20account%20first`,
+        )
+
+        return new Response("Unverified")
       }
 
       const discordGuildMember = await discord.guilds
@@ -105,8 +112,8 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
           discordUsername: discordUser.username,
           discordMetadata: discordUser,
           settings: {
-            fahrenheit: cookie.data.fahrenheit,
-            fullHourFormat: cookie.data.fullHourFormat,
+            fahrenheit: cookie.output.fahrenheit,
+            fullHourFormat: cookie.output.fullHourFormat,
             shareCursor: true,
             shareStreaming: true,
           },
@@ -124,8 +131,9 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
         .then(([value]) => value)
 
       if (!user) {
-        await sendRedirect(`${cookie.data.pathname}?error`)
-        return new Response()
+        setResponseStatus(307)
+        setResponseHeader("location", `${cookie.output.pathname}?error`)
+        return new Response("Failed to create user")
       }
 
       if (!auth) {
@@ -137,10 +145,10 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
       }
 
       const maybeInsertGeolocationPromise =
-        cookie.data.geolocation &&
+        cookie.output.geolocation &&
         database
           .insert(locationTable)
-          .values(cookie.data.geolocation)
+          .values(cookie.output.geolocation)
           .onConflictDoNothing({
             target: locationTable.city,
           })
@@ -162,19 +170,19 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
         maybeAddDiscordRolePromise,
       ])
 
-      await sendRedirect(
-        `${cookie.data.pathname}?toast=Logged%20in%20as%20%40${user.username}`,
+      setResponseStatus(307)
+      setResponseHeader(
+        "location",
+        `${cookie.output.pathname}?toast=Logged%20in%20as%20%40${user.username}`,
       )
 
-      return new Response()
+      return new Response("Logged in successfully")
     } catch (error) {
-      if (error instanceof Response) {
-        return error
-      }
-
-      console.error(error)
-      await sendRedirect(`${cookie.data.pathname}?error`)
-      return new Response()
+      setResponseStatus(307)
+      setResponseHeader("location", `${cookie.output.pathname}?error`)
+      return new Response(
+        error instanceof Error ? error.message : "Unexpected error",
+      )
     }
   },
 })

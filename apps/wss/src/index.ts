@@ -1,13 +1,14 @@
 import "dotenv-mono/load"
 import type { ServerWebSocket } from "bun"
-import { SuperHeaders } from "@mjackson/headers"
 import type { SessionValidationResult } from "@artists-together/core/auth"
 import { validateSessionToken } from "@artists-together/core/auth"
-import { unreachable } from "@artists-together/core/utils"
-import type { Cursor, ServerEventData } from "@artists-together/core/websocket"
+import type {
+  Cursor,
+  ServerEventOutput,
+} from "@artists-together/core/websocket"
 import {
   encodeServerMessage,
-  parseClientMessage,
+  safeParseClientMessage,
 } from "@artists-together/core/websocket"
 
 type WebSocketData = {
@@ -24,7 +25,7 @@ function update(ws: ServerWebSocket<WebSocketData>) {
 }
 
 function getRoomState(room: string) {
-  return Array.from(connections).reduce<ServerEventData<"room:update">>(
+  return Array.from(connections).reduce<ServerEventOutput<"room:update">>(
     (state, ws) => {
       if (ws.data.room !== room) return state
 
@@ -46,10 +47,17 @@ function getRoomState(room: string) {
 const server = Bun.serve<WebSocketData>({
   port: process.env.PORT || 1999,
   async fetch(request, server) {
-    const headers = new SuperHeaders(request.headers)
-    const token = decodeURIComponent(headers.cookie.get("session") ?? "")
-    const auth = await validateSessionToken(token)
+    const cookies = request.headers.get("Cookie")?.split("; ") || []
+    let token = ""
+    for (const cookie of cookies) {
+      const [name, value] = cookie.trim().split("=")
+      if (name === "session" && value) {
+        token = decodeURIComponent(value)
+        break
+      }
+    }
 
+    const auth = await validateSessionToken(token)
     const upgraded = server.upgrade<WebSocketData>(request, {
       data: {
         auth,
@@ -80,21 +88,17 @@ const server = Bun.serve<WebSocketData>({
       )
     },
     async message(ws, message) {
-      const parsed = parseClientMessage(message)
+      const parsed = safeParseClientMessage(message)
 
       if (!parsed.success) {
-        console.warn("Received invalid message", {
-          error: parsed.error.message,
-          message,
-        })
-
-        return ws.close(1009, parsed.error.message)
+        console.warn("Received invalid message", parsed)
+        return ws.close(1009, "Invalid message")
       }
 
-      switch (parsed.data.event) {
+      switch (parsed.output.event) {
         case "room:update":
           // Bail out when trying to join the same room
-          if (ws.data.room === parsed.data.payload.room) return
+          if (ws.data.room === parsed.output.data.room) return
 
           // Leave the previous room
           if (ws.data.room) {
@@ -110,7 +114,7 @@ const server = Bun.serve<WebSocketData>({
           }
 
           // Join the new room
-          ws.data.room = parsed.data.payload.room
+          ws.data.room = parsed.output.data.room
           ws.subscribe(ws.data.room)
           update(ws)
 
@@ -125,22 +129,25 @@ const server = Bun.serve<WebSocketData>({
           break
         case "cursor:update":
           if (ws.data.room && ws.data.auth) {
-            ws.data.cursor = parsed.data.payload
+            ws.data.cursor =
+              parsed.output.data[parsed.output.data.length - 1]?.[1] || null
+
             update(ws)
             server.publish(
               ws.data.room,
               encodeServerMessage("cursor:update", {
-                cursor: parsed.data.payload,
+                cursor: parsed.output.data,
                 username: ws.data.auth.user.username,
               })
             )
           }
           break
         case "invalidate":
-          console.log("TODO: not implemented")
+          console.warn("TODO: not implemented")
           break
         default:
-          unreachable(parsed.data, "Unreachable event")
+          console.warn("Received unsupported message", parsed)
+          return ws.close(1009, "Unsupported message")
       }
     },
   },

@@ -1,12 +1,12 @@
 import type {
   ClientEvent,
-  ClientEventData,
+  ClientEventOutput,
   ServerEvent,
-  ServerEventData,
+  ServerEventOutput,
 } from "@artists-together/core/websocket"
 import {
   encodeClientMessage,
-  parseServerMessage,
+  safeParseServerMessage,
 } from "@artists-together/core/websocket"
 import {
   queryOptions,
@@ -27,7 +27,7 @@ const queue = new Map<ClientEvent, string>()
 
 export function webSocketQueryOptions<T extends ServerEvent>(
   event: T,
-  initialData: ServerEventData<T>,
+  initialData: ServerEventOutput<T>,
 ) {
   return queryOptions({
     initialData,
@@ -39,7 +39,7 @@ export function useWebSocket() {
   const webSocket = useWebSocketContext()
 
   const send = useCallback(
-    function send<T extends ClientEvent>(event: T, data: ClientEventData<T>) {
+    function send<T extends ClientEvent>(event: T, data: ClientEventOutput<T>) {
       const message = encodeClientMessage(event, data)
 
       if (webSocket && webSocket.readyState === webSocket.OPEN) {
@@ -92,27 +92,25 @@ export function WebSocket({ children }: { children: ReactNode }) {
     }
 
     function onMessage(message: MessageEvent) {
-      const parsed = parseServerMessage(message.data)
+      const parsed = safeParseServerMessage(message.data)
 
       if (!parsed.success) {
         if (import.meta.env.DEV) {
-          console.error(
-            `Error while unpacking WebSocket message: ${parsed.error}`,
-          )
+          console.error(parsed)
         }
 
         return
       }
 
-      if (parsed.data.event === "invalidate") {
-        return parsed.data.payload.forEach((invalidation) => {
+      if (parsed.output.event === "invalidate") {
+        return parsed.output.data.forEach((invalidation) => {
           queryClient.invalidateQueries(invalidation)
         })
       }
 
       queryClient.setQueryData(
-        [`ws:${parsed.data.event}`],
-        () => parsed.data.payload,
+        [`ws:${parsed.output.event}`],
+        () => parsed.output.data,
       )
     }
 

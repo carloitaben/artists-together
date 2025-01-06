@@ -1,5 +1,4 @@
-import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
-import { forwardRef } from "react"
+import type { ComponentProps } from "react"
 import { sectionData } from "./lib"
 import Icon from "../../Icon"
 import DialogContainer from "../DialogContainer"
@@ -8,16 +7,16 @@ type Props = ComponentProps<"div"> & {
   id: keyof typeof sectionData
 }
 
-function ProfileDialogContainer(
-  { className, children, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<"div">>,
-) {
+export default function ProfileDialogContainer({
+  className,
+  children,
+  ...props
+}: Props) {
   const section = sectionData[props.id]
 
   return (
     <DialogContainer
       {...props}
-      ref={ref}
       padding="y"
       className="flex pr-8 md:block md:px-12"
     >
@@ -30,5 +29,3 @@ function ProfileDialogContainer(
     </DialogContainer>
   )
 }
-
-export default forwardRef(ProfileDialogContainer)

@@ -1,79 +1,50 @@
-import { AnyJSONString } from "@artists-together/core/schemas"
+import { AnyJSONString, JSONStringify } from "@artists-together/core/schemas"
 import type { CookieSerializeOptions, HTTPEvent } from "vinxi/http"
 import { deleteCookie, getCookie, setCookie } from "vinxi/http"
-import type { z, SafeParseReturnType, ZodTypeAny } from "zod"
+import * as v from "valibot"
 
-export class Cookie<Name extends string, Schema extends ZodTypeAny> {
-  private json: boolean
+export class Cookie<Name extends string, Schema extends v.GenericSchema> {
+  private read
+
+  private write
 
   constructor(
     public name: Name,
     public schema: Schema,
-    private options?: CookieSerializeOptions,
+    public options?: CookieSerializeOptions,
   ) {
-    this.json =
-      "typeName" in schema._def ? schema._def.typeName !== "ZodString" : true
+    this.read = v.pipe(AnyJSONString, schema)
+    this.write = v.pipe(schema, JSONStringify)
   }
 
-  private parse<Strict extends boolean = false>(
-    cookie: string | undefined,
-    options?: {
-      strict?: Strict
-    },
-  ): Strict extends true
-    ? z.output<Schema>
-    : SafeParseReturnType<Schema, z.output<Schema>> {
-    return this.json
-      ? options?.strict
-        ? AnyJSONString.pipe(this.schema).parse(cookie)
-        : AnyJSONString.pipe(this.schema).safeParse(cookie)
-      : options?.strict
-        ? this.schema.parse(cookie)
-        : this.schema.safeParse(cookie)
+  public parse(event: HTTPEvent) {
+    return v.parse(this.read, getCookie(event, this.name))
   }
 
-  has(event: HTTPEvent) {
-    const cookie = getCookie(event, this.name)
-    return Boolean(this.parse(cookie, { strict: false }).success)
+  public safeParse(event: HTTPEvent) {
+    return v.safeParse(this.read, getCookie(event, this.name))
   }
 
-  get<Strict extends boolean = false>(
+  public has(event: HTTPEvent) {
+    return this.safeParse(event).success
+  }
+
+  public set(
     event: HTTPEvent,
-    options?: {
-      strict?: Strict
-    },
-  ): Strict extends true
-    ? z.output<Schema>
-    : SafeParseReturnType<Schema, z.output<Schema>> {
-      return this.parse(getCookie(event, this.name), options)
-    }
-
-  set(
-    event: HTTPEvent,
-    value: z.output<Schema>,
+    value: v.InferInput<Schema>,
     options?: CookieSerializeOptions,
   ) {
-    const parsed = this.schema.parse(value)
-    setCookie(event, this.name, this.json ? JSON.stringify(parsed) : parsed, {
+    const parsed = v.parse(this.write, value)
+    return setCookie(event, this.name, parsed, {
       ...this.options,
       ...options,
     })
   }
 
-  delete(event: HTTPEvent) {
-    return deleteCookie(event, this.name)
+  public delete(event: HTTPEvent, options?: CookieSerializeOptions) {
+    return deleteCookie(event, this.name, {
+      ...this.options,
+      ...options,
+    })
   }
-
-  flash<Strict extends boolean = false>(
-    event: HTTPEvent,
-    options?: {
-      strict?: Strict
-    },
-  ): Strict extends true
-    ? z.output<Schema>
-    : SafeParseReturnType<Schema, z.output<Schema>> {
-      const cookie = getCookie(event, this.name)
-      this.delete(event)
-      return this.parse(cookie, options)
-    }
 }

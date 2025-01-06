@@ -1,5 +1,6 @@
+import * as v from "valibot"
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router"
-import { MonthEnum } from "~/lib/schemas"
+import { Month } from "~/lib/schemas"
 
 export const Route = createFileRoute("/calendar/")({
   beforeLoad() {
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/calendar/")({
 
     const now = new Date()
     const year = now.getFullYear()
-    const month = MonthEnum.options[now.getMonth()]
+    const month = v.safeParse(Month, now.getMonth())
 
     throw redirect({
       to: "/calendar/$year/$month",

@@ -1,10 +1,5 @@
-import type {
-  ComponentProps,
-  ComponentRef,
-  ForwardedRef,
-  ReactNode,
-} from "react"
-import { Suspense, lazy, forwardRef } from "react"
+import type { ComponentProps, ReactNode } from "react"
+import { Suspense, lazy } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import type LottieComponent from "./LottieComponent"
 import ClientOnly from "../ClientOnly"
@@ -20,17 +15,18 @@ type Props = Omit<ComponentProps<typeof LottieComponent>, "src"> & {
   errorFallback?: ReactNode
 }
 
-function Lottie(
-  { src, fallback = null, errorFallback = fallback, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<typeof LottieComponent>>,
-) {
+export default function Lottie({
+  src,
+  fallback = null,
+  errorFallback = fallback,
+  ...props
+}: Props) {
   return (
     <Suspense fallback={fallback}>
       <ClientOnly fallback={fallback}>
         <ErrorBoundary fallback={errorFallback}>
           <LazyLottieComponent
             {...props}
-            ref={ref}
             src={src().then((module) => module.default)}
           />
         </ErrorBoundary>
@@ -38,5 +34,3 @@ function Lottie(
     </Suspense>
   )
 }
-
-export default forwardRef(Lottie)

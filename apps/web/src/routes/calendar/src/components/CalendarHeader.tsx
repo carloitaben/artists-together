@@ -3,7 +3,7 @@
 import dayjs from "dayjs"
 import Link from "next/link"
 import { useSelectedLayoutSegments } from "next/navigation"
-import { MonthEnum, MonthNumber } from "~/lib/schemas"
+import { MonthList, MonthNumber } from "~/lib/schemas"
 import Button from "~/components/Button"
 import Icon from "~/components/Icon"
 import Container from "~/components/Container"
@@ -25,7 +25,7 @@ function useDate() {
     .set("year", parseInt(year))
     .set(
       "month",
-      month ? MonthEnum.options.findIndex((m) => m === month) : date.month(),
+      month ? MonthList.options.findIndex((m) => m === month) : date.month(),
     )
 }
 

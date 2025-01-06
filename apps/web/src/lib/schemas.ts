@@ -1,27 +1,31 @@
-import { fallback } from "@tanstack/router-zod-adapter"
-import { z } from "zod"
+import * as v from "valibot"
 
-export const Pathname = z.string().refine((value) => value.startsWith("/"), {
-  message: "Pathname must start with a /",
-})
+export const Pathname = v.pipe(
+  v.string(),
+  v.check(
+    (value) => value.startsWith("/"),
+    "Pathname must have trailing slash",
+  ),
+)
 
-export const Geolocation = z
-  .object({
-    city: z.string(),
-    country: z
-      .string()
-      .refine((value) => value !== "T1", { message: "Tor network" })
-      .refine((value) => value !== "XX", { message: "Missing country code" }),
-    continent: z.string(),
-    latitude: z.string(),
-    longitude: z.string(),
-    timezone: z.string(),
-  })
-  .nullable()
+export const Geolocation = v.nullable(
+  v.object({
+    city: v.string(),
+    country: v.pipe(
+      v.string(),
+      v.check((value) => value !== "T1", "Tor network"),
+      v.check((value) => value !== "XX", "Missing country code"),
+    ),
+    continent: v.string(),
+    latitude: v.string(),
+    longitude: v.string(),
+    timezone: v.string(),
+  }),
+)
 
-export type Geolocation = z.infer<typeof Geolocation>
+export type Geolocation = v.InferOutput<typeof Geolocation>
 
-export const MonthEnum = z.enum([
+const MonthList = v.picklist([
   "january",
   "february",
   "march",
@@ -36,47 +40,69 @@ export const MonthEnum = z.enum([
   "december",
 ])
 
-export const MonthNumber = z.coerce
-  .number()
-  .min(1)
-  .max(MonthEnum.options.length)
+export const Month = v.union([
+  MonthList,
+  v.pipe(
+    v.string(),
+    v.transform(Number),
+    v.number(),
+    v.integer(),
+    v.minValue(1),
+    v.maxValue(MonthList.options.length),
+    v.transform((value) => MonthList.options.at(value - 1)!),
+  ),
+])
 
-export const Month = z.union([MonthEnum, MonthNumber])
+export type Month = v.InferOutput<typeof Month>
 
-export const OAuthCookieSchema = z.object({
-  geolocation: Geolocation,
-  pathname: Pathname,
-  state: z.string(),
+export const RootSearchParams = v.object({
+  modal: v.optional(v.picklist(["auth"])),
+  toast: v.optional(v.string()),
+  error: v.optional(v.string()),
+  q: v.optional(v.string()),
 })
 
-export const RootSearchParams = z.object({
-  modal: fallback(z.enum(["auth"]).optional(), undefined),
-  toast: fallback(z.string().optional(), undefined),
-  error: fallback(z.string().optional(), undefined),
-  q: fallback(z.string().optional(), undefined),
-})
-
-export const CalendarPathParams = z.object({
-  year: z.coerce.number().min(1970),
+export const CalendarPathParams = v.object({
+  year: v.pipe(v.string(), v.transform(Number), v.integer(), v.minValue(1970)),
   month: Month,
 })
 
-export const AuthEndpointSearchParams = z.union([
-  z.object({
-    error: z.string(),
-    error_description: z.string().optional(),
+export const AuthEndpointSearchParams = v.union([
+  v.object({
+    error: v.string(),
+    error_description: v.optional(v.string()),
   }),
-  z.object({
-    code: z.string().min(1),
-    state: z.string().min(1),
+  v.object({
+    code: v.pipe(v.string(), v.nonEmpty()),
+    state: v.pipe(v.string(), v.nonEmpty()),
   }),
 ])
 
-export const AuthFormSchema = z.object({
+export const AuthFormSchema = v.object({
   pathname: Pathname,
 })
 
-export const ContactSupportFormSchema = z.object({
-  subject: z.string().min(1),
-  message: z.string().min(1).max(300),
+export const ContactSupportFormSchema = v.object({
+  subject: v.pipe(v.string(), v.nonEmpty()),
+  message: v.pipe(v.string(), v.nonEmpty(), v.maxLength(300)),
+})
+
+// export const UpdateprofileFormSchema = UserTableInsert.pick({
+//   bio: true,
+// }).extend({
+//   settings: UserSettings.partial(),
+// })
+
+export const UpdateProfileFormSchema = v.object({
+  bio: v.nullable(v.pipe(v.string(), v.maxLength(300))),
+})
+
+export const CookieSession = v.pipe(v.string(), v.nonEmpty())
+
+export const CookieOAuth = v.object({
+  ...AuthFormSchema.entries,
+  geolocation: Geolocation,
+  fahrenheit: v.boolean(),
+  fullHourFormat: v.boolean(),
+  state: v.string(),
 })

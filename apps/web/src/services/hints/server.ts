@@ -1,3 +1,4 @@
+import * as v from "valibot"
 import Negotiator from "negotiator"
 import { createServerFn } from "@tanstack/start"
 import { getHeader, getHeaders } from "vinxi/http"
@@ -27,7 +28,7 @@ function getHourFormat(locale: string) {
 }
 
 function getGeolocation() {
-  const geolocation = Geolocation.safeParse({
+  const geolocation = v.safeParse(Geolocation, {
     city: getHeader("x-vercel-ip-city"),
     country: getHeader("x-vercel-ip-country"),
     continent: getHeader("x-vercel-ip-continent"),
@@ -36,7 +37,7 @@ function getGeolocation() {
     timezone: getHeader("x-vercel-ip-timezone"),
   })
 
-  return geolocation.success ? geolocation.data : null
+  return geolocation.success ? geolocation.output : null
 }
 
 export const $hints = createServerFn({ method: "GET" }).handler(async () => {

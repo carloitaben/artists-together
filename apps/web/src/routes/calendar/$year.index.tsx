@@ -1,9 +1,11 @@
+import * as v from "valibot"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { CalendarPathParams } from "~/lib/schemas"
 
 export const Route = createFileRoute("/calendar/$year/")({
   beforeLoad(context) {
-    const parsed = CalendarPathParams.pick({ year: true }).safeParse(
+    const parsed = v.safeParse(
+      v.pick(CalendarPathParams, { year: true }),
       context.params,
     )
 

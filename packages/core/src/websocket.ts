@@ -1,27 +1,34 @@
-import type { SafeParseReturnType } from "zod"
-import { z } from "zod"
-import type { ValueOf } from "./types"
+import * as v from "valibot"
 import { AnyJSONString } from "./schemas"
 
-export const CursorState = z.enum(["idle", "hover", "drag"])
+export const CursorState = v.picklist(["idle", "hover", "drag"])
 
-export type CursorState = z.infer<typeof CursorState>
+export type CursorState = v.InferOutput<typeof CursorState>
 
-export const Cursor = z
-  .object({
-    x: z.number().min(0).max(1),
-    y: z.number().min(0).max(1),
-    target: z.string(),
+export const Cursor = v.nullable(
+  v.object({
+    x: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
+    y: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
+    target: v.string(),
     state: CursorState,
-  })
-  .nullable()
+  }),
+)
 
-export type Cursor = z.infer<typeof Cursor>
+export type Cursor = v.InferOutput<typeof Cursor>
 
-export const Invalidation = z.object({
-  exact: z.boolean(),
-  queryKey: z.unknown().array(),
+/**
+ * An array of tuples representing the delta of the message, and the message itself.
+ */
+export const CursorUpdates = v.array(v.tuple([v.number(), Cursor]))
+
+export type CursorUpdates = v.InferOutput<typeof CursorUpdates>
+
+export const Invalidation = v.object({
+  exact: v.boolean(),
+  queryKey: v.array(v.string()),
 })
+
+export type Invalidation = v.InferOutput<typeof Invalidation>
 
 const events = {
   /**
@@ -31,17 +38,17 @@ const events = {
     /**
      * Tells other clients to invalidate an array of query keys
      */
-    invalidate: Invalidation.array(),
+    invalidate: v.array(Invalidation),
     /**
      * Switches to a new room
      */
-    "room:update": z.object({
-      room: z.string(),
+    "room:update": v.object({
+      room: v.string(),
     }),
     /**
      * Sends the current cursor state
      */
-    "cursor:update": Cursor,
+    "cursor:update": CursorUpdates,
   },
   /**
    * Events sent from the server to the client
@@ -50,157 +57,133 @@ const events = {
     /**
      * Tells other clients to invalidate an array of query keys
      */
-    invalidate: Invalidation.array(),
+    invalidate: v.array(Invalidation),
     /**
      * Sends the current state of the room
      */
-    "room:update": z.object({
-      count: z.number().int().nonnegative(),
-      members: z.array(
-        z.object({
+    "room:update": v.object({
+      count: v.pipe(v.number(), v.integer(), v.minValue(0)),
+      members: v.array(
+        v.object({
           cursor: Cursor,
-          username: z.string(),
+          username: v.string(),
         }),
       ),
     }),
     /**
      * Sends the data for a new connection
      */
-    "cursor:update": z.object({
-      cursor: Cursor,
-      username: z.string(),
+    "cursor:update": v.object({
+      cursor: CursorUpdates,
+      username: v.string(),
     }),
   },
 }
 
 type Events = typeof events
 
-function event(kind: keyof Events) {
-  return z.string().transform((string, context) => {
-    if (string in events[kind]) {
-      return string as keyof (typeof events)[typeof kind]
-    }
+export const ClientEvent = v.custom<keyof Events["client"]>(
+  (value) => typeof value === "string" && value in events.client,
+)
 
-    context.addIssue({
-      code: "custom",
-      message: `Invalid ${kind} event`,
-    })
+export type ClientEvent = v.InferOutput<typeof ClientEvent>
 
-    return z.NEVER
-  })
-}
+export const ServerEvent = v.custom<keyof Events["server"]>(
+  (value) => typeof value === "string" && value in events.server,
+)
 
-const ClientEvent = event("client")
-const ServerEvent = event("server")
+export type ServerEvent = v.InferOutput<typeof ServerEvent>
 
-export type ClientEvent = z.infer<typeof ClientEvent>
-export type ServerEvent = z.infer<typeof ServerEvent>
-
-export type ClientEventData<T extends ClientEvent> = z.output<
+export type ClientEventInput<T extends ClientEvent> = v.InferInput<
   Events["client"][T]
 >
-export type ServerEventData<T extends ServerEvent> = z.output<
+
+export type ServerEventInput<T extends keyof Events["server"]> = v.InferInput<
   Events["server"][T]
 >
 
-/**
- * Creates a WebSocket message for sending to the server from the client.
- */
+export type ClientEventOutput<T extends ClientEvent> = v.InferOutput<
+  Events["client"][T]
+>
+
+export type ServerEventOutput<T extends keyof Events["server"]> = v.InferOutput<
+  Events["server"][T]
+>
+
 export function encodeClientMessage<T extends ClientEvent>(
   event: T,
-  data: ClientEventData<T>,
+  data: ClientEventOutput<T>,
 ) {
-  const clientEvent = ClientEvent.parse(event)
-  const clientEventData = events.client[clientEvent].parse(data)
-  return JSON.stringify([event, clientEventData])
+  const schema = events.client[event]
+  const parsed = v.parse(schema, data)
+  return JSON.stringify([event, parsed])
 }
 
-/**
- * Creates a WebSocket message for sending from the client to the server.
- */
-export function encodeServerMessage<T extends ServerEvent>(
+export function encodeServerMessage<T extends keyof Events["server"]>(
   event: T,
-  data: ServerEventData<T>,
+  data: ServerEventOutput<T>,
 ) {
-  const serverEvent = ServerEvent.parse(event)
-  const serverEventData = events.server[serverEvent].parse(data)
-  return JSON.stringify([event, serverEventData])
+  const schema = events.server[event]
+  const parsed = v.parse(schema, data)
+  return JSON.stringify([event, parsed])
 }
 
-const EncodedClientMessage = AnyJSONString.pipe(
-  z.tuple([ClientEvent, z.unknown()]).transform(([event, json], context) => {
-    const payload = events.client[event].safeParse(json)
+export const safeParseClientMessage = v.safeParser(
+  v.pipe(
+    AnyJSONString,
+    v.tuple([ClientEvent, v.unknown()]),
+    v.rawTransform((context) => {
+      const schema = events.client[context.dataset.value[0]]
+      const parsed = v.safeParse(schema, context.dataset.value[1])
 
-    if (!payload.success) {
-      context.addIssue({
-        code: "custom",
-        message: payload.error.message,
-      })
+      if (!parsed.success) {
+        context.addIssue({
+          message: "Invalid Websocket client message",
+          input: parsed.output,
+        })
 
-      return z.NEVER
-    }
+        return context.NEVER
+      }
 
-    return {
-      event,
-      payload: payload.data,
-    }
-  }),
+      return {
+        event: context.dataset.value[0],
+        data: parsed.output,
+      } as {
+        [K in ClientEvent]: {
+          event: K
+          data: ClientEventOutput<K>
+        }
+      }[ClientEvent]
+    }),
+  ),
 )
 
-const EncodedServerMessage = AnyJSONString.pipe(
-  z.tuple([ServerEvent, z.unknown()]).transform(([event, json], context) => {
-    const payload = events.server[event].safeParse(json)
+export const safeParseServerMessage = v.safeParser(
+  v.pipe(
+    AnyJSONString,
+    v.tuple([ServerEvent, v.unknown()]),
+    v.rawTransform((context) => {
+      const schema = events.server[context.dataset.value[0]]
+      const parsed = v.safeParse(schema, context.dataset.value[1])
 
-    if (!payload.success) {
-      context.addIssue({
-        code: "custom",
-        message: payload.error.message,
-      })
+      if (!parsed.success) {
+        context.addIssue({
+          message: "Invalid Websocket server message",
+          input: parsed.output,
+        })
 
-      return z.NEVER
-    }
+        return context.NEVER
+      }
 
-    return {
-      event,
-      payload: payload.data,
-    }
-  }),
+      return {
+        event: context.dataset.value[0],
+        data: parsed.output,
+      } as {
+        [K in ServerEvent]: {
+          event: K
+          data: ServerEventOutput<K>
+        }
+      }[ServerEvent]
+    }),
+  ),
 )
-
-/**
- * Parses a WebSocket message received from the client.
- */
-export function parseClientMessage(
-  message: string | Buffer,
-): SafeParseReturnType<
-  string | Buffer,
-  ValueOf<{
-    [K in ClientEvent]: {
-      event: K
-      payload: ClientEventData<K>
-    }
-  }>
-> {
-  return EncodedClientMessage.safeParse(
-    typeof message === "string" ? message : message.toString(),
-  ) as any
-}
-
-/**
- * Parses a WebSocket message received from the server.
- */
-export function parseServerMessage(
-  message: string | Buffer,
-): SafeParseReturnType<
-  string | Buffer,
-  ValueOf<{
-    [K in ServerEvent]: {
-      event: K
-      payload: ServerEventData<K>
-    }
-  }>
-> {
-  return EncodedServerMessage.safeParse(
-    typeof message === "string" ? message : message.toString(),
-  ) as any
-}

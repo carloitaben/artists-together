@@ -47,11 +47,11 @@ function Component() {
 
   return (
     <>
-      {hints.data.saveData ? null : (
+      {/* {hints.data.saveData ? null : (
         <Suspense>
           <Stars />
         </Suspense>
-      )}
+      )} */}
       <header>
         <Container asChild>
           <Grid className="min-h-screen place-items-center py-16">

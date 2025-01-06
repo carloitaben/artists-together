@@ -1,36 +1,52 @@
-import { z } from "zod"
+import * as v from "valibot"
 
-export const AnyJSONLiteral = z.union([
-  z.string(),
-  z.number(),
-  z.boolean(),
-  z.null(),
-])
+export type AnyJSON =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: AnyJSON }
+  | AnyJSON[]
 
-export type AnyJSONLiteral = z.infer<typeof AnyJSONLiteral>
-
-export type AnyJSON = AnyJSONLiteral | { [key: string]: AnyJSON } | AnyJSON[]
-
-export const AnyJSON: z.ZodType<AnyJSON> = z.lazy(() =>
-  z.union([AnyJSONLiteral, z.array(AnyJSON), z.record(AnyJSON)]),
+const AnyJSON: v.GenericSchema<AnyJSON> = v.lazy(() =>
+  v.union([
+    v.string(),
+    v.number(),
+    v.boolean(),
+    v.null(),
+    v.record(v.string(), AnyJSON),
+    v.array(AnyJSON),
+  ]),
 )
 
-export const AnyJSONString = z
-  .string()
-  .transform((value, context) => {
+export const AnyJSONString = v.pipe(
+  v.string(),
+  v.rawTransform((context) => {
     try {
-      return JSON.parse(value)
+      return JSON.parse(context.dataset.value)
     } catch {
       context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Invalid JSON string",
+        message: "Invalid stringified JSON",
+        input: context.dataset.value,
       })
 
-      return z.NEVER
+      return context.NEVER
     }
-  })
-  .pipe(AnyJSON)
+  }),
+  v.unknown(),
+)
 
-export const AnyObject = z.object({}).passthrough()
+export type AnyJSONString = v.InferInput<typeof AnyJSONString>
 
-export const EmptyObject = z.object({}).strict()
+export const JSONStringify = v.rawTransform((context) => {
+  try {
+    return JSON.stringify(context.dataset)
+  } catch (error) {
+    context.addIssue({
+      message: "Error while stringifying value",
+      input: context.dataset,
+    })
+
+    return context.NEVER
+  }
+})

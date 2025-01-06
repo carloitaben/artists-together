@@ -2,8 +2,7 @@ import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
-import type { ComponentRef, ForwardedRef } from "react"
-import { forwardRef, createContext, useContext } from "react"
+import { createContext, useContext } from "react"
 
 export const gap = {
   x: "gap-x-1 sm:scale:gap-x-4",
@@ -40,16 +39,12 @@ GridContext.displayName = "GridContext"
 
 type Props = HTMLArkProps<"div"> & Omit<VariantProps<typeof variants>, "cols">
 
-function Grid(
-  { className, gap, inline, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<"div">>,
-) {
+export default function Grid({ className, gap, inline, ...props }: Props) {
   const isSubgrid = Boolean(useContext(GridContext))
 
   return (
     <GridContext.Provider value={true}>
       <ark.div
-        ref={ref}
         className={variants({
           className,
           gap,
@@ -61,5 +56,3 @@ function Grid(
     </GridContext.Provider>
   )
 }
-
-export default forwardRef(Grid)

@@ -1,5 +1,6 @@
 import type { SessionValidationResult } from "@artists-together/core/auth"
 import { invalidateSession } from "@artists-together/core/auth"
+import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/start"
 import { parseWithZod } from "@conform-to/zod"
 import { getEvent } from "vinxi/http"
@@ -23,20 +24,20 @@ export const $login = createServerFn({ method: "POST" })
     })
 
     if (form.status !== "success") {
-      return form.reply()
+      throw form.reply()
     }
 
     const event = getEvent()
 
     if (cookieSession.has(event)) {
-      return form.reply({
+      throw form.reply({
         formErrors: ["Already logged in"],
       })
     }
 
     const hints = await $hints()
     const state = generateState()
-    const url = provider.discord.createAuthorizationURL(state, [
+    const url = provider.discord.createAuthorizationURL(state, null, [
       "identify",
       "email",
     ])
@@ -49,12 +50,9 @@ export const $login = createServerFn({ method: "POST" })
       state,
     })
 
-    // TODO: External redirects are currently not supported by Start
-    // throw redirect({
-    //   to: url.href,
-    // })
-
-    return url.href
+    throw redirect({
+      href: url.href,
+    })
   })
 
 export const $logout = createServerFn({ method: "POST" })
@@ -65,7 +63,7 @@ export const $logout = createServerFn({ method: "POST" })
     })
 
     if (parsed.status !== "success") {
-      return parsed.reply()
+      throw parsed.reply()
     }
 
     const event = getEvent()
@@ -94,17 +92,6 @@ export const $unlinkDiscord = createServerFn({ method: "GET" }).handler(
 export const $unlinkTwitch = createServerFn({ method: "GET" }).handler(
   async () => {},
 )
-
-// export async function logout() {
-//   const auth = await authenticate()
-
-//   if (!auth) {
-//     return error({ cause: "UNAUTHORIZED" })
-//   }
-
-//   await invalidateSession(auth.session.id)
-//   await deleteSessionTokenCookie()
-// }
 
 // export async function update(_: unknown, formData: FormData) {
 //   const submission = parseWithZod(formData, {

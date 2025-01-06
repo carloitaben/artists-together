@@ -1,6 +1,10 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core"
 import { relations } from "drizzle-orm"
-import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-valibot"
 import { timestamps } from "../types"
 
 export const locationTable = sqliteTable("location", {
@@ -16,6 +20,8 @@ export const locationTable = sqliteTable("location", {
 export const LocationTableInsert = createInsertSchema(locationTable)
 
 export const LocationTableSelect = createSelectSchema(locationTable)
+
+export const LocationTableUpdate = createUpdateSchema(locationTable)
 
 export type Location = typeof locationTable.$inferSelect
 
@@ -43,5 +49,7 @@ export const weatherTable = sqliteTable("weathers", {
 export const WeatherTableInsert = createInsertSchema(weatherTable)
 
 export const WeatherTableSelect = createSelectSchema(weatherTable)
+
+export const WeatherTableUpdate = createUpdateSchema(weatherTable)
 
 export type Weather = typeof weatherTable.$inferSelect

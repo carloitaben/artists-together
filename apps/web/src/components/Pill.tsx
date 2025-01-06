@@ -2,8 +2,6 @@ import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
-import type { ComponentRef, ForwardedRef } from "react"
-import { forwardRef } from "react"
 
 const variants = cva({
   base: "rounded-full shadow-button text-sm items-center justify-center whitespace-nowrap",
@@ -43,14 +41,18 @@ const variants = cva({
 
 type Props = Omit<HTMLArkProps<"div">, "color"> & VariantProps<typeof variants>
 
-function Pill(
-  { textAlign, color, inline, gap, padding, className, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<"div">>,
-) {
+export default function Pill({
+  textAlign,
+  color,
+  inline,
+  gap,
+  padding,
+  className,
+  ...props
+}: Props) {
   return (
     <ark.div
       {...props}
-      ref={ref}
       className={variants({
         textAlign,
         color,
@@ -62,5 +64,3 @@ function Pill(
     />
   )
 }
-
-export default forwardRef(Pill)

@@ -1,7 +1,6 @@
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
-import type { ComponentRef, ForwardedRef } from "react"
-import { createContext, forwardRef, useContext } from "react"
+import { createContext, useContext } from "react"
 
 type Props = HTMLArkProps<"div"> & {
   name: string
@@ -16,10 +15,7 @@ const CursorPrecisionContext = createContext<string | null>(null)
 
 CursorPrecisionContext.displayName = "CursorPrecisionContext"
 
-function CursorPrecision(
-  { name, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<"div">>,
-) {
+export default function CursorPrecision({ name, ...props }: Props) {
   const scope = useContext(CursorPrecisionContext)
   const scopedName = scope ? `${scope}.${name}` : name
   const attrs = {
@@ -28,9 +24,8 @@ function CursorPrecision(
 
   return (
     <CursorPrecisionContext.Provider value={name}>
-      <ark.div ref={ref} {...props} {...attrs} />
+      <ark.div {...props} {...attrs} />
     </CursorPrecisionContext.Provider>
   )
 }
 
-export default forwardRef(CursorPrecision)

@@ -1,6 +1,6 @@
+import * as v from "valibot"
 import { TransactionRollbackError } from "drizzle-orm"
 import type { SQLiteTransactionConfig } from "drizzle-orm/sqlite-core"
-import { z } from "zod"
 import { AsyncContextInvariantError, createContext } from "../context"
 import { assert } from "../types"
 import { database } from "./client"
@@ -52,7 +52,7 @@ export function useTransaction<T>(
     const context = TransactionContext.use()
     return callback(context.tx)
   } catch (error) {
-    assert(error, z.instanceof(AsyncContextInvariantError))
+    assert(v.instance(AsyncContextInvariantError), error)
     return callback(database)
   }
 }
@@ -78,7 +78,7 @@ export async function afterTransaction(effect: () => any | Promise<any>) {
     const context = TransactionContext.use()
     context.effects.push(effect)
   } catch (error) {
-    assert(error, z.instanceof(AsyncContextInvariantError))
+    assert(v.instance(AsyncContextInvariantError), error)
     await effect()
   }
 }
@@ -112,7 +112,7 @@ export async function createTransaction<T>(
     const context = TransactionContext.use()
     return callback(context.tx)
   } catch (error) {
-    assert(error, z.instanceof(AsyncContextInvariantError))
+    assert(v.instance(AsyncContextInvariantError), error)
 
     const effects: (() => void | Promise<void>)[] = []
 

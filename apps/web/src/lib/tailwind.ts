@@ -1,5 +1,4 @@
-import { is } from "@artists-together/core/types"
-import { z } from "zod"
+import * as v from "valibot"
 import plugin from "tailwindcss/plugin"
 import type { PluginAPI } from "tailwindcss/types/config"
 import defaultTheme from "tailwindcss/defaultTheme"
@@ -94,17 +93,17 @@ export const pluginSubgrid = plugin(({ addComponents, theme }) => {
 
 const themeableColorRegex = /(?:rgb\()(\d+,)\s*(\d+,)\s*(\d+)(?:\))/
 
-const ThemeableColorConfig = z.object({
-  50: z.string().regex(themeableColorRegex),
-  100: z.string().regex(themeableColorRegex),
-  200: z.string().regex(themeableColorRegex),
-  300: z.string().regex(themeableColorRegex),
-  400: z.string().regex(themeableColorRegex),
-  500: z.string().regex(themeableColorRegex),
-  600: z.string().regex(themeableColorRegex),
-  700: z.string().regex(themeableColorRegex),
-  800: z.string().regex(themeableColorRegex),
-  900: z.string().regex(themeableColorRegex),
+const ThemeableColorConfig = v.object({
+  50: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  100: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  200: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  300: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  400: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  500: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  600: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  700: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  800: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  900: v.pipe(v.string(), v.regex(themeableColorRegex)),
 })
 
 /**
@@ -127,7 +126,7 @@ export const pluginTheme = plugin(({ addComponents }) => {
   for (const name in colors) {
     const color = colors[name as keyof typeof colors]
 
-    if (!is(ThemeableColorConfig, color)) {
+    if (!v.is(ThemeableColorConfig, color)) {
       continue
     }
 

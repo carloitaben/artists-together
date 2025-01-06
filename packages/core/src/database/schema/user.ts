@@ -1,64 +1,59 @@
+import * as v from "valibot"
 import { sqliteTable, text, index, int } from "drizzle-orm/sqlite-core"
 import { relations } from "drizzle-orm"
-import { z } from "zod"
-import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-valibot"
 import { timestamp, timestamps } from "../types"
 
-export const DiscordMetadata = z.object({
-  id: z.string(),
-  username: z.string(),
-  discriminator: z.string(),
-  global_name: z.string().nullable(),
-  avatar: z.string().nullable(),
-  bot: z.boolean().optional(),
-  system: z.boolean().optional(),
-  mfa_enabled: z.boolean().optional(),
-  verified: z.boolean().optional(),
-  email: z.string().optional().nullable(),
-  flags: z.number().optional(),
-  banner: z.string().optional().nullable(),
-  accent_color: z.number().optional().nullable(),
-  premium_type: z.number().optional(),
-  public_flags: z.number().optional(),
-  locale: z.string().optional(),
-  avatar_decoration: z.string().optional().nullable(),
+export const DiscordMetadata = v.object({
+  id: v.string(),
+  username: v.string(),
+  discriminator: v.string(),
+  global_name: v.nullable(v.string()),
+  avatar: v.nullable(v.string()),
+  bot: v.optional(v.boolean()),
+  system: v.optional(v.boolean()),
+  mfa_enabled: v.optional(v.boolean()),
+  verified: v.optional(v.boolean()),
+  email: v.nullable(v.pipe(v.string(), v.email())),
+  flags: v.optional(v.number()),
+  banner: v.optional(v.string()),
+  accent_color: v.optional(v.number()),
+  premium_type: v.optional(v.number()),
+  public_flags: v.optional(v.number()),
+  locale: v.optional(v.string()),
+  avatar_decoration: v.optional(v.string()),
 })
 
-export type DiscordMetadata = z.output<typeof DiscordMetadata>
+export type DiscordMetadata = v.InferOutput<typeof DiscordMetadata>
 
-export const TwitchMetadata = z.object({
-  id: z.string(),
-  login: z.string(),
-  display_name: z.string(),
-  type: z
-    .union([
-      z.literal(""),
-      z.literal("admin"),
-      z.literal("staff"),
-      z.literal("global_mod"),
-    ])
-    .transform((value) => value || null),
-  broadcaster_type: z
-    .union([z.literal(""), z.literal("affiliate"), z.literal("partner")])
-    .transform((value) => value || null),
-  description: z.string(),
-  profile_image_url: z.string(),
-  offline_image_url: z.string(),
-  view_count: z.number(),
-  email: z.string().optional(),
-  created_at: z.string(),
+export const TwitchMetadata = v.object({
+  id: v.string(),
+  login: v.string(),
+  display_name: v.string(),
+  type: v.picklist(["", "admin", "staff", "global_mod"]),
+  broadcaster_type: v.picklist(["", "affiliate", "partner"]),
+  description: v.string(),
+  profile_image_url: v.string(),
+  offline_image_url: v.string(),
+  view_count: v.number(),
+  email: v.optional(v.string()),
+  created_at: v.string(),
 })
 
-export type TwitchMetadata = z.output<typeof TwitchMetadata>
+export type TwitchMetadata = v.InferOutput<typeof TwitchMetadata>
 
-export const UserSettings = z.object({
-  fullHourFormat: z.boolean().default(false),
-  shareStreaming: z.boolean().default(true),
-  shareCursor: z.boolean().default(true),
-  fahrenheit: z.boolean().default(false),
+export const UserSettings = v.object({
+  fullHourFormat: v.optional(v.boolean(), false),
+  shareStreaming: v.optional(v.boolean(), true),
+  shareCursor: v.optional(v.boolean(), true),
+  fahrenheit: v.optional(v.boolean(), false),
 })
 
-export type UserSettings = z.output<typeof UserSettings>
+export type UserSettings = v.InferOutput<typeof UserSettings>
 
 export const userTable = sqliteTable(
   "user",
@@ -85,17 +80,25 @@ export const userTable = sqliteTable(
 )
 
 export const UserTableInsert = createInsertSchema(userTable, {
-  avatar: (schema) => schema.avatar.url(),
-  email: (schema) => schema.email.email(),
-  bio: (schema) => schema.bio.max(128),
+  avatar: (schema) => v.pipe(schema, v.url()),
+  email: (schema) => v.pipe(schema, v.email()),
+  bio: (schema) => v.pipe(schema, v.maxLength(300)),
   discordMetadata: DiscordMetadata,
   twitchMetadata: TwitchMetadata,
 })
 
 export const UserTableSelect = createSelectSchema(userTable, {
-  avatar: (schema) => schema.avatar.url(),
-  email: (schema) => schema.email.email(),
-  bio: (schema) => schema.bio.max(128),
+  avatar: (schema) => v.pipe(schema, v.url()),
+  email: (schema) => v.pipe(schema, v.email()),
+  bio: (schema) => v.pipe(schema, v.maxLength(300)),
+  discordMetadata: DiscordMetadata,
+  twitchMetadata: TwitchMetadata,
+})
+
+export const UserTableUpdate = createUpdateSchema(userTable, {
+  avatar: (schema) => v.pipe(schema, v.url()),
+  email: (schema) => v.pipe(schema, v.email()),
+  bio: (schema) => v.pipe(schema, v.maxLength(300)),
   discordMetadata: DiscordMetadata,
   twitchMetadata: TwitchMetadata,
 })

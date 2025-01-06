@@ -1,5 +1,6 @@
-// import { wait } from "@artists-together/core/utils"
-// import type { InsertWeathers } from "@artists-together/core"
+import * as v from "valibot"
+import { wait } from "@artists-together/core/utils"
+import type { WeatherTableInsert } from "@artists-together/core/database"
 // import {
 //   asc,
 //   eq,
@@ -12,42 +13,39 @@
 //   connect,
 // } from "@artists-together/core"
 // import type { Handler } from "aws-lambda"
-// import { z } from "zod"
 
-// const weatherResponseSchema = z
-//   .object({
-//     latitude: z.number(),
-//     longitude: z.number(),
-//     generationtime_ms: z.number(),
-//     utc_offset_seconds: z.number(),
-//     timezone: z.string(),
-//     timezone_abbreviation: z.string(),
-//     elevation: z.number(),
-//     current_weather: z.object({
-//       is_day: z.number(),
-//       temperature: z.number(),
-//       time: z.string(),
-//       winddirection: z.number(),
-//       windspeed: z.number(),
-//       weathercode: z.coerce.number(),
-//     }),
-//     daily: z.object({
-//       temperature_2m_max: z.tuple([z.number(), z.number()]),
-//       temperature_2m_min: z.tuple([z.number(), z.number()]),
-//       weathercode: z.tuple([z.number(), z.number()]),
-//     }),
-//   })
-//   .transform(
-//     (data) =>
-//       ({
-//         todayMin: data.daily.temperature_2m_min[0],
-//         todayMax: data.daily.temperature_2m_max[0],
-//         todayWeatherCode: data.current_weather.weathercode,
-//         tomorrowMin: data.daily.temperature_2m_min[1],
-//         tomorrowMax: data.daily.temperature_2m_max[1],
-//         tomorrowWeatherCode: data.daily.weathercode[1],
-//       }) satisfies Omit<InsertWeathers, "city">
-//   )
+const weatherResponseSchema = v.pipe(
+  v.object({
+    latitude: v.number(),
+    longitude: v.number(),
+    generationtime_ms: v.number(),
+    utc_offset_seconds: v.number(),
+    timezone: v.string(),
+    timezone_abbreviation: v.string(),
+    elevation: v.number(),
+    current_weather: v.object({
+      is_day: v.number(),
+      temperature: v.number(),
+      time: v.string(),
+      winddirection: v.number(),
+      windspeed: v.number(),
+      weathercode: v.pipe(v.string(), v.transform(Number)),
+    }),
+    daily: v.object({
+      temperature_2m_max: v.tuple([v.number(), v.number()]),
+      temperature_2m_min: v.tuple([v.number(), v.number()]),
+      weathercode: v.tuple([v.number(), v.number()]),
+    }),
+  }),
+  v.transform((data) => ({
+    todayMin: data.daily.temperature_2m_min[0],
+    todayMax: data.daily.temperature_2m_max[0],
+    todayWeatherCode: data.current_weather.weathercode,
+    tomorrowMin: data.daily.temperature_2m_min[1],
+    tomorrowMax: data.daily.temperature_2m_max[1],
+    tomorrowWeatherCode: data.daily.weathercode[1],
+  }))
+)
 
 // export const handler: Handler = async () => {
 //   const db = connect()

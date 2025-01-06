@@ -1,11 +1,11 @@
 import type {
   CursorState,
   Cursor as CursorType,
+  CursorUpdates,
 } from "@artists-together/core/websocket"
 import { QueryObserver, useQueryClient } from "@tanstack/react-query"
 import { PerfectCursor } from "perfect-cursors"
-import { forwardRef, useEffect, useState } from "react"
-import type { ComponentRef, ForwardedRef } from "react"
+import { useEffect, useState } from "react"
 import type { Spring } from "motion/react"
 import { AnimatePresence, useMotionTemplate, useSpring } from "motion/react"
 import { webSocketQueryOptions } from "~/lib/websocket"
@@ -22,10 +22,7 @@ const spring: Spring = {
   mass: 0.15,
 }
 
-function CursorPresence(
-  { cursor, username }: Props,
-  ref: ForwardedRef<ComponentRef<typeof Cursor>>,
-) {
+export default function CursorPresence({ cursor, username }: Props) {
   const [state, setState] = useState<CursorState>()
   const queryClient = useQueryClient()
   const x = useSpring(cursor?.x || 0, spring)
@@ -54,49 +51,71 @@ function CursorPresence(
   useEffect(() => {
     const observer = new QueryObserver(queryClient, {
       ...webSocketQueryOptions("cursor:update", {
-        cursor,
+        cursor: [[0, cursor]],
         username,
       }),
       select: (data) => (data.username === username ? data.cursor : null),
     })
 
+    function update(updates: CursorUpdates, index: number) {
+      const [delta, cursor] = updates[index]!
+
+      function maybeUpdate() {
+        if (index === updates.length - 1) {
+          update(updates, index + 1)
+        }
+      }
+
+      const timeout = setTimeout(() => {
+        setState(cursor?.state)
+
+        if (!cursor) {
+          return maybeUpdate()
+        }
+
+        const selector = `[${ATTR_NAME_DATA_CURSOR_PRECISION}="${cursor.target}"]`
+        const element = document.querySelector(selector)
+
+        if (!element) {
+          if (import.meta.env.DEV) {
+            throw Error(`Could not find cursor target "${cursor.target}"`)
+          }
+
+          return maybeUpdate()
+        }
+
+        const rect = element.getBoundingClientRect()
+
+        const percentX =
+          ((rect.x +
+            document.documentElement.scrollLeft +
+            cursor.x * rect.width) /
+            document.documentElement.offsetWidth) *
+          100
+
+        const percentY =
+          ((rect.y +
+            document.documentElement.scrollTop +
+            cursor.y * rect.height) /
+            document.documentElement.offsetHeight) *
+          100
+
+        if (pc.prevPoint) {
+          pc.addPoint([percentX, percentY])
+        } else {
+          pc.prevPoint = [percentX, percentY]
+        }
+
+        return maybeUpdate()
+      }, delta)
+
+      return () => clearTimeout(timeout)
+    }
+
     return observer.subscribe((context) => {
       if (!context.data) return setState(undefined)
 
-      setState(context.data.state)
-
-      const selector = `[${ATTR_NAME_DATA_CURSOR_PRECISION}="${context.data.target}"]`
-      const element = document.querySelector(selector)
-
-      if (!element) {
-        if (import.meta.env.DEV) {
-          throw Error(`Could not find cursor target "${context.data.target}"`)
-        }
-
-        return
-      }
-
-      const rect = element.getBoundingClientRect()
-
-      const percentX =
-        ((rect.x +
-          document.documentElement.scrollLeft +
-          context.data.x * rect.width) /
-          document.documentElement.offsetWidth) *
-        100
-
-      const percentY =
-        ((rect.y +
-          document.documentElement.scrollTop +
-          context.data.y * rect.height) /
-          document.documentElement.offsetHeight) *
-        100
-
-      if (pc.prevPoint) {
-        pc.addPoint([percentX, percentY])
-      } else {
-        pc.prevPoint = [percentX, percentY]
-      }
+      update(context.data, 0)
     })
   }, [pc, queryClient, cursor, username])
 
@@ -104,7 +123,6 @@ function CursorPresence(
     <AnimatePresence>
       {state ? (
         <Cursor
-          ref={ref}
           state={state}
           username={username}
           style={{
@@ -116,5 +134,3 @@ function CursorPresence(
     </AnimatePresence>
   )
 }
-
-export default forwardRef(CursorPresence)

@@ -1,15 +1,15 @@
 import SplitType from "split-type"
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
-import type { ComponentRef, ForwardedRef } from "react"
-import { forwardRef, useEffect } from "react"
+import type { ComponentRef } from "react"
+import { useEffect } from "react"
 import { mergeRefs } from "react-merge-refs"
 import type { Segment } from "motion/react"
 import { useAnimate, useInView, useScroll, useSpring } from "motion/react"
 
 type Props = HTMLArkProps<"div">
 
-function TextAnimation(props: Props, ref: ForwardedRef<ComponentRef<"div">>) {
+export default function TextAnimation(props: Props) {
   const [scope, animate] = useAnimate<ComponentRef<"div">>()
   const inView = useInView(scope)
   const scroll = useScroll({
@@ -61,7 +61,5 @@ function TextAnimation(props: Props, ref: ForwardedRef<ComponentRef<"div">>) {
     }
   }, [animate, scope, inView, scrollSpring])
 
-  return <ark.div ref={mergeRefs([ref, scope])} {...props} />
+  return <ark.div ref={mergeRefs([props.ref, scope])} {...props} />
 }
-
-export default forwardRef(TextAnimation)

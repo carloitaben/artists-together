@@ -2,8 +2,6 @@ import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
-import type { ComponentRef, ForwardedRef } from "react"
-import { forwardRef } from "react"
 
 const variants = cva({
   base: "rounded-full transition active:scale-95 disabled:active:scale-100",
@@ -66,14 +64,18 @@ const variants = cva({
 type Props = Omit<HTMLArkProps<"button">, "color"> &
   VariantProps<typeof variants>
 
-function Button(
-  { className, color, gap, icon, padding, shadow, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<"button">>,
-) {
+export default function Button({
+  className,
+  color,
+  gap,
+  icon,
+  padding,
+  shadow,
+  ...props
+}: Props) {
   return (
     <ark.button
       {...props}
-      ref={ref}
       className={variants({
         className,
         color,
@@ -85,5 +87,3 @@ function Button(
     />
   )
 }
-
-export default forwardRef(Button)

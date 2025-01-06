@@ -1,8 +1,8 @@
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
 import { animate } from "motion/react"
-import type { ComponentRef, ForwardedRef, MouseEvent } from "react"
-import { forwardRef, useCallback } from "react"
+import type { MouseEvent } from "react"
+import { useCallback } from "react"
 
 function pxToNumber(px: string) {
   const match = px.match(/\d+/)?.[0]
@@ -47,10 +47,7 @@ export function anchor(event: MouseEvent, href?: string) {
 
 type Props = HTMLArkProps<"a">
 
-function Anchor(
-  { href, onClick, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<"a">>,
-) {
+export default function Anchor({ href, onClick, ...props }: Props) {
   const scroll = useCallback<NonNullable<Props["onClick"]>>(
     (event) => {
       onClick?.(event)
@@ -62,7 +59,5 @@ function Anchor(
     [href, onClick],
   )
 
-  return <ark.a {...props} ref={ref} href={href} onClick={scroll} />
+  return <ark.a {...props} href={href} onClick={scroll} />
 }
-
-export default forwardRef(Anchor)
