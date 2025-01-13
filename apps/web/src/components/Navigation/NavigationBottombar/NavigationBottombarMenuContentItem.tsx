@@ -2,6 +2,8 @@ import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
+import type { ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 
 const variants = cva({
   base: [
@@ -26,16 +28,17 @@ const variants = cva({
 
 type Props = HTMLArkProps<"div"> & VariantProps<typeof variants>
 
-export default function NavigationBottombarMenuContentItem({
-  className,
-  disabled,
-  justify,
-  ...props
-}: Props) {
+function NavigationBottombarMenuContentItem(
+  { className, disabled, justify, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<typeof ark.div>>,
+) {
   return (
     <ark.div
       {...props}
+      ref={ref}
       className={variants({ className, justify, disabled })}
     />
   )
 }
+
+export default forwardRef(NavigationBottombarMenuContentItem)

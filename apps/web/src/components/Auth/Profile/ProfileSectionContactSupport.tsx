@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 import { FormProvider, useForm } from "@conform-to/react"
-import { getZodConstraint, parseWithZod } from "@conform-to/zod"
+import { getValibotConstraint, parseWithValibot } from "conform-to-valibot"
 import { Field } from "@ark-ui/react/field"
 import { ContactSupportFormSchema } from "~/lib/schemas"
 import FieldLength from "~/components/FieldLength"
@@ -18,9 +18,9 @@ function ContactSupportForm() {
   })
 
   const [form, fields] = useForm({
-    constraint: getZodConstraint(ContactSupportFormSchema),
+    constraint: getValibotConstraint(ContactSupportFormSchema),
     onValidate({ formData }) {
-      return parseWithZod(formData, {
+      return parseWithValibot(formData, {
         schema: ContactSupportFormSchema,
       })
     },

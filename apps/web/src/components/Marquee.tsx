@@ -1,5 +1,10 @@
-import type { CSSProperties, ComponentProps, ComponentRef } from "react"
-import { startTransition, useEffect, useRef, useState } from "react"
+import type {
+  CSSProperties,
+  ComponentProps,
+  ComponentRef,
+  ForwardedRef,
+} from "react"
+import { startTransition, forwardRef, useEffect, useRef, useState } from "react"
 import { cx } from "cva"
 import { transform } from "motion/react"
 
@@ -21,7 +26,10 @@ type Props = ComponentProps<"div"> & {
   children: string
 }
 
-export default function Marquee({ children, className, ...props }: Props) {
+function Marquee(
+  { children, className, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<"div">>,
+) {
   const [shadows, setShadows] = useState<string>()
   const innerRef = useRef<ComponentRef<"span">>(null)
 
@@ -51,6 +59,7 @@ export default function Marquee({ children, className, ...props }: Props) {
   return (
     <div
       {...props}
+      ref={ref}
       aria-label={children}
       className={cx(className, "w-full overflow-hidden whitespace-nowrap")}
     >
@@ -70,3 +79,4 @@ export default function Marquee({ children, className, ...props }: Props) {
   )
 }
 
+export default forwardRef(Marquee)

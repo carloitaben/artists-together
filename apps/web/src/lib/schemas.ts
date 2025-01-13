@@ -1,3 +1,4 @@
+import { UserTableInsert } from "@artists-together/core/database/schema"
 import * as v from "valibot"
 
 export const Pathname = v.pipe(
@@ -25,7 +26,7 @@ export const Geolocation = v.nullable(
 
 export type Geolocation = v.InferOutput<typeof Geolocation>
 
-const MonthList = v.picklist([
+export const MonthNameList = v.picklist([
   "january",
   "february",
   "march",
@@ -40,20 +41,13 @@ const MonthList = v.picklist([
   "december",
 ])
 
-export const Month = v.union([
-  MonthList,
-  v.pipe(
-    v.string(),
-    v.transform(Number),
-    v.number(),
-    v.integer(),
-    v.minValue(1),
-    v.maxValue(MonthList.options.length),
-    v.transform((value) => MonthList.options.at(value - 1)!),
-  ),
-])
-
-export type Month = v.InferOutput<typeof Month>
+export const MonthNumberToName = v.pipe(
+  v.number(),
+  v.integer(),
+  v.minValue(1),
+  v.maxValue(MonthNameList.options.length),
+  v.transform((value) => MonthNameList.options.at(value - 1)!),
+)
 
 export const RootSearchParams = v.object({
   modal: v.optional(v.picklist(["auth"])),
@@ -64,7 +58,10 @@ export const RootSearchParams = v.object({
 
 export const CalendarPathParams = v.object({
   year: v.pipe(v.string(), v.transform(Number), v.integer(), v.minValue(1970)),
-  month: Month,
+  month: v.union([
+    MonthNameList,
+    v.pipe(v.string(), v.transform(Number), MonthNumberToName),
+  ]),
 })
 
 export const AuthEndpointSearchParams = v.union([
@@ -87,15 +84,7 @@ export const ContactSupportFormSchema = v.object({
   message: v.pipe(v.string(), v.nonEmpty(), v.maxLength(300)),
 })
 
-// export const UpdateprofileFormSchema = UserTableInsert.pick({
-//   bio: true,
-// }).extend({
-//   settings: UserSettings.partial(),
-// })
-
-export const UpdateProfileFormSchema = v.object({
-  bio: v.nullable(v.pipe(v.string(), v.maxLength(300))),
-})
+export const UpdateProfileFormSchema = v.pick(UserTableInsert, ["bio"])
 
 export const CookieSession = v.pipe(v.string(), v.nonEmpty())
 

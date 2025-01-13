@@ -1,6 +1,6 @@
 import * as v from "valibot"
 import { wait } from "@artists-together/core/utils"
-import type { WeatherTableInsert } from "@artists-together/core/database"
+import type { WeatherTableInsert } from "@artists-together/core/database/schema"
 // import {
 //   asc,
 //   eq,

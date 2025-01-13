@@ -2,6 +2,8 @@ import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
+import type { ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 
 export const padding = "px-1 sm:pr-4 sm:pl-0"
 
@@ -20,6 +22,17 @@ const variants = cva({
 
 type Props = HTMLArkProps<"div"> & VariantProps<typeof variants>
 
-export default function Container({ className, padding, ...props }: Props) {
-  return <ark.div className={variants({ className, padding })} {...props} />
+function Container(
+  { className, padding, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<"div">>,
+) {
+  return (
+    <ark.div
+      ref={ref}
+      className={variants({ className, padding })}
+      {...props}
+    />
+  )
 }
+
+export default forwardRef(Container)

@@ -1,6 +1,7 @@
 import {
   SESSION_COOKIE_NAME,
   validateSessionToken,
+  type SessionValidationResult,
 } from "@artists-together/core/auth"
 import { Discord, Twitch } from "arctic"
 import type { HTTPEvent } from "vinxi/http"
@@ -36,7 +37,9 @@ export const provider = {
   ),
 }
 
-export async function authenticate(event: HTTPEvent) {
+export async function authenticate(
+  event: HTTPEvent,
+): Promise<SessionValidationResult> {
   const cookie = cookieSession.safeParse(event)
 
   if (!cookie.success) {

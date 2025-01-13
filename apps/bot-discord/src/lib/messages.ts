@@ -1,4 +1,4 @@
-import { oneOf } from "@artists-together/core/utils"
+import { draw } from "@artists-together/core/utils"
 
 function timeout(message?: string) {
   const prefix = [["Oops!", "Oopsie!", "Uh-oh!", "Whoops!"]]
@@ -10,7 +10,7 @@ function timeout(message?: string) {
     "No worries, but we're canceling due to no response in 1 minute!",
   ]
 
-  return [oneOf(prefix), message || oneOf(meat)].join(" ")
+  return [draw(prefix), message || draw(meat)].join(" ")
 }
 
 function cancel(message?: string) {
@@ -39,7 +39,7 @@ function cancel(message?: string) {
 
   const emoji = ["", "✅", "✨", "👋", "👍", "😄", "😄", "😎", "🙌", "🥧", "🪄"]
 
-  return [oneOf(prefix), message || oneOf(meat), oneOf(emoji)]
+  return [draw(prefix), message || draw(meat), draw(emoji)]
     .filter(Boolean)
     .join(" ")
 }
@@ -84,7 +84,7 @@ function done(message?: string) {
     "🪄",
   ]
 
-  return [oneOf(prefix), message || oneOf(meat), oneOf(emoji)]
+  return [draw(prefix), message || draw(meat), draw(emoji)]
     .filter(Boolean)
     .join(" ")
 }
@@ -101,7 +101,7 @@ function oops(message?: string) {
     "A hiccup in the system…",
   ]
 
-  return [oneOf(prefix), message || oneOf(meat), "😅"].filter(Boolean).join(" ")
+  return [draw(prefix), message || draw(meat), "😅"].filter(Boolean).join(" ")
 }
 
 export const template = {

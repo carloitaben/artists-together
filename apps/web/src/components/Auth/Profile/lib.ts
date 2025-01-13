@@ -1,5 +1,5 @@
 import { useForm } from "@conform-to/react"
-import { parseWithZod } from "@conform-to/zod"
+import { parseWithValibot } from "conform-to-valibot"
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import type { IconName } from "~/assets/spritesheet/types"
 import { UpdateProfileFormSchema } from "~/lib/schemas"
@@ -58,7 +58,7 @@ export function useUpdateProfileForm() {
 
   const [form, fields] = useForm({
     onValidate({ formData }) {
-      return parseWithZod(formData, {
+      return parseWithValibot(formData, {
         schema: UpdateProfileFormSchema,
       })
     },

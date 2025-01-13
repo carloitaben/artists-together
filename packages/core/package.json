@@ -5,7 +5,9 @@
   "private": true,
   "sideEffects": false,
   "exports": {
-    "./database": "./src/database/index.ts",
+    "./database/schema": "./src/database/schema/index.ts",
+    "./database/client": "./src/database/client.ts",
+    "./database/transaction": "./src/database/transaction.ts",
     "./*": "./src/*.ts"
   },
   "scripts": {

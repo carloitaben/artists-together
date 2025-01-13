@@ -1,7 +1,7 @@
+import * as v from "valibot"
 import { AnyJSONString, JSONStringify } from "@artists-together/core/schemas"
 import type { CookieSerializeOptions, HTTPEvent } from "vinxi/http"
 import { deleteCookie, getCookie, setCookie } from "vinxi/http"
-import * as v from "valibot"
 
 export class Cookie<Name extends string, Schema extends v.GenericSchema> {
   private read
@@ -13,8 +13,11 @@ export class Cookie<Name extends string, Schema extends v.GenericSchema> {
     public schema: Schema,
     public options?: CookieSerializeOptions,
   ) {
-    this.read = v.pipe(AnyJSONString, schema)
-    this.write = v.pipe(schema, JSONStringify)
+    this.read =
+      schema.type === "string" ? schema : v.pipe(AnyJSONString, schema)
+
+    this.write =
+      schema.type === "string" ? schema : v.pipe(schema, JSONStringify)
   }
 
   public parse(event: HTTPEvent) {
@@ -35,6 +38,13 @@ export class Cookie<Name extends string, Schema extends v.GenericSchema> {
     options?: CookieSerializeOptions,
   ) {
     const parsed = v.parse(this.write, value)
+
+    if (typeof parsed !== "string") {
+      throw Error(
+        `Parsed cookie value is not a string. This is likely a bug. Check the value: ${JSON.stringify(parsed, null, 2)}`,
+      )
+    }
+
     return setCookie(event, this.name, parsed, {
       ...this.options,
       ...options,

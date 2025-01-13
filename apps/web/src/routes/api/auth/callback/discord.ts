@@ -1,21 +1,16 @@
 import * as v from "valibot"
 import { createDiscord, discord, ROLE } from "@artists-together/core/discord"
+import { database } from "@artists-together/core/database/client"
 import {
-  database,
   locationTable,
   userTable,
-} from "@artists-together/core/database"
+} from "@artists-together/core/database/schema"
 import {
   createSession,
   generateSessionToken,
 } from "@artists-together/core/auth"
 import { createAPIFileRoute } from "@tanstack/start/api"
-import {
-  getEvent,
-  getRequestURL,
-  setResponseHeader,
-  setResponseStatus,
-} from "vinxi/http"
+import { getEvent, getRequestURL } from "vinxi/http"
 import {
   authenticate,
   cookieOauth,
@@ -24,15 +19,16 @@ import {
 } from "~/services/auth/server"
 import { AuthEndpointSearchParams } from "~/lib/schemas"
 
-export const Route = createAPIFileRoute("/api/auth/callback/discord")({
+export const APIRoute = createAPIFileRoute("/api/auth/callback/discord")({
   async GET() {
     const event = getEvent()
     const cookie = cookieOauth.safeParse(event)
     cookieOauth.delete(event)
 
     if (!cookie.success) {
-      setResponseStatus(400)
-      return new Response("Missing or invalid oauth cookie")
+      return new Response("Missing or invalid oauth cookie", {
+        status: 400,
+      })
     }
 
     const params = v.safeParse(
@@ -41,28 +37,40 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
     )
 
     if (!params.success) {
-      setResponseStatus(307)
-      setResponseHeader("location", `${cookie.output.pathname}?error`)
-      return new Response("Invalid params")
+      return new Response("Invalid params", {
+        status: 307,
+        headers: {
+          Location: `${cookie.output.pathname}?error`,
+        },
+      })
     }
 
     if ("error" in params.output) {
       switch (params.output.error) {
         case "access_denied":
-          setResponseStatus(307)
-          setResponseHeader("location", `${cookie.output.pathname}?modal=auth`)
-          return new Response()
+          return new Response("Access denied", {
+            status: 307,
+            headers: {
+              Location: `${cookie.output.pathname}?modal=auth`,
+            },
+          })
         default:
-          setResponseStatus(307)
-          setResponseHeader("location", `${cookie.output.pathname}?error`)
-          return new Response(params.output.error_description)
+          return new Response(params.output.error_description, {
+            status: 307,
+            headers: {
+              Location: `${cookie.output.pathname}?error`,
+            },
+          })
       }
     }
 
     if (params.output.state !== cookie.output.state) {
-      setResponseStatus(307)
-      setResponseHeader("location", `${cookie.output.pathname}?error`)
-      return new Response("OAuth state mismatch")
+      return new Response("OAuth state mismatch", {
+        status: 307,
+        headers: {
+          Location: `${cookie.output.pathname}?error`,
+        },
+      })
     }
 
     try {
@@ -79,13 +87,12 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
       const discordUser = await discordUserClient.users.getCurrent()
 
       if (!discordUser.verified) {
-        setResponseStatus(307)
-        setResponseHeader(
-          "location",
-          `${cookie.output.pathname}?error=Verify%20your%20Discord%20account%20first`,
-        )
-
-        return new Response("Unverified")
+        return new Response("Unverified", {
+          status: 307,
+          headers: {
+            Location: `${cookie.output.pathname}?error=Verify%20your%20Discord%20account%20first`,
+          },
+        })
       }
 
       const discordGuildMember = await discord.guilds
@@ -131,9 +138,12 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
         .then(([value]) => value)
 
       if (!user) {
-        setResponseStatus(307)
-        setResponseHeader("location", `${cookie.output.pathname}?error`)
-        return new Response("Failed to create user")
+        return new Response("Failed to create user", {
+          status: 307,
+          headers: {
+            Location: `${cookie.output.pathname}?error`,
+          },
+        })
       }
 
       if (!auth) {
@@ -144,8 +154,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
         })
       }
 
-      const maybeInsertGeolocationPromise =
-        cookie.output.geolocation &&
+      if (cookie.output.geolocation) {
         database
           .insert(locationTable)
           .values(cookie.output.geolocation)
@@ -153,9 +162,9 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
             target: locationTable.city,
           })
           .catch(console.error)
+      }
 
-      const maybeAddDiscordRolePromise =
-        shouldAddWebRole &&
+      if (shouldAddWebRole) {
         discord.guilds
           .addRoleToMember(
             String(process.env.DISCORD_SERVER_ID),
@@ -164,24 +173,23 @@ export const Route = createAPIFileRoute("/api/auth/callback/discord")({
             { reason: "Linked Artists Together account" },
           )
           .catch(console.error)
+      }
 
-      await Promise.all([
-        maybeInsertGeolocationPromise,
-        maybeAddDiscordRolePromise,
-      ])
-
-      setResponseStatus(307)
-      setResponseHeader(
-        "location",
-        `${cookie.output.pathname}?toast=Logged%20in%20as%20%40${user.username}`,
-      )
-
-      return new Response("Logged in successfully")
+      return new Response("Logged in successfully", {
+        status: 307,
+        headers: {
+          Location: `${cookie.output.pathname}?toast=Logged%20in%20as%20%40${user.username}`,
+        },
+      })
     } catch (error) {
-      setResponseStatus(307)
-      setResponseHeader("location", `${cookie.output.pathname}?error`)
       return new Response(
         error instanceof Error ? error.message : "Unexpected error",
+        {
+          status: 307,
+          headers: {
+            Location: `${cookie.output.pathname}?error`,
+          },
+        },
       )
     }
   },

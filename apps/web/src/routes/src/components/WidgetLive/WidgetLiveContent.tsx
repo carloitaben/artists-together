@@ -1,4 +1,4 @@
-import { oneOf } from "@artists-together/core/utils"
+import { draw } from "@artists-together/core/utils"
 import { useInView } from "motion/react"
 import { use, useMemo, useRef } from "react"
 import type { getRandomLiveUsers } from "~/services/live-user/server"
@@ -18,7 +18,7 @@ export default function WidgetLiveContent({ usersPromise }: Props) {
   const src = useMemo(() => {
     if (!users.length) return
 
-    const user = oneOf(users)
+    const user = draw(users)
     const url = new URL("https://player.twitch.tv")
 
     url.searchParams.set("channel", new URL(user.url).pathname.slice(1))

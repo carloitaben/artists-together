@@ -1,9 +1,9 @@
 import { json } from '@tanstack/start'
 import { createAPIFileRoute } from '@tanstack/start/api'
 
-export const Route = createAPIFileRoute('/api/auth/callback/twitch')({
+export const APIRoute = createAPIFileRoute("/api/auth/callback/twitch")({
   GET: ({ request, params }) => {
-    return json({ message: 'Hello /api/auth/callback/twitch' })
+    return json({ message: "Hello /api/auth/callback/twitch" })
   },
 })
 

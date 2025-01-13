@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query"
 import { createRouter as createTanStackRouter } from "@tanstack/react-router"
 import { routerWithQueryClient } from "@tanstack/react-router-with-query"
+import { broadcastQueryClient } from "@tanstack/query-broadcast-client-experimental"
 import type { Action } from "~/lib/navigation"
 import { toaster } from "~/components/Toasts"
 import NotFound from "~/components/NotFound"
@@ -25,6 +26,11 @@ export function createRouter() {
         },
       },
     },
+  })
+
+  broadcastQueryClient({
+    queryClient,
+    broadcastChannel: "artists-together",
   })
 
   return routerWithQueryClient(

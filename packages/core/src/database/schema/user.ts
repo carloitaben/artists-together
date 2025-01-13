@@ -8,44 +8,6 @@ import {
 } from "drizzle-valibot"
 import { timestamp, timestamps } from "../types"
 
-export const DiscordMetadata = v.object({
-  id: v.string(),
-  username: v.string(),
-  discriminator: v.string(),
-  global_name: v.nullable(v.string()),
-  avatar: v.nullable(v.string()),
-  bot: v.optional(v.boolean()),
-  system: v.optional(v.boolean()),
-  mfa_enabled: v.optional(v.boolean()),
-  verified: v.optional(v.boolean()),
-  email: v.nullable(v.pipe(v.string(), v.email())),
-  flags: v.optional(v.number()),
-  banner: v.optional(v.string()),
-  accent_color: v.optional(v.number()),
-  premium_type: v.optional(v.number()),
-  public_flags: v.optional(v.number()),
-  locale: v.optional(v.string()),
-  avatar_decoration: v.optional(v.string()),
-})
-
-export type DiscordMetadata = v.InferOutput<typeof DiscordMetadata>
-
-export const TwitchMetadata = v.object({
-  id: v.string(),
-  login: v.string(),
-  display_name: v.string(),
-  type: v.picklist(["", "admin", "staff", "global_mod"]),
-  broadcaster_type: v.picklist(["", "affiliate", "partner"]),
-  description: v.string(),
-  profile_image_url: v.string(),
-  offline_image_url: v.string(),
-  view_count: v.number(),
-  email: v.optional(v.string()),
-  created_at: v.string(),
-})
-
-export type TwitchMetadata = v.InferOutput<typeof TwitchMetadata>
-
 export const UserSettings = v.object({
   fullHourFormat: v.optional(v.boolean(), false),
   shareStreaming: v.optional(v.boolean(), true),
@@ -67,10 +29,10 @@ export const userTable = sqliteTable(
     bio: text(),
     discordId: text().unique(),
     discordUsername: text().unique(),
-    discordMetadata: text({ mode: "json" }).$type<DiscordMetadata>(),
+    discordMetadata: text({ mode: "json" }).$type<{}>(),
     twitchId: text().unique(),
     twitchUsername: text().unique(),
-    twitchMetadata: text({ mode: "json" }).$type<DiscordMetadata>(),
+    twitchMetadata: text({ mode: "json" }).$type<{}>(),
     settings: text({ mode: "json" }).$type<UserSettings>(),
   },
   (table) => ({
@@ -83,24 +45,18 @@ export const UserTableInsert = createInsertSchema(userTable, {
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
   bio: (schema) => v.pipe(schema, v.maxLength(300)),
-  discordMetadata: DiscordMetadata,
-  twitchMetadata: TwitchMetadata,
 })
 
 export const UserTableSelect = createSelectSchema(userTable, {
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
   bio: (schema) => v.pipe(schema, v.maxLength(300)),
-  discordMetadata: DiscordMetadata,
-  twitchMetadata: TwitchMetadata,
 })
 
 export const UserTableUpdate = createUpdateSchema(userTable, {
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
   bio: (schema) => v.pipe(schema, v.maxLength(300)),
-  discordMetadata: DiscordMetadata,
-  twitchMetadata: TwitchMetadata,
 })
 
 export type User = typeof userTable.$inferSelect

@@ -38,7 +38,6 @@ export default function NavigationSidebar() {
           <Link
             replace
             to={pathname}
-            // @ts-expect-error I don't know how to solve this
             search={(prev) => ({ ...prev, modal: "auth" })}
             className={className.navLink}
           >
@@ -59,11 +58,11 @@ export default function NavigationSidebar() {
             key={key}
             id={key}
             label={route.label}
-            disabled={route.disabled}
+            disabled={route.link.disabled}
           >
             <NavLink
               {...route.link}
-              disabled={route.disabled}
+              disabled={route.link.disabled}
               preload={hints.data.saveData ? "intent" : "render"}
               className={className.navLink}
             >

@@ -24,9 +24,8 @@ export default function NavigationBottombarMenuContent() {
         <NavigationBottombarMenuContentItem asChild>
           <NavLink
             to={pathname}
-            replace
-            // @ts-expect-error I don't know how to solve this
             search={(prev) => ({ ...prev, modal: "auth" })}
+            replace
           >
             {auth.data ? (
               <Avatar
@@ -46,13 +45,16 @@ export default function NavigationBottombarMenuContent() {
         <Menu.Item
           key={key}
           value={route.link.to}
-          disabled={route.disabled}
+          disabled={route.link.disabled}
           asChild
         >
-          <NavigationBottombarMenuContentItem disabled={route.disabled} asChild>
+          <NavigationBottombarMenuContentItem
+            disabled={route.link.disabled}
+            asChild
+          >
             <NavLink
               {...route.link}
-              disabled={route.disabled}
+              disabled={route.link.disabled}
               preload={hints.data.saveData ? "intent" : "render"}
             >
               <Icon src={route.icon} alt="" />

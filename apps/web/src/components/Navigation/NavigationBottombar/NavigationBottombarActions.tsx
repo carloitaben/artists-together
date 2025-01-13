@@ -5,6 +5,7 @@ import type {
   ForwardedRef,
   SetStateAction,
 } from "react"
+import { forwardRef } from "react"
 import { motion } from "motion/react"
 import type { Action } from "~/lib/navigation"
 import Icon from "~/components/Icon"
@@ -12,16 +13,14 @@ import NavigationBottombarMenuItem from "./NavigationBottombarMenuContentItem"
 import { scalePresenceVariants, spring } from "../lib"
 
 type Props = {
-  ref?: ForwardedRef<ComponentRef<typeof motion.button>>
   onOpenChange: Dispatch<SetStateAction<boolean>>
   actions: Action[]
 }
 
-export default function NavigationBottombarActions({
-  ref,
-  actions,
-  onOpenChange,
-}: Props) {
+function NavigationBottombarActions(
+  { actions, onOpenChange }: Props,
+  ref: ForwardedRef<ComponentRef<typeof motion.button>>,
+) {
   return (
     <Menu.Root onOpenChange={(context) => onOpenChange(context.open)}>
       <Menu.Trigger asChild>
@@ -56,3 +55,5 @@ export default function NavigationBottombarActions({
     </Menu.Root>
   )
 }
+
+export default forwardRef(NavigationBottombarActions)

@@ -2,7 +2,7 @@ import { useLocation } from "@tanstack/react-router"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useDialogContext } from "@ark-ui/react/dialog"
 import { useForm } from "@conform-to/react"
-import { parseWithZod } from "@conform-to/zod"
+import { parseWithValibot } from "conform-to-valibot"
 import { authenticateQueryOptions } from "~/services/auth/queries"
 import { $logout } from "~/services/auth/actions"
 import { toaster } from "~/components/Toasts"
@@ -29,10 +29,10 @@ export default function ProfileLogout() {
       })
     },
   })
-  
+
   const [form, fields] = useForm({
     onValidate({ formData }) {
-      return parseWithZod(formData, {
+      return parseWithValibot(formData, {
         schema: AuthFormSchema,
       })
     },

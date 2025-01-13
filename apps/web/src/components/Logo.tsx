@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
-import type { ComponentProps } from "react"
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 import { hintsQueryOptions } from "~/services/hints/queries"
 import AspectRatio from "./AspectRatio"
 import Icon from "./Icon"
@@ -7,11 +8,14 @@ import Lottie from "./Lottie"
 
 type Props = Omit<ComponentProps<typeof AspectRatio.Root>, "ratio">
 
-export default function Logo(props: Props) {
+function Logo(
+  props: Props,
+  ref: ForwardedRef<ComponentRef<typeof AspectRatio.Root>>,
+) {
   const hints = useSuspenseQuery(hintsQueryOptions)
 
   return (
-    <AspectRatio.Root {...props} ratio={2 / 1}>
+    <AspectRatio.Root {...props} ref={ref} ratio={2 / 1}>
       <AspectRatio.Content>
         <h2 className="sr-only">Artists Together</h2>
         {hints.data.saveData ? (
@@ -39,3 +43,4 @@ export default function Logo(props: Props) {
   )
 }
 
+export default forwardRef(Logo)

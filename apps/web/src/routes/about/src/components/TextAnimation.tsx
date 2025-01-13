@@ -1,13 +1,15 @@
 import SplitType from "split-type"
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
-import type { ComponentRef } from "react"
+import type { ComponentRef, Ref } from "react"
 import { useEffect } from "react"
 import { mergeRefs } from "react-merge-refs"
 import type { Segment } from "motion/react"
 import { useAnimate, useInView, useScroll, useSpring } from "motion/react"
 
-type Props = HTMLArkProps<"div">
+type Props = HTMLArkProps<"div"> & {
+  ref?: Ref<ComponentRef<"div">>
+}
 
 export default function TextAnimation(props: Props) {
   const [scope, animate] = useAnimate<ComponentRef<"div">>()

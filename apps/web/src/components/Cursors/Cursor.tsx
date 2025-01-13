@@ -3,7 +3,8 @@ import type { VariantProps } from "cva"
 import { cva } from "cva"
 import type { Variants } from "motion/react"
 import { motion } from "motion/react"
-import type { ComponentProps } from "react"
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 import Icon from "~/components/Icon"
 import Pill from "~/components/Pill"
 
@@ -42,14 +43,17 @@ const motionVariants: Variants = {
   },
 }
 
-export default function Cursor({
-  state,
-  username,
-  className,
-  position,
-  style: { scale, ...style } = {},
-  ...props
-}: Props) {
+function Cursor(
+  {
+    state,
+    username,
+    className,
+    position,
+    style: { scale, ...style } = {},
+    ...props
+  }: Props,
+  ref: ForwardedRef<ComponentRef<typeof motion.div>>,
+) {
   return (
     <motion.div
       {...props}
@@ -58,6 +62,7 @@ export default function Cursor({
       initial="hide"
       animate={["show", state]}
       exit="hide"
+      ref={ref}
       style={style}
     >
       <motion.div
@@ -79,3 +84,5 @@ export default function Cursor({
     </motion.div>
   )
 }
+
+export default forwardRef(Cursor)

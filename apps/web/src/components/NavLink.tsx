@@ -1,13 +1,15 @@
 import type { LinkComponent } from "@tanstack/react-router"
 import { createLink } from "@tanstack/react-router"
-import type { ComponentProps } from "react"
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 import { anchor } from "./Anchor"
 
 type Props = ComponentProps<"a">
 
-function NavLinkComponent(props: Props) {
+function NavLinkComponent(props: Props, ref: ForwardedRef<ComponentRef<"a">>) {
   return (
     <a
+      ref={ref}
       {...props}
       onClick={(event) => {
         props.onClick?.(event)
@@ -22,6 +24,6 @@ function NavLinkComponent(props: Props) {
   )
 }
 
-export default createLink(NavLinkComponent) satisfies LinkComponent<
+export default createLink(forwardRef(NavLinkComponent)) satisfies LinkComponent<
   typeof NavLinkComponent
 >

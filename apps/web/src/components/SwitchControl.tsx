@@ -1,11 +1,16 @@
 import { Switch } from "@ark-ui/react/switch"
-import type { ComponentProps } from "react"
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 
 type Props = ComponentProps<typeof Switch.Control>
 
-export default function SwitchControl(props: Props) {
+function SwitchControl(
+  props: Props,
+  ref: ForwardedRef<ComponentRef<typeof Switch.Control>>,
+) {
   return (
     <Switch.Control
+      ref={ref}
       className="h-8 w-[3.75rem] rounded-full bg-gunpla-white-300 p-1 shadow-inner"
       {...props}
     >
@@ -14,3 +19,4 @@ export default function SwitchControl(props: Props) {
   )
 }
 
+export default forwardRef(SwitchControl)

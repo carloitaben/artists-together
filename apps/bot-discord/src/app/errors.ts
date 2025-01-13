@@ -1,4 +1,4 @@
-import { oneOf } from "@artists-together/core/utils"
+import { draw } from "@artists-together/core/utils"
 import { CHANNELS, ROLES } from "@artists-together/core/discord"
 import { EmbedBuilder } from "discord.js"
 import { registerEventHandler } from "~/lib/core"
@@ -30,9 +30,9 @@ registerEventHandler("ready", async (client) => {
       content:
         `<@&${ROLES.TECH_SUPPORT}>` +
         " " +
-        oneOf(MESSAGE_TITLE) +
+        draw(MESSAGE_TITLE) +
         " " +
-        oneOf(MESSAGE_SUBTITLE),
+        draw(MESSAGE_SUBTITLE),
       embeds: [
         new EmbedBuilder({
           color: 0xff1800,

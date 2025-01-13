@@ -1,8 +1,7 @@
-import type { SessionValidationResult } from "@artists-together/core/auth"
 import { invalidateSession } from "@artists-together/core/auth"
 import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/start"
-import { parseWithZod } from "@conform-to/zod"
+import { parseWithValibot } from "conform-to-valibot"
 import { getEvent } from "vinxi/http"
 import { generateState } from "arctic"
 import { AuthFormSchema } from "~/lib/schemas"
@@ -10,7 +9,7 @@ import { $hints } from "~/services/hints/server"
 import { authenticate, cookieOauth, cookieSession, provider } from "./server"
 
 export const $authenticate = createServerFn({ method: "GET" }).handler(
-  async (): Promise<SessionValidationResult> => {
+  async () => {
     const event = getEvent()
     return authenticate(event)
   },
@@ -19,7 +18,7 @@ export const $authenticate = createServerFn({ method: "GET" }).handler(
 export const $login = createServerFn({ method: "POST" })
   .validator((formData: FormData) => formData)
   .handler(async ({ data }) => {
-    const form = parseWithZod(data, {
+    const form = parseWithValibot(data, {
       schema: AuthFormSchema,
     })
 
@@ -58,7 +57,7 @@ export const $login = createServerFn({ method: "POST" })
 export const $logout = createServerFn({ method: "POST" })
   .validator((formData: FormData) => formData)
   .handler(async ({ data }) => {
-    const parsed = parseWithZod(data, {
+    const parsed = parseWithValibot(data, {
       schema: AuthFormSchema,
     })
 

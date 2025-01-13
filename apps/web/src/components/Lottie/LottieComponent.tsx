@@ -3,28 +3,25 @@ import type {
   AnimationConfigWithData,
   AnimationItem,
 } from "lottie-web/build/player/lottie_svg"
-import type {
-  ComponentPropsWithoutRef,
-  ComponentRef,
-  ForwardedRef,
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
 } from "react"
-import { useEffect, useImperativeHandle, useRef, useState } from "react"
 import { cx } from "cva"
 
-type Props = ComponentPropsWithoutRef<"div"> &
+type Props = ComponentProps<"div"> &
   Pick<AnimationConfigWithData, "autoplay" | "loop"> & {
     src: Promise<unknown>
-    ref?: ForwardedRef<AnimationItem | undefined>
   }
 
-export default function LottieComponent({
-  src,
-  ref,
-  className,
-  autoplay = false,
-  loop = false,
-  ...props
-}: Props) {
+function LottieComponent(
+  { src, className, autoplay = false, loop = false, ...props }: Props,
+  ref: ForwardedRef<AnimationItem | undefined>,
+) {
   const innerRef = useRef<ComponentRef<"div">>(null)
   const [animationData, setAnimationData] = useState<unknown>()
   const [animation, setAnimation] = useState<AnimationItem>()
@@ -72,3 +69,5 @@ export default function LottieComponent({
     />
   )
 }
+
+export default forwardRef(LottieComponent)

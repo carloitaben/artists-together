@@ -5,11 +5,13 @@ import type {
 } from "@artists-together/core/websocket"
 import { QueryObserver, useQueryClient } from "@tanstack/react-query"
 import { PerfectCursor } from "perfect-cursors"
-import { useEffect, useState } from "react"
+import type { ComponentRef, ForwardedRef } from "react"
+import { forwardRef, useEffect, useState } from "react"
 import type { Spring } from "motion/react"
 import { AnimatePresence, useMotionTemplate, useSpring } from "motion/react"
 import { webSocketQueryOptions } from "~/lib/websocket"
 import { ATTR_NAME_DATA_CURSOR_PRECISION } from "./CursorPrecision"
+import { measure } from "./measure"
 import Cursor from "./Cursor"
 
 type Props = {
@@ -22,7 +24,10 @@ const spring: Spring = {
   mass: 0.15,
 }
 
-export default function CursorPresence({ cursor, username }: Props) {
+function CursorPresence(
+  { cursor, username }: Props,
+  ref: ForwardedRef<ComponentRef<typeof Cursor>>,
+) {
   const [state, setState] = useState<CursorState>()
   const queryClient = useQueryClient()
   const x = useSpring(cursor?.x || 0, spring)
@@ -57,20 +62,24 @@ export default function CursorPresence({ cursor, username }: Props) {
       select: (data) => (data.username === username ? data.cursor : null),
     })
 
-    function update(updates: CursorUpdates, index: number) {
-      const [delta, cursor] = updates[index]!
+    let timeout: NodeJS.Timeout | undefined
+    let updates: CursorUpdates = []
 
-      function maybeUpdate() {
-        if (index === updates.length - 1) {
-          update(updates, index + 1)
-        }
+    function update() {
+      const current = updates.shift()
+
+      if (!current) {
+        timeout = undefined
+        return
       }
 
-      const timeout = setTimeout(() => {
+      const [delta, cursor] = current
+
+      timeout = setTimeout(() => {
         setState(cursor?.state)
 
         if (!cursor) {
-          return maybeUpdate()
+          return update()
         }
 
         const selector = `[${ATTR_NAME_DATA_CURSOR_PRECISION}="${cursor.target}"]`
@@ -81,10 +90,13 @@ export default function CursorPresence({ cursor, username }: Props) {
             throw Error(`Could not find cursor target "${cursor.target}"`)
           }
 
-          return maybeUpdate()
+          return update()
         }
 
-        const rect = element.getBoundingClientRect()
+        const rect = measure({
+          element,
+          attribute: cursor.target,
+        })
 
         const percentX =
           ((rect.x +
@@ -106,23 +118,29 @@ export default function CursorPresence({ cursor, username }: Props) {
           pc.prevPoint = [percentX, percentY]
         }
 
-        return maybeUpdate()
+        update()
       }, delta)
-
-      return () => clearTimeout(timeout)
     }
 
-    return observer.subscribe((context) => {
-      if (!context.data) return setState(undefined)
-
-      update(context.data, 0)
+    const unsubscribe = observer.subscribe((context) => {
+      if (context.data) {
+        updates.push(...context.data)
+        if (!timeout) update()
+      }
     })
+
+    return () => {
+      unsubscribe()
+      updates = []
+      if (timeout) clearTimeout(timeout)
+    }
   }, [pc, queryClient, cursor, username])
 
   return (
     <AnimatePresence>
       {state ? (
         <Cursor
+          ref={ref}
           state={state}
           username={username}
           style={{
@@ -134,3 +152,5 @@ export default function CursorPresence({ cursor, username }: Props) {
     </AnimatePresence>
   )
 }
+
+export default forwardRef(CursorPresence)

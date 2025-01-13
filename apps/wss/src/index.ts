@@ -19,6 +19,24 @@ type WebSocketData = {
 
 const connections = new Set<ServerWebSocket<WebSocketData>>()
 
+// Adapted from https://github.com/pilcrowonpaper/oslo/blob/main/src/cookie/index.ts#L46-L57
+function parseCookies(header: string): Map<string, string> {
+  const cookies = new Map<string, string>()
+  const items = header.split("; ")
+
+  for (const item of items) {
+    const pair = item.split("=")
+    const rawKey = pair[0]
+    const rawValue = pair[1] ?? ""
+
+    if (!rawKey) continue
+
+    cookies.set(decodeURIComponent(rawKey), decodeURIComponent(rawValue))
+  }
+
+  return cookies
+}
+
 function update(ws: ServerWebSocket<WebSocketData>) {
   connections.delete(ws)
   connections.add(ws)
@@ -47,17 +65,11 @@ function getRoomState(room: string) {
 const server = Bun.serve<WebSocketData>({
   port: process.env.PORT || 1999,
   async fetch(request, server) {
-    const cookies = request.headers.get("Cookie")?.split("; ") || []
-    let token = ""
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split("=")
-      if (name === "session" && value) {
-        token = decodeURIComponent(value)
-        break
-      }
-    }
+    const cookiesHeader = request.headers.get("Cookie") || ""
+    const cookies = parseCookies(cookiesHeader)
+    const token = cookies.get("session")
 
-    const auth = await validateSessionToken(token)
+    const auth = token ? await validateSessionToken(token) : null
     const upgraded = server.upgrade<WebSocketData>(request, {
       data: {
         auth,

@@ -1,6 +1,7 @@
 import { Avatar as AvatarPrimitive } from "@ark-ui/react/avatar"
 import { cx } from "cva"
-import type { ComponentProps } from "react"
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 import Icon from "./Icon"
 import Image from "./Image"
 
@@ -9,9 +10,13 @@ type Props = ComponentProps<typeof AvatarPrimitive.Root> & {
   src: string | null
 }
 
-export default function Avatar({ username, src, className, ...props }: Props) {
+function Avatar(
+  { username, src, className, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<typeof AvatarPrimitive.Root>>,
+) {
   return (
     <AvatarPrimitive.Root
+      ref={ref}
       className={cx(className, "relative overflow-hidden rounded-full")}
       {...props}
     >
@@ -31,3 +36,5 @@ export default function Avatar({ username, src, className, ...props }: Props) {
     </AvatarPrimitive.Root>
   )
 }
+
+export default forwardRef(Avatar)

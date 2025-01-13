@@ -40,7 +40,7 @@ export type AnyJSONString = v.InferInput<typeof AnyJSONString>
 
 export const JSONStringify = v.rawTransform((context) => {
   try {
-    return JSON.stringify(context.dataset)
+    return JSON.stringify(context.dataset.value)
   } catch (error) {
     context.addIssue({
       message: "Error while stringifying value",

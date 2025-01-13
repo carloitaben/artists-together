@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
 import { Dialog } from "@ark-ui/react/dialog"
 import { useForm } from "@conform-to/react"
-import { parseWithZod } from "@conform-to/zod"
+import { parseWithValibot } from "conform-to-valibot"
 import { AuthFormSchema } from "~/lib/schemas"
 import { $login } from "~/services/auth/actions"
 import Button from "~/components/Button"
@@ -19,16 +19,11 @@ export default function Login() {
 
   const mutation = useMutation({
     mutationFn: serverFn,
-    onSuccess(data) {
-      if (typeof data === "string") {
-        window.location.href = data
-      }
-    },
   })
 
   const [form, fields] = useForm({
     onValidate({ formData }) {
-      return parseWithZod(formData, {
+      return parseWithValibot(formData, {
         schema: AuthFormSchema,
       })
     },
@@ -56,7 +51,7 @@ export default function Login() {
       <form
         id={form.id}
         onSubmit={form.onSubmit}
-        action={$login.url}
+        // action={$login.url}
         method="post"
         encType="multipart/form-data"
         className="flex justify-end"

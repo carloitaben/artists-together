@@ -9,11 +9,8 @@ import { useEffect, useState } from "react"
 import { useScreen } from "~/lib/media"
 import { authenticateQueryOptions } from "~/services/auth/queries"
 import { useWebSocket, webSocketQueryOptions } from "~/lib/websocket"
-import { useMeasurePrecisionArea } from "./hooks"
-import {
-  ATTR_NAME_DATA_CURSOR_PRECISION,
-  ATTR_NAME_DATA_CURSOR_PRECISION_SELECTOR,
-} from "./CursorPrecision"
+import { ATTR_NAME_DATA_CURSOR_PRECISION } from "./CursorPrecision"
+import { measure } from "./measure"
 import Cursor from "./Cursor"
 
 const limit = clamp.bind(null, 0, 1)
@@ -22,7 +19,6 @@ export default function Me() {
   const [state, setState] = useState<CursorState>()
   const auth = useSuspenseQuery(authenticateQueryOptions)
   const webSocket = useWebSocket()
-  const measure = useMeasurePrecisionArea()
   const alone = useQuery({
     ...webSocketQueryOptions("room:update", {
       count: 0,
@@ -47,15 +43,17 @@ export default function Me() {
 
     document.documentElement.classList.add("cursor")
 
+    let timestamp: number | undefined = undefined
     let updates: CursorUpdates = []
-    let timestamp = Date.now()
 
     const notify = throttle(
       {
-        interval: alone.data ? 5_000 : 1_000,
+        interval: alone.data ? 5_000 : 500,
+        trailing: true,
       },
       () => {
         webSocket.send("cursor:update", updates)
+        timestamp = undefined
         updates = []
       },
     )
@@ -63,34 +61,37 @@ export default function Me() {
     const update = throttle(
       {
         interval: alone.data ? 5_000 : 60,
+        trailing: true,
       },
       (event: MouseEvent, state?: CursorState) => {
         if (!auth.data || !sm) return
 
         const now = Date.now()
-        const delta = now - timestamp
+        const delta = typeof timestamp === "number" ? now - timestamp : 0
+
         timestamp = now
 
         if (!state) {
           alone.data ? (updates = [[delta, null]]) : updates.push([delta, null])
-
           return notify()
         }
 
         const target =
           event.target &&
           event.target instanceof Element &&
-          event.target.closest(ATTR_NAME_DATA_CURSOR_PRECISION_SELECTOR)
+          event.target.closest(`[${ATTR_NAME_DATA_CURSOR_PRECISION}]`)
 
-        if (!target) return
+        if (!target) {
+          return notify()
+        }
 
         const targetAttribute = target.getAttribute(
           ATTR_NAME_DATA_CURSOR_PRECISION,
         )
 
         if (!targetAttribute) {
-          throw Error(
-            `Missing attribute "${ATTR_NAME_DATA_CURSOR_PRECISION}" on target`,
+          throw new Error(
+            `Missing attribute "${ATTR_NAME_DATA_CURSOR_PRECISION}" on event target`,
           )
         }
 
@@ -101,13 +102,13 @@ export default function Me() {
 
         if (!rect) {
           const error = new Error(
-            `Could not measure target ${ATTR_NAME_DATA_CURSOR_PRECISION}`,
+            `Could not measure "${targetAttribute}" precision area`,
           )
 
           if (import.meta.env.DEV) {
             throw error
           } else {
-            return console.error(error)
+            return notify()
           }
         }
 
@@ -178,18 +179,7 @@ export default function Me() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [
-    hasCursor,
-    sm,
-    scale,
-    state,
-    x,
-    y,
-    alone.data,
-    webSocket,
-    auth.data,
-    measure,
-  ])
+  }, [hasCursor, sm, scale, state, x, y, alone.data, webSocket, auth.data])
 
   return (
     <AnimatePresence initial={false}>

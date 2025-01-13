@@ -1,13 +1,19 @@
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
+import type { ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
 import { cx } from "cva"
 
 type Props = HTMLArkProps<"div">
 
-export default function Backdrop({ className, ...props }: Props) {
+function Backdrop(
+  { className, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<typeof ark.div>>,
+) {
   return (
     <ark.div
       {...props}
+      ref={ref}
       aria-hidden
       className={cx(
         className,
@@ -17,3 +23,4 @@ export default function Backdrop({ className, ...props }: Props) {
   )
 }
 
+export default forwardRef(Backdrop)
