@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { createFileRoute, linkOptions } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import { Suspense, lazy } from "react"
 import { hintsQueryOptions } from "~/services/hints/queries"
 import { CursorPrecision } from "~/components/Cursors"
@@ -20,23 +20,26 @@ export const Route = createFileRoute("/about/")({
       {
         label: "Twitch",
         icon: "Twitch",
-        link: linkOptions({
+        link: {
           href: "https://www.twitch.tv/artiststogether",
-        }),
+          target: "_blank,",
+        },
       },
       {
         label: "Discord",
         icon: "Discord",
-        link: linkOptions({
+        link: {
           href: "https://discord.gg/9Ayh9dvhHe",
-        }),
+          target: "_blank,",
+        },
       },
       {
         label: "Instagram",
         icon: "Instagram",
-        link: linkOptions({
+        link: {
           href: "https://www.instagram.com/artiststogether.online",
-        }),
+          target: "_blank,",
+        },
       },
     ],
   },
