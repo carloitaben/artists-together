@@ -1,8 +1,8 @@
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
 import { useMotionValueEvent, useScroll } from "motion/react"
-import type { ComponentRef, ForwardedRef, RefCallback, RefObject } from "react"
-import { createContext, forwardRef, useCallback, useContext } from "react"
+import type { ComponentRef, ForwardedRef, RefObject } from "react"
+import { createContext, forwardRef, useContext, useEffect, useRef } from "react"
 import { mergeRefs } from "react-merge-refs"
 import { onMeasure } from "~/lib/media"
 import { invalidate } from "./measure"
@@ -23,6 +23,7 @@ function CursorPrecision(
   ref: ForwardedRef<ComponentRef<"div">>,
 ) {
   const scope = useContext(CursorPrecisionContext)
+  const innerRef = useRef<ComponentRef<"div">>(null)
 
   const attr = scope ? `${scope}.${name}` : name
   const attrs = {
@@ -33,20 +34,17 @@ function CursorPrecision(
   useMotionValueEvent(scroll.scrollY, "change", () => invalidate(attr))
   useMotionValueEvent(scroll.scrollX, "change", () => invalidate(attr))
 
-  const refMeasure = useCallback<RefCallback<ComponentRef<"div">>>(
-    (node) => {
-      const cleanup = onMeasure(node, () => invalidate(attr))
-      return () => {
-        cleanup()
-        invalidate(attr)
-      }
-    },
-    [attr],
-  )
+  useEffect(() => {
+    const cleanup = onMeasure(innerRef.current, () => invalidate(attr))
+    return () => {
+      cleanup()
+      invalidate(attr)
+    }
+  }, [attr])
 
   return (
     <CursorPrecisionContext.Provider value={name}>
-      <ark.div {...props} {...attrs} ref={mergeRefs([ref, refMeasure])} />
+      <ark.div {...props} {...attrs} ref={mergeRefs([ref, innerRef])} />
     </CursorPrecisionContext.Provider>
   )
 }

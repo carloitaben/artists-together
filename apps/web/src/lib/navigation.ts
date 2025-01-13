@@ -19,39 +19,48 @@ export type NavigationItem = {
   label: string
   icon: IconName
   link: ReturnType<typeof linkOptions>
-  disabled: boolean
-} 
+}
 
 export const navigation = {
   home: {
     label: "Home",
     icon: "Home",
-    link: linkOptions({ to: "/" }),
-    disabled: false,
+    link: linkOptions({
+      to: "/",
+      disabled: true,
+    }),
   },
   about: {
     label: "About",
     icon: "Help",
-    link: linkOptions({ to: "/about" }),
-    disabled: false,
+    link: linkOptions({
+      to: "/about",
+      disabled: false,
+    }),
   },
   lounge: {
     label: "Artists Lounge",
     icon: "Diversity",
-    link: linkOptions({ to: "/lounge" }),
-    disabled: true,
+    link: linkOptions({
+      to: "/lounge",
+      disabled: true,
+    }),
   },
   art: {
     label: "Artist Raid Train",
     icon: "Train",
-    link: linkOptions({ to: "/art" }),
-    disabled: true,
+    link: linkOptions({
+      to: "/art",
+      disabled: true,
+    }),
   },
   calendar: {
     label: "Calendar",
     icon: "Calendar",
-    link: linkOptions({ to: "/calendar" }),
-    disabled: true,
+    link: linkOptions({
+      to: "/calendar",
+      disabled: true,
+    }),
   },
 } satisfies Record<string, NavigationItem>
 
