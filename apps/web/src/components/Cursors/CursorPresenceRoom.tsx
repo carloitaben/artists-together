@@ -1,6 +1,6 @@
 import { useSuspenseQueries } from "@tanstack/react-query"
 import { webSocketQueryOptions } from "~/lib/websocket"
-import { authenticateQueryOptions } from "~/services/auth/queries"
+import { authenticateQueryOptions } from "~/services/auth/shared"
 import CursorPresence from "./CursorPresence"
 
 export default function CursorPresenceRoom() {

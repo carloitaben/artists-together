@@ -7,7 +7,7 @@ import {
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { Dialog } from "@ark-ui/react/dialog"
 import { cx } from "cva"
-import { authenticateQueryOptions } from "~/services/auth/queries"
+import { authenticateQueryOptions } from "~/services/auth/shared"
 import Backdrop from "~/components/Backdrop"
 import Profile from "./Profile"
 import Login from "./Login"

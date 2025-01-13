@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
-import { hintsQueryOptions } from "~/services/hints/queries"
+import { hintsQueryOptions } from "~/services/hints/shared"
 import AspectRatio from "./AspectRatio"
 import Icon from "./Icon"
 import Lottie from "./Lottie"

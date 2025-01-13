@@ -17,7 +17,7 @@ import { useLocation } from "@tanstack/react-router"
 import type { ReactNode } from "react"
 import { useCallback, useEffect, useState } from "react"
 import { PartySocket } from "partysocket"
-import { hintsQueryOptions } from "~/services/hints/queries"
+import { hintsQueryOptions } from "~/services/hints/shared"
 import { createContextFactory } from "~/lib/react"
 
 const [WebSocketContextProvider, useWebSocketContext] =

@@ -3,7 +3,7 @@ import { parseWithValibot } from "conform-to-valibot"
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import type { IconName } from "~/assets/spritesheet/types"
 import { UpdateProfileFormSchema } from "~/lib/schemas"
-import { authenticateQueryOptions } from "~/services/auth/queries"
+import { authenticateQueryOptions } from "~/services/auth/shared"
 
 export const sections = [
   "profile",
