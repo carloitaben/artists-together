@@ -10,5 +10,5 @@ export const Route = createFileRoute("/art")({
 })
 
 function Component() {
-  return <div>Hello /_layout/lounge!</div>
+  return <div>Hello /_layout/art!</div>
 }
