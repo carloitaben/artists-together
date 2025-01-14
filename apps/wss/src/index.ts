@@ -12,12 +12,13 @@ import {
 } from "@artists-together/core/websocket"
 
 type WebSocketData = {
+  uuid: string
   room?: string
   auth: SessionValidationResult
   cursor: Cursor
 }
 
-const connections = new Set<ServerWebSocket<WebSocketData>>()
+const connections = new Map<string, ServerWebSocket<WebSocketData>>()
 
 // Adapted from https://github.com/pilcrowonpaper/oslo/blob/main/src/cookie/index.ts#L46-L57
 function parseCookies(header: string): Map<string, string> {
@@ -38,12 +39,11 @@ function parseCookies(header: string): Map<string, string> {
 }
 
 function update(ws: ServerWebSocket<WebSocketData>) {
-  connections.delete(ws)
-  connections.add(ws)
+  connections.set(ws.data.uuid, ws)
 }
 
 function getRoomState(room: string) {
-  return Array.from(connections).reduce<ServerEventOutput<"room:update">>(
+  return connections.values().reduce<ServerEventOutput<"room:update">>(
     (state, ws) => {
       if (ws.data.room !== room) return state
 
@@ -73,6 +73,7 @@ const server = Bun.serve<WebSocketData>({
     const upgraded = server.upgrade<WebSocketData>(request, {
       data: {
         auth,
+        uuid: auth?.user.username || crypto.randomUUID(),
         cursor: null,
       },
     })
@@ -85,10 +86,10 @@ const server = Bun.serve<WebSocketData>({
   },
   websocket: {
     open(ws) {
-      connections.add(ws)
+      connections.set(ws.data.uuid, ws)
     },
     close(ws) {
-      connections.delete(ws)
+      connections.delete(ws.data.uuid)
 
       if (!ws.data.room) return
 

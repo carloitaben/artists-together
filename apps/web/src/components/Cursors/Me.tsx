@@ -9,16 +9,13 @@ import { useEffect, useState } from "react"
 import { useScreen } from "~/lib/media"
 import { authenticateQueryOptions } from "~/services/auth/shared"
 import { useWebSocket, webSocketQueryOptions } from "~/lib/websocket"
-import { ATTR_NAME_DATA_CURSOR_PRECISION } from "./CursorPrecision"
-import { measure } from "./measure"
+import { ATTR_NAME_DATA_CURSOR_PRECISION, measure, SCOPE_ROOT } from "./lib"
 import Cursor from "./Cursor"
 
 const limit = clamp.bind(null, 0, 1)
 
 export default function Me() {
-  const [state, setState] = useState<CursorState>()
   const auth = useSuspenseQuery(authenticateQueryOptions)
-  const webSocket = useWebSocket()
   const alone = useQuery({
     ...webSocketQueryOptions("room:update", {
       count: 0,
@@ -27,9 +24,10 @@ export default function Me() {
     select: (data) => data.count < 2,
   })
 
+  const [state, setState] = useState<CursorState>()
+  const webSocket = useWebSocket()
   const sm = useScreen("sm")
   const hasCursor = useScreen("cursor")
-
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const scale = useSpring(0, { mass: 0.05, stiffness: 200 })
@@ -76,42 +74,16 @@ export default function Me() {
           return notify()
         }
 
+        const targetElement =
+          (event.target instanceof Element &&
+            event.target.closest(`[${ATTR_NAME_DATA_CURSOR_PRECISION}]`)) ||
+          document.documentElement
+
         const target =
-          event.target &&
-          event.target instanceof Element &&
-          event.target.closest(`[${ATTR_NAME_DATA_CURSOR_PRECISION}]`)
+          targetElement.getAttribute(ATTR_NAME_DATA_CURSOR_PRECISION) ||
+          SCOPE_ROOT
 
-        if (!target) {
-          return notify()
-        }
-
-        const targetAttribute = target.getAttribute(
-          ATTR_NAME_DATA_CURSOR_PRECISION,
-        )
-
-        if (!targetAttribute) {
-          throw new Error(
-            `Missing attribute "${ATTR_NAME_DATA_CURSOR_PRECISION}" on event target`,
-          )
-        }
-
-        const rect = measure({
-          element: target,
-          attribute: targetAttribute,
-        })
-
-        if (!rect) {
-          const error = new Error(
-            `Could not measure "${targetAttribute}" precision area`,
-          )
-
-          if (import.meta.env.DEV) {
-            throw error
-          } else {
-            return notify()
-          }
-        }
-
+        const rect = measure(target, targetElement)
         const x = limit((event.clientX - rect.x) / rect.width)
         const y = limit((event.clientY - rect.y) / rect.height)
 
@@ -121,7 +93,7 @@ export default function Me() {
             x,
             y,
             state,
-            target: targetAttribute,
+            target,
           },
         ]
 

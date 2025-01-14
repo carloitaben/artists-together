@@ -1,5 +1,5 @@
 import { useChildMatches } from "@tanstack/react-router"
-import type { CSSProperties } from "react"
+import type { ComponentProps, CSSProperties, ComponentRef } from "react"
 import { useRef, useState } from "react"
 import { AnimatePresence, motion } from "motion/react"
 import { useMeasure } from "~/lib/media"
@@ -11,13 +11,13 @@ import NavigationBottombarActions from "./NavigationBottombarActions"
 export default function NavigationBottombar() {
   const [searchbarFocus, setSearchbarFocus] = useState(false)
   const [showBackdrop, setShowBackdrop] = useState(false)
-  const ref = useRef(null)
+  const ref = useRef<ComponentRef<"div">>(null)
   const refRect = useMeasure(ref)
   const routeStaticData = useChildMatches({
     select: ([match]) => match?.staticData,
   })
 
-  const inputMinWidth = refRect.width - refRect.height * 2
+  const inputMinWidth = refRect ? refRect.width - refRect.height * 2 : 0
 
   return (
     <>

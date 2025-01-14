@@ -1,18 +1,20 @@
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
-import { useMotionValueEvent, useScroll } from "motion/react"
 import type { ComponentRef, ForwardedRef, RefObject } from "react"
 import { createContext, forwardRef, useContext, useEffect, useRef } from "react"
 import { mergeRefs } from "react-merge-refs"
 import { onMeasure } from "~/lib/media"
-import { invalidate } from "./measure"
+import {
+  ATTR_NAME_DATA_CURSOR_PRECISION,
+  createPrecisionScope,
+  measurements,
+  SCOPE_ROOT,
+} from "./lib"
 
 type Props = HTMLArkProps<"div"> & {
   ref?: RefObject<ComponentRef<"div">>
   name: string
 }
-
-export const ATTR_NAME_DATA_CURSOR_PRECISION = "data-precision"
 
 const CursorPrecisionContext = createContext<string | null>(null)
 
@@ -25,26 +27,28 @@ function CursorPrecision(
   const scope = useContext(CursorPrecisionContext)
   const innerRef = useRef<ComponentRef<"div">>(null)
 
-  const attr = scope ? `${scope}.${name}` : name
-  const attrs = {
-    [ATTR_NAME_DATA_CURSOR_PRECISION]: attr,
+  const attribute = scope
+    ? createPrecisionScope(scope, name)
+    : createPrecisionScope(SCOPE_ROOT, name)
+
+  const attributes = {
+    [ATTR_NAME_DATA_CURSOR_PRECISION]: attribute,
   }
 
-  const scroll = useScroll()
-  useMotionValueEvent(scroll.scrollY, "change", () => invalidate(attr))
-  useMotionValueEvent(scroll.scrollX, "change", () => invalidate(attr))
-
   useEffect(() => {
-    const cleanup = onMeasure(innerRef.current, () => invalidate(attr))
+    const cleanup = onMeasure(innerRef.current, () => {
+      measurements.delete(attribute)
+    })
+
     return () => {
       cleanup()
-      invalidate(attr)
+      measurements.delete(attribute)
     }
-  }, [attr])
+  }, [attribute])
 
   return (
     <CursorPrecisionContext.Provider value={name}>
-      <ark.div {...props} {...attrs} ref={mergeRefs([ref, innerRef])} />
+      <ark.div {...props} {...attributes} ref={mergeRefs([ref, innerRef])} />
     </CursorPrecisionContext.Provider>
   )
 }

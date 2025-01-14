@@ -1,6 +1,7 @@
 import { CursorPrecision } from "~/components/Cursors"
 import Container from "~/components/Container"
 import Grid from "~/components/Grid"
+import { createPrecisionScope } from "./Cursors/lib"
 
 const links = [
   {
@@ -40,9 +41,12 @@ export default function Footer() {
               <Grid asChild>
                 <nav aria-label="Secondary navigation">
                   <ul className="space-y-2">
-                    {links.map((link) => (
+                    {links.map((link, index) => (
                       <li key={link.label}>
-                        <CursorPrecision name={link.href} asChild>
+                        <CursorPrecision
+                          name={createPrecisionScope("link", String(index))}
+                          asChild
+                        >
                           <a
                             href={link.href}
                             target={"target" in link ? link.target : undefined}

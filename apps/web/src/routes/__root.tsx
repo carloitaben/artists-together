@@ -144,33 +144,31 @@ function EnsureUppercaseSerifAmpersand() {
 
 function RootDocument({ children }: { children: ReactNode }) {
   return (
-    <CursorPrecision name="root" asChild>
-      <html
-        lang="en"
-        className={cx(
-          "relative min-h-full scroll-p-0 font-inter antialiased",
-          "theme-arpeggio-black bg-arpeggio-black-900 text-gunpla-white-50",
-          "selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900",
-        )}
-      >
-        <head>
-          <Meta />
-        </head>
-        <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
-          <Navigation />
-          <WebSocket>
-            {children}
-            <Cursors />
-          </WebSocket>
-          <Footer />
-          <Toasts />
-          <Auth />
-          {import.meta.dev ? <EnsureUppercaseSerifAmpersand /> : null}
-          <QueryDevtools />
-          <ScrollRestoration />
-          <Scripts />
-        </body>
-      </html>
-    </CursorPrecision>
+    <html
+      lang="en"
+      className={cx(
+        "relative min-h-full scroll-p-0 font-inter antialiased",
+        "theme-arpeggio-black bg-arpeggio-black-900 text-gunpla-white-50",
+        "selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900",
+      )}
+    >
+      <head>
+        <Meta />
+      </head>
+      <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
+        <Navigation />
+        <WebSocket>
+          {children}
+          <Cursors />
+        </WebSocket>
+        <Footer />
+        <Toasts />
+        <Auth />
+        {import.meta.dev ? <EnsureUppercaseSerifAmpersand /> : null}
+        <QueryDevtools />
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
   )
 }

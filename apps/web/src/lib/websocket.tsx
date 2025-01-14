@@ -9,6 +9,7 @@ import {
   safeParseServerMessage,
 } from "@artists-together/core/websocket"
 import {
+  focusManager,
   queryOptions,
   useQueryClient,
   useSuspenseQuery,
@@ -18,10 +19,10 @@ import type { ReactNode } from "react"
 import { useCallback, useEffect, useState } from "react"
 import { PartySocket } from "partysocket"
 import { hintsQueryOptions } from "~/services/hints/shared"
-import { createContextFactory } from "~/lib/react"
+import { createRequiredContext } from "~/lib/react"
 
 const [WebSocketContextProvider, useWebSocketContext] =
-  createContextFactory<PartySocket | null>("WebSocketContext", null)
+  createRequiredContext<PartySocket | null>("WebSocketContext", null)
 
 const queue = new Map<ClientEvent, string>()
 
@@ -40,6 +41,10 @@ export function useWebSocket() {
 
   const send = useCallback(
     function send<T extends ClientEvent>(event: T, data: ClientEventOutput<T>) {
+      const focused = focusManager.isFocused()
+
+      if (!focused) return
+
       const message = encodeClientMessage(event, data)
 
       if (webSocket && webSocket.readyState === webSocket.OPEN) {

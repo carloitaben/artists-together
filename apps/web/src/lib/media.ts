@@ -1,6 +1,5 @@
 import type { RefObject } from "react"
 import {
-  startTransition,
   useCallback,
   useEffect,
   useState,
@@ -59,11 +58,7 @@ export function useScreen(screen: Screen) {
   return useMediaQuery(getScreenMediaQuery(screen))
 }
 
-export type MeasureResult = Omit<DOMRectReadOnly, "toJSON"> & {
-  measured: boolean
-}
-
-export type MeasureCallback = (rect: MeasureResult) => void
+export type MeasureCallback = (rect: DOMRect) => void
 
 const resizeObserverCallbacks = new Map<Element, Set<MeasureCallback>>()
 
@@ -72,13 +67,8 @@ export const resizeObserver =
     ? undefined
     : new ResizeObserver((entries) => {
         entries.forEach((entry) => {
-          const rect: MeasureResult = {
-            ...entry.contentRect,
-            measured: true,
-          }
-
           resizeObserverCallbacks.get(entry.target)?.forEach((callback) => {
-            callback(rect)
+            callback(entry.contentRect)
           })
         })
       })
@@ -110,17 +100,7 @@ export function useMeasure<T extends Element = Element>(
   options?: ResizeObserverOptions,
 ) {
   const [_, startTransition] = useTransition()
-  const [entry, setEntry] = useState<MeasureResult>({
-    bottom: 0,
-    height: 0,
-    left: 0,
-    right: 0,
-    top: 0,
-    width: 0,
-    x: 0,
-    y: 0,
-    measured: false,
-  })
+  const [entry, setEntry] = useState<DOMRect>()
 
   const callback = useCallback<MeasureCallback>((entry) => {
     startTransition(() => setEntry(entry))
@@ -133,52 +113,12 @@ export function useMeasure<T extends Element = Element>(
   return entry
 }
 
-export type WindowDimensions = {
-  innerWidth: number
-  outerWidth: number
-  innerHeight: number
-  outerHeight: number
-  measured: boolean
-}
-
-/**
- * Measures the `window` object.
- * On server-side rendering, the measured values are all `0`.
- *
- * @example
- * Basic usage
- *
- * ```ts
- * const dimensions = useWindowDimensions()
- * //    ^? WindowDimensions | null
- * ```
- */
-export function useWindowDimensions() {
-  const [dimensions, setDimensions] = useState<WindowDimensions>({
-    innerWidth: 0,
-    outerWidth: 0,
-    innerHeight: 0,
-    outerHeight: 0,
-    measured: false,
-  })
-
-  useEffect(() => {
-    function callback() {
-      startTransition(() => {
-        setDimensions({
-          innerWidth: window.innerWidth,
-          outerWidth: window.outerWidth,
-          innerHeight: window.innerHeight,
-          outerHeight: window.outerHeight,
-          measured: true,
-        })
-      })
-    }
-
-    callback()
-    window.addEventListener("resize", callback)
-    return () => window.removeEventListener("resize", callback)
-  }, [])
-
-  return dimensions
+export function useWindowFocus() {
+  return useSyncExternalStore(
+    (notify) => {
+      document.documentElement.addEventListener("blur", notify)
+      return () => document.documentElement.removeEventListener("blur", notify)
+    },
+    () => document.hasFocus(),
+  )
 }

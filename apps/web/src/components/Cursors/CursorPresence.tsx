@@ -10,8 +10,7 @@ import { forwardRef, useEffect, useState } from "react"
 import type { Spring } from "motion/react"
 import { AnimatePresence, useMotionTemplate, useSpring } from "motion/react"
 import { webSocketQueryOptions } from "~/lib/websocket"
-import { ATTR_NAME_DATA_CURSOR_PRECISION } from "./CursorPrecision"
-import { measure } from "./measure"
+import { ATTR_NAME_DATA_CURSOR_PRECISION, measure, SCOPE_ROOT } from "./lib"
 import Cursor from "./Cursor"
 
 type Props = {
@@ -21,7 +20,7 @@ type Props = {
 
 const spring: Spring = {
   type: "spring",
-  mass: 0.15,
+  mass: 0.1,
 }
 
 function CursorPresence(
@@ -32,8 +31,7 @@ function CursorPresence(
   const queryClient = useQueryClient()
   const x = useSpring(cursor?.x || 0, spring)
   const y = useSpring(cursor?.y || 0, spring)
-  const percentX = useMotionTemplate`${x}%`
-  const percentY = useMotionTemplate`${y}%`
+  const transform = useMotionTemplate`translateX(${x}%) translateY(${y}%)`
 
   const [pc] = useState(
     () =>
@@ -82,8 +80,12 @@ function CursorPresence(
           return update()
         }
 
-        const selector = `[${ATTR_NAME_DATA_CURSOR_PRECISION}="${cursor.target}"]`
-        const element = document.querySelector(selector)
+        const element =
+          cursor.target === SCOPE_ROOT
+            ? document.documentElement
+            : document.querySelector(
+                `[${ATTR_NAME_DATA_CURSOR_PRECISION}="${cursor.target}"]`,
+              )
 
         if (!element) {
           if (import.meta.env.DEV) {
@@ -93,19 +95,16 @@ function CursorPresence(
           return update()
         }
 
-        const rect = measure({
-          element,
-          attribute: cursor.target,
-        })
+        const rect = measure(cursor.target, element)
 
-        const percentX =
+        const x =
           ((rect.x +
             document.documentElement.scrollLeft +
             cursor.x * rect.width) /
             document.documentElement.offsetWidth) *
           100
 
-        const percentY =
+        const y =
           ((rect.y +
             document.documentElement.scrollTop +
             cursor.y * rect.height) /
@@ -113,9 +112,9 @@ function CursorPresence(
           100
 
         if (pc.prevPoint) {
-          pc.addPoint([percentX, percentY])
+          pc.addPoint([x, y])
         } else {
-          pc.prevPoint = [percentX, percentY]
+          pc.prevPoint = [x, y]
         }
 
         update()
@@ -143,10 +142,7 @@ function CursorPresence(
           ref={ref}
           state={state}
           username={username}
-          style={{
-            x: percentX,
-            y: percentY,
-          }}
+          style={{ transform }}
         />
       ) : null}
     </AnimatePresence>

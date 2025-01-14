@@ -1,51 +1,29 @@
-import type { ReactNode } from "react"
 import { createContext, useContext, useSyncExternalStore } from "react"
 
-const empty = Symbol("Empty React context")
-
-export function createContextFactory<T>(displayName: string, defaultValue?: T) {
-  const Context = createContext<T | typeof empty>(defaultValue ?? empty)
+export function createRequiredContext<T>(
+  displayName: string,
+  defaultValue?: T,
+) {
+  const Context = createContext<T | undefined>(defaultValue)
 
   Context.displayName = displayName
 
-  function useContextFactory<Strict extends boolean>(options?: {
-    strict: Strict
-  }): Strict extends true ? NonNullable<T> : T | null {
+  function useStrictContext() {
     const value = useContext(Context)
 
-    if (value === empty) {
-      if (options?.strict) {
-        throw Error(`Called "${displayName}" outside Provider`)
-      }
-
-      return null as any
+    if (typeof value === "undefined") {
+      throw Error(
+        `Context \`${displayName}\` returned \`undefined\`. Seems you forgot to wrap component within its provider`,
+      )
     }
 
-    if (!value) {
-      if (options?.strict) {
-        throw Error(
-          `Called "${displayName}" with strict flag enabled, but received "${typeof value}"`,
-        )
-      }
-    }
-
-    return value as any
+    return value as T
   }
 
-  function Provider({
-    value,
-    children = null,
-  }: {
-    value: T
-    children?: ReactNode
-  }) {
-    return <Context.Provider value={value}>{children}</Context.Provider>
-  }
-
-  return [Provider, useContextFactory] as const
+  return [Context.Provider, useStrictContext] as const
 }
 
-export function subscribeOnce() {
+export function notifyOnce() {
   return () => {}
 }
 
@@ -61,7 +39,7 @@ export function subscribeOnce() {
  */
 export function useHydrated() {
   return useSyncExternalStore(
-    subscribeOnce,
+    notifyOnce,
     () => true,
     () => false,
   )
