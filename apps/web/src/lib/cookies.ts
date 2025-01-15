@@ -132,8 +132,3 @@ export function createCookie<
         }),
     )()
 }
-
-export const cookieCalendarTab = createCookie({
-  name: "calendar-tab",
-  schema: v.picklist(["monthly", "yearly"]),
-})

@@ -1,6 +1,6 @@
 import * as v from "valibot"
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router"
-import { cookieCalendarTab } from "~/lib/cookies"
+import { cookieCalendarTab } from "~/services/calendar/shared"
 import { MonthNumberToName } from "~/lib/schemas"
 
 export const Route = createFileRoute("/calendar/")({

@@ -1,3 +1,4 @@
+import * as v from "valibot"
 import {
   SESSION_COOKIE_NAME,
   validateSessionToken,
@@ -6,22 +7,32 @@ import {
 import { Discord, Twitch } from "arctic"
 import type { HTTPEvent } from "vinxi/http"
 import { WEB_URL } from "~/lib/constants"
-import { CookieOAuth, CookieSession } from "~/lib/schemas"
-import { Cookie } from "~/lib/server"
+import { createCookie } from "~/lib/cookies"
+import { AuthFormSchema, Geolocation } from "~/lib/schemas"
 
-export const cookieSession = new Cookie(SESSION_COOKIE_NAME, CookieSession, {
+export const cookieSession = createCookie({
+  name: SESSION_COOKIE_NAME,
+  schema: v.pipe(v.string(), v.nonEmpty()),
+  secure: import.meta.env.PROD,
   httpOnly: true,
   sameSite: "lax",
-  secure: import.meta.env.PROD,
   path: "/",
 })
 
-export const cookieOauth = new Cookie("oauth", CookieOAuth, {
+export const cookieOauth = createCookie({
+  name: "oauth",
+  schema: v.object({
+    ...AuthFormSchema.entries,
+    geolocation: Geolocation,
+    fahrenheit: v.boolean(),
+    fullHourFormat: v.boolean(),
+    state: v.string(),
+  }),
+  secure: import.meta.env.PROD,
   httpOnly: true,
   sameSite: "lax",
-  secure: import.meta.env.PROD,
-  path: "/",
   maxAge: 60 * 10,
+  path: "/",
 })
 
 export const provider = {
@@ -40,7 +51,7 @@ export const provider = {
 export async function authenticate(
   event: HTTPEvent,
 ): Promise<SessionValidationResult> {
-  const cookie = cookieSession.safeParse(event)
+  const cookie = cookieSession.safeParse()
 
   if (!cookie.success) {
     return null
@@ -53,7 +64,7 @@ export async function authenticate(
     return null
   }
 
-  cookieSession.set(event, cookie.output, {
+  cookieSession.set(cookie.output, {
     expires: result.session.expiresAt,
   })
 

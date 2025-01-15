@@ -85,13 +85,3 @@ export const ContactSupportFormSchema = v.object({
 })
 
 export const UpdateProfileFormSchema = v.pick(UserTableInsert, ["bio"])
-
-export const CookieSession = v.pipe(v.string(), v.nonEmpty())
-
-export const CookieOAuth = v.object({
-  ...AuthFormSchema.entries,
-  geolocation: Geolocation,
-  fahrenheit: v.boolean(),
-  fullHourFormat: v.boolean(),
-  state: v.string(),
-})
