@@ -102,6 +102,9 @@ importers:
       conform-to-valibot:
         specifier: ^1.13.0
         version: 1.13.0(@conform-to/dom@1.2.2)(valibot@1.0.0-beta.10(typescript@5.7.3))
+      cookie-es:
+        specifier: ^1.2.2
+        version: 1.2.2
       cva:
         specifier: beta
         version: 1.0.0-beta.2(typescript@5.7.3)
@@ -2077,8 +2080,8 @@ packages:
   '@tanstack/store@0.7.0':
     resolution: {integrity: sha512-CNIhdoUsmD2NolYuaIs8VfWM467RK6oIBAW4nPEKZhg1smZ+/CwtCdpURgp7nxSqOaV9oKkzdWD80+bC66F/Jg==}
 
-  '@tanstack/virtual-file-routes@1.87.6':
-    resolution: {integrity: sha512-PTpeM8SHL7AJM0pJOacFvHribbUODS51qe9NsMqku4mogh6BWObY1EeVmeGnp9o3VngAEsf+rJMs2zqIVz3WFA==}
+  '@tanstack/virtual-file-routes@1.97.0':
+    resolution: {integrity: sha512-UsLBb+ALvxbRTYMlx3WJ36oq13Ps4n8tcN8biFrtiCbA8TiS0sgSAOr0lPQpzQqZuVSjscPjX43ciKf33hvkQw==}
     engines: {node: '>=12'}
 
   '@testing-library/dom@8.20.1':
@@ -7842,7 +7845,7 @@ snapshots:
 
   '@tanstack/router-generator@1.95.6(@tanstack/react-router@1.95.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
-      '@tanstack/virtual-file-routes': 1.87.6
+      '@tanstack/virtual-file-routes': 1.97.0
       prettier: 3.4.2
       tsx: 4.19.2
       zod: 3.24.1
@@ -7860,7 +7863,7 @@ snapshots:
       '@babel/traverse': 7.26.5
       '@babel/types': 7.26.5
       '@tanstack/router-generator': 1.95.6(@tanstack/react-router@1.95.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@tanstack/virtual-file-routes': 1.87.6
+      '@tanstack/virtual-file-routes': 1.97.0
       '@types/babel__core': 7.20.5
       '@types/babel__generator': 7.6.8
       '@types/babel__template': 7.4.4
@@ -7957,7 +7960,7 @@ snapshots:
 
   '@tanstack/store@0.7.0': {}
 
-  '@tanstack/virtual-file-routes@1.87.6': {}
+  '@tanstack/virtual-file-routes@1.97.0': {}
 
   '@testing-library/dom@8.20.1':
     dependencies:

@@ -1,6 +1,6 @@
-import { createFileRoute, notFound } from "@tanstack/react-router"
+import { createFileRoute, notFound } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/art")({
+export const Route = createFileRoute('/art/')({
   beforeLoad() {
     if (import.meta.env.PROD) {
       throw notFound()

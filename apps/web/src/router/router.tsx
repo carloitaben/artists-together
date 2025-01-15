@@ -5,7 +5,7 @@ import { broadcastQueryClient } from "@tanstack/query-broadcast-client-experimen
 import type { Action } from "~/lib/navigation"
 import { toaster } from "~/components/Toasts"
 import NotFound from "~/components/NotFound"
-import { routeTree } from "./route-tree.gen"
+import { routeTree } from "./router.generated"
 
 export function createRouter() {
   const queryClient = new QueryClient({

@@ -19,16 +19,18 @@ export default defineConfig({
     },
   },
   tsr: {
-    generatedRouteTree: "src/router/route-tree.gen.ts",
+    generatedRouteTree: "src/router/router.generated.ts",
     appDirectory: "src",
-    routeFileIgnorePattern: "src",
+    routeFileIgnorePrefix: ".",
   },
   server: {
     preset: "vercel-edge",
   },
   vite: {
     plugins: [
-      imagetools(),
+      tsConfigPaths({
+        projects: ["./tsconfig.json"],
+      }),
       iconsSpritesheet({
         fileName: "spritesheet.svg",
         inputDir: "./src/assets/icons",
@@ -36,9 +38,7 @@ export default defineConfig({
         formatter: "prettier",
         withTypes: true,
       }),
-      tsConfigPaths({
-        projects: ["./tsconfig.json"],
-      }),
+      imagetools(),
     ],
     css: {
       postcss: {

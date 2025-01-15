@@ -7,9 +7,9 @@ import Container from "~/components/Container"
 import Grid from "~/components/Grid"
 import Logo from "~/components/Logo"
 import Marquee from "~/components/Marquee"
-import TextAnimation from "./src/components/TextAnimation"
+import TextAnimation from "./.components/TextAnimation"
 
-const Stars = lazy(() => import("./src/components/Stars"))
+const Stars = lazy(() => import("./.components/Stars"))
 
 export const Route = createFileRoute("/about/")({
   component: Component,

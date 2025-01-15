@@ -1,6 +1,6 @@
-import { createFileRoute, notFound } from "@tanstack/react-router"
+import { createFileRoute, notFound } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/_legal/privacy-policy")({
+export const Route = createFileRoute('/(legal)/privacy-policy')({
   beforeLoad() {
     if (import.meta.env.PROD) {
       throw notFound()

@@ -6,7 +6,9 @@ export function createRequiredContext<T>(
 ) {
   const Context = createContext<T | undefined>(defaultValue)
 
-  Context.displayName = displayName
+  if (import.meta.env.DEV) {
+    Context.displayName = displayName
+  }
 
   function useStrictContext() {
     const value = useContext(Context)

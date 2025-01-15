@@ -25,6 +25,7 @@
     "@tanstack/start": "^1.95.6",
     "arctic": "^3.1.2",
     "conform-to-valibot": "^1.13.0",
+    "cookie-es": "^1.2.2",
     "cva": "beta",
     "isbot": "^5.1.21",
     "lottie-web": "^5.12.2",

@@ -11,34 +11,22 @@
 // Import Routes
 
 import { Route as rootRoute } from './../routes/__root'
-import { Route as LoungeImport } from './../routes/lounge'
-import { Route as ArtImport } from './../routes/art'
-import { Route as IndexImport } from './../routes/index'
+import { Route as LoungeIndexImport } from './../routes/lounge/index'
 import { Route as CalendarIndexImport } from './../routes/calendar/index'
+import { Route as ArtIndexImport } from './../routes/art/index'
 import { Route as AboutIndexImport } from './../routes/about/index'
-import { Route as LegalTermsOfServiceImport } from './../routes/_legal/terms-of-service'
-import { Route as LegalPrivacyPolicyImport } from './../routes/_legal/privacy-policy'
-import { Route as LegalCookiesImport } from './../routes/_legal/cookies'
+import { Route as indexIndexImport } from './../routes/(index)/index'
+import { Route as legalTermsOfServiceImport } from './../routes/(legal)/terms-of-service'
+import { Route as legalPrivacyPolicyImport } from './../routes/(legal)/privacy-policy'
+import { Route as legalCookiesImport } from './../routes/(legal)/cookies'
 import { Route as CalendarYearIndexImport } from './../routes/calendar/$year.index'
 import { Route as CalendarYearMonthImport } from './../routes/calendar/$year.$month'
 
 // Create/Update Routes
 
-const LoungeRoute = LoungeImport.update({
-  id: '/lounge',
-  path: '/lounge',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ArtRoute = ArtImport.update({
-  id: '/art',
-  path: '/art',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+const LoungeIndexRoute = LoungeIndexImport.update({
+  id: '/lounge/',
+  path: '/lounge/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -48,26 +36,38 @@ const CalendarIndexRoute = CalendarIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ArtIndexRoute = ArtIndexImport.update({
+  id: '/art/',
+  path: '/art/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AboutIndexRoute = AboutIndexImport.update({
   id: '/about/',
   path: '/about/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LegalTermsOfServiceRoute = LegalTermsOfServiceImport.update({
-  id: '/_legal/terms-of-service',
+const indexIndexRoute = indexIndexImport.update({
+  id: '/(index)/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const legalTermsOfServiceRoute = legalTermsOfServiceImport.update({
+  id: '/(legal)/terms-of-service',
   path: '/terms-of-service',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LegalPrivacyPolicyRoute = LegalPrivacyPolicyImport.update({
-  id: '/_legal/privacy-policy',
+const legalPrivacyPolicyRoute = legalPrivacyPolicyImport.update({
+  id: '/(legal)/privacy-policy',
   path: '/privacy-policy',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LegalCookiesRoute = LegalCookiesImport.update({
-  id: '/_legal/cookies',
+const legalCookiesRoute = legalCookiesImport.update({
+  id: '/(legal)/cookies',
   path: '/cookies',
   getParentRoute: () => rootRoute,
 } as any)
@@ -88,46 +88,32 @@ const CalendarYearMonthRoute = CalendarYearMonthImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/art': {
-      id: '/art'
-      path: '/art'
-      fullPath: '/art'
-      preLoaderRoute: typeof ArtImport
-      parentRoute: typeof rootRoute
-    }
-    '/lounge': {
-      id: '/lounge'
-      path: '/lounge'
-      fullPath: '/lounge'
-      preLoaderRoute: typeof LoungeImport
-      parentRoute: typeof rootRoute
-    }
-    '/_legal/cookies': {
-      id: '/_legal/cookies'
+    '/(legal)/cookies': {
+      id: '/(legal)/cookies'
       path: '/cookies'
       fullPath: '/cookies'
-      preLoaderRoute: typeof LegalCookiesImport
+      preLoaderRoute: typeof legalCookiesImport
       parentRoute: typeof rootRoute
     }
-    '/_legal/privacy-policy': {
-      id: '/_legal/privacy-policy'
+    '/(legal)/privacy-policy': {
+      id: '/(legal)/privacy-policy'
       path: '/privacy-policy'
       fullPath: '/privacy-policy'
-      preLoaderRoute: typeof LegalPrivacyPolicyImport
+      preLoaderRoute: typeof legalPrivacyPolicyImport
       parentRoute: typeof rootRoute
     }
-    '/_legal/terms-of-service': {
-      id: '/_legal/terms-of-service'
+    '/(legal)/terms-of-service': {
+      id: '/(legal)/terms-of-service'
       path: '/terms-of-service'
       fullPath: '/terms-of-service'
-      preLoaderRoute: typeof LegalTermsOfServiceImport
+      preLoaderRoute: typeof legalTermsOfServiceImport
+      parentRoute: typeof rootRoute
+    }
+    '/(index)/': {
+      id: '/(index)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof indexIndexImport
       parentRoute: typeof rootRoute
     }
     '/about/': {
@@ -137,11 +123,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexImport
       parentRoute: typeof rootRoute
     }
+    '/art/': {
+      id: '/art/'
+      path: '/art'
+      fullPath: '/art'
+      preLoaderRoute: typeof ArtIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/calendar/': {
       id: '/calendar/'
       path: '/calendar'
       fullPath: '/calendar'
       preLoaderRoute: typeof CalendarIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/lounge/': {
+      id: '/lounge/'
+      path: '/lounge'
+      fullPath: '/lounge'
+      preLoaderRoute: typeof LoungeIndexImport
       parentRoute: typeof rootRoute
     }
     '/calendar/$year/$month': {
@@ -164,41 +164,41 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/art': typeof ArtRoute
-  '/lounge': typeof LoungeRoute
-  '/cookies': typeof LegalCookiesRoute
-  '/privacy-policy': typeof LegalPrivacyPolicyRoute
-  '/terms-of-service': typeof LegalTermsOfServiceRoute
+  '/cookies': typeof legalCookiesRoute
+  '/privacy-policy': typeof legalPrivacyPolicyRoute
+  '/terms-of-service': typeof legalTermsOfServiceRoute
+  '/': typeof indexIndexRoute
   '/about': typeof AboutIndexRoute
+  '/art': typeof ArtIndexRoute
   '/calendar': typeof CalendarIndexRoute
+  '/lounge': typeof LoungeIndexRoute
   '/calendar/$year/$month': typeof CalendarYearMonthRoute
   '/calendar/$year': typeof CalendarYearIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/art': typeof ArtRoute
-  '/lounge': typeof LoungeRoute
-  '/cookies': typeof LegalCookiesRoute
-  '/privacy-policy': typeof LegalPrivacyPolicyRoute
-  '/terms-of-service': typeof LegalTermsOfServiceRoute
+  '/cookies': typeof legalCookiesRoute
+  '/privacy-policy': typeof legalPrivacyPolicyRoute
+  '/terms-of-service': typeof legalTermsOfServiceRoute
+  '/': typeof indexIndexRoute
   '/about': typeof AboutIndexRoute
+  '/art': typeof ArtIndexRoute
   '/calendar': typeof CalendarIndexRoute
+  '/lounge': typeof LoungeIndexRoute
   '/calendar/$year/$month': typeof CalendarYearMonthRoute
   '/calendar/$year': typeof CalendarYearIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/art': typeof ArtRoute
-  '/lounge': typeof LoungeRoute
-  '/_legal/cookies': typeof LegalCookiesRoute
-  '/_legal/privacy-policy': typeof LegalPrivacyPolicyRoute
-  '/_legal/terms-of-service': typeof LegalTermsOfServiceRoute
+  '/(legal)/cookies': typeof legalCookiesRoute
+  '/(legal)/privacy-policy': typeof legalPrivacyPolicyRoute
+  '/(legal)/terms-of-service': typeof legalTermsOfServiceRoute
+  '/(index)/': typeof indexIndexRoute
   '/about/': typeof AboutIndexRoute
+  '/art/': typeof ArtIndexRoute
   '/calendar/': typeof CalendarIndexRoute
+  '/lounge/': typeof LoungeIndexRoute
   '/calendar/$year/$month': typeof CalendarYearMonthRoute
   '/calendar/$year/': typeof CalendarYearIndexRoute
 }
@@ -206,65 +206,65 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/art'
-    | '/lounge'
     | '/cookies'
     | '/privacy-policy'
     | '/terms-of-service'
+    | '/'
     | '/about'
+    | '/art'
     | '/calendar'
+    | '/lounge'
     | '/calendar/$year/$month'
     | '/calendar/$year'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/art'
-    | '/lounge'
     | '/cookies'
     | '/privacy-policy'
     | '/terms-of-service'
+    | '/'
     | '/about'
+    | '/art'
     | '/calendar'
+    | '/lounge'
     | '/calendar/$year/$month'
     | '/calendar/$year'
   id:
     | '__root__'
-    | '/'
-    | '/art'
-    | '/lounge'
-    | '/_legal/cookies'
-    | '/_legal/privacy-policy'
-    | '/_legal/terms-of-service'
+    | '/(legal)/cookies'
+    | '/(legal)/privacy-policy'
+    | '/(legal)/terms-of-service'
+    | '/(index)/'
     | '/about/'
+    | '/art/'
     | '/calendar/'
+    | '/lounge/'
     | '/calendar/$year/$month'
     | '/calendar/$year/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ArtRoute: typeof ArtRoute
-  LoungeRoute: typeof LoungeRoute
-  LegalCookiesRoute: typeof LegalCookiesRoute
-  LegalPrivacyPolicyRoute: typeof LegalPrivacyPolicyRoute
-  LegalTermsOfServiceRoute: typeof LegalTermsOfServiceRoute
+  legalCookiesRoute: typeof legalCookiesRoute
+  legalPrivacyPolicyRoute: typeof legalPrivacyPolicyRoute
+  legalTermsOfServiceRoute: typeof legalTermsOfServiceRoute
+  indexIndexRoute: typeof indexIndexRoute
   AboutIndexRoute: typeof AboutIndexRoute
+  ArtIndexRoute: typeof ArtIndexRoute
   CalendarIndexRoute: typeof CalendarIndexRoute
+  LoungeIndexRoute: typeof LoungeIndexRoute
   CalendarYearMonthRoute: typeof CalendarYearMonthRoute
   CalendarYearIndexRoute: typeof CalendarYearIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ArtRoute: ArtRoute,
-  LoungeRoute: LoungeRoute,
-  LegalCookiesRoute: LegalCookiesRoute,
-  LegalPrivacyPolicyRoute: LegalPrivacyPolicyRoute,
-  LegalTermsOfServiceRoute: LegalTermsOfServiceRoute,
+  legalCookiesRoute: legalCookiesRoute,
+  legalPrivacyPolicyRoute: legalPrivacyPolicyRoute,
+  legalTermsOfServiceRoute: legalTermsOfServiceRoute,
+  indexIndexRoute: indexIndexRoute,
   AboutIndexRoute: AboutIndexRoute,
+  ArtIndexRoute: ArtIndexRoute,
   CalendarIndexRoute: CalendarIndexRoute,
+  LoungeIndexRoute: LoungeIndexRoute,
   CalendarYearMonthRoute: CalendarYearMonthRoute,
   CalendarYearIndexRoute: CalendarYearIndexRoute,
 }
@@ -279,41 +279,41 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/art",
-        "/lounge",
-        "/_legal/cookies",
-        "/_legal/privacy-policy",
-        "/_legal/terms-of-service",
+        "/(legal)/cookies",
+        "/(legal)/privacy-policy",
+        "/(legal)/terms-of-service",
+        "/(index)/",
         "/about/",
+        "/art/",
         "/calendar/",
+        "/lounge/",
         "/calendar/$year/$month",
         "/calendar/$year/"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/(legal)/cookies": {
+      "filePath": "(legal)/cookies.tsx"
     },
-    "/art": {
-      "filePath": "art.tsx"
+    "/(legal)/privacy-policy": {
+      "filePath": "(legal)/privacy-policy.tsx"
     },
-    "/lounge": {
-      "filePath": "lounge.tsx"
+    "/(legal)/terms-of-service": {
+      "filePath": "(legal)/terms-of-service.tsx"
     },
-    "/_legal/cookies": {
-      "filePath": "_legal/cookies.tsx"
-    },
-    "/_legal/privacy-policy": {
-      "filePath": "_legal/privacy-policy.tsx"
-    },
-    "/_legal/terms-of-service": {
-      "filePath": "_legal/terms-of-service.tsx"
+    "/(index)/": {
+      "filePath": "(index)/index.tsx"
     },
     "/about/": {
       "filePath": "about/index.tsx"
     },
+    "/art/": {
+      "filePath": "art/index.tsx"
+    },
     "/calendar/": {
       "filePath": "calendar/index.tsx"
+    },
+    "/lounge/": {
+      "filePath": "lounge/index.tsx"
     },
     "/calendar/$year/$month": {
       "filePath": "calendar/$year.$month.tsx"
