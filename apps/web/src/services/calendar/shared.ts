@@ -1,7 +1,7 @@
 import * as v from "valibot"
-import { createCookie } from "~/lib/cookies"
+import { cookieOptions } from "~/lib/cookies"
 
-export const cookieCalendarTab = createCookie({
+export const cookieCalendarTabOptions = cookieOptions({
   name: "calendar-tab",
   schema: v.picklist(["monthly", "yearly"]),
 })

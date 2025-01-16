@@ -38,6 +38,7 @@
     @apply cursor-none;
   }
 
+  /* Make the cursor visible on TanStack Query devtools */
   html.cursor .tsqd-parent-container * {
     @apply cursor-default;
   }

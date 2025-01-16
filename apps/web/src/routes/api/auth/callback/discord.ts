@@ -10,7 +10,7 @@ import {
   generateSessionToken,
 } from "@artists-together/core/auth"
 import { createAPIFileRoute } from "@tanstack/start/api"
-import { getEvent, getRequestURL } from "vinxi/http"
+import { getRequestURL } from "vinxi/http"
 import {
   authenticate,
   cookieOauth,
@@ -21,176 +21,176 @@ import { AuthEndpointSearchParams } from "~/lib/schemas"
 
 export const APIRoute = createAPIFileRoute("/api/auth/callback/discord")({
   async GET() {
-    const event = getEvent()
-    const cookie = cookieOauth.safeParse(event)
-    cookieOauth.delete(event)
+    // const cookie = safeParseServerCookie(cookieOauth)
+    // deleteServerCookie(cookieOauth)
 
-    if (!cookie.success) {
-      return new Response("Missing or invalid oauth cookie", {
-        status: 400,
-      })
-    }
+    // if (!cookie.success) {
+    //   return new Response("Missing or invalid oauth cookie", {
+    //     status: 400,
+    //   })
+    // }
 
-    const params = v.safeParse(
-      AuthEndpointSearchParams,
-      Object.fromEntries(getRequestURL().searchParams),
-    )
+    // const params = v.safeParse(
+    //   AuthEndpointSearchParams,
+    //   Object.fromEntries(getRequestURL().searchParams),
+    // )
 
-    if (!params.success) {
-      return new Response("Invalid params", {
-        status: 307,
-        headers: {
-          Location: `${cookie.output.pathname}?error`,
-        },
-      })
-    }
+    // if (!params.success) {
+    //   return new Response("Invalid params", {
+    //     status: 307,
+    //     headers: {
+    //       Location: `${cookie.output.pathname}?error`,
+    //     },
+    //   })
+    // }
 
-    if ("error" in params.output) {
-      switch (params.output.error) {
-        case "access_denied":
-          return new Response("Access denied", {
-            status: 307,
-            headers: {
-              Location: `${cookie.output.pathname}?modal=auth`,
-            },
-          })
-        default:
-          return new Response(params.output.error_description, {
-            status: 307,
-            headers: {
-              Location: `${cookie.output.pathname}?error`,
-            },
-          })
-      }
-    }
+    // if ("error" in params.output) {
+    //   switch (params.output.error) {
+    //     case "access_denied":
+    //       return new Response("Access denied", {
+    //         status: 307,
+    //         headers: {
+    //           Location: `${cookie.output.pathname}?modal=auth`,
+    //         },
+    //       })
+    //     default:
+    //       return new Response(params.output.error_description, {
+    //         status: 307,
+    //         headers: {
+    //           Location: `${cookie.output.pathname}?error`,
+    //         },
+    //       })
+    //   }
+    // }
 
-    if (params.output.state !== cookie.output.state) {
-      return new Response("OAuth state mismatch", {
-        status: 307,
-        headers: {
-          Location: `${cookie.output.pathname}?error`,
-        },
-      })
-    }
+    // if (params.output.state !== cookie.output.state) {
+    //   return new Response("OAuth state mismatch", {
+    //     status: 307,
+    //     headers: {
+    //       Location: `${cookie.output.pathname}?error`,
+    //     },
+    //   })
+    // }
 
-    try {
-      const [tokens, auth] = await Promise.all([
-        provider.discord.validateAuthorizationCode(params.output.code, null),
-        authenticate(event),
-      ])
+    // try {
+    //   const [tokens, auth] = await Promise.all([
+    //     provider.discord.validateAuthorizationCode(params.output.code, null),
+    //     authenticate(),
+    //   ])
 
-      const discordUserClient = createDiscord({
-        authPrefix: "Bearer",
-        token: tokens.accessToken(),
-      })
+    //   const discordUserClient = createDiscord({
+    //     authPrefix: "Bearer",
+    //     token: tokens.accessToken(),
+    //   })
 
-      const discordUser = await discordUserClient.users.getCurrent()
+    //   const discordUser = await discordUserClient.users.getCurrent()
 
-      if (!discordUser.verified) {
-        return new Response("Unverified", {
-          status: 307,
-          headers: {
-            Location: `${cookie.output.pathname}?error=Verify%20your%20Discord%20account%20first`,
-          },
-        })
-      }
+    //   if (!discordUser.verified) {
+    //     return new Response("Unverified", {
+    //       status: 307,
+    //       headers: {
+    //         Location: `${cookie.output.pathname}?error=Verify%20your%20Discord%20account%20first`,
+    //       },
+    //     })
+    //   }
 
-      const discordGuildMember = await discord.guilds
-        .getMember(String(process.env.DISCORD_SERVER_ID), discordUser.id)
-        .catch(() => null)
+    //   const discordGuildMember = await discord.guilds
+    //     .getMember(String(process.env.DISCORD_SERVER_ID), discordUser.id)
+    //     .catch(() => null)
 
-      const shouldAddWebRole =
-        discordGuildMember && !discordGuildMember.roles.includes(ROLE.WEB)
+    //   const shouldAddWebRole =
+    //     discordGuildMember && !discordGuildMember.roles.includes(ROLE.WEB)
 
-      const discordAvatarId = discordGuildMember?.avatar || discordUser.avatar
+    //   const discordAvatarId = discordGuildMember?.avatar || discordUser.avatar
 
-      // TODO: upload this to our R2 bucket
-      const discordAvatar = discordAvatarId
-        ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordAvatarId}`
-        : null
+    //   // TODO: upload this to our R2 bucket
+    //   const discordAvatar = discordAvatarId
+    //     ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordAvatarId}`
+    //     : null
 
-      const user = await database
-        .insert(userTable)
-        .values({
-          email: discordUser.email,
-          avatar: discordAvatar,
-          username: discordUser.username,
-          discordId: discordUser.id,
-          discordUsername: discordUser.username,
-          discordMetadata: discordUser,
-          settings: {
-            fahrenheit: cookie.output.fahrenheit,
-            fullHourFormat: cookie.output.fullHourFormat,
-            shareCursor: true,
-            shareStreaming: true,
-          },
-        })
-        .onConflictDoUpdate({
-          target: userTable.email,
-          set: {
-            avatar: discordAvatar,
-            discordId: discordUser.id,
-            discordUsername: discordUser.username,
-            discordMetadata: discordUser,
-          },
-        })
-        .returning()
-        .then(([value]) => value)
+    //   const user = await database
+    //     .insert(userTable)
+    //     .values({
+    //       email: discordUser.email,
+    //       avatar: discordAvatar,
+    //       username: discordUser.username,
+    //       discordId: discordUser.id,
+    //       discordUsername: discordUser.username,
+    //       discordMetadata: discordUser,
+    //       settings: {
+    //         fahrenheit: cookie.output.fahrenheit,
+    //         fullHourFormat: cookie.output.fullHourFormat,
+    //         shareCursor: true,
+    //         shareStreaming: true,
+    //       },
+    //     })
+    //     .onConflictDoUpdate({
+    //       target: userTable.email,
+    //       set: {
+    //         avatar: discordAvatar,
+    //         discordId: discordUser.id,
+    //         discordUsername: discordUser.username,
+    //         discordMetadata: discordUser,
+    //       },
+    //     })
+    //     .returning()
+    //     .then(([value]) => value)
 
-      if (!user) {
-        return new Response("Failed to create user", {
-          status: 307,
-          headers: {
-            Location: `${cookie.output.pathname}?error`,
-          },
-        })
-      }
+    //   if (!user) {
+    //     return new Response("Failed to create user", {
+    //       status: 307,
+    //       headers: {
+    //         Location: `${cookie.output.pathname}?error`,
+    //       },
+    //     })
+    //   }
 
-      if (!auth) {
-        const sessionToken = generateSessionToken()
-        const session = await createSession(sessionToken, user.id)
-        cookieSession.set(getEvent(), sessionToken, {
-          expires: session.expiresAt,
-        })
-      }
+    //   if (!auth) {
+    //     const sessionToken = generateSessionToken()
+    //     const session = await createSession(sessionToken, user.id)
+    //     setServerCookie(cookieSession, sessionToken, {
+    //       expires: session.expiresAt,
+    //     })
+    //   }
 
-      if (cookie.output.geolocation) {
-        database
-          .insert(locationTable)
-          .values(cookie.output.geolocation)
-          .onConflictDoNothing({
-            target: locationTable.city,
-          })
-          .catch(console.error)
-      }
+    //   if (cookie.output.geolocation) {
+    //     database
+    //       .insert(locationTable)
+    //       .values(cookie.output.geolocation)
+    //       .onConflictDoNothing({
+    //         target: locationTable.city,
+    //       })
+    //       .catch(console.error)
+    //   }
 
-      if (shouldAddWebRole) {
-        discord.guilds
-          .addRoleToMember(
-            String(process.env.DISCORD_SERVER_ID),
-            discordUser.id,
-            ROLE.WEB,
-            { reason: "Linked Artists Together account" },
-          )
-          .catch(console.error)
-      }
+    //   if (shouldAddWebRole) {
+    //     discord.guilds
+    //       .addRoleToMember(
+    //         String(process.env.DISCORD_SERVER_ID),
+    //         discordUser.id,
+    //         ROLE.WEB,
+    //         { reason: "Linked Artists Together account" },
+    //       )
+    //       .catch(console.error)
+    //   }
 
-      return new Response("Logged in successfully", {
-        status: 307,
-        headers: {
-          Location: `${cookie.output.pathname}?toast=Logged%20in%20as%20%40${user.username}`,
-        },
-      })
-    } catch (error) {
-      return new Response(
-        error instanceof Error ? error.message : "Unexpected error",
-        {
-          status: 307,
-          headers: {
-            Location: `${cookie.output.pathname}?error`,
-          },
-        },
-      )
-    }
+    //   return new Response("Logged in successfully", {
+    //     status: 307,
+    //     headers: {
+    //       Location: `${cookie.output.pathname}?toast=Logged%20in%20as%20%40${user.username}`,
+    //     },
+    //   })
+    // } catch (error) {
+    //   return new Response(
+    //     error instanceof Error ? error.message : "Unexpected error",
+    //     {
+    //       status: 307,
+    //       headers: {
+    //         Location: `${cookie.output.pathname}?error`,
+    //       },
+    //     },
+    //   )
+    // }
+    return new Response(null)
   },
 })

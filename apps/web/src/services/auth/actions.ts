@@ -2,17 +2,14 @@ import { invalidateSession } from "@artists-together/core/auth"
 import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/start"
 import { parseWithValibot } from "conform-to-valibot"
-import { getEvent } from "vinxi/http"
 import { generateState } from "arctic"
 import { AuthFormSchema } from "~/lib/schemas"
 import { $hints } from "~/services/hints/server"
-import { authenticate, cookieOauth, cookieSession, provider } from "./server"
+import { authenticate, cookieSession, provider } from "./server"
+import { deleteCookie, getCookie, setCookie } from "vinxi/http"
 
 export const $authenticate = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const event = getEvent()
-    return authenticate(event)
-  },
+  async () => authenticate(),
 )
 
 export const $login = createServerFn({ method: "POST" })
@@ -26,9 +23,7 @@ export const $login = createServerFn({ method: "POST" })
       throw form.reply()
     }
 
-    const event = getEvent()
-
-    if (cookieSession.has(event)) {
+    if (cookieSession.safeDecode(getCookie(cookieSession.name)).success) {
       throw form.reply({
         formErrors: ["Already logged in"],
       })
@@ -41,13 +36,17 @@ export const $login = createServerFn({ method: "POST" })
       "email",
     ])
 
-    cookieOauth.set(event, {
-      fahrenheit: hints.temperatureUnit === "fahrenheit",
-      fullHourFormat: hints.hourFormat === "24",
-      pathname: form.value.pathname,
-      geolocation: hints.geolocation,
-      state,
-    })
+    setCookie(
+      cookieSession.name,
+      cookieSession.encode({
+        fahrenheit: hints.temperatureUnit === "fahrenheit",
+        fullHourFormat: hints.hourFormat === "24",
+        pathname: form.value.pathname,
+        geolocation: hints.geolocation,
+        state,
+      }),
+      cookieSession.options,
+    )
 
     throw redirect({
       href: url.href,
@@ -65,15 +64,14 @@ export const $logout = createServerFn({ method: "POST" })
       throw parsed.reply()
     }
 
-    const event = getEvent()
-    const auth = await authenticate(event)
+    const auth = await authenticate()
 
     if (!auth) {
       throw Error("Unauthorized")
     }
 
     invalidateSession(auth.session.id)
-    cookieSession.delete(getEvent())
+    deleteCookie(cookieSession.name, cookieSession.options)
   })
 
 export const $linkDiscord = createServerFn({ method: "GET" }).handler(

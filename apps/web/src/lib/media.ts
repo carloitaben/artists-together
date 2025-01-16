@@ -99,7 +99,7 @@ export function useMeasure<T extends Element = Element>(
   elementOrRef: RefObject<T> | T | null,
   options?: ResizeObserverOptions,
 ) {
-  const [_, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
   const [entry, setEntry] = useState<DOMRect>()
 
   const callback = useCallback<MeasureCallback>((entry) => {

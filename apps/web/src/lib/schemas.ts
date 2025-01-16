@@ -49,6 +49,11 @@ export const MonthNumberToName = v.pipe(
   v.transform((value) => MonthNameList.options.at(value - 1)!),
 )
 
+export const MonthNameToNumber = v.pipe(
+  MonthNameList,
+  v.transform((value) => MonthNameList.options.indexOf(value) + 1),
+)
+
 export const RootSearchParams = v.object({
   modal: v.optional(v.picklist(["auth"])),
   toast: v.optional(v.string()),

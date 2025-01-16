@@ -108,7 +108,7 @@ export default function Stars() {
       initial={false}
       animate={{ opacity: loaded ? 1 : 0 }}
       transition={{ duration: 1.75, delay: 0.3 }}
-      className="pointer-events-none fixed inset-y-0 -left-16 right-0 -z-10"
+      className="pointer-events-none fixed inset-y-0 -left-16 right-0 -z-10 size-full"
       aria-hidden
     >
       <Canvas

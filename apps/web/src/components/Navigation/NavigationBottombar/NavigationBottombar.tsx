@@ -1,5 +1,5 @@
 import { useChildMatches } from "@tanstack/react-router"
-import type { ComponentProps, CSSProperties, ComponentRef } from "react"
+import type { CSSProperties, ComponentRef } from "react"
 import { useRef, useState } from "react"
 import { AnimatePresence, motion } from "motion/react"
 import { useMeasure } from "~/lib/media"

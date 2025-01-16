@@ -18,7 +18,6 @@ export function seo({
     { name: "keywords", content: keywords },
     { name: "theme-color", content: colors["arpeggio-black"][900] },
     { name: "color-scheme", content: "dark" },
-
     { name: "og:title", content: title },
     { name: "og:description", content: description },
     // { name: "og:url", content: "" },
@@ -28,7 +27,6 @@ export function seo({
     { name: "og:image:width", content: "1200" },
     { name: "og:image:height", content: "630" },
     { name: "og:type", content: "website" },
-
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },

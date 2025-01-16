@@ -35,6 +35,7 @@ export const navigation = {
     icon: "Help",
     link: linkOptions({
       to: "/about",
+      disabled: false,
     }),
   },
   lounge: {
@@ -58,7 +59,7 @@ export const navigation = {
     icon: "Calendar",
     link: linkOptions({
       to: "/calendar",
-      disabled: true,
+      disabled: false,
     }),
   },
 } satisfies Record<string, NavigationItem>

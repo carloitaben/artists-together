@@ -5,12 +5,12 @@ import {
   type SessionValidationResult,
 } from "@artists-together/core/auth"
 import { Discord, Twitch } from "arctic"
-import type { HTTPEvent } from "vinxi/http"
 import { WEB_URL } from "~/lib/constants"
-import { createCookie } from "~/lib/cookies"
 import { AuthFormSchema, Geolocation } from "~/lib/schemas"
+import { cookieOptions } from "~/lib/cookies"
+import { deleteCookie, getCookie, setCookie } from "vinxi/http"
 
-export const cookieSession = createCookie({
+export const cookieSession = cookieOptions({
   name: SESSION_COOKIE_NAME,
   schema: v.pipe(v.string(), v.nonEmpty()),
   secure: import.meta.env.PROD,
@@ -19,7 +19,7 @@ export const cookieSession = createCookie({
   path: "/",
 })
 
-export const cookieOauth = createCookie({
+export const cookieOauth = cookieOptions({
   name: "oauth",
   schema: v.object({
     ...AuthFormSchema.entries,
@@ -48,10 +48,8 @@ export const provider = {
   ),
 }
 
-export async function authenticate(
-  event: HTTPEvent,
-): Promise<SessionValidationResult> {
-  const cookie = cookieSession.safeParse()
+export async function authenticate(): Promise<SessionValidationResult> {
+  const cookie = cookieSession.safeDecode(getCookie(cookieSession.name))
 
   if (!cookie.success) {
     return null
@@ -60,11 +58,12 @@ export async function authenticate(
   const result = await validateSessionToken(cookie.output)
 
   if (!result) {
-    cookieSession.delete(event)
+    deleteCookie(cookieSession.name)
     return null
   }
 
-  cookieSession.set(cookie.output, {
+  setCookie(cookieSession.name, cookieSession.encode(cookie.output), {
+    ...cookieSession.options,
     expires: result.session.expiresAt,
   })
 

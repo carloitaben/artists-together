@@ -1,9 +1,15 @@
 import { json } from '@tanstack/start'
 import { createAPIFileRoute } from '@tanstack/start/api'
+import { getCookie } from "vinxi/http"
+import { cookieCalendarTabOptions } from "~/services/calendar/shared"
 
 export const APIRoute = createAPIFileRoute("/api/auth/callback/twitch")({
-  GET: ({ request, params }) => {
-    return json({ message: "Hello /api/auth/callback/twitch" })
+  GET: () => {
+    const cookie = cookieCalendarTabOptions.safeDecode(
+      getCookie(cookieCalendarTabOptions.name),
+    )
+
+    return json({ message: cookie })
   },
 })
 
