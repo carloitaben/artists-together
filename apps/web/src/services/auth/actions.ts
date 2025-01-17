@@ -5,7 +5,7 @@ import { parseWithValibot } from "conform-to-valibot"
 import { generateState } from "arctic"
 import { AuthFormSchema } from "~/lib/schemas"
 import { $hints } from "~/services/hints/server"
-import { authenticate, cookieSession, provider } from "./server"
+import { authenticate, cookieOauth, cookieSession, provider } from "./server"
 import { deleteCookie, getCookie, setCookie } from "vinxi/http"
 
 export const $authenticate = createServerFn({ method: "GET" }).handler(
@@ -37,15 +37,15 @@ export const $login = createServerFn({ method: "POST" })
     ])
 
     setCookie(
-      cookieSession.name,
-      cookieSession.encode({
+      cookieOauth.name,
+      cookieOauth.encode({
         fahrenheit: hints.temperatureUnit === "fahrenheit",
         fullHourFormat: hints.hourFormat === "24",
         pathname: form.value.pathname,
         geolocation: hints.geolocation,
         state,
       }),
-      cookieSession.options,
+      cookieOauth.options,
     )
 
     throw redirect({

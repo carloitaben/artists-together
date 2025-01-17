@@ -2,6 +2,7 @@ import * as v from "valibot"
 import { createDiscord, discord, ROLE } from "@artists-together/core/discord"
 import { database } from "@artists-together/core/database/client"
 import {
+  DiscordMetadata,
   locationTable,
   userTable,
 } from "@artists-together/core/database/schema"
@@ -83,7 +84,9 @@ export const APIRoute = createAPIFileRoute("/api/auth/callback/discord")({
         token: tokens.accessToken(),
       })
 
-      const discordUser = await discordUserClient.users.getCurrent()
+      const discordUser = await discordUserClient.users
+        .getCurrent()
+        .then((current) => v.parse(DiscordMetadata, current))
 
       if (!discordUser.verified) {
         return new Response("Unverified", {
@@ -181,8 +184,12 @@ export const APIRoute = createAPIFileRoute("/api/auth/callback/discord")({
         },
       })
     } catch (error) {
+      if (import.meta.env.DEV) {
+        throw error
+      }
+
       return new Response(
-        error instanceof Error ? error.message : "Unexpected error",
+        error instanceof Error ? error.message : "Internal server error",
         {
           status: 307,
           headers: {

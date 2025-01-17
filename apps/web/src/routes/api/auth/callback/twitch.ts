@@ -1,111 +1,120 @@
-import { json } from '@tanstack/start'
-import { createAPIFileRoute } from '@tanstack/start/api'
-import { getCookie } from "vinxi/http"
-import { cookieCalendarTabOptions } from "~/services/calendar/shared"
+import * as v from "valibot"
+import { createAPIFileRoute } from "@tanstack/start/api"
+import { getCookie, getRequestURL } from "vinxi/http"
+import { authenticate, cookieOauth, provider } from "~/services/auth/server"
+import { AuthEndpointSearchParams } from "~/lib/schemas"
+import { database, eq } from "@artists-together/core/database/client"
+import {
+  TwitchMetadata,
+  userTable,
+} from "@artists-together/core/database/schema"
 
 export const APIRoute = createAPIFileRoute("/api/auth/callback/twitch")({
-  GET: () => {
-    const cookie = cookieCalendarTabOptions.safeDecode(
-      getCookie(cookieCalendarTabOptions.name),
+  async GET() {
+    const cookie = cookieOauth.safeDecode(getCookie(cookieOauth.name))
+
+    if (!cookie.success) {
+      return new Response("Missing or invalid oauth cookie", {
+        status: 400,
+      })
+    }
+
+    const params = v.safeParse(
+      AuthEndpointSearchParams,
+      Object.fromEntries(getRequestURL().searchParams),
     )
 
-    return json({ message: cookie })
+    if (!params.success) {
+      return new Response("Invalid params", {
+        status: 307,
+        headers: {
+          Location: `${cookie.output.pathname}?error`,
+        },
+      })
+    }
+
+    if ("error" in params.output) {
+      switch (params.output.error) {
+        case "access_denied":
+          return new Response("Access denied", {
+            status: 307,
+            headers: {
+              Location: `${cookie.output.pathname}?modal=auth`,
+            },
+          })
+        default:
+          return new Response(params.output.error_description, {
+            status: 307,
+            headers: {
+              Location: `${cookie.output.pathname}?error`,
+            },
+          })
+      }
+    }
+
+    if (params.output.state !== cookie.output.state) {
+      return new Response("OAuth state mismatch", {
+        status: 307,
+        headers: {
+          Location: `${cookie.output.pathname}?error`,
+        },
+      })
+    }
+
+    const auth = await authenticate()
+
+    if (!auth) {
+      return new Response("Unauthorized", {
+        status: 401,
+        headers: {
+          Location: `${cookie.output.pathname}?error`,
+        },
+      })
+    }
+
+    try {
+      const tokens = await provider.twitch.validateAuthorizationCode(
+        params.output.code,
+      )
+
+      const twitchUser = await fetch("https://api.twitch.tv/helix/users", {
+        headers: {
+          Authorization: `Bearer ${tokens.accessToken}`,
+          "Client-Id": process.env.OAUTH_TWITCH_ID || "",
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => v.parse(TwitchMetadata, json))
+
+      await database
+        .update(userTable)
+        .set({
+          twitchId: twitchUser.id,
+          twitchUsername: twitchUser.login,
+          twitchMetadata: twitchUser,
+        })
+        .where(eq(userTable.id, auth.user.id))
+
+      return new Response("Updated Twitch user metadata", {
+        status: 307,
+        headers: {
+          Location: `${cookie.output.pathname}?modal=auth`,
+        },
+      })
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        throw error
+      }
+
+      return new Response(
+        error instanceof Error ? error.message : "Internal server error",
+        {
+          status: 307,
+          headers: {
+            Location: `${cookie.output.pathname}?error`,
+          },
+        },
+      )
+    }
   },
 })
-
-// import {
-//   database,
-//   userTable,
-//   eq,
-//   TwitchMetadata,
-// } from "@artists-together/core/database"
-// import { isRedirectError } from "next/dist/client/components/redirect"
-// import { redirect } from "next/navigation"
-// import type { NextRequest } from "next/server"
-// import { z } from "zod"
-// import { authenticate, oauthCookie, provider } from "~/services/auth/server"
-// import { parseSearchParams } from "~/lib/server"
-
-// const searchParams = z.union([
-//   z.object({
-//     error: z.string(),
-//     error_description: z.string().optional(),
-//   }),
-//   z.object({
-//     code: z.string().min(1),
-//     state: z.string().min(1),
-//   }),
-// ])
-
-// export async function GET(request: NextRequest) {
-//   const cookie = oauthCookie.get()
-
-//   if (!cookie.success) {
-//     throw new Response(null, {
-//       status: 400,
-//       statusText: "Missing or invalid oauth cookie",
-//     })
-//   }
-
-//   oauthCookie.delete()
-
-//   const params = parseSearchParams(request.nextUrl.searchParams, {
-//     schema: searchParams,
-//   })
-
-//   if (!params.success) {
-//     return redirect(`${cookie.data.pathname}?error`)
-//   }
-
-//   if ("error" in params.data) {
-//     switch (params.data.error) {
-//       case "access_denied":
-//         return redirect(`${cookie.data.pathname}?modal=auth`)
-//       default:
-//         return redirect(`${cookie.data.pathname}?error`)
-//     }
-//   }
-
-//   if (params.data.state !== cookie.data.state) {
-//     return redirect(`${cookie.data.pathname}?error`)
-//   }
-
-//   const auth = await authenticate()
-
-//   if (!auth) {
-//     return redirect(`${cookie.data.pathname}?error`)
-//   }
-
-//   try {
-//     const tokens = await provider.twitch.validateAuthorizationCode(
-//       params.data.code,
-//     )
-
-//     const twitchUser = await fetch("https://api.twitch.tv/helix/users", {
-//       headers: {
-//         Authorization: `Bearer ${tokens.accessToken}`,
-//         "Client-Id": process.env.OAUTH_TWITCH_ID || "",
-//       },
-//     })
-//       .then((response) => response.json())
-//       .then(TwitchMetadata.parse)
-
-//     await database
-//       .update(userTable)
-//       .set({
-//         twitchId: twitchUser.id,
-//         twitchUsername: twitchUser.login,
-//         twitchMetadata: twitchUser,
-//       })
-//       .where(eq(userTable.id, auth.user.id))
-
-//     return redirect(`${cookie.data.pathname}?modal=auth`)
-//   } catch (error) {
-//     if (isRedirectError(error)) {
-//       throw error
-//     }
-
-//     console.error(error)
-//     return redirect(`${cookie.data.pathname}?error`)
-//   }
-// }
