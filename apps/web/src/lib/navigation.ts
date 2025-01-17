@@ -59,7 +59,7 @@ export const navigation = {
     icon: "Calendar",
     link: linkOptions({
       to: "/calendar",
-      disabled: false,
+      disabled: true,
     }),
   },
 } satisfies Record<string, NavigationItem>

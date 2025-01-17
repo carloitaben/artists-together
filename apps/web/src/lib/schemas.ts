@@ -1,12 +1,9 @@
-import { UserTableInsert } from "@artists-together/core/database/schema"
 import * as v from "valibot"
+import { UserTableInsert } from "@artists-together/core/database/schema"
 
 export const Pathname = v.pipe(
   v.string(),
-  v.check(
-    (value) => value.startsWith("/"),
-    "Pathname must have trailing slash",
-  ),
+  v.startsWith("/", "Pathname must have trailing slash"),
 )
 
 export const Geolocation = v.nullable(
