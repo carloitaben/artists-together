@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@artists-together/core": "workspace:*",
-    "valibot": "1.0.0-beta.10"
+    "valibot": "beta"
   },
   "devDependencies": {
     "@artists-together/config": "workspace:*"

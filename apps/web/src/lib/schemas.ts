@@ -1,6 +1,25 @@
 import * as v from "valibot"
 import { UserTableInsert } from "@artists-together/core/database/schema"
 
+export const FormActionValidator = v.parser(
+  v.pipe(
+    v.tuple([v.instance(FormData)]),
+    v.transform(([formData]) => formData),
+  ),
+)
+
+/**
+ * A loosely defined `SubmissionResult`.
+ */
+export const FormActionSubmissionResult = v.object({
+  status: v.undefinedable(v.picklist(["error", "success"])),
+  intent: v.undefinedable(v.string()),
+  initialValue: v.undefinedable(v.record(v.string(), v.unknown())),
+  fields: v.undefinedable(v.array(v.string())),
+  error: v.undefinedable(v.record(v.string(), v.unknown())),
+  state: v.undefinedable(v.unknown()),
+})
+
 export const Pathname = v.pipe(
   v.string(),
   v.startsWith("/", "Pathname must have trailing slash"),
