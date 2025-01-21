@@ -94,6 +94,7 @@ export function useWebSocket() {
       )
     }
 
+    webSocket.reconnect()
     webSocket.addEventListener("open", onOpen)
     webSocket.addEventListener("message", onMessage)
 
