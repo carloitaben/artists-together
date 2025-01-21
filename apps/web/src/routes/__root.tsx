@@ -12,7 +12,7 @@ import { cx } from "cva"
 import { authenticateQueryOptions } from "~/services/auth/shared"
 import { hintsQueryOptions } from "~/services/hints/shared"
 import { seo } from "~/lib/seo"
-import { WebSocket } from "~/lib/websocket"
+import { useWebSocket } from "~/lib/websocket"
 import { RootSearchParams } from "~/lib/schemas"
 import css from "~/styles/index.css?url"
 import inter from "~/assets/fonts/inter.woff2"
@@ -143,6 +143,8 @@ function EnsureUppercaseSerifAmpersand() {
 }
 
 function RootDocument({ children }: { children: ReactNode }) {
+  useWebSocket()
+
   return (
     <html
       lang="en"
@@ -157,10 +159,8 @@ function RootDocument({ children }: { children: ReactNode }) {
       </head>
       <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
         <Navigation />
-        <WebSocket>
-          {children}
-          <Cursors />
-        </WebSocket>
+        {children}
+        <Cursors />
         <Footer />
         <Toasts />
         <Auth />

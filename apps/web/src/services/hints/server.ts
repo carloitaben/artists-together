@@ -20,11 +20,16 @@ function getTemperatureUnit(locale: string) {
 }
 
 function getHourFormat(locale: string) {
-  const dateTimeFormat = new Intl.DateTimeFormat(locale, {
-    hour: "numeric",
-  })
+  try {
+    const dateTimeFormat = new Intl.DateTimeFormat(locale, {
+      hour: "numeric",
+    })
 
-  return dateTimeFormat.resolvedOptions().hour12 ? "12" : "24"
+    return dateTimeFormat.resolvedOptions().hour12 ? "12" : "24"
+  } catch (error) {
+    console.warn(error, locale)
+    return "24"
+  }
 }
 
 function getGeolocation() {

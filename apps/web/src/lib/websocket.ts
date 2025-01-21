@@ -15,7 +15,6 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query"
 import { useLocation } from "@tanstack/react-router"
-import type { ReactNode } from "react"
 import { useEffect } from "react"
 import { PartySocket } from "partysocket"
 import { hintsQueryOptions } from "~/services/hints/shared"
@@ -55,19 +54,10 @@ export function sendWebSocketMessage<T extends ClientEvent>(
   }
 }
 
-function NotifyLocationChange() {
-  const room = useLocation({ select: (state) => state.pathname })
-
-  useEffect(() => {
-    sendWebSocketMessage("room:update", { room })
-  }, [room])
-
-  return null
-}
-
-export function WebSocket({ children }: { children: ReactNode }) {
+export function useWebSocket() {
   const queryClient = useQueryClient()
   const hints = useSuspenseQuery(hintsQueryOptions)
+  const room = useLocation({ select: (state) => state.pathname })
 
   useEffect(() => {
     if (hints.data.saveData || hints.data.isBot) return
@@ -114,10 +104,7 @@ export function WebSocket({ children }: { children: ReactNode }) {
     }
   }, [hints.data.isBot, hints.data.saveData, queryClient])
 
-  return (
-    <>
-      <NotifyLocationChange />
-      {children}
-    </>
-  )
+  useEffect(() => {
+    sendWebSocketMessage("room:update", { room })
+  }, [room])
 }
