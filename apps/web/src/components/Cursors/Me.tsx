@@ -8,7 +8,7 @@ import { throttle } from "radashi"
 import { useEffect, useState } from "react"
 import { useScreen } from "~/lib/media"
 import { authenticateQueryOptions } from "~/services/auth/shared"
-import { useWebSocket, webSocketQueryOptions } from "~/lib/websocket"
+import { sendWebSocketMessage, webSocketQueryOptions } from "~/lib/websocket"
 import { ATTR_NAME_DATA_CURSOR_PRECISION, measure, SCOPE_ROOT } from "./lib"
 import Cursor from "./Cursor"
 
@@ -25,7 +25,6 @@ export default function Me() {
   })
 
   const [state, setState] = useState<CursorState>()
-  const webSocket = useWebSocket()
   const sm = useScreen("sm")
   const hasCursor = useScreen("cursor")
   const x = useMotionValue(0)
@@ -50,7 +49,7 @@ export default function Me() {
         trailing: true,
       },
       () => {
-        webSocket.send("cursor:update", updates)
+        sendWebSocketMessage("cursor:update", updates)
         timestamp = undefined
         updates = []
       },
@@ -151,7 +150,7 @@ export default function Me() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [hasCursor, sm, scale, state, x, y, alone.data, webSocket, auth.data])
+  }, [hasCursor, sm, scale, state, x, y, alone.data, auth.data])
 
   return (
     <AnimatePresence initial={false}>

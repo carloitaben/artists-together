@@ -16,13 +16,9 @@ import {
 } from "@tanstack/react-query"
 import { useLocation } from "@tanstack/react-router"
 import type { ReactNode } from "react"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect } from "react"
 import { PartySocket } from "partysocket"
 import { hintsQueryOptions } from "~/services/hints/shared"
-import { createRequiredContext } from "~/lib/react"
-
-const [WebSocketContextProvider, useWebSocketContext] =
-  createRequiredContext<PartySocket | null>("WebSocketContext", null)
 
 const queue = new Map<ClientEvent, string>()
 
@@ -36,56 +32,45 @@ export function webSocketQueryOptions<T extends ServerEvent>(
   })
 }
 
-export function useWebSocket() {
-  const webSocket = useWebSocketContext()
+export const webSocket = new PartySocket({
+  host: process.env.WSS_URL || "ws://localhost:1999",
+  debug: import.meta.env.DEV,
+  startClosed: true,
+})
 
-  const send = useCallback(
-    function send<T extends ClientEvent>(event: T, data: ClientEventOutput<T>) {
-      const focused = focusManager.isFocused()
+export function sendWebSocketMessage<T extends ClientEvent>(
+  event: T,
+  data: ClientEventOutput<T>,
+) {
+  const focused = focusManager.isFocused()
 
-      if (!focused) return
+  if (!focused) return
 
-      const message = encodeClientMessage(event, data)
+  const message = encodeClientMessage(event, data)
 
-      if (webSocket && webSocket.readyState === webSocket.OPEN) {
-        webSocket.send(message)
-      } else {
-        queue.set(event, message)
-      }
-    },
-    [webSocket],
-  )
-
-  return {
-    instance: webSocket,
-    send,
+  if (webSocket.readyState === webSocket.OPEN) {
+    webSocket.send(message)
+  } else {
+    queue.set(event, message)
   }
 }
 
 function NotifyLocationChange() {
-  const webSocket = useWebSocket()
   const room = useLocation({ select: (state) => state.pathname })
 
   useEffect(() => {
-    webSocket.send("room:update", { room })
-  }, [room, webSocket])
+    sendWebSocketMessage("room:update", { room })
+  }, [room])
 
   return null
 }
 
 export function WebSocket({ children }: { children: ReactNode }) {
-  const [webSocket, setWebSocket] = useState<PartySocket | null>(null)
   const queryClient = useQueryClient()
   const hints = useSuspenseQuery(hintsQueryOptions)
 
   useEffect(() => {
     if (hints.data.saveData || hints.data.isBot) return
-
-    const webSocket = new PartySocket({
-      host: process.env.WSS_URL || "ws://localhost:1999",
-      debug: false,
-      startClosed: false,
-    })
 
     function onOpen() {
       queue.forEach((message, event) => {
@@ -121,20 +106,18 @@ export function WebSocket({ children }: { children: ReactNode }) {
 
     webSocket.addEventListener("open", onOpen)
     webSocket.addEventListener("message", onMessage)
-    setWebSocket(webSocket)
 
     return () => {
       webSocket.close()
       webSocket.removeEventListener("open", onOpen)
       webSocket.removeEventListener("message", onMessage)
-      setWebSocket(null)
     }
   }, [hints.data.isBot, hints.data.saveData, queryClient])
 
   return (
-    <WebSocketContextProvider value={webSocket}>
+    <>
       <NotifyLocationChange />
       {children}
-    </WebSocketContextProvider>
+    </>
   )
 }
