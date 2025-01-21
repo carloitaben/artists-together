@@ -1,7 +1,6 @@
 import * as v from "valibot"
 import { AnyJSONString, JSONStringify } from "@artists-together/core/schemas"
-import type { CookieSerializeOptions } from "cookie-es"
-import { parse, serialize } from "cookie-es"
+import type { CookieSerializeOptions } from "vinxi/http"
 
 export function cookieOptions<
   Name extends string,
@@ -30,29 +29,4 @@ export function cookieOptions<
     decode: v.parser(decodeSchema),
     safeDecode: v.safeParser(decodeSchema),
   }
-}
-
-export function deleteDocumentCookie(
-  name: string,
-  serializeOptions?: CookieSerializeOptions,
-) {
-  setDocumentCookie(name, "", {
-    ...serializeOptions,
-    maxAge: 0,
-  })
-}
-
-export function getDocumentCookie(name: string): string | undefined {
-  return parse(document.cookie)[name]
-}
-
-export function setDocumentCookie(
-  name: string,
-  value: string,
-  options?: CookieSerializeOptions,
-) {
-  document.cookie = serialize(name, value, {
-    path: "/",
-    ...options,
-  })
 }

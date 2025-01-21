@@ -1,7 +1,5 @@
 import * as v from "valibot"
 import { createFileRoute, Link, notFound } from "@tanstack/react-router"
-import { cookieCalendarTabOptions } from "~/services/calendar/shared"
-import { setIsomorphicCookie } from "~/lib/isomorphic"
 import { CalendarPathParams } from "~/lib/schemas"
 
 export const Route = createFileRoute("/calendar/$year/$month")({
@@ -10,15 +8,6 @@ export const Route = createFileRoute("/calendar/$year/$month")({
 
     if (!parsed.success) {
       throw notFound()
-    }
-  },
-  loader(options) {
-    if (!options.preload) {
-      setIsomorphicCookie(
-        cookieCalendarTabOptions.name,
-        cookieCalendarTabOptions.encode("monthly"),
-        cookieCalendarTabOptions.options,
-      )
     }
   },
   head() {

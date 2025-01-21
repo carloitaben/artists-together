@@ -11,12 +11,11 @@ export const FormActionValidator = v.parser(
 /**
  * A loosely defined `SubmissionResult`.
  */
-export const FormActionSubmissionResult = v.object({
-  status: v.undefinedable(v.picklist(["error", "success"])),
+export const FormActionSubmissionError = v.object({
+  status: v.literal("error"),
   intent: v.undefinedable(v.string()),
-  initialValue: v.undefinedable(v.record(v.string(), v.unknown())),
   fields: v.undefinedable(v.array(v.string())),
-  error: v.undefinedable(v.record(v.string(), v.unknown())),
+  error: v.record(v.string(), v.array(v.string())),
   state: v.undefinedable(v.unknown()),
 })
 

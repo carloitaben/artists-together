@@ -1,14 +1,14 @@
 import * as v from "valibot"
+import type { SessionValidationResult } from "@artists-together/core/auth"
 import {
   SESSION_COOKIE_NAME,
   validateSessionToken,
-  type SessionValidationResult,
 } from "@artists-together/core/auth"
 import { Discord, Twitch } from "arctic"
+import { deleteCookie, getCookie, setCookie } from "vinxi/http"
 import { WEB_URL } from "~/lib/constants"
 import { AuthFormSchema, Geolocation } from "~/lib/schemas"
 import { cookieOptions } from "~/lib/cookies"
-import { deleteCookie, getCookie, setCookie } from "vinxi/http"
 
 export const cookieSession = cookieOptions({
   name: SESSION_COOKIE_NAME,

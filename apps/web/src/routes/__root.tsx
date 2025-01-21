@@ -8,6 +8,7 @@ import { Meta, Scripts } from "@tanstack/start"
 import type { QueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { lazy, useEffect } from "react"
+import { cx } from "cva"
 import { authenticateQueryOptions } from "~/services/auth/shared"
 import { hintsQueryOptions } from "~/services/hints/shared"
 import { seo } from "~/lib/seo"
@@ -22,7 +23,6 @@ import Cursors from "~/components/Cursors"
 import Footer from "~/components/Footer"
 import Toasts from "~/components/Toasts"
 import Auth from "~/components/Auth"
-import { cx } from "cva"
 
 const QueryDevtools = import.meta.env.PROD
   ? () => null
