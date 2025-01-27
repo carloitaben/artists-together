@@ -1,3 +1,5 @@
+"use client"
+
 import type {
   CursorState,
   Cursor as CursorType,
@@ -88,7 +90,7 @@ function CursorPresence(
               )
 
         if (!element) {
-          if (import.meta.env.DEV) {
+          if (process.env.NODE_ENV === "development") {
             throw Error(`Could not find cursor target "${cursor.target}"`)
           }
 

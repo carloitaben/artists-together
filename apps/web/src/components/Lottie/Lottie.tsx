@@ -1,42 +1,47 @@
-import type {
-  ComponentProps,
-  ComponentRef,
-  ForwardedRef,
-  ReactNode,
-} from "react"
-import { Suspense, lazy, forwardRef } from "react"
-import { ErrorBoundary } from "react-error-boundary"
-import type LottieComponent from "./LottieComponent"
-import ClientOnly from "../ClientOnly"
+"use client"
 
-const LazyLottieComponent = lazy(() => import("./LottieComponent"))
+import lottie from "lottie-web/build/player/lottie_svg"
+import type { AnimationConfigWithData } from "lottie-web/build/player/lottie_svg"
+import type { ComponentProps, ComponentRef, RefCallback } from "react"
+import { use, useCallback } from "react"
+import { cx } from "cva"
+import { clientOnly } from "~/components/ClientOnly"
 
-type Props = Omit<ComponentProps<typeof LottieComponent>, "src"> & {
-  /**
-   * A dynamic import with the Lottie JSON animation
-   */
-  src: () => Promise<{ default: unknown }>
-  fallback?: ReactNode
-  errorFallback?: ReactNode
-}
+type Props = ComponentProps<"div"> &
+  Pick<AnimationConfigWithData, "autoplay" | "loop"> & {
+    /**
+     * A dynamic import with the Lottie JSON animation
+     */
+    src: Promise<{ default: unknown }>
+  }
 
-function Lottie(
-  { src, fallback = null, errorFallback = fallback, ...props }: Props,
-  ref: ForwardedRef<ComponentRef<typeof LottieComponent>>,
-) {
+export default function Lottie({
+  src,
+  className,
+  autoplay = false,
+  loop = false,
+  ...props
+}: Props) {
+  clientOnly()
+
+  const animationData = use(src)
+  const ref = useCallback<RefCallback<ComponentRef<"div">>>(
+    (container) => {
+      if (!container) return
+
+      const animation = lottie.loadAnimation({
+        animationData: animationData.default,
+        container,
+        autoplay,
+        loop,
+      })
+
+      return () => animation.destroy()
+    },
+    [animationData.default, autoplay, loop],
+  )
+
   return (
-    <Suspense fallback={fallback}>
-      <ClientOnly fallback={fallback}>
-        <ErrorBoundary fallback={errorFallback}>
-          <LazyLottieComponent
-            {...props}
-            ref={ref}
-            src={src().then((module) => module.default)}
-          />
-        </ErrorBoundary>
-      </ClientOnly>
-    </Suspense>
+    <div {...props} ref={ref} className={cx(className, "*:!transform-none")} />
   )
 }
-
-export default forwardRef(Lottie)

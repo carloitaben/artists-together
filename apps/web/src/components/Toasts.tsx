@@ -1,5 +1,7 @@
-import { rootRouteId, useNavigate, useSearch } from "@tanstack/react-router"
+"use client"
+
 import { Toast, Toaster, createToaster } from "@ark-ui/react/toast"
+import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
 import { cx } from "cva"
 import Icon from "./Icon"
@@ -11,34 +13,24 @@ export const toaster = createToaster({
 })
 
 export default function Toasts() {
-  const navigate = useNavigate()
-  const search = useSearch({
-    from: rootRouteId,
-    select: ({ error, toast }) => ({ error, toast }),
-  })
+  const search = useSearchParams()
 
   useEffect(() => {
-    if (
-      typeof search.toast === "undefined" &&
-      typeof search.error === "undefined"
-    )
-      return
+    const toast = search.get("toast")
+    const error = search.get("error")
+
+    if (toast === null && error === null) return
 
     toaster.create({
-      title: search.toast || search.error || "Oops! Something went wrong…",
-      type: search.error ? "error" : "info",
+      title: toast || error || "Oops! Something went wrong…",
+      type: error ? "error" : "info",
     })
 
-    navigate({
-      replace: true,
-      // @ts-expect-error I don't know how to solve this
-      search: (prev) => ({
-        ...prev,
-        toast: undefined,
-        error: undefined,
-      }),
-    })
-  }, [navigate, search.error, search.toast])
+    const url = new URL(window.location.href)
+    url.searchParams.delete("toast")
+    url.searchParams.delete("error")
+    window.history.replaceState(null, "", url)
+  }, [search])
 
   return (
     <Toaster toaster={toaster} className="!z-[100]">

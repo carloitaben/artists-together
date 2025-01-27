@@ -1,7 +1,6 @@
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
-import type { IconName } from "~/assets/spritesheet/types"
-import spritesheet from "~/assets/spritesheet/spritesheet.svg"
+import type { IconName } from "~/lib/icons"
 
 type Props = Omit<ComponentProps<"svg">, "children"> & {
   src: IconName
@@ -22,7 +21,7 @@ function Icon(
         aria-hidden
         {...props}
       >
-        <use href={`${spritesheet}#${src}`} />
+        <use href={`/spritesheet.svg#${src}`} />
       </svg>
       {alt ? <span className="sr-only">{alt}</span> : null}
     </>

@@ -1,8 +1,10 @@
-import { useChildMatches } from "@tanstack/react-router"
-import type { CSSProperties, ComponentRef } from "react"
-import { useRef, useState } from "react"
-import { AnimatePresence, motion } from "motion/react"
-import { useMeasure } from "~/lib/media"
+"use client"
+
+import type { ComponentRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import { AnimatePresence, motion, useMotionValue } from "motion/react"
+import { useNavigationMatch } from "~/lib/navigation/client"
+import { onMeasure } from "~/lib/media"
 import Backdrop from "~/components/Backdrop"
 import NavigationBottombarMenu from "./NavigationBottombarMenu"
 import NavigationBottombarSearch from "./NavigationBottombarSearch"
@@ -12,12 +14,14 @@ export default function NavigationBottombar() {
   const [searchbarFocus, setSearchbarFocus] = useState(false)
   const [showBackdrop, setShowBackdrop] = useState(false)
   const ref = useRef<ComponentRef<"div">>(null)
-  const refRect = useMeasure(ref)
-  const routeStaticData = useChildMatches({
-    select: ([match]) => match?.staticData,
-  })
+  const match = useNavigationMatch()
+  const inputMinWidth = useMotionValue(0)
 
-  const inputMinWidth = refRect ? refRect.width - refRect.height * 2 : 0
+  useEffect(() => {
+    return onMeasure(ref.current, (rect) => {
+      inputMinWidth.set(rect.width - rect.height * 2)
+    })
+  }, [])
 
   return (
     <>
@@ -25,34 +29,35 @@ export default function NavigationBottombar() {
       <motion.div
         ref={ref}
         className="fixed inset-x-0 bottom-0 flex h-16 flex-row-reverse items-stretch justify-center gap-1 p-2 sm:hidden"
-        style={{ "--min-w": `${inputMinWidth}px` } as CSSProperties}
         layoutScroll
       >
         <AnimatePresence initial={false} mode="popLayout">
-          {routeStaticData?.actions?.length ? (
+          {match?.actions.length ? (
             <NavigationBottombarActions
               key="actions"
-              actions={routeStaticData.actions}
+              actions={match.actions}
               onOpenChange={setShowBackdrop}
             />
           ) : null}
-          {routeStaticData?.search ? (
+          {match?.search ? (
             <NavigationBottombarSearch
               key="search"
               placeholder={
-                typeof routeStaticData.search === "string"
-                  ? routeStaticData.search
+                typeof match.search === "string"
+                  ? match.search
                   : "Search something"
               }
               searchbarFocus={searchbarFocus}
               setSearchbarFocus={setSearchbarFocus}
+              minWidth={inputMinWidth}
             />
           ) : null}
         </AnimatePresence>
         <NavigationBottombarMenu
-          label={routeStaticData?.label || "404"}
+          label={match?.label || "404"}
           searchbarFocus={searchbarFocus}
           onOpenChange={setShowBackdrop}
+          minWidth={inputMinWidth}
         />
       </motion.div>
     </>

@@ -1,40 +1,41 @@
-import { useMutation } from "@tanstack/react-query"
-import { FormProvider, useForm } from "@conform-to/react"
-import { getValibotConstraint, parseWithValibot } from "conform-to-valibot"
+"use client"
+
 import { Field } from "@ark-ui/react/field"
+import { FormProvider, useForm } from "@conform-to/react"
+import { parseWithValibot } from "conform-to-valibot"
+import { useActionState } from "react"
+import { contactSupport } from "~/lib/actions"
+import { useHydrated } from "~/lib/react"
+import { useFormToastError } from "~/lib/forms"
 import { ContactSupportFormSchema } from "~/lib/schemas"
 import FieldLength from "~/components/FieldLength"
 import Button from "~/components/Button"
 import Icon from "~/components/Icon"
 import ProfileTitle from "../DialogTitle"
-import { sectionData } from "./lib"
 import ProfileDialogContainer from "./ProfileDialogContainer"
+import { sectionData } from "./lib"
 
 function ContactSupportForm() {
-  const loginMutation = useMutation({
-    mutationFn: async (formData: FormData) => {
-      console.log("contact support", formData)
-    },
-  })
+  const [lastResult, action, isPending] = useActionState(contactSupport, null)
+  const hydrated = useHydrated()
+
+  useFormToastError(lastResult)
 
   const [form, fields] = useForm({
-    constraint: getValibotConstraint(ContactSupportFormSchema),
-    onValidate({ formData }) {
-      return parseWithValibot(formData, {
+    lastResult,
+    onValidate(context) {
+      return parseWithValibot(context.formData, {
         schema: ContactSupportFormSchema,
       })
-    },
-    async onSubmit(event, context) {
-      event.preventDefault()
-      await loginMutation.mutateAsync(context.formData)
     },
   })
 
   return (
     <form
-      method="post"
       id={form.id}
       onSubmit={form.onSubmit}
+      action={action}
+      noValidate={hydrated}
       className="space-y-2"
     >
       <FormProvider context={form.context}>
@@ -64,11 +65,16 @@ function ContactSupportForm() {
           <Field.Textarea
             name={fields.message.name}
             placeholder="Your message"
-            className="scrollbar-none h-[9.25rem] w-full resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3.5 py-2.5 placeholder:text-gunpla-white-300"
+            className="h-[9.25rem] w-full resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3.5 py-2.5 scrollbar-none placeholder:text-gunpla-white-300"
           />
         </Field.Root>
         <div className="pointer-events-none absolute bottom-0 right-0">
-          <Button type="submit" icon className="pointer-events-auto">
+          <Button
+            type="submit"
+            icon
+            className="pointer-events-auto"
+            disabled={isPending}
+          >
             <Icon src="Check" alt="Submit" />
           </Button>
         </div>

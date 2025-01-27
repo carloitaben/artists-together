@@ -1,3 +1,5 @@
+"use client"
+
 import type {
   CSSProperties,
   ComponentProps,
@@ -5,8 +7,8 @@ import type {
   ForwardedRef,
 } from "react"
 import { startTransition, forwardRef, useEffect, useRef, useState } from "react"
-import { cx } from "cva"
 import { transform } from "motion/react"
+import { cx } from "cva"
 
 const duration = transform([0, 100], ["0s", "30s"], {
   clamp: false,

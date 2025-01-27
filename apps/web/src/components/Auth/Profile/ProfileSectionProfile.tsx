@@ -1,46 +1,70 @@
+"use client"
+
 import { Dialog } from "@ark-ui/react/dialog"
 import { Field } from "@ark-ui/react/field"
-import Image from "~/components/Image"
+import Image from "next/image"
 import AspectRatio from "~/components/AspectRatio"
 import DialogTitle from "../DialogTitle"
 import Connections from "./Connections"
 import ProfileDialogContainer from "./ProfileDialogContainer"
-import { sectionData, useUpdateProfileForm } from "./lib"
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { authenticateQueryOptions } from "~/services/auth/shared"
+import { sectionData } from "./lib"
 import Icon from "~/components/Icon"
 import FieldLength from "~/components/FieldLength"
-import { FormProvider } from "@conform-to/react"
+import { FormProvider, useForm } from "@conform-to/react"
+import { useUser } from "~/lib/promises"
+import { useActionState } from "react"
+import { updateProfile } from "~/lib/actions"
+import { useHydrated } from "~/lib/react"
+import { useFormToastError } from "~/lib/forms"
+import { parseWithValibot } from "conform-to-valibot"
+import { UpdateProfileFormSchema } from "~/lib/schemas"
 
 export default function ProfileSectionProfile() {
+  const user = useUser()
   const section = sectionData["profile"]
-  const auth = useSuspenseQuery(authenticateQueryOptions)
 
-  if (!auth.data) {
+  if (!user) {
     throw Error("Unauthorized")
   }
 
-  const { form, fields } = useUpdateProfileForm()
+  const [lastResult, action] = useActionState(updateProfile, null)
+  const hydrated = useHydrated()
+
+  useFormToastError(lastResult)
+
+  const [form, fields] = useForm({
+    lastResult,
+    onValidate(context) {
+      return parseWithValibot(context.formData, {
+        schema: UpdateProfileFormSchema,
+      })
+    },
+  })
 
   return (
     <ProfileDialogContainer id="profile">
       <Dialog.Title className="sr-only">{section.label}</Dialog.Title>
-      <DialogTitle className="pb-6">{auth.data.user.username}</DialogTitle>
+      <DialogTitle className="pb-6">{user.username}</DialogTitle>
       <FormProvider context={form.context}>
         <form
           id={form.id}
           onSubmit={form.onSubmit}
+          action={action}
+          noValidate={hydrated}
           className="flex grid-cols-3 flex-col gap-3 pb-3 md:grid"
         >
           <div>
             <div className="flex items-center gap-x-2 px-3.5 pb-1">Avatar</div>
             <AspectRatio.Root ratio={1}>
               <AspectRatio.Content className="overflow-hidden rounded-4 bg-not-so-white">
-                {auth.data.user.avatar ? (
+                {user.avatar ? (
                   <Image
                     className="size-full object-cover"
                     alt="Your avatar"
-                    src={auth.data.user.avatar}
+                    src={user.avatar}
+                    draggable={false}
+                    unoptimized
+                    fill
                   />
                 ) : (
                   <div className="grid size-full place-items-center">

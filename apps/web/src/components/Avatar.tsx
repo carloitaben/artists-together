@@ -2,12 +2,12 @@ import { Avatar as AvatarPrimitive } from "@ark-ui/react/avatar"
 import { cx } from "cva"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
+import Image from "next/image"
 import Icon from "./Icon"
-import Image from "./Image"
 
 type Props = ComponentProps<typeof AvatarPrimitive.Root> & {
   username: string
-  src: string | null
+  src?: string | null
 }
 
 function Avatar(
@@ -26,10 +26,12 @@ function Avatar(
       {src ? (
         <AvatarPrimitive.Image asChild>
           <Image
+            draggable={false}
+            className="absolute inset-0 size-full object-cover"
             src={src}
             alt={username}
-            loading="eager"
-            className="absolute inset-0 size-full object-cover"
+            unoptimized
+            fill
           />
         </AvatarPrimitive.Image>
       ) : null}

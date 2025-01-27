@@ -1,3 +1,4 @@
+import { noop } from "@artists-together/core/utils"
 import type { RefObject } from "react"
 import {
   useCallback,
@@ -9,7 +10,6 @@ import {
 import type { ScreensConfig } from "tailwindcss/types/config"
 import { screens } from "~/../tailwind.config"
 import type { Screen } from "./tailwind"
-import { noop } from "@artists-together/core/utils"
 
 function getScreenMediaQuery(screen: Screen) {
   const config = screens[screen] as string | ScreensConfig
@@ -74,7 +74,7 @@ export const resizeObserver =
       })
 
 export function onMeasure<T extends Element = Element>(
-  elementOrRef: RefObject<T> | T | null,
+  elementOrRef: RefObject<T | null> | T | null,
   callback: MeasureCallback,
   options?: ResizeObserverOptions,
 ) {
@@ -96,7 +96,7 @@ export function onMeasure<T extends Element = Element>(
 }
 
 export function useMeasure<T extends Element = Element>(
-  elementOrRef: RefObject<T> | T | null,
+  elementOrRef: RefObject<T | null> | T | null,
   options?: ResizeObserverOptions,
 ) {
   const [, startTransition] = useTransition()
@@ -121,4 +121,52 @@ export function useWindowFocus() {
     },
     () => document.hasFocus(),
   )
+}
+
+const preloadMap = new Map<string, string | Promise<string>>()
+
+function preloadSource(source: string) {
+  const current = preloadMap.get(source)
+
+  if (current instanceof Promise) {
+    return current
+  }
+
+  const promise = new Promise<string>((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => {
+      resolve(source)
+      preloadMap.set(source, source)
+    }
+    image.onerror = reject
+    image.src = source
+  })
+
+  preloadMap.set(source, promise)
+  return promise
+}
+
+export function preloadSources(sources: string[]) {
+  return Promise.allSettled(sources.map(preloadSource))
+}
+
+export function usePreloadImages(sources: string[]) {
+  const [pending, startTransition] = useTransition()
+  const [cached, setCached] = useState(() =>
+    sources.every(
+      (source) =>
+        preloadMap.has(source) && !(preloadMap.get(source) instanceof Promise),
+    ),
+  )
+
+  function startCaching() {
+    if (cached || pending) return
+
+    startTransition(async () => {
+      await preloadSources(sources)
+      setCached(true)
+    })
+  }
+
+  return [cached, startCaching] as const
 }

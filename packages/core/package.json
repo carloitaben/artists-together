@@ -5,14 +5,13 @@
   "private": true,
   "sideEffects": false,
   "exports": {
-    "./database/schema": "./src/database/schema/index.ts",
-    "./database/client": "./src/database/client.ts",
-    "./database/transaction": "./src/database/transaction.ts",
+    "./database": "./src/database/index.ts",
     "./*": "./src/*.ts"
   },
   "scripts": {
     "db:dev": "mkdir -p .db && turso dev --db-file .db/db.db",
     "db:push": "drizzle-kit push",
+    "db:seed": "tsx ./scripts/seed.ts",
     "db:clean": "rm -rf .db",
     "db:studio": "drizzle-kit studio"
   },
@@ -34,6 +33,7 @@
     "dotenv-mono": "^1.3.14",
     "drizzle-kit": "^0.30.1",
     "prettier": "^3.2.5",
+    "tsx": "^4.19.2",
     "typescript": "^5.5.4"
   },
   "prettier": {

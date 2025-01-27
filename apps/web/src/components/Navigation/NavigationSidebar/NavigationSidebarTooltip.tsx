@@ -1,3 +1,5 @@
+"use client"
+
 import { Tooltip } from "@ark-ui/react/tooltip"
 import type { ReactNode } from "react"
 import { useState } from "react"
@@ -50,7 +52,7 @@ export default function NavigationSidebarTooltip({
         placement: "right",
       }}
     >
-      <CursorPrecision asChild name={id}>
+      <CursorPrecision id={id} asChild>
         <li>
           <Tooltip.Trigger
             asChild

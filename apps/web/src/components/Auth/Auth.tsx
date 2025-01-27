@@ -1,43 +1,16 @@
-import {
-  rootRouteId,
-  useLocation,
-  useNavigate,
-  useSearch,
-} from "@tanstack/react-router"
-import { useSuspenseQuery } from "@tanstack/react-query"
 import { Dialog } from "@ark-ui/react/dialog"
 import { cx } from "cva"
-import { authenticateQueryOptions } from "~/services/auth/shared"
+import { getAuth } from "~/services/auth/server"
 import Backdrop from "~/components/Backdrop"
+import AuthRoot from "./AuthRoot"
 import Profile from "./Profile"
 import Login from "./Login"
 
-export default function Auth() {
-  const auth = useSuspenseQuery(authenticateQueryOptions)
-  const navigate = useNavigate()
-  const pathname = useLocation({
-    select: (state) => state.pathname,
-  })
-
-  const open = useSearch({
-    from: rootRouteId,
-    select: ({ modal }) => modal === "auth",
-  })
+export default async function Auth() {
+  const auth = await getAuth()
 
   return (
-    <Dialog.Root
-      immediate
-      open={open}
-      onOpenChange={(details) => {
-        if (!details.open) {
-          navigate({
-            to: pathname,
-            replace: true,
-            search: (prev) => ({ ...prev, modal: undefined }),
-          })
-        }
-      }}
-    >
+    <AuthRoot>
       <Dialog.Backdrop asChild>
         <Backdrop className="z-50" />
       </Dialog.Backdrop>
@@ -47,8 +20,8 @@ export default function Auth() {
           "scroll-px-1 scroll-pb-4 scroll-pt-1 px-1 pb-4 pt-1 sm:scroll-p-12 sm:p-12",
         )}
       >
-        {auth.data ? <Profile /> : <Login />}
+        {auth ? <Profile /> : <Login />}
       </Dialog.Positioner>
-    </Dialog.Root>
+    </AuthRoot>
   )
 }

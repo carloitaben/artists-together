@@ -91,7 +91,7 @@ export const pluginSubgrid = plugin(({ addComponents, theme }) => {
   )
 })
 
-const themeableColorRegex = /(?:rgb\()(\d+,)\s*(\d+,)\s*(\d+)(?:\))/
+export const themeableColorRegex = /(?:rgb\()(\d+,)\s*(\d+,)\s*(\d+)(?:\))/
 
 const ThemeableColorConfig = v.object({
   50: v.pipe(v.string(), v.regex(themeableColorRegex)),

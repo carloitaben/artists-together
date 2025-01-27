@@ -1,12 +1,11 @@
-import { useSuspenseQueries } from "@tanstack/react-query"
-import { Link, useLocation } from "@tanstack/react-router"
-import { authenticateQueryOptions } from "~/services/auth/shared"
-import { hintsQueryOptions } from "~/services/hints/shared"
-import { navigationEntries } from "~/lib/navigation"
-import NavLink from "~/components/NavLink"
-import Icon from "~/components/Icon"
-import NavigationSidebarTooltip from "./NavigationSidebarTooltip"
+import { getHints } from "~/services/hints/server"
+import { getAuth } from "~/services/auth/server"
 import Avatar from "~/components/Avatar"
+import Icon from "~/components/Icon"
+import NavLink from "~/components/NavLink"
+import { navigation } from "~/lib/navigation/shared"
+import NavigationAuthLink from "../NavigationAuthLink"
+import NavigationSidebarTooltip from "./NavigationSidebarTooltip"
 
 const className = {
   navLink:
@@ -15,14 +14,8 @@ const className = {
     "grid size-12 place-items-center rounded-2 group-hover:bg-theme-300 group-aria-[current='page']:group-hover:text-theme-800 *:size-6 *:text-current group-focus-visible:bg-theme-300",
 }
 
-export default function NavigationSidebar() {
-  const [auth, hints] = useSuspenseQueries({
-    queries: [authenticateQueryOptions, hintsQueryOptions],
-  })
-
-  const pathname = useLocation({
-    select: (state) => state.pathname,
-  })
+export default async function NavigationSidebar() {
+  const [auth, hints] = await Promise.all([getAuth(), getHints()])
 
   return (
     <nav
@@ -33,41 +26,33 @@ export default function NavigationSidebar() {
       <ul>
         <NavigationSidebarTooltip
           id="auth"
-          label={auth.data ? "Your profile" : "Log-in"}
+          label={auth ? "Your profile" : "Log-in"}
         >
-          <Link
-            replace
-            to={pathname}
-            search={(prev) => ({ ...prev, modal: "auth" })}
-            className={className.navLink}
-          >
+          <NavigationAuthLink className={className.navLink}>
             <span className={className.iconWrapper}>
-              {auth.data ? (
-                <Avatar
-                  username={auth.data.user.username}
-                  src={auth.data.user.avatar}
-                />
+              {auth ? (
+                <Avatar username={auth.user.username} src={auth.user.avatar} />
               ) : (
                 <Icon src="Face" alt="Log-in" />
               )}
             </span>
-          </Link>
+          </NavigationAuthLink>
         </NavigationSidebarTooltip>
-        {navigationEntries.map(([key, route]) => (
+        {navigation.map((item) => (
           <NavigationSidebarTooltip
-            key={key}
-            id={key}
-            label={route.label}
-            disabled={route.link.disabled}
+            key={item.id}
+            id={item.id}
+            label={item.label}
+            disabled={item.link.disabled}
           >
             <NavLink
-              {...route.link}
-              disabled={route.link.disabled}
-              preload={hints.data.saveData ? "intent" : "render"}
+              {...item.link}
+              disabled={item.link.disabled}
+              prefetch={!hints.saveData}
               className={className.navLink}
             >
               <span className={className.iconWrapper}>
-                <Icon src={route.icon} alt={route.label} />
+                <Icon src={item.icon} alt={item.label} />
               </span>
             </NavLink>
           </NavigationSidebarTooltip>

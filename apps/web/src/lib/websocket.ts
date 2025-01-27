@@ -1,3 +1,6 @@
+"use client"
+
+import * as v from "valibot"
 import type {
   ClientEvent,
   ClientEventOutput,
@@ -12,12 +15,11 @@ import {
   focusManager,
   queryOptions,
   useQueryClient,
-  useSuspenseQuery,
 } from "@tanstack/react-query"
-import { useLocation } from "@tanstack/react-router"
 import { useEffect } from "react"
-import { PartySocket } from "partysocket"
-import { hintsQueryOptions } from "~/services/hints/shared"
+import { WebSocket as ReconnectingWebSocket } from "partysocket"
+import { useNavigationMatch } from "./navigation/client"
+import { useHints } from "./promises"
 
 const queue = new Map<ClientEvent, string>()
 
@@ -31,11 +33,13 @@ export function webSocketQueryOptions<T extends ServerEvent>(
   })
 }
 
-export const webSocket = new PartySocket({
-  host: process.env.WSS_URL || "ws://localhost:1999",
-  debug: import.meta.env.DEV,
-  startClosed: true,
-})
+export const webSocket = new ReconnectingWebSocket(
+  process.env.WSS_URL || "ws://localhost:1999",
+  process.env.WSS_URL ? "https" : "http",
+  {
+    startClosed: true,
+  },
+)
 
 export function sendWebSocketMessage<T extends ClientEvent>(
   event: T,
@@ -54,13 +58,13 @@ export function sendWebSocketMessage<T extends ClientEvent>(
   }
 }
 
-export function useWebSocket() {
+export function WebSocket() {
   const queryClient = useQueryClient()
-  const hints = useSuspenseQuery(hintsQueryOptions)
-  const room = useLocation({ select: (state) => state.pathname })
+  const match = useNavigationMatch()
+  const hints = useHints()
 
   useEffect(() => {
-    if (hints.data.saveData || hints.data.isBot) return
+    if (hints.saveData || hints.isBot) return
 
     function onOpen() {
       queue.forEach((message, event) => {
@@ -75,11 +79,8 @@ export function useWebSocket() {
       const parsed = safeParseServerMessage(message.data)
 
       if (!parsed.success) {
-        if (import.meta.env.DEV) {
-          console.error(parsed)
-        }
-
-        return
+        if (process.env.NODE_ENV !== "development") return
+        throw new v.ValiError(parsed.issues)
       }
 
       if (parsed.output.event === "invalidate") {
@@ -103,9 +104,13 @@ export function useWebSocket() {
       webSocket.removeEventListener("open", onOpen)
       webSocket.removeEventListener("message", onMessage)
     }
-  }, [hints.data.isBot, hints.data.saveData, queryClient])
+  }, [hints.isBot, hints.saveData, queryClient])
 
   useEffect(() => {
-    sendWebSocketMessage("room:update", { room })
-  }, [room])
+    sendWebSocketMessage("room:update", {
+      room: match?.link.href.toString() || "404",
+    })
+  }, [match])
+
+  return null
 }

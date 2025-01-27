@@ -8,29 +8,20 @@ import {
 } from "drizzle-valibot"
 import { timestamp, timestamps } from "../types"
 
-export const DiscordMetadata = v.object({
+export const DiscordMetadata = v.looseObject({
   id: v.string(),
   username: v.string(),
-  discriminator: v.string(),
-  global_name: v.nullable(v.string()),
   avatar: v.nullable(v.string()),
-  bot: v.optional(v.boolean()),
-  system: v.optional(v.boolean()),
+  global_name: v.nullable(v.string()),
   mfa_enabled: v.optional(v.boolean()),
   verified: v.optional(v.boolean()),
   email: v.nullable(v.pipe(v.string(), v.email())),
-  flags: v.optional(v.number()),
-  banner: v.optional(v.string()),
-  accent_color: v.optional(v.number()),
-  premium_type: v.optional(v.number()),
-  public_flags: v.optional(v.number()),
   locale: v.optional(v.string()),
-  avatar_decoration: v.optional(v.string()),
 })
 
 export type DiscordMetadata = v.InferOutput<typeof DiscordMetadata>
 
-export const TwitchMetadata = v.object({
+export const TwitchMetadata = v.looseObject({
   id: v.string(),
   login: v.string(),
   display_name: v.string(),
@@ -88,6 +79,8 @@ export const UserTableInsert = createInsertSchema(userTable, {
 })
 
 export const UserTableSelect = createSelectSchema(userTable, {
+  createdAt: v.pipe(v.string(), v.isoTimestamp()),
+  updatedAt: v.pipe(v.string(), v.isoTimestamp()),
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
   bio: (schema) => v.pipe(schema, v.maxLength(300)),
@@ -96,6 +89,8 @@ export const UserTableSelect = createSelectSchema(userTable, {
 })
 
 export const UserTableUpdate = createUpdateSchema(userTable, {
+  createdAt: v.pipe(v.string(), v.isoTimestamp()),
+  updatedAt: v.pipe(v.string(), v.isoTimestamp()),
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
   bio: (schema) => v.pipe(schema, v.maxLength(300)),

@@ -1,36 +1,31 @@
-import { useLocation } from "@tanstack/react-router"
-import { useMutation } from "@tanstack/react-query"
-import { useServerFn } from "@tanstack/start"
+"use client"
+
 import { Dialog } from "@ark-ui/react/dialog"
 import { useForm } from "@conform-to/react"
 import { parseWithValibot } from "conform-to-valibot"
+import { usePathname } from "next/navigation"
+import { useActionState } from "react"
+import { useHydrated } from "~/lib/react"
+import { login } from "~/lib/actions"
+import { useFormToastError } from "~/lib/forms"
 import { AuthFormSchema } from "~/lib/schemas"
-import { $login } from "~/services/auth/actions"
 import Button from "~/components/Button"
 import Icon from "~/components/Icon"
 import DialogContainer from "./DialogContainer"
 import DialogTitle from "./DialogTitle"
 
 export default function Login() {
-  const serverFn = useServerFn($login)
-  const pathname = useLocation({
-    select: (state) => state.pathname,
-  })
+  const [lastResult, action, isPending] = useActionState(login, null)
+  const hydrated = useHydrated()
+  const pathname = usePathname()
 
-  const mutation = useMutation({
-    mutationFn: serverFn,
-  })
+  useFormToastError(lastResult)
 
   const [form, fields] = useForm({
-    onValidate({ formData }) {
-      return parseWithValibot(formData, {
+    lastResult,
+    onValidate(context) {
+      return parseWithValibot(context.formData, {
         schema: AuthFormSchema,
-      })
-    },
-    async onSubmit(event, context) {
-      event.preventDefault()
-      await mutation.mutateAsync({
-        data: context.formData,
       })
     },
   })
@@ -38,7 +33,7 @@ export default function Login() {
   return (
     <Dialog.Content className="space-y-4 focus:outline-none">
       <DialogContainer className="px-8 pb-9 pt-7 md:px-[3.75rem] md:pb-12 md:pt-10">
-        <DialogTitle padding={false} asChild>
+        <DialogTitle asChild>
           <Dialog.Title className="mb-4 text-center md:mb-5 md:[text-align:unset]">
             Welcome to <br className="md:hidden" />
             Artists Together
@@ -51,16 +46,15 @@ export default function Login() {
       <form
         id={form.id}
         onSubmit={form.onSubmit}
-        // action={$login.url}
-        method="post"
-        encType="multipart/form-data"
+        action={action}
+        noValidate={hydrated}
         className="flex justify-end"
       >
         <Button
           type="submit"
           name={fields.pathname.name}
           value={pathname}
-          disabled={mutation.isPending}
+          disabled={isPending}
           color={false}
           padding={false}
           className="bg-[#5865F2] px-4 text-gunpla-white-50 selection:bg-gunpla-white-50 selection:text-[#5865F2]"

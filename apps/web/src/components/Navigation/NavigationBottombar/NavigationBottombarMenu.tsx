@@ -1,6 +1,8 @@
+"use client"
+
 import { Menu } from "@ark-ui/react/menu"
 import { cx } from "cva"
-import type { Transition } from "motion/react"
+import type { MotionValue, Transition } from "motion/react"
 import { AnimatePresence, motion } from "motion/react"
 import type { Dispatch, SetStateAction } from "react"
 import Icon from "~/components/Icon"
@@ -11,6 +13,7 @@ type Props = {
   label: string
   searchbarFocus: boolean
   onOpenChange: Dispatch<SetStateAction<boolean>>
+  minWidth: MotionValue<number>
 }
 
 const transition: Transition = {
@@ -22,6 +25,7 @@ export default function NavigationBottombarMenu({
   label,
   searchbarFocus,
   onOpenChange,
+  minWidth,
 }: Props) {
   return (
     <Menu.Root onOpenChange={(context) => onOpenChange(context.open)}>
@@ -69,7 +73,7 @@ export default function NavigationBottombarMenu({
               ) : (
                 <motion.div
                   key={label}
-                  className="min-w-[--min-w] px-4"
+                  className="px-4"
                   initial="hide"
                   animate="show"
                   exit="hide"
@@ -81,6 +85,9 @@ export default function NavigationBottombarMenu({
                     show: {
                       opacity: 1,
                     },
+                  }}
+                  style={{
+                    minWidth,
                   }}
                 >
                   <motion.div

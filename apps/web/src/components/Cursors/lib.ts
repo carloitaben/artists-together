@@ -2,7 +2,7 @@ export const ATTR_NAME_DATA_CURSOR_PRECISION = "data-precision"
 
 export const SCOPE_ROOT = "root"
 
-export const SCOPE_DELIMITER = "$"
+export const SCOPE_DELIMITER = ":"
 
 export const measurements = new Map<string, DOMRect>()
 

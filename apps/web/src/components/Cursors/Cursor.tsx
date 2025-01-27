@@ -1,3 +1,5 @@
+"use client"
+
 import type { CursorState } from "@artists-together/core/websocket"
 import type { VariantProps } from "cva"
 import { cva } from "cva"

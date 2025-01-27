@@ -1,23 +1,5 @@
 import * as v from "valibot"
-import { UserTableInsert } from "@artists-together/core/database/schema"
-
-export const FormActionValidator = v.parser(
-  v.pipe(
-    v.tuple([v.instance(FormData)]),
-    v.transform(([formData]) => formData),
-  ),
-)
-
-/**
- * A loosely defined `SubmissionResult`.
- */
-export const FormActionSubmissionError = v.object({
-  status: v.literal("error"),
-  intent: v.undefinedable(v.string()),
-  fields: v.undefinedable(v.array(v.string())),
-  error: v.record(v.string(), v.array(v.string())),
-  state: v.undefinedable(v.unknown()),
-})
+import { UserTableInsert } from "@artists-together/core/database"
 
 export const Pathname = v.pipe(
   v.string(),

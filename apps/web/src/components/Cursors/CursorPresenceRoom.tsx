@@ -1,20 +1,20 @@
-import { useSuspenseQueries } from "@tanstack/react-query"
+"use client"
+
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { useUser } from "~/lib/promises"
 import { webSocketQueryOptions } from "~/lib/websocket"
-import { authenticateQueryOptions } from "~/services/auth/shared"
 import CursorPresence from "./CursorPresence"
 
 export default function CursorPresenceRoom() {
-  const [auth, room] = useSuspenseQueries({
-    queries: [
-      authenticateQueryOptions,
-      webSocketQueryOptions("room:update", {
-        count: 0,
-        members: [],
-      }),
-    ],
-  })
+  const user = useUser()
+  const room = useSuspenseQuery(
+    webSocketQueryOptions("room:update", {
+      count: 0,
+      members: [],
+    }),
+  )
 
   return room.data.members
-    .filter((member) => member.username !== auth.data?.user.username)
+    .filter((member) => member.username !== user?.username)
     .map((member) => <CursorPresence key={member.username} {...member} />)
 }

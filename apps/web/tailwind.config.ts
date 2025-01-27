@@ -254,9 +254,9 @@ export default {
     screens,
     colors,
     fontFamily: {
-      inter: ["Inter"],
+      inter: ["var(--font-inter)"],
       fraunces: [
-        "Fraunces",
+        "var(--font-fraunces)",
         {
           fontVariationSettings: '"SOFT" 100, "WONK" 0, "OPSZ" 144',
         },

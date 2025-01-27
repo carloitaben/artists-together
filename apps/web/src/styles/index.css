@@ -30,16 +30,23 @@
     src: url(../assets/fonts/inter.woff2) format("woff2");
   }
 
+  .font-serif-ampersand {
+    font-variation-settings:
+      "SOFT" 100,
+      "WONK" 100,
+      "opsz" 144;
+  }
+  
   * {
     -webkit-tap-highlight-color: transparent;
   }
 
-  html.cursor * {
+  html.cursor, html.cursor * {
     @apply cursor-none;
   }
 
   /* Make the cursor visible on TanStack Query devtools */
-  html.cursor .tsqd-parent-container * {
+  .tsqd-parent-container * {
     @apply cursor-default;
   }
 
@@ -47,10 +54,4 @@
     @apply select-none;
   }
 
-  .font-serif-ampersand {
-    font-variation-settings:
-      "SOFT" 100,
-      "WONK" 100,
-      "opsz" 144;
-  }
 }

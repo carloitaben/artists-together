@@ -1,3 +1,4 @@
+import * as v from "valibot"
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core"
 import { relations } from "drizzle-orm"
 import {
@@ -19,9 +20,15 @@ export const locationTable = sqliteTable("location", {
 
 export const LocationTableInsert = createInsertSchema(locationTable)
 
-export const LocationTableSelect = createSelectSchema(locationTable)
+export const LocationTableSelect = createSelectSchema(locationTable, {
+  createdAt: v.pipe(v.string(), v.isoTimestamp()),
+  updatedAt: v.pipe(v.string(), v.isoTimestamp()),
+})
 
-export const LocationTableUpdate = createUpdateSchema(locationTable)
+export const LocationTableUpdate = createUpdateSchema(locationTable, {
+  createdAt: v.pipe(v.string(), v.isoTimestamp()),
+  updatedAt: v.pipe(v.string(), v.isoTimestamp()),
+})
 
 export type Location = typeof locationTable.$inferSelect
 
@@ -48,8 +55,28 @@ export const weatherTable = sqliteTable("weathers", {
 
 export const WeatherTableInsert = createInsertSchema(weatherTable)
 
-export const WeatherTableSelect = createSelectSchema(weatherTable)
+export const WeatherTableSelect = createSelectSchema(weatherTable, {
+  createdAt: v.union([
+    v.date(),
+    v.pipe(
+      v.string(),
+      v.isoTimestamp(),
+      v.transform((date) => new Date(date)),
+    ),
+  ]),
+  updatedAt: v.union([
+    v.date(),
+    v.pipe(
+      v.string(),
+      v.isoTimestamp(),
+      v.transform((date) => new Date(date)),
+    ),
+  ]),
+})
 
-export const WeatherTableUpdate = createUpdateSchema(weatherTable)
+export const WeatherTableUpdate = createUpdateSchema(weatherTable, {
+  createdAt: v.pipe(v.string(), v.isoTimestamp()),
+  updatedAt: v.pipe(v.string(), v.isoTimestamp()),
+})
 
 export type Weather = typeof weatherTable.$inferSelect

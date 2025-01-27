@@ -1,38 +1,55 @@
+import "server-only"
 import * as v from "valibot"
 import type { SessionValidationResult } from "@artists-together/core/auth"
 import {
   SESSION_COOKIE_NAME,
   validateSessionToken,
 } from "@artists-together/core/auth"
+import { cache } from "react"
 import { Discord, Twitch } from "arctic"
-import { deleteCookie, getCookie, setCookie } from "vinxi/http"
-import { WEB_URL } from "~/lib/constants"
 import { AuthFormSchema, Geolocation } from "~/lib/schemas"
-import { cookieOptions } from "~/lib/cookies"
+import { createGetCookie } from "~/lib/server"
+import { WEB_URL } from "~/lib/constants"
 
-export const cookieSession = cookieOptions({
+export const getCookieSession = createGetCookie({
   name: SESSION_COOKIE_NAME,
   schema: v.pipe(v.string(), v.nonEmpty()),
-  secure: import.meta.env.PROD,
+  secure: process.env.NODE_ENV === "production",
   httpOnly: true,
   sameSite: "lax",
+  maxAge: 60 * 60 * 24 * 30,
   path: "/",
 })
 
-export const cookieOauth = cookieOptions({
+export const getCookieOauth = createGetCookie({
   name: "oauth",
   schema: v.object({
     ...AuthFormSchema.entries,
-    geolocation: Geolocation,
-    fahrenheit: v.boolean(),
-    fullHourFormat: v.boolean(),
     state: v.string(),
+    hints: v.optional(
+      v.object({
+        geolocation: Geolocation,
+        fahrenheit: v.boolean(),
+        fullHourFormat: v.boolean(),
+      }),
+    ),
   }),
-  secure: import.meta.env.PROD,
+  secure: process.env.NODE_ENV === "production",
   httpOnly: true,
   sameSite: "lax",
   maxAge: 60 * 10,
   path: "/",
+})
+
+export const getAuth = cache(async (): Promise<SessionValidationResult> => {
+  const cookieSession = await getCookieSession()
+  const cookieSessionValue = cookieSession.get()
+
+  if (!cookieSessionValue.success) {
+    return null
+  }
+
+  return validateSessionToken(cookieSessionValue.output)
 })
 
 export const provider = {
@@ -46,26 +63,4 @@ export const provider = {
     String(process.env.OAUTH_TWITCH_SECRET),
     new URL("/api/auth/callback/twitch", WEB_URL).href,
   ),
-}
-
-export async function authenticate(): Promise<SessionValidationResult> {
-  const cookie = cookieSession.safeDecode(getCookie(cookieSession.name))
-
-  if (!cookie.success) {
-    return null
-  }
-
-  const result = await validateSessionToken(cookie.output)
-
-  if (!result) {
-    deleteCookie(cookieSession.name)
-    return null
-  }
-
-  setCookie(cookieSession.name, cookieSession.encode(cookie.output), {
-    ...cookieSession.options,
-    expires: result.session.expiresAt,
-  })
-
-  return result
 }

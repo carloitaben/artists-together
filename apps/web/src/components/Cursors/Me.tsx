@@ -2,20 +2,26 @@ import type {
   CursorState,
   CursorUpdates,
 } from "@artists-together/core/websocket"
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { AnimatePresence, clamp, useMotionValue, useSpring } from "motion/react"
-import { throttle } from "radashi"
 import { useEffect, useState } from "react"
+import { throttle } from "radashi"
 import { useScreen } from "~/lib/media"
-import { authenticateQueryOptions } from "~/services/auth/shared"
+import { useUser } from "~/lib/promises"
 import { sendWebSocketMessage, webSocketQueryOptions } from "~/lib/websocket"
-import { ATTR_NAME_DATA_CURSOR_PRECISION, measure, SCOPE_ROOT } from "./lib"
+import { ATTR_NAME_DATA_CURSOR_PRECISION, SCOPE_ROOT, measure } from "./lib"
 import Cursor from "./Cursor"
 
 const limit = clamp.bind(null, 0, 1)
 
 export default function Me() {
-  const auth = useSuspenseQuery(authenticateQueryOptions)
+  const [state, setState] = useState<CursorState>()
+  const sm = useScreen("sm")
+  const hasCursor = useScreen("cursor")
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const user = useUser()
+  const scale = useSpring(0, { mass: 0.05, stiffness: 200 })
   const alone = useQuery({
     ...webSocketQueryOptions("room:update", {
       count: 0,
@@ -24,14 +30,8 @@ export default function Me() {
     select: (data) => data.count < 2,
   })
 
-  const [state, setState] = useState<CursorState>()
-  const sm = useScreen("sm")
-  const hasCursor = useScreen("cursor")
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-  const scale = useSpring(0, { mass: 0.05, stiffness: 200 })
-
   const render = state && hasCursor
+  const canSend = Boolean(user && sm)
 
   useEffect(() => {
     if (!hasCursor) {
@@ -61,7 +61,7 @@ export default function Me() {
         trailing: true,
       },
       (event: MouseEvent, state?: CursorState) => {
-        if (!auth.data || !sm) return
+        if (!canSend) return
 
         const now = Date.now()
         const delta = typeof timestamp === "number" ? now - timestamp : 0
@@ -150,7 +150,7 @@ export default function Me() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [hasCursor, sm, scale, state, x, y, alone.data, auth.data])
+  }, [alone.data, canSend, hasCursor, scale, state, x, y])
 
   return (
     <AnimatePresence initial={false}>

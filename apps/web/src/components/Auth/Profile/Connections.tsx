@@ -1,12 +1,16 @@
+"use client"
+
 import { Checkbox } from "@ark-ui/react/checkbox"
-import type { IconName } from "~/assets/spritesheet/types"
+import type { ReactNode } from "react"
+import type { IconName } from "~/lib/icons"
 import Icon from "~/components/Icon"
+import { useUser } from "~/lib/promises"
 
 type ConnectionProps = {
   action: any
   value: string
   icon: IconName
-  children: (connected: boolean) => string
+  children: ReactNode
 }
 
 function Connection({ children, icon, value }: ConnectionProps) {
@@ -19,7 +23,7 @@ function Connection({ children, icon, value }: ConnectionProps) {
               <Icon src={icon} className="size-6" alt="" />
             </div>
             <Checkbox.Label className="w-full flex-1">
-              {children(context.checked)}
+              {children}
             </Checkbox.Label>
             <div className="flex items-center gap-x-2 text-end">
               {context.checked ? "Connected" : "Disconnected"}
@@ -38,25 +42,32 @@ function Connection({ children, icon, value }: ConnectionProps) {
 }
 
 export default function Connections() {
+  const user = useUser()
+  const discordUsername = user?.discordUsername
+  const twitchUsername = user?.twitchUsername
+
   return (
     <div className="pb-3 text-xs md:text-sm">
       <div className="gap-x-2 px-3.5 pb-1">Connections</div>
       <Checkbox.Group
         name="connections"
         className="space-y-2"
-        value={["discord"]}
+        value={[
+          discordUsername ? "discord" : null,
+          twitchUsername ? "twitch" : null,
+        ].filter((value) => typeof value === "string")}
         onValueChange={console.log}
         readOnly
       >
         <Connection action={console.log} value="discord" icon="Discord">
-          {(connected) =>
-            connected ? `Discord @artist_00315` : "Connect to Discord"
-          }
+          {user?.discordUsername
+            ? `Discord @${user.discordUsername}`
+            : "Connect to Discord"}
         </Connection>
         <Connection action={console.log} value="twitch" icon="Twitch">
-          {(connected) =>
-            connected ? `Twitch @artist_00315` : "Connect to Twitch"
-          }
+          {user?.twitchUsername
+            ? `Twitch @${user.twitchUsername}`
+            : "Connect to Twitch"}
         </Connection>
       </Checkbox.Group>
     </div>

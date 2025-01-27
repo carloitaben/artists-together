@@ -1,3 +1,5 @@
+"use client"
+
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
 import type { ComponentRef, ForwardedRef, RefObject } from "react"
@@ -6,14 +8,14 @@ import { mergeRefs } from "react-merge-refs"
 import { onMeasure } from "~/lib/media"
 import {
   ATTR_NAME_DATA_CURSOR_PRECISION,
+  SCOPE_ROOT,
   createPrecisionScope,
   measurements,
-  SCOPE_ROOT,
 } from "./lib"
 
 type Props = HTMLArkProps<"div"> & {
   ref?: RefObject<ComponentRef<"div">>
-  name: string
+  id: string
 }
 
 const CursorPrecisionContext = createContext<string | null>(null)
@@ -21,15 +23,15 @@ const CursorPrecisionContext = createContext<string | null>(null)
 CursorPrecisionContext.displayName = "CursorPrecisionContext"
 
 function CursorPrecision(
-  { name, ...props }: Props,
+  { id, ...props }: Props,
   ref: ForwardedRef<ComponentRef<"div">>,
 ) {
   const scope = useContext(CursorPrecisionContext)
   const innerRef = useRef<ComponentRef<"div">>(null)
 
   const attribute = scope
-    ? createPrecisionScope(scope, name)
-    : createPrecisionScope(SCOPE_ROOT, name)
+    ? createPrecisionScope(scope, id)
+    : createPrecisionScope(SCOPE_ROOT, id)
 
   const attributes = {
     [ATTR_NAME_DATA_CURSOR_PRECISION]: attribute,
@@ -47,7 +49,7 @@ function CursorPrecision(
   }, [attribute])
 
   return (
-    <CursorPrecisionContext.Provider value={name}>
+    <CursorPrecisionContext.Provider value={id}>
       <ark.div {...props} {...attributes} ref={mergeRefs([ref, innerRef])} />
     </CursorPrecisionContext.Provider>
   )

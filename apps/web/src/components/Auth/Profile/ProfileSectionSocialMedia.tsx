@@ -43,7 +43,7 @@ export default function ProfileSectionSocialMedia() {
 // import ModalTitle from "../ModalTitle"
 // import { useForm } from "@conform-to/react"
 // import { updateSchema } from "~/services/auth/shared"
-// import { update } from "~/services/auth/actions"
+// import { update } from "~/lib/actions"
 
 // const keys = Array(5)
 //   .fill(null)

@@ -1,5 +1,7 @@
+"use client"
+
 import { cx } from "cva"
-import type { Transition, Variants } from "motion/react"
+import type { MotionValue, Transition, Variants } from "motion/react"
 import { motion } from "motion/react"
 import type {
   ComponentRef,
@@ -16,6 +18,7 @@ type Props = {
   placeholder: string
   searchbarFocus: boolean
   setSearchbarFocus: Dispatch<SetStateAction<boolean>>
+  minWidth: MotionValue<number>
 }
 
 const variants: Variants = {
@@ -43,17 +46,24 @@ const transition: Transition = {
 }
 
 function NavigationBottombarSearch(
-  { placeholder, searchbarFocus, setSearchbarFocus }: Props,
+  { placeholder, searchbarFocus, setSearchbarFocus, minWidth }: Props,
   ref: ForwardedRef<ComponentRef<typeof motion.form>>,
 ) {
   return (
     <motion.form
       layout
       ref={ref}
-      onSubmit={(event) => {
-        event.preventDefault()
-        console.log("this should navigate")
-        // console.log(formData.get("q")?.toString())
+      action={(formData) => {
+        const url = new URL(window.location.href)
+        const q = formData.get("q")?.toString().trim()
+
+        if (q) {
+          url.searchParams.set("q", q)
+        } else {
+          url.searchParams.delete("q")
+        }
+
+        window.history.replaceState(null, "", url)
       }}
       onFocus={() => setSearchbarFocus(true)}
       onBlur={() => setSearchbarFocus(false)}
@@ -77,7 +87,7 @@ function NavigationBottombarSearch(
         layout="position"
         placeholder={placeholder}
         className={cx(
-          "size-full min-w-[--min-w] bg-transparent py-4 pl-4 pr-12 caret-gunpla-white-700 placeholder:text-gunpla-white-300 focus:outline-none",
+          "size-full bg-transparent py-4 pl-4 pr-12 caret-gunpla-white-700 placeholder:text-gunpla-white-300 focus:outline-none",
           !searchbarFocus && "cursor-pointer",
         )}
         initial={false}
@@ -100,6 +110,9 @@ function NavigationBottombarSearch(
               delay: searchbarFocus ? 0.05 : 0,
             },
           },
+        }}
+        style={{
+          minWidth,
         }}
       />
       <motion.div

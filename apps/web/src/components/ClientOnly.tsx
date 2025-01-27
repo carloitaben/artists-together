@@ -1,14 +1,18 @@
-import type { ReactNode } from "react"
-import { useHydrated } from "~/lib/react"
+import type { PropsWithChildren } from "react"
+import { unstable_postpone } from "react"
 
-type Props = {
-  children?: ReactNode
-  fallback?: ReactNode
+declare module "react" {
+  export function unstable_postpone(reason?: string): never
 }
 
-export default function ClientOnly({
-  children = null,
-  fallback = children,
-}: Props) {
-  return useHydrated() ? children : fallback
+export function clientOnly() {
+  if (typeof window === "undefined") {
+    unstable_postpone("Client only")
+  }
+}
+
+export default function ClientOnly({ children }: PropsWithChildren) {
+  clientOnly()
+
+  return children
 }

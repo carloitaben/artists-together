@@ -1,29 +1,45 @@
-import type { LinkComponent } from "@tanstack/react-router"
-import { createLink } from "@tanstack/react-router"
-import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
-import { forwardRef } from "react"
+"use client"
+
+import Link from "next/link"
+import type { ComponentProps } from "react"
+import { useMatches } from "~/lib/navigation/client"
+
 import { anchor } from "./Anchor"
+import { useRouterTransition } from "~/lib/transition"
+import { useRouter } from "next/navigation"
 
-type Props = ComponentProps<"a">
-
-function NavLinkComponent(props: Props, ref: ForwardedRef<ComponentRef<"a">>) {
-  return (
-    <a
-      ref={ref}
-      {...props}
-      onClick={(event) => {
-        props.onClick?.(event)
-        if (event.currentTarget.ariaCurrent === "page") {
-          event.preventDefault()
-          anchor(event)
-        }
-      }}
-    >
-      {props.children}
-    </a>
-  )
+export type Props = ComponentProps<typeof Link> & {
+  match?: string
+  disabled?: boolean
 }
 
-export default createLink(forwardRef(NavLinkComponent)) satisfies LinkComponent<
-  typeof NavLinkComponent
->
+export default function NavLink({ href, match, disabled, ...props }: Props) {
+  const [, startTransition] = useRouterTransition()
+  const router = useRouter()
+  const matches = useMatches({ href, match })
+  const aria = matches
+    ? {
+        "aria-current": "page" as const,
+      }
+    : undefined
+
+  return (
+    <Link
+      {...props}
+      {...aria}
+      href={href}
+      onClick={(event) => {
+        props.onClick?.(event)
+
+        if (matches) {
+          event.preventDefault()
+          return anchor(event)
+        }
+
+        startTransition(href.toString(), () => {
+          router.push(href.toString())
+        })
+      }}
+    />
+  )
+}

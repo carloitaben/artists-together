@@ -1,3 +1,5 @@
+"use client"
+
 import { Menu } from "@ark-ui/react/menu"
 import type {
   ComponentRef,
@@ -7,14 +9,14 @@ import type {
 } from "react"
 import { forwardRef } from "react"
 import { motion } from "motion/react"
-import type { Action } from "~/lib/navigation"
+import type { NavigationAction } from "~/lib/navigation/shared"
 import Icon from "~/components/Icon"
-import NavigationBottombarMenuItem from "./NavigationBottombarMenuContentItem"
 import { scalePresenceVariants, spring } from "../lib"
+import NavigationBottombarMenuItem from "./NavigationBottombarMenuContentItem"
 
 type Props = {
   onOpenChange: Dispatch<SetStateAction<boolean>>
-  actions: Action[]
+  actions: NavigationAction[]
 }
 
 function NavigationBottombarActions(

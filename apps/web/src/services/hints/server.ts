@@ -1,8 +1,9 @@
+import "server-only"
 import * as v from "valibot"
 import Negotiator from "negotiator"
-import { createServerFn } from "@tanstack/start"
-import { getHeader, getHeaders } from "vinxi/http"
-import { isbot } from "isbot"
+import { headers as getHeaders } from "next/headers"
+import { userAgent as getUserAgent } from "next/server"
+import { cache } from "react"
 import { Geolocation } from "~/lib/schemas"
 
 function getTemperatureUnit(locale: string) {
@@ -32,32 +33,36 @@ function getHourFormat(locale: string) {
   }
 }
 
-function getGeolocation() {
+function getGeolocation({ headers }: { headers: Headers }) {
   const geolocation = v.safeParse(Geolocation, {
-    city: getHeader("x-vercel-ip-city"),
-    country: getHeader("x-vercel-ip-country"),
-    continent: getHeader("x-vercel-ip-continent"),
-    latitude: getHeader("x-vercel-ip-latitude"),
-    longitude: getHeader("x-vercel-ip-longitude"),
-    timezone: getHeader("x-vercel-ip-timezone"),
+    city: headers.get("x-vercel-ip-city"),
+    country: headers.get("x-vercel-ip-country"),
+    continent: headers.get("x-vercel-ip-continent"),
+    latitude: headers.get("x-vercel-ip-latitude"),
+    longitude: headers.get("x-vercel-ip-longitude"),
+    timezone: headers.get("x-vercel-ip-timezone"),
   })
 
   return geolocation.success ? geolocation.output : null
 }
 
-export const $hints = createServerFn({ method: "GET" }).handler(async () => {
-  const geolocation = getGeolocation()
-  const headers = getHeaders()
-  const negotiator = new Negotiator({ headers })
-  const locale = negotiator.language() || "en-US"
-  const isBot = isbot(headers["user-agent"])
+export const getHints = cache(async () => {
+  const headers = await getHeaders()
+  const negotiator = new Negotiator({
+    headers: {
+      "accept-language": headers.get("accept-language") || undefined,
+    },
+  })
+
+  const language = negotiator.language() || "*"
+  const locale = language === "*" ? "en-US" : language
 
   return {
     locale,
-    isBot,
-    geolocation,
+    isBot: getUserAgent({ headers }).isBot,
+    geolocation: getGeolocation({ headers }),
     temperatureUnit: getTemperatureUnit(locale),
     hourFormat: getHourFormat(locale),
-    saveData: headers["save-data"] === "on",
+    saveData: headers.get("save-data") === "on",
   }
 })
