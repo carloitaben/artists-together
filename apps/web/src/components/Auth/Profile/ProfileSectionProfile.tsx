@@ -1,32 +1,32 @@
 "use client"
 
+import Image from "next/image"
 import { Dialog } from "@ark-ui/react/dialog"
 import { Field } from "@ark-ui/react/field"
-import Image from "next/image"
+import { FormProvider, useForm } from "@conform-to/react"
+import { parseWithValibot } from "conform-to-valibot"
+import { useActionState } from "react"
+import { useUser } from "~/lib/promises"
+import { updateProfile } from "~/lib/actions"
+import { useHydrated } from "~/lib/react"
+import { useFormToastError } from "~/lib/forms"
+import { UpdateProfileFormSchema } from "~/lib/schemas"
+import Icon from "~/components/Icon"
+import FieldLength from "~/components/FieldLength"
 import AspectRatio from "~/components/AspectRatio"
 import DialogTitle from "../DialogTitle"
 import Connections from "./Connections"
 import ProfileDialogContainer from "./ProfileDialogContainer"
 import { sectionData } from "./lib"
-import Icon from "~/components/Icon"
-import FieldLength from "~/components/FieldLength"
-import { FormProvider, useForm } from "@conform-to/react"
-import { useUser } from "~/lib/promises"
-import { useActionState } from "react"
-import { updateProfile } from "~/lib/actions"
-import { useHydrated } from "~/lib/react"
-import { useFormToastError } from "~/lib/forms"
-import { parseWithValibot } from "conform-to-valibot"
-import { UpdateProfileFormSchema } from "~/lib/schemas"
 
 export default function ProfileSectionProfile() {
   const user = useUser()
-  const section = sectionData["profile"]
 
   if (!user) {
     throw Error("Unauthorized")
   }
 
+  const section = sectionData["profile"]
   const [lastResult, action] = useActionState(updateProfile, null)
   const hydrated = useHydrated()
 
@@ -43,8 +43,14 @@ export default function ProfileSectionProfile() {
 
   return (
     <ProfileDialogContainer id="profile">
-      <Dialog.Title className="sr-only">{section.label}</Dialog.Title>
-      <DialogTitle className="pb-6">{user.username}</DialogTitle>
+      <Dialog.Title asChild>
+        <DialogTitle sm="inter" className="md:sr-only">
+          {section.label}
+        </DialogTitle>
+      </Dialog.Title>
+      <DialogTitle sm="fraunces" className="pb-6">
+        {user.username}
+      </DialogTitle>
       <FormProvider context={form.context}>
         <form
           id={form.id}
@@ -74,20 +80,20 @@ export default function ProfileSectionProfile() {
               </AspectRatio.Content>
             </AspectRatio.Root>
           </div>
-          <Field.Root className="col-span-2 flex flex-col">
+          <Field.Root className="col-span-2 flex-col md:flex">
             <Field.Label className="flex flex-none items-center justify-between px-3.5 pb-1">
               <span>Description</span>
               <FieldLength
                 className="text-right"
                 name={fields.bio.name}
-                max={300}
+                max={128}
               />
             </Field.Label>
             <Field.Textarea
               name={fields.bio.name}
               defaultValue={fields.bio.initialValue}
               placeholder="Hello! I am a creative person!"
-              className="w-full flex-1 resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3.5 py-2.5 scrollbar-none placeholder:text-gunpla-white-300"
+              className="h-24 w-full flex-1 resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3.5 py-2.5 scrollbar-none placeholder:text-gunpla-white-300 md:h-auto"
             />
           </Field.Root>
         </form>

@@ -88,7 +88,9 @@ export default function ProfileSectionContactSupport() {
 
   return (
     <ProfileDialogContainer id="contact-support">
-      <ProfileTitle className="pb-6">{section.label}</ProfileTitle>
+      <ProfileTitle sm="inter" className="pb-6">
+        {section.label}
+      </ProfileTitle>
       <ContactSupportForm />
     </ProfileDialogContainer>
   )

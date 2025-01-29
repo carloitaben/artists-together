@@ -11,7 +11,9 @@ export default function ProfileSectionSocialMedia() {
 
   return (
     <ProfileDialogContainer id="social-media">
-      <DialogTitle className="pb-6">{section.label}</DialogTitle>
+      <DialogTitle sm="inter" className="pb-6">
+        {section.label}
+      </DialogTitle>
       <form>
         <Fieldset.Root>
           <Fieldset.Legend className="px-3.5 pb-1">Links</Fieldset.Legend>

@@ -35,10 +35,13 @@ export default function Me() {
 
   useEffect(() => {
     if (!hasCursor) {
+      if (process.env.NODE_ENV === "development") return
       return document.documentElement.classList.remove("cursor")
     }
 
-    document.documentElement.classList.add("cursor")
+    if (process.env.NODE_ENV !== "development") {
+      document.documentElement.classList.add("cursor")
+    }
 
     let timestamp: number | undefined = undefined
     let updates: CursorUpdates = []
@@ -49,6 +52,8 @@ export default function Me() {
         trailing: true,
       },
       () => {
+        if (!canSend) return
+
         sendWebSocketMessage("cursor:update", updates)
         timestamp = undefined
         updates = []

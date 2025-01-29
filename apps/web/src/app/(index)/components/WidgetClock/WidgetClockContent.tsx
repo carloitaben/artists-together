@@ -9,6 +9,7 @@ import { useSpring, motion } from "motion/react"
 import type { SpringOptions } from "motion/react"
 import type { getRandomLocationWithWeather } from "~/services/locations/server"
 import { useUser, useHints } from "~/lib/promises"
+import { clientOnly } from "~/components/ClientOnly"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -37,6 +38,7 @@ type Props = {
 }
 
 export default function WidgetClockContent({ promise }: Props) {
+  clientOnly()
   const data = use(promise)
   const now = useMemo(
     () => dayjs().tz(data.location.timezone),

@@ -1,13 +1,11 @@
 import * as v from "valibot"
-import {
-  database,
-  eq,
-  TwitchMetadata,
-  userTable,
-} from "@artists-together/core/database"
+import { database, eq, userTable } from "@artists-together/core/database"
 import type { NextRequest } from "next/server"
 import { getAuth, getCookieOauth, provider } from "~/services/auth/server"
-import { AuthEndpointSearchParams } from "~/lib/schemas"
+import {
+  AuthEndpointSearchParams,
+  AuthEndpointTwitchResponseSchema,
+} from "~/lib/schemas"
 
 export async function GET(request: NextRequest) {
   const cookieOauth = await getCookieOauth()
@@ -80,14 +78,15 @@ export async function GET(request: NextRequest) {
 
     const twitchUser = await fetch("https://api.twitch.tv/helix/users", {
       headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
-        "Client-Id": process.env.OAUTH_TWITCH_ID || "",
+        Authorization: `Bearer ${tokens.accessToken()}`,
+        "Client-Id": String(process.env.OAUTH_TWITCH_ID),
       },
     })
       .then((response) => response.json())
-      .then((data) => v.parse(TwitchMetadata, data))
+      .then((data) => v.parse(AuthEndpointTwitchResponseSchema, data))
+      .then((data) => data.data[0])
 
-    const user = await database
+    await database
       .update(userTable)
       .set({
         twitchId: twitchUser.id,

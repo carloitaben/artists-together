@@ -1,23 +1,27 @@
-import { Suspense } from "react"
+import { lazy, Suspense } from "react"
 import { getRandomLocationWithWeather } from "~/services/locations/server"
+import { CursorPrecision } from "~/components/Cursors"
 import AspectRatio from "~/components/AspectRatio"
-import WidgetClockContent from "./WidgetClockContent"
+
+const WidgetClockContent = lazy(() => import("./WidgetClockContent"))
 
 export default function WidgetClock() {
   const location = getRandomLocationWithWeather()
 
   return (
     <div className="col-span-2">
-      <AspectRatio.Root
-        ratio={1}
-        className="select-none overflow-hidden rounded-full bg-arpeggio-black-800 shadow-card"
-      >
-        <AspectRatio.Content>
-          <Suspense>
-            <WidgetClockContent promise={location} />
-          </Suspense>
-        </AspectRatio.Content>
-      </AspectRatio.Root>
+      <CursorPrecision id="widget-clock" asChild>
+        <AspectRatio.Root
+          ratio={1}
+          className="select-none overflow-hidden rounded-full bg-arpeggio-black-800 shadow-card"
+        >
+          <AspectRatio.Content>
+            <Suspense>
+              <WidgetClockContent promise={location} />
+            </Suspense>
+          </AspectRatio.Content>
+        </AspectRatio.Root>
+      </CursorPrecision>
     </div>
   )
 }

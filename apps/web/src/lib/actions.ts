@@ -15,9 +15,11 @@ import {
 import { createFormAction } from "~/lib/server"
 import {
   AuthFormSchema,
+  AuthConnectionFormSchema,
   ContactSupportFormSchema,
   UpdateProfileFormSchema,
 } from "~/lib/schemas"
+import { unreachable } from "@artists-together/core/utils"
 
 export const login = createFormAction(AuthFormSchema, async (context) => {
   const cookieSession = await getCookieSession()
@@ -79,8 +81,8 @@ export const updateProfile = createFormAction(
   },
 )
 
-export const connectDiscord = createFormAction(
-  AuthFormSchema,
+export const connect = createFormAction(
+  AuthConnectionFormSchema,
   async (context) => {
     const auth = await getAuth()
 
@@ -92,46 +94,33 @@ export const connectDiscord = createFormAction(
 
     const cookieOauth = await getCookieOauth()
     const state = generateState()
-    const url = provider.discord.createAuthorizationURL(state, null, [
-      "identify",
-      "email",
-    ])
 
     cookieOauth.set({
       pathname: context.form.value.pathname,
       state,
     })
 
-    redirect(url.href)
-  },
-)
-
-export const connectTwitch = createFormAction(
-  AuthFormSchema,
-  async (context) => {
-    const auth = await getAuth()
-
-    if (!auth) {
-      return context.form.reply({
-        formErrors: ["Unauthorized"],
-      })
+    let url
+    switch (context.form.value.provider) {
+      case "discord":
+        url = provider.discord.createAuthorizationURL(state, null, [
+          "identify",
+          "email",
+        ])
+        break
+      case "twitch":
+        url = provider.twitch.createAuthorizationURL(state, [])
+        break
+      default:
+        unreachable(context.form.value.provider)
     }
-
-    const cookieOauth = await getCookieOauth()
-    const state = generateState()
-    const url = provider.twitch.createAuthorizationURL(state, [])
-
-    cookieOauth.set({
-      pathname: context.form.value.pathname,
-      state,
-    })
 
     redirect(url.href)
   },
 )
 
-export const disconnectDiscord = createFormAction(
-  AuthFormSchema,
+export const disconnect = createFormAction(
+  AuthConnectionFormSchema,
   async (context) => {
     const auth = await getAuth()
 
@@ -141,36 +130,30 @@ export const disconnectDiscord = createFormAction(
       })
     }
 
-    await database
-      .update(userTable)
-      .set({
-        discordId: null,
-        discordUsername: null,
-        discordMetadata: null,
-      })
-      .where(eq(userTable.id, auth.user.id))
-  },
-)
-
-export const disconnectTwitch = createFormAction(
-  AuthFormSchema,
-  async (context) => {
-    const auth = await getAuth()
-
-    if (!auth) {
-      return context.form.reply({
-        formErrors: ["Unauthorized"],
-      })
+    switch (context.form.value.provider) {
+      case "discord":
+        await database
+          .update(userTable)
+          .set({
+            discordId: null,
+            discordUsername: null,
+            discordMetadata: null,
+          })
+          .where(eq(userTable.id, auth.user.id))
+        break
+      case "twitch":
+        await database
+          .update(userTable)
+          .set({
+            twitchId: null,
+            twitchUsername: null,
+            twitchMetadata: null,
+          })
+          .where(eq(userTable.id, auth.user.id))
+        break
+      default:
+        unreachable(context.form.value.provider)
     }
-
-    await database
-      .update(userTable)
-      .set({
-        twitchId: null,
-        twitchUsername: null,
-        twitchMetadata: null,
-      })
-      .where(eq(userTable.id, auth.user.id))
   },
 )
 

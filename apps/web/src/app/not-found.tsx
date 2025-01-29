@@ -17,11 +17,7 @@ export default function NotFound() {
           src={image}
           draggable={false}
           alt=""
-          className="absolute inset-0 mx-auto size-full max-w-[1136px] object-contain"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-arpeggio-black-300 mix-blend-darken"
+          className="mx-auto size-full max-w-[1136px] object-contain"
         />
       </section>
     </Container>

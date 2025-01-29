@@ -31,7 +31,6 @@ export const TwitchMetadata = v.looseObject({
   profile_image_url: v.string(),
   offline_image_url: v.string(),
   view_count: v.number(),
-  email: v.optional(v.string()),
   created_at: v.string(),
 })
 
@@ -73,7 +72,7 @@ export const userTable = sqliteTable(
 export const UserTableInsert = createInsertSchema(userTable, {
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
-  bio: (schema) => v.pipe(schema, v.maxLength(300)),
+  bio: (schema) => v.pipe(schema, v.maxLength(128)),
   discordMetadata: DiscordMetadata,
   twitchMetadata: TwitchMetadata,
 })
@@ -83,7 +82,7 @@ export const UserTableSelect = createSelectSchema(userTable, {
   updatedAt: v.pipe(v.string(), v.isoTimestamp()),
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
-  bio: (schema) => v.pipe(schema, v.maxLength(300)),
+  bio: (schema) => v.pipe(schema, v.maxLength(128)),
   discordMetadata: DiscordMetadata,
   twitchMetadata: TwitchMetadata,
 })
@@ -93,7 +92,7 @@ export const UserTableUpdate = createUpdateSchema(userTable, {
   updatedAt: v.pipe(v.string(), v.isoTimestamp()),
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
-  bio: (schema) => v.pipe(schema, v.maxLength(300)),
+  bio: (schema) => v.pipe(schema, v.maxLength(128)),
   discordMetadata: DiscordMetadata,
   twitchMetadata: TwitchMetadata,
 })

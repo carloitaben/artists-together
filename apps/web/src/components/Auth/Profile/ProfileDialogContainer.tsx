@@ -1,8 +1,8 @@
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
-import { sectionData } from "./lib"
-import Icon from "../../Icon"
+import Icon from "~/components/Icon"
 import DialogContainer from "../DialogContainer"
+import { sectionData } from "./lib"
 
 type Props = ComponentProps<"div"> & {
   id: keyof typeof sectionData
@@ -18,7 +18,6 @@ function ProfileDialogContainer(
     <DialogContainer
       {...props}
       ref={ref}
-      padding="y"
       className="flex pr-8 md:block md:px-12"
     >
       <div className="relative w-12">
@@ -26,7 +25,7 @@ function ProfileDialogContainer(
           <Icon src={section.icon} alt="" className="size-5" />
         </div>
       </div>
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 pb-8 pt-3.5 md:pb-12 md:pt-10">{children}</div>
     </DialogContainer>
   )
 }

@@ -19,6 +19,12 @@ export default function NavigationAuthLink({
     <Link
       {...props}
       prefetch={prefetch}
+      onClick={(event) => {
+        event.preventDefault()
+        const url = new URL(window.location.href)
+        url.searchParams.set("modal", "auth")
+        window.history.pushState(null, "", url)
+      }}
       href={{
         pathname,
         search: urlSearchParams.toString(),

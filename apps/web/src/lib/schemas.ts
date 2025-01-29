@@ -1,5 +1,8 @@
 import * as v from "valibot"
-import { UserTableInsert } from "@artists-together/core/database"
+import {
+  TwitchMetadata,
+  UserTableInsert,
+} from "@artists-together/core/database"
 
 export const Pathname = v.pipe(
   v.string(),
@@ -77,8 +80,17 @@ export const AuthEndpointSearchParams = v.union([
   }),
 ])
 
+export const AuthEndpointTwitchResponseSchema = v.object({
+  data: v.tuple([TwitchMetadata]),
+})
+
 export const AuthFormSchema = v.object({
   pathname: Pathname,
+})
+
+export const AuthConnectionFormSchema = v.object({
+  pathname: Pathname,
+  provider: v.picklist(["discord", "twitch"]),
 })
 
 export const ContactSupportFormSchema = v.object({

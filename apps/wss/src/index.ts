@@ -1,4 +1,5 @@
 import "dotenv-mono/load"
+import * as v from "valibot"
 import type { ServerWebSocket } from "bun"
 import type { SessionValidationResult } from "@artists-together/core/auth"
 import { validateSessionToken } from "@artists-together/core/auth"
@@ -10,6 +11,7 @@ import {
   encodeServerMessage,
   safeParseClientMessage,
 } from "@artists-together/core/websocket"
+import { AnyJSONString } from "@artists-together/core/schemas"
 
 type WebSocketData = {
   uuid: string
@@ -67,9 +69,12 @@ const server = Bun.serve<WebSocketData>({
   async fetch(request, server) {
     const cookiesHeader = request.headers.get("Cookie") || ""
     const cookies = parseCookies(cookiesHeader)
-    const token = cookies.get("session")
+    const token = v.safeParse(
+      v.pipe(AnyJSONString, v.string(), v.nonEmpty()),
+      cookies.get("session")
+    )
 
-    const auth = token ? await validateSessionToken(token) : null
+    const auth = token.success ? await validateSessionToken(token.output) : null
     const upgraded = server.upgrade<WebSocketData>(request, {
       data: {
         auth,

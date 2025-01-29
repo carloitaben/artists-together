@@ -39,7 +39,9 @@ export default function ProfileSectionAdvancedSettings() {
 
   return (
     <ProfileDialogContainer id="advanced-settings">
-      <DialogTitle className="pb-6">{section.label}</DialogTitle>
+      <DialogTitle sm="inter" className="pb-6">
+        {section.label}
+      </DialogTitle>
       <form className="space-y-2">
         {settings.map((setting) => (
           <Switch.Root
