@@ -75,7 +75,8 @@ export const metadata: Metadata = {
 export const runtime = "edge"
 
 export default async function Layout({ children }: PropsWithChildren) {
-  const [auth, hints] = await Promise.all([getAuth(), getHints()])
+  const user = getAuth().then((auth) => auth?.user || null)
+  const hints = getHints()
 
   return (
     <html
@@ -90,7 +91,7 @@ export default async function Layout({ children }: PropsWithChildren) {
     >
       <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
         <QueryProvider>
-          <PromiseProvider user={auth?.user || null} hints={hints}>
+          <PromiseProvider user={user} hints={hints}>
             <PageTransition>
               <Navigation />
               <div data-transition-container>

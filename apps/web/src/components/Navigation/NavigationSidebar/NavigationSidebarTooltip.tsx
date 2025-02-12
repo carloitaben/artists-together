@@ -2,7 +2,7 @@
 
 import { Tooltip } from "@ark-ui/react/tooltip"
 import type { ReactNode } from "react"
-import { useState } from "react"
+import { useState, useTransition } from "react"
 import type { Transition } from "motion/react"
 import { motion, mix } from "motion/react"
 import { cx } from "cva"
@@ -32,6 +32,7 @@ export default function NavigationSidebarTooltip({
   disabled,
   label,
 }: Props) {
+  const [, startTransition] = useTransition()
   const [rotate, setRotate] = useState(angle(Math.random()))
 
   return (
@@ -44,8 +45,10 @@ export default function NavigationSidebarTooltip({
       interactive={false}
       onOpenChange={(details) => {
         if (!details.open) {
-          sign *= -1
-          setRotate(angle(Math.random()) * sign)
+          startTransition(() => {
+            sign *= -1
+            setRotate(angle(Math.random()) * sign)
+          })
         }
       }}
       positioning={{

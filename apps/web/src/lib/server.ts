@@ -6,7 +6,7 @@ import { parseWithValibot } from "conform-to-valibot"
 import type { Submission, SubmissionResult } from "@conform-to/react"
 import { AnyJSONString, JSONStringify } from "@artists-together/core/schemas"
 
-export function createGetCookie<
+export function createCookie<
   Name extends string,
   Schema extends v.GenericSchema,
 >({
@@ -54,26 +54,29 @@ type SuccessfulSubmission<
   FormValue = Schema,
 > = Extract<Submission<Schema, FormError, FormValue>, { status: "success" }>
 
+export type FormActionResult<FormError extends string[] = string[]> = {
+  result: SubmissionResult<FormError>
+}
+
 type FormActionContext<
   Schema extends v.GenericSchema,
   FormError extends string[] = string[],
 > = {
-  lastResult: SubmissionResult<FormError> | null
+  lastResult: FormActionResult<FormError> | null
   formData: FormData
   form: SuccessfulSubmission<v.InferOutput<Schema>>
 }
 
 export function createFormAction<
+  const Result extends void | FormActionResult<FormError>,
   Schema extends v.GenericSchema,
   FormError extends string[] = string[],
 >(
   schema: Schema,
-  action: (
-    context: FormActionContext<Schema, FormError>,
-  ) => Promise<void | SubmissionResult<FormError>>,
+  action: (context: FormActionContext<Schema, FormError>) => Promise<Result>,
 ) {
   return async function formAction(
-    lastResult: SubmissionResult<FormError> | null,
+    lastResult: FormActionResult<FormError> | null,
     formData: FormData,
   ) {
     const form = parseWithValibot(formData, {
@@ -81,7 +84,9 @@ export function createFormAction<
     })
 
     if (form.status !== "success") {
-      return form.reply()
+      return {
+        result: form.reply(),
+      }
     }
 
     const result = await action({
@@ -90,6 +95,12 @@ export function createFormAction<
       lastResult,
     })
 
-    return typeof result === "undefined" ? form.reply() : result
+    if (typeof result !== "undefined") {
+      return result
+    }
+
+    return {
+      result: form.reply(),
+    }
   }
 }

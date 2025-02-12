@@ -39,7 +39,7 @@ export default function ProfileSectionAdvancedSettings() {
 
   return (
     <ProfileDialogContainer id="advanced-settings">
-      <DialogTitle sm="inter" className="pb-6">
+      <DialogTitle sm="inter" className="pb-4 md:pb-6">
         {section.label}
       </DialogTitle>
       <form className="space-y-2">
@@ -49,7 +49,7 @@ export default function ProfileSectionAdvancedSettings() {
             name={setting.name}
             className="flex items-center justify-between"
           >
-            <Switch.Label className="flex items-center gap-x-2 px-3.5">
+            <Switch.Label className="flex items-center gap-x-2 text-sm md:px-3.5">
               {setting.tooltip ? (
                 <InlineTooltip tooltip={setting.tooltip}>
                   <span>{setting.label}</span>

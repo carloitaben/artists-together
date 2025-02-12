@@ -41,17 +41,17 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  img {
+    @apply select-none;
+  }
+}
+
+@layer components {
   html.cursor, html.cursor * {
     @apply cursor-none;
   }
 
-  /* Make the cursor visible on TanStack Query devtools */
-  .tsqd-parent-container * {
-    @apply cursor-default;
+  input, textarea {
+    @apply ring-0 aria-[invalid]:ring-acrylic-red-500 aria-[invalid]:ring-1;
   }
-
-  img {
-    @apply select-none;
-  }
-
 }

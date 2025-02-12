@@ -1,12 +1,11 @@
 "use client"
 
 import { useDialogContext } from "@ark-ui/react/dialog"
-import { useForm } from "@conform-to/react"
+import { getFormProps, useForm } from "@conform-to/react"
 import { parseWithValibot } from "conform-to-valibot"
 import { usePathname, useRouter } from "next/navigation"
 import { startTransition, useActionState, useEffect } from "react"
 import { logout } from "~/lib/actions"
-import { useHydrated } from "~/lib/react"
 import { useFormToastError } from "~/lib/forms"
 import { AuthFormSchema } from "~/lib/schemas"
 import { toaster } from "~/components/Toasts"
@@ -14,7 +13,6 @@ import Button from "~/components/Button"
 
 export default function ProfileLogout() {
   const [lastResult, action, isPending] = useActionState(logout, null)
-  const hydrated = useHydrated()
   const pathname = usePathname()
   const router = useRouter()
   const dialog = useDialogContext()
@@ -47,12 +45,7 @@ export default function ProfileLogout() {
   })
 
   return (
-    <form
-      id={form.id}
-      onSubmit={form.onSubmit}
-      action={action}
-      noValidate={hydrated}
-    >
+    <form {...getFormProps(form)} action={action}>
       <Button
         type="submit"
         name={fields.pathname.name}

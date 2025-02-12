@@ -2,13 +2,16 @@
 
 import Image from "next/image"
 import { Dialog } from "@ark-ui/react/dialog"
-import { Field } from "@ark-ui/react/field"
-import { FormProvider, useForm } from "@conform-to/react"
+import {
+  FormProvider,
+  getFormProps,
+  getTextareaProps,
+  useForm,
+} from "@conform-to/react"
 import { parseWithValibot } from "conform-to-valibot"
 import { useActionState } from "react"
 import { useUser } from "~/lib/promises"
 import { updateProfile } from "~/lib/actions"
-import { useHydrated } from "~/lib/react"
 import { useFormToastError } from "~/lib/forms"
 import { UpdateProfileFormSchema } from "~/lib/schemas"
 import Icon from "~/components/Icon"
@@ -27,17 +30,19 @@ export default function ProfileSectionProfile() {
   }
 
   const section = sectionData["profile"]
-  const [lastResult, action] = useActionState(updateProfile, null)
-  const hydrated = useHydrated()
+  const [lastResult, action, isPending] = useActionState(updateProfile, null)
 
   useFormToastError(lastResult)
 
   const [form, fields] = useForm({
-    lastResult,
+    lastResult: lastResult?.result,
     onValidate(context) {
       return parseWithValibot(context.formData, {
         schema: UpdateProfileFormSchema,
       })
+    },
+    defaultValue: {
+      bio: user.bio,
     },
   })
 
@@ -48,19 +53,24 @@ export default function ProfileSectionProfile() {
           {section.label}
         </DialogTitle>
       </Dialog.Title>
-      <DialogTitle sm="fraunces" className="pb-6">
+      <DialogTitle sm="fraunces" className="md:pt:0 pb-4 pt-3 md:pb-6">
         {user.username}
       </DialogTitle>
-      <FormProvider context={form.context}>
-        <form
-          id={form.id}
-          onSubmit={form.onSubmit}
-          action={action}
-          noValidate={hydrated}
-          className="flex grid-cols-3 flex-col gap-3 pb-3 md:grid"
-        >
+      <form
+        {...getFormProps(form)}
+        action={action}
+        className="flex grid-cols-3 flex-col gap-7 pb-6 md:grid md:gap-3 md:pb-3"
+        onBlur={(event) => {
+          if (!(event.target instanceof HTMLInputElement)) return
+          if (isPending) return
+          event.currentTarget.requestSubmit()
+        }}
+      >
+        <FormProvider context={form.context}>
           <div>
-            <div className="flex items-center gap-x-2 px-3.5 pb-1">Avatar</div>
+            <div className="flex items-center gap-x-2 px-3 pb-1 md:px-3.5">
+              Avatar
+            </div>
             <AspectRatio.Root ratio={1}>
               <AspectRatio.Content className="overflow-hidden rounded-4 bg-not-so-white">
                 {user.avatar ? (
@@ -80,27 +90,29 @@ export default function ProfileSectionProfile() {
               </AspectRatio.Content>
             </AspectRatio.Root>
           </div>
-          <Field.Root className="col-span-2 flex-col md:flex">
-            <Field.Label className="flex flex-none items-center justify-between px-3.5 pb-1">
+          <div className="col-span-2 flex-col md:flex">
+            <label
+              htmlFor={fields.bio.id}
+              className="flex flex-none items-center justify-between px-3 pb-1 md:px-3.5"
+            >
               <span>Description</span>
               <FieldLength
                 className="text-right"
                 name={fields.bio.name}
                 max={128}
               />
-            </Field.Label>
-            <Field.Textarea
-              name={fields.bio.name}
-              defaultValue={fields.bio.initialValue}
+            </label>
+            <textarea
+              {...getTextareaProps(fields.bio)}
               placeholder="Hello! I am a creative person!"
-              className="h-24 w-full flex-1 resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3.5 py-2.5 scrollbar-none placeholder:text-gunpla-white-300 md:h-auto"
+              className="h-24 w-full flex-1 resize-none scroll-py-2.5 rounded-4 bg-not-so-white px-3 py-2.5 scrollbar-none placeholder:text-gunpla-white-300 md:h-auto md:px-3.5"
             />
-          </Field.Root>
-        </form>
-      </FormProvider>
+          </div>
+        </FormProvider>
+      </form>
       <Connections />
       {/* <Fieldset.Root className="grid grid-cols-3 gap-2">
-        <Fieldset.Legend className="flex items-center gap-x-2 px-3.5 pb-1">
+        <Fieldset.Legend className="flex items-center gap-x-2 px-3 md:px-3.5 pb-1">
           <InlineTooltip tooltip="Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis nobis, magni possimus qui neque soluta sequi, eligendi cum explicabo earum non consequatur in at repellat libero quod tempore enim necessitatibus!">
             Content shared
           </InlineTooltip>

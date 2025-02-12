@@ -1,22 +1,15 @@
 "use client"
 
-import { Checkbox } from "@ark-ui/react/checkbox"
-import {
-  ComponentProps,
-  useActionState,
-  type PropsWithChildren,
-  type ReactNode,
-} from "react"
-import type { IconName } from "~/lib/icons"
-import Icon from "~/components/Icon"
-import { useUser } from "~/lib/promises"
-import { useForm } from "@conform-to/react"
-import { connect, login } from "~/lib/actions"
-import { useHydrated } from "~/lib/react"
+import { getFormProps, useForm } from "@conform-to/react"
 import { parseWithValibot } from "conform-to-valibot"
-import { AuthConnectionFormSchema } from "~/lib/schemas"
+import { ComponentProps, useActionState } from "react"
 import { usePathname } from "next/navigation"
 import { cx } from "cva"
+import type { IconName } from "~/lib/icons"
+import { useUser } from "~/lib/promises"
+import { connect } from "~/lib/actions"
+import { AuthConnectionFormSchema } from "~/lib/schemas"
+import Icon from "~/components/Icon"
 
 function Connection({
   children,
@@ -54,7 +47,9 @@ function Connection({
       </div>
       <div className="w-full flex-1">{children}</div>
       <div className="flex items-center gap-x-2 text-end">
-        {connected ? "Connected" : "Disconnected"}
+        <span className="sr-only md:not-sr-only">
+          {connected ? "Connected" : "Disconnected"}
+        </span>
         <Icon
           className="size-3.5"
           src={connected ? "CheckCircle" : "CancelCircle"}
@@ -71,10 +66,9 @@ export default function Connections() {
   const twitchUsername = user?.twitchUsername
 
   const pathname = usePathname()
-  const hydrated = useHydrated()
   const [lastResult, action] = useActionState(connect, null)
   const [form, fields] = useForm({
-    lastResult,
+    lastResult: lastResult?.result,
     onValidate(context) {
       return parseWithValibot(context.formData, {
         schema: AuthConnectionFormSchema,
@@ -84,13 +78,11 @@ export default function Connections() {
 
   return (
     <div className="pb-3 text-xs md:text-sm">
-      <div className="gap-x-2 px-3.5 pb-1">Connections</div>
+      <div className="gap-x-2 px-3 pb-1 md:px-3.5">Connections</div>
       <form
-        id={form.id}
-        onSubmit={form.onSubmit}
+        {...getFormProps(form)}
         action={action}
-        noValidate={hydrated}
-        className="space-y-2"
+        className="grid gap-y-1 md:gap-y-2"
       >
         <input type="hidden" name={fields.pathname.name} value={pathname} />
         <Connection

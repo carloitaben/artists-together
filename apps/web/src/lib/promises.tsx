@@ -2,12 +2,13 @@
 
 import type { User } from "@artists-together/core/database"
 import type { PropsWithChildren } from "react"
+import { use } from "react"
 import type { getHints } from "~/services/hints/server"
 import { createRequiredContext } from "./react"
 
 type Promises = {
-  hints: Awaited<ReturnType<typeof getHints>>
-  user: User | null
+  hints: ReturnType<typeof getHints>
+  user: Promise<User | null>
 }
 
 const [PromiseContext, usePromiseContext] =
@@ -20,10 +21,18 @@ export function PromiseProvider({
   return <PromiseContext value={value}>{children}</PromiseContext>
 }
 
-export function useUser() {
+export function useUserPromise(): Promise<User | null> {
   return usePromiseContext().user
 }
 
-export function useHints() {
+export function useUser(): User | null {
+  return use(useUserPromise())
+}
+
+export function useHintsPromise() {
   return usePromiseContext().hints
+}
+
+export function useHints() {
+  return use(useHintsPromise())
 }

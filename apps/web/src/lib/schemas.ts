@@ -61,13 +61,23 @@ export const RootSearchParams = v.object({
   q: v.optional(v.string()),
 })
 
-export const CalendarPathParams = v.object({
-  year: v.pipe(v.string(), v.transform(Number), v.integer(), v.minValue(1970)),
+export const CalendarYearMonthPathParams = v.object({
+  year: v.pipe(
+    v.string(),
+    v.transform(Number),
+    v.integer(),
+    v.minValue(1970),
+    v.maxValue(2100),
+  ),
   month: v.union([
     MonthNameList,
     v.pipe(v.string(), v.transform(Number), MonthNumberToName),
   ]),
 })
+
+export const CalendarYearPathParams = v.pick(CalendarYearMonthPathParams, [
+  "year",
+])
 
 export const AuthEndpointSearchParams = v.union([
   v.object({
@@ -98,4 +108,4 @@ export const ContactSupportFormSchema = v.object({
   message: v.pipe(v.string(), v.nonEmpty(), v.maxLength(300)),
 })
 
-export const UpdateProfileFormSchema = v.pick(UserTableInsert, ["bio"])
+export const UpdateProfileFormSchema = v.pick(UserTableInsert, ["bio", "links"]) 

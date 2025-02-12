@@ -33,19 +33,20 @@ function useDate() {
 
 export default function CalendarHeader() {
   const segments = useSelectedLayoutSegments()
-  const date = useDate()
+  // const date = useDate()
   const mode = segments.length === 2 ? "month" : "year"
 
   function move(sign: 1 | -1) {
-    if (mode === "year") {
-      const year = dayjs(date).add(1, "year").year()
-      return `/calendar/${year}`
-    }
+    // if (mode === "year") {
+    //   const year = dayjs(date).add(1, "year").year()
+    //   return `/calendar/${year}`
+    // }
 
-    const target = dayjs(date).add(sign, "month")
-    const year = target.year()
-    const month = MonthNumber.parse(target.month() + 1)
-    return `/calendar/${year}/${month}`
+    // const target = dayjs(date).add(sign, "month")
+    // const year = target.year()
+    // const month = MonthNumber.parse(target.month() + 1)
+    // return `/calendar/${year}/${month}`
+    return ""
   }
 
   return (
@@ -83,9 +84,7 @@ export default function CalendarHeader() {
                 </Link>
               </Button>
             </li>
-            <li>
-              <CalendarHeaderToggle date={date} mode={mode} />
-            </li>
+            <li>{/* <CalendarHeaderToggle date={date} mode={mode} /> */}</li>
           </ul>
         </nav>
       </header>

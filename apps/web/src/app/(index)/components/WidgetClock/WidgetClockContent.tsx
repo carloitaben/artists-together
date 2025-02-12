@@ -39,6 +39,8 @@ type Props = {
 
 export default function WidgetClockContent({ promise }: Props) {
   clientOnly()
+  const hints = useHints()
+  const user = useUser()
   const data = use(promise)
   const now = useMemo(
     () => dayjs().tz(data.location.timezone),
@@ -49,8 +51,6 @@ export default function WidgetClockContent({ promise }: Props) {
   const seconds = useSpring(transformSeconds(now.second()), spring)
   const minutes = useSpring(transformMinutes(now.minute()), spring)
   const hours = useSpring(transformHours(now.hour()), spring)
-  const hints = useHints()
-  const user = useUser()
 
   useEffect(() => {
     let second = now.second()

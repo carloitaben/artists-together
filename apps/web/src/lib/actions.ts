@@ -3,6 +3,7 @@
 import { database, eq, userTable } from "@artists-together/core/database"
 import { invalidateSession } from "@artists-together/core/auth"
 import { discord, CHANNEL } from "@artists-together/core/discord"
+import { unreachable } from "@artists-together/core/utils"
 import { generateState } from "arctic"
 import { redirect } from "next/navigation"
 import { getHints } from "~/services/hints/server"
@@ -19,15 +20,16 @@ import {
   ContactSupportFormSchema,
   UpdateProfileFormSchema,
 } from "~/lib/schemas"
-import { unreachable } from "@artists-together/core/utils"
 
 export const login = createFormAction(AuthFormSchema, async (context) => {
   const cookieSession = await getCookieSession()
 
   if (cookieSession.get().success) {
-    return context.form.reply({
-      formErrors: ["No need to do that again!"],
-    })
+    return {
+      result: context.form.reply({
+        formErrors: ["No need to do that again!"],
+      }),
+    }
   }
 
   const cookieOauth = await getCookieOauth()
@@ -67,15 +69,17 @@ export const updateProfile = createFormAction(
     const auth = await getAuth()
 
     if (!auth) {
-      return context.form.reply({
-        formErrors: ["Unauthorized"],
-      })
+      return {
+        result: context.form.reply({
+          formErrors: ["Unauthorized"],
+        }),
+      }
     }
 
     await database
       .update(userTable)
       .set({
-        bio: context.form.value.bio,
+        links: context.form.value.links,
       })
       .where(eq(userTable.id, auth.user.id))
   },
@@ -87,9 +91,11 @@ export const connect = createFormAction(
     const auth = await getAuth()
 
     if (!auth) {
-      return context.form.reply({
-        formErrors: ["Unauthorized"],
-      })
+      return {
+        result: context.form.reply({
+          formErrors: ["Unauthorized"],
+        }),
+      }
     }
 
     const cookieOauth = await getCookieOauth()
@@ -125,9 +131,11 @@ export const disconnect = createFormAction(
     const auth = await getAuth()
 
     if (!auth) {
-      return context.form.reply({
-        formErrors: ["Unauthorized"],
-      })
+      return {
+        result: context.form.reply({
+          formErrors: ["Unauthorized"],
+        }),
+      }
     }
 
     switch (context.form.value.provider) {
@@ -163,9 +171,11 @@ export const contactSupport = createFormAction(
     const auth = await getAuth()
 
     if (!auth) {
-      return context.form.reply({
-        formErrors: ["Unauthorized"],
-      })
+      return {
+        result: context.form.reply({
+          formErrors: ["Unauthorized"],
+        }),
+      }
     }
 
     await discord.channels.createMessage(CHANNEL.BOT_SHENANIGANS, {
@@ -195,5 +205,12 @@ export const contactSupport = createFormAction(
         },
       ],
     })
+
+    return {
+      message: "Message sent!",
+      result: context.form.reply({
+        resetForm: true,
+      }),
+    }
   },
 )

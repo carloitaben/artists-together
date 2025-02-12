@@ -1,7 +1,15 @@
+import * as v from "valibot"
 import { notFound } from "next/navigation"
+import { CalendarYearMonthPathParams } from "~/lib/schemas"
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<unknown> }) {
   if (process.env.NODE_ENV === "production") {
+    notFound()
+  }
+
+  const parsed = v.safeParse(CalendarYearMonthPathParams, await params)
+
+  if (!parsed.success) {
     notFound()
   }
 

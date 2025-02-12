@@ -36,6 +36,13 @@ export const TwitchMetadata = v.looseObject({
 
 export type TwitchMetadata = v.InferOutput<typeof TwitchMetadata>
 
+export const UserLinks = v.pipe(
+  v.array(v.optional(v.pipe(v.string(), v.url()))),
+  v.maxLength(5),
+)
+
+export type UserLinks = v.InferOutput<typeof UserLinks>
+
 export const UserSettings = v.object({
   fullHourFormat: v.optional(v.boolean(), false),
   shareStreaming: v.optional(v.boolean(), true),
@@ -54,6 +61,7 @@ export const userTable = sqliteTable(
     pronouns: text(),
     avatar: text(),
     email: text().unique(),
+    links: text({ mode: "json" }).$type<UserLinks>(),
     bio: text(),
     discordId: text().unique(),
     discordUsername: text().unique(),
@@ -72,6 +80,7 @@ export const userTable = sqliteTable(
 export const UserTableInsert = createInsertSchema(userTable, {
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
+  links: UserLinks,
   bio: (schema) => v.pipe(schema, v.maxLength(128)),
   discordMetadata: DiscordMetadata,
   twitchMetadata: TwitchMetadata,
@@ -81,6 +90,7 @@ export const UserTableSelect = createSelectSchema(userTable, {
   createdAt: v.pipe(v.string(), v.isoTimestamp()),
   updatedAt: v.pipe(v.string(), v.isoTimestamp()),
   avatar: (schema) => v.pipe(schema, v.url()),
+  links: UserLinks,
   email: (schema) => v.pipe(schema, v.email()),
   bio: (schema) => v.pipe(schema, v.maxLength(128)),
   discordMetadata: DiscordMetadata,
@@ -91,6 +101,7 @@ export const UserTableUpdate = createUpdateSchema(userTable, {
   createdAt: v.pipe(v.string(), v.isoTimestamp()),
   updatedAt: v.pipe(v.string(), v.isoTimestamp()),
   avatar: (schema) => v.pipe(schema, v.url()),
+  links: UserLinks,
   email: (schema) => v.pipe(schema, v.email()),
   bio: (schema) => v.pipe(schema, v.maxLength(128)),
   discordMetadata: DiscordMetadata,

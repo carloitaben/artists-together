@@ -18,11 +18,11 @@ function ProfileDialogContainer(
     <DialogContainer
       {...props}
       ref={ref}
-      className="flex pr-8 md:block md:px-12"
+      className="flex pr-8 text-xs md:block md:px-12 md:text-sm"
     >
       <div className="relative w-12">
         <div className="sticky top-0 grid size-12 place-items-center md:hidden">
-          <Icon src={section.icon} alt="" className="size-5" />
+          <Icon src={section.icon} alt="" className="size-6 md:size-5" />
         </div>
       </div>
       <div className="flex-1 pb-8 pt-3.5 md:pb-12 md:pt-10">{children}</div>

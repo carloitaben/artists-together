@@ -8,10 +8,10 @@ import {
 import { cache } from "react"
 import { Discord, Twitch } from "arctic"
 import { AuthFormSchema, Geolocation } from "~/lib/schemas"
-import { createGetCookie } from "~/lib/server"
+import { createCookie } from "~/lib/server"
 import { WEB_URL } from "~/lib/constants"
 
-export const getCookieSession = createGetCookie({
+export const getCookieSession = createCookie({
   name: SESSION_COOKIE_NAME,
   schema: v.pipe(v.string(), v.nonEmpty()),
   secure: process.env.NODE_ENV === "production",
@@ -21,7 +21,7 @@ export const getCookieSession = createGetCookie({
   path: "/",
 })
 
-export const getCookieOauth = createGetCookie({
+export const getCookieOauth = createCookie({
   name: "oauth",
   schema: v.object({
     ...AuthFormSchema.entries,

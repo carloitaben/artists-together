@@ -15,7 +15,7 @@ function DialogContainer(
       {...props}
       ref={ref}
       className={cx(
-        "rounded-6 bg-gunpla-white-50 text-gunpla-white-500 shadow-card",
+        "rounded-4 bg-gunpla-white-50 text-gunpla-white-500 shadow-card md:rounded-6",
         className,
       )}
     />

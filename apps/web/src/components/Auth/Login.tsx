@@ -1,11 +1,10 @@
 "use client"
 
 import { Dialog } from "@ark-ui/react/dialog"
-import { useForm } from "@conform-to/react"
+import { getFormProps, useForm } from "@conform-to/react"
 import { parseWithValibot } from "conform-to-valibot"
 import { usePathname } from "next/navigation"
 import { useActionState } from "react"
-import { useHydrated } from "~/lib/react"
 import { login } from "~/lib/actions"
 import { useFormToastError } from "~/lib/forms"
 import { AuthFormSchema } from "~/lib/schemas"
@@ -16,7 +15,6 @@ import DialogTitle from "./DialogTitle"
 
 export default function Login() {
   const [lastResult, action, isPending] = useActionState(login, null)
-  const hydrated = useHydrated()
   const pathname = usePathname()
 
   useFormToastError(lastResult)
@@ -44,10 +42,8 @@ export default function Login() {
         </Dialog.Description>
       </DialogContainer>
       <form
-        id={form.id}
-        onSubmit={form.onSubmit}
+        {...getFormProps(form)}
         action={action}
-        noValidate={hydrated}
         className="flex justify-end"
       >
         <Button
