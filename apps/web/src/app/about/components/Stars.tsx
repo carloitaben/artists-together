@@ -1,3 +1,5 @@
+"use client"
+
 import { Canvas, useFrame } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
 import { useScroll, motion, useSpring } from "motion/react"
