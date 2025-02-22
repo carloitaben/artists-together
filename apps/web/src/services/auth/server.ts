@@ -8,9 +8,9 @@ import {
   validateSessionToken,
 } from "@artists-together/core/auth"
 import { Discord, Twitch } from "arctic"
+import { cache } from "react"
 import { AuthFormSchema, Geolocation } from "~/lib/schemas"
 import { WEB_URL } from "~/lib/constants"
-import { cache } from "react"
 
 export const cookieSessionOptions = cookieOptions({
   name: SESSION_COOKIE_NAME,

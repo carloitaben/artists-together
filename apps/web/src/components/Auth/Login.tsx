@@ -21,8 +21,8 @@ export default function Login() {
   })
 
   const [form, fields] = useFormMutation({
-    schema: AuthFormSchema,
     mutation,
+    schema: AuthFormSchema,
   })
 
   return (
