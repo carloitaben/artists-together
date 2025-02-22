@@ -13,7 +13,13 @@ export type Props = ComponentProps<typeof Link> & {
   disabled?: boolean
 }
 
-export default function NavLink({ href, match, disabled, ...props }: Props) {
+export default function NavLink({
+  href,
+  match,
+  disabled,
+  prefetch,
+  ...props
+}: Props) {
   const [, startTransition] = useRouterTransition()
   const router = useRouter()
   const matches = useMatches({ href, match })
@@ -23,11 +29,16 @@ export default function NavLink({ href, match, disabled, ...props }: Props) {
       }
     : undefined
 
+  if (disabled) {
+    return <a {...props} {...aria} />
+  }
+
   return (
     <Link
       {...props}
       {...aria}
       href={href}
+      prefetch={prefetch}
       onClick={(event) => {
         props.onClick?.(event)
 

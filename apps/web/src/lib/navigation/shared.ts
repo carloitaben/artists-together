@@ -30,8 +30,8 @@ export const navigation = [
     label: "Home",
     icon: "Home",
     link: {
-      href: "/",
-      disabled: false,
+      href: "/home",
+      disabled: true,
     },
     actions: [],
   },
@@ -40,7 +40,7 @@ export const navigation = [
     label: "About",
     icon: "Help",
     link: {
-      href: "/about",
+      href: "/",
       disabled: false,
     },
     search: "Search something",
@@ -77,7 +77,7 @@ export const navigation = [
     icon: "Diversity",
     link: {
       href: "/lounge",
-      disabled: false,
+      disabled: true,
     },
     actions: [],
   },
@@ -87,7 +87,7 @@ export const navigation = [
     icon: "Train",
     link: {
       href: "/art",
-      disabled: false,
+      disabled: true,
     },
     actions: [],
   },
@@ -98,7 +98,7 @@ export const navigation = [
     link: {
       href: "/calendar",
       match: "^\/calendar",
-      disabled: false,
+      disabled: true,
     },
     actions: [],
   },
