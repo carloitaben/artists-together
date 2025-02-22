@@ -16,9 +16,9 @@ import { after } from "next/server"
 import {
   cookieOauthOptions,
   cookieSessionOptions,
+  getAuth,
   provider,
 } from "~/services/auth/server"
-import { getAuth } from "~/services/auth/actions"
 import { AuthEndpointSearchParams } from "~/lib/schemas"
 
 export async function GET(request: NextRequest) {

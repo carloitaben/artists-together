@@ -124,8 +124,6 @@ export function useFormMutation<
   )
 
   return useForm<v.InferInput<Schema>, v.InferOutput<Schema>>({
-    shouldValidate: "onBlur",
-    shouldRevalidate: "onInput",
     ...options,
     lastResult,
     onValidate(context) {

@@ -1,16 +1,16 @@
 import "server-only"
 import * as v from "valibot"
+import type { User } from "@artists-together/core/database"
 import { cookieOptions, getCookie } from "@standard-cookie/next"
+import type { SessionValidationResult } from "@artists-together/core/auth"
 import {
   SESSION_COOKIE_NAME,
-  SessionValidationResult,
   validateSessionToken,
 } from "@artists-together/core/auth"
 import { Discord, Twitch } from "arctic"
 import { AuthFormSchema, Geolocation } from "~/lib/schemas"
 import { WEB_URL } from "~/lib/constants"
 import { cache } from "react"
-import { User } from "@artists-together/core/database"
 
 export const cookieSessionOptions = cookieOptions({
   name: SESSION_COOKIE_NAME,

@@ -1,23 +1,23 @@
 "use client"
 
+import { useMutation } from "@tanstack/react-query"
 import {
   FormProvider,
   getFieldsetProps,
   getFormProps,
   useField,
-  useForm,
 } from "@conform-to/react"
-import { parseWithValibot } from "conform-to-valibot"
-import { useActionState } from "react"
-import { motion, AnimatePresence, Variants } from "motion/react"
-import DialogTitle from "../DialogTitle"
-import { sectionData } from "./lib"
-import ProfileDialogContainer from "./ProfileDialogContainer"
+import type { Variants } from "motion/react"
+import { motion, AnimatePresence } from "motion/react"
 import { updateProfile } from "~/lib/actions"
 import { UpdateProfileFormSchema } from "~/lib/schemas"
-import { IconName } from "~/lib/icons"
-import Icon from "~/components/Icon"
 import { useUser } from "~/lib/promises"
+import { useFormMutation } from "~/lib/mutations"
+import type { IconName } from "~/lib/icons"
+import Icon from "~/components/Icon"
+import DialogTitle from "../DialogTitle"
+import ProfileDialogContainer from "./ProfileDialogContainer"
+import { sectionData } from "./lib"
 
 const array = Array.from(Array(5))
 
@@ -66,21 +66,22 @@ function SocialMediaIcon({ name }: { name: string }) {
 
 export default function ProfileSectionSocialMedia() {
   const section = sectionData["social-media"]
-  const user = useUser()
 
-  const [lastResult, action, isPending] = useActionState(updateProfile, null)
-  const [form, fields] = useForm({
-    lastResult: lastResult?.result,
-    onValidate(context) {
-      return parseWithValibot(context.formData, {
-        schema: UpdateProfileFormSchema,
-      })
+  const user = useUser()
+  const mutation = useMutation({
+    async mutationFn(formData: FormData) {
+      return updateProfile(formData)
     },
+  })
+
+  const [form, fields] = useFormMutation({
+    mutation,
+    schema: UpdateProfileFormSchema,
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onInput",
     defaultValue: {
       links: user?.links,
     },
-    shouldValidate: "onBlur",
-    shouldRevalidate: "onInput",
   })
 
   return (
@@ -90,7 +91,6 @@ export default function ProfileSectionSocialMedia() {
       </DialogTitle>
       <form
         {...getFormProps(form)}
-        action={action}
         onPointerUp={(event) => {
           if (!(event.target instanceof HTMLInputElement)) return
           if (!event.target.hasAttribute("disabled")) return
@@ -107,7 +107,7 @@ export default function ProfileSectionSocialMedia() {
         }}
         onBlur={(event) => {
           if (!(event.target instanceof HTMLInputElement)) return
-          if (isPending) return
+          if (mutation.isPending) return
           event.currentTarget.requestSubmit()
         }}
       >

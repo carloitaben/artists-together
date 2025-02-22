@@ -34,8 +34,10 @@ function ContactSupportForm() {
   })
 
   const [form, fields] = useFormMutation({
-    schema: ContactSupportFormSchema,
     mutation,
+    schema: ContactSupportFormSchema,
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onInput",
   })
 
   return (

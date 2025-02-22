@@ -32,8 +32,8 @@ export default function ProfileLogout() {
   })
 
   const [form, fields] = useFormMutation({
-    schema: AuthFormSchema,
     mutation,
+    schema: AuthFormSchema,
   })
 
   return (

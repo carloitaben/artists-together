@@ -1,13 +1,14 @@
 "use client"
 
-import { getFormProps, useForm } from "@conform-to/react"
-import { parseWithValibot } from "conform-to-valibot"
-import { ComponentProps, useActionState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { getFormProps } from "@conform-to/react"
+import type { ComponentProps } from "react"
 import { usePathname } from "next/navigation"
 import { cx } from "cva"
 import type { IconName } from "~/lib/icons"
-import { useUser } from "~/lib/promises"
 import { connect } from "~/lib/actions"
+import { useUser } from "~/lib/promises"
+import { useFormMutation } from "~/lib/mutations"
 import { AuthConnectionFormSchema } from "~/lib/schemas"
 import Icon from "~/components/Icon"
 
@@ -62,28 +63,25 @@ function Connection({
 
 export default function Connections() {
   const user = useUser()
-  const discordUsername = user?.discordUsername
-  const twitchUsername = user?.twitchUsername
-
   const pathname = usePathname()
-  const [lastResult, action] = useActionState(connect, null)
-  const [form, fields] = useForm({
-    lastResult: lastResult?.result,
-    onValidate(context) {
-      return parseWithValibot(context.formData, {
-        schema: AuthConnectionFormSchema,
-      })
+  const mutation = useMutation({
+    async mutationFn(formData: FormData) {
+      return connect(formData)
     },
   })
+
+  const [form, fields] = useFormMutation({
+    mutation,
+    schema: AuthConnectionFormSchema,
+  })
+
+  const discordUsername = user?.discordUsername
+  const twitchUsername = user?.twitchUsername
 
   return (
     <div className="pb-3 text-xs md:text-sm">
       <div className="gap-x-2 px-3 pb-1 md:px-3.5">Connections</div>
-      <form
-        {...getFormProps(form)}
-        action={action}
-        className="grid gap-y-1 md:gap-y-2"
-      >
+      <form {...getFormProps(form)} className="grid gap-y-1 md:gap-y-2">
         <input type="hidden" name={fields.pathname.name} value={pathname} />
         <Connection
           name={fields.provider.name}

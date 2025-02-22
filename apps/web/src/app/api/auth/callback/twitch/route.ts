@@ -2,8 +2,7 @@ import * as v from "valibot"
 import { deleteCookie, getCookie } from "@standard-cookie/next"
 import { database, eq, userTable } from "@artists-together/core/database"
 import type { NextRequest } from "next/server"
-import { cookieOauthOptions, provider } from "~/services/auth/server"
-import { getAuth } from "~/services/auth/actions"
+import { cookieOauthOptions, getAuth, provider } from "~/services/auth/server"
 import {
   AuthEndpointSearchParams,
   AuthEndpointTwitchResponseSchema,

@@ -8,7 +8,7 @@ export function createDiscord({
   ...options
 }: Partial<RESTOptions> & { token: string }) {
   const rest = new REST({
-    makeRequest: globalThis.fetch,
+    makeRequest: globalThis.fetch as any,
     version: "10",
     ...options,
   }).setToken(token)

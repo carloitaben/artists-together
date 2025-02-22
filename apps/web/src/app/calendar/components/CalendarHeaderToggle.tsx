@@ -3,7 +3,7 @@ import type { Dayjs } from "dayjs"
 import { motion } from "motion/react"
 import Link from "next/link"
 import { startTransition, useOptimistic } from "react"
-import { MonthNumber } from "~/lib/schemas"
+import { MonthNameToNumber } from "~/lib/schemas"
 
 type Props = {
   date: Dayjs
@@ -41,7 +41,7 @@ export default function CalendarHeaderToggle({ date, mode }: Props) {
       <SegmentGroup.Item asChild value="month">
         <Link
           className="relative grid place-items-center rounded-full px-5 text-center"
-          href={`/calendar/${date.get("year")}/${MonthNumber.parse(date.get("month") + 1)}`}
+          href={`/calendar/${date.get("year")}/${MonthNumberToName.parse(date.get("month") + 1)}`}
         >
           <SegmentGroup.Context>
             {(context) => (context.value === "month" ? <Indicator /> : null)}

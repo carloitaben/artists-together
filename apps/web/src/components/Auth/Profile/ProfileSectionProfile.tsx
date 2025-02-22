@@ -32,6 +32,8 @@ export default function ProfileSectionProfile() {
   const [form, fields] = useFormMutation({
     mutation,
     schema: UpdateProfileFormSchema,
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onInput",
     defaultValue: {
       bio: user.bio,
     },
