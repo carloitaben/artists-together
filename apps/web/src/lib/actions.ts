@@ -1,5 +1,6 @@
 "use server"
 
+import { deleteCookie, getCookie, setCookie } from "@standard-cookie/next"
 import { database, eq, userTable } from "@artists-together/core/database"
 import { invalidateSession } from "@artists-together/core/auth"
 import { discord, CHANNEL } from "@artists-together/core/discord"
@@ -8,11 +9,11 @@ import { generateState } from "arctic"
 import { redirect } from "next/navigation"
 import { getHints } from "~/services/hints/server"
 import {
-  getAuth,
-  getCookieOauth,
-  getCookieSession,
+  cookieOauthOptions,
+  cookieSessionOptions,
   provider,
 } from "~/services/auth/server"
+import { getAuth } from "~/services/auth/actions"
 import { createFormAction } from "~/lib/server"
 import {
   AuthFormSchema,
@@ -22,17 +23,14 @@ import {
 } from "~/lib/schemas"
 
 export const login = createFormAction(AuthFormSchema, async (context) => {
-  const cookieSession = await getCookieSession()
+  const cookieSession = await getCookie(cookieSessionOptions)
 
-  if (cookieSession.get().success) {
-    return {
-      result: context.form.reply({
-        formErrors: ["No need to do that again!"],
-      }),
-    }
+  if (cookieSession) {
+    throw context.form.reply({
+      formErrors: ["No need to do that again!"],
+    })
   }
 
-  const cookieOauth = await getCookieOauth()
   const hints = await getHints()
   const state = generateState()
   const url = provider.discord.createAuthorizationURL(state, null, [
@@ -40,7 +38,7 @@ export const login = createFormAction(AuthFormSchema, async (context) => {
     "email",
   ])
 
-  cookieOauth.set({
+  await setCookie(cookieOauthOptions, {
     pathname: context.form.value.pathname,
     state,
     hints: {
@@ -58,9 +56,8 @@ export const logout = createFormAction(AuthFormSchema, async () => {
 
   if (!auth) return
 
-  const cookieSession = await getCookieSession()
   await invalidateSession(auth.session.id)
-  cookieSession.delete()
+  await deleteCookie(cookieSessionOptions)
 })
 
 export const updateProfile = createFormAction(
@@ -98,10 +95,9 @@ export const connect = createFormAction(
       }
     }
 
-    const cookieOauth = await getCookieOauth()
     const state = generateState()
 
-    cookieOauth.set({
+    await setCookie(cookieOauthOptions, {
       pathname: context.form.value.pathname,
       state,
     })

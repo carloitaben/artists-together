@@ -1,18 +1,12 @@
 "use client"
 
 import Image from "next/image"
+import { useMutation } from "@tanstack/react-query"
 import { Dialog } from "@ark-ui/react/dialog"
-import {
-  FormProvider,
-  getFormProps,
-  getTextareaProps,
-  useForm,
-} from "@conform-to/react"
-import { parseWithValibot } from "conform-to-valibot"
-import { useActionState } from "react"
+import { FormProvider, getFormProps, getTextareaProps } from "@conform-to/react"
 import { useUser } from "~/lib/promises"
+import { useFormMutation } from "~/lib/mutations"
 import { updateProfile } from "~/lib/actions"
-import { useFormToastError } from "~/lib/forms"
 import { UpdateProfileFormSchema } from "~/lib/schemas"
 import Icon from "~/components/Icon"
 import FieldLength from "~/components/FieldLength"
@@ -29,22 +23,21 @@ export default function ProfileSectionProfile() {
     throw Error("Unauthorized")
   }
 
-  const section = sectionData["profile"]
-  const [lastResult, action, isPending] = useActionState(updateProfile, null)
-
-  useFormToastError(lastResult)
-
-  const [form, fields] = useForm({
-    lastResult: lastResult?.result,
-    onValidate(context) {
-      return parseWithValibot(context.formData, {
-        schema: UpdateProfileFormSchema,
-      })
+  const mutation = useMutation({
+    async mutationFn(formData: FormData) {
+      return updateProfile(formData)
     },
+  })
+
+  const [form, fields] = useFormMutation({
+    mutation,
+    schema: UpdateProfileFormSchema,
     defaultValue: {
       bio: user.bio,
     },
   })
+
+  const section = sectionData["profile"]
 
   return (
     <ProfileDialogContainer id="profile">
@@ -58,11 +51,10 @@ export default function ProfileSectionProfile() {
       </DialogTitle>
       <form
         {...getFormProps(form)}
-        action={action}
         className="flex grid-cols-3 flex-col gap-7 pb-6 md:grid md:gap-3 md:pb-3"
         onBlur={(event) => {
           if (!(event.target instanceof HTMLInputElement)) return
-          if (isPending) return
+          if (mutation.isPending) return
           event.currentTarget.requestSubmit()
         }}
       >

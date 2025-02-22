@@ -1,21 +1,25 @@
 import * as v from "valibot"
+import { deleteCookie, getCookie } from "@standard-cookie/next"
 import { database, eq, userTable } from "@artists-together/core/database"
 import type { NextRequest } from "next/server"
-import { getAuth, getCookieOauth, provider } from "~/services/auth/server"
+import { cookieOauthOptions, provider } from "~/services/auth/server"
+import { getAuth } from "~/services/auth/actions"
 import {
   AuthEndpointSearchParams,
   AuthEndpointTwitchResponseSchema,
 } from "~/lib/schemas"
 
 export async function GET(request: NextRequest) {
-  const cookieOauth = await getCookieOauth()
-  const cookieOauthValue = cookieOauth.get()
-  cookieOauth.delete()
+  const cookieOauth = await getCookie(cookieOauthOptions)
+  await deleteCookie(cookieOauthOptions)
 
-  if (!cookieOauthValue.success) {
-    return new Response(`Missing or invalid "${cookieOauth.name}" cookie`, {
-      status: 400,
-    })
+  if (!cookieOauth) {
+    return new Response(
+      `Missing or invalid "${cookieOauthOptions.name}" cookie`,
+      {
+        status: 400,
+      },
+    )
   }
 
   const params = v.safeParse(
@@ -27,7 +31,7 @@ export async function GET(request: NextRequest) {
     return new Response("Invalid params", {
       status: 307,
       headers: {
-        Location: `${cookieOauthValue.output.pathname}?error`,
+        Location: `${cookieOauth.pathname}?error`,
       },
     })
   }
@@ -38,24 +42,24 @@ export async function GET(request: NextRequest) {
         return new Response("Access denied", {
           status: 307,
           headers: {
-            Location: `${cookieOauthValue.output.pathname}?modal=auth`,
+            Location: `${cookieOauth.pathname}?modal=auth`,
           },
         })
       default:
         return new Response(params.output.error_description, {
           status: 307,
           headers: {
-            Location: `${cookieOauthValue.output.pathname}?error`,
+            Location: `${cookieOauth.pathname}?error`,
           },
         })
     }
   }
 
-  if (params.output.state !== cookieOauthValue.output.state) {
+  if (params.output.state !== cookieOauth.state) {
     return new Response("OAuth state mismatch", {
       status: 307,
       headers: {
-        Location: `${cookieOauthValue.output.pathname}?error`,
+        Location: `${cookieOauth.pathname}?error`,
       },
     })
   }
@@ -66,7 +70,7 @@ export async function GET(request: NextRequest) {
     return new Response("Unauthorized", {
       status: 401,
       headers: {
-        Location: `${cookieOauthValue.output.pathname}?error`,
+        Location: `${cookieOauth.pathname}?error`,
       },
     })
   }
@@ -98,7 +102,7 @@ export async function GET(request: NextRequest) {
     return new Response("Connected successfully", {
       status: 307,
       headers: {
-        Location: `${cookieOauthValue.output.pathname}?modal=auth`,
+        Location: `${cookieOauth.pathname}?modal=auth`,
       },
     })
   } catch (error) {
@@ -111,7 +115,7 @@ export async function GET(request: NextRequest) {
       {
         status: 307,
         headers: {
-          Location: `${cookieOauthValue.output.pathname}?error`,
+          Location: `${cookieOauth.pathname}?error`,
         },
       },
     )

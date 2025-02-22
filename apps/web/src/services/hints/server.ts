@@ -3,7 +3,6 @@ import * as v from "valibot"
 import Negotiator from "negotiator"
 import { headers as getHeaders } from "next/headers"
 import { userAgent as getUserAgent } from "next/server"
-import { cache } from "react"
 import { Geolocation } from "~/lib/schemas"
 
 function getTemperatureUnit(locale: string) {
@@ -46,7 +45,7 @@ function getGeolocation({ headers }: { headers: Headers }) {
   return geolocation.success ? geolocation.output : null
 }
 
-export const getHints = cache(async () => {
+async function getLocale() {
   const headers = await getHeaders()
   const negotiator = new Negotiator({
     headers: {
@@ -55,7 +54,12 @@ export const getHints = cache(async () => {
   })
 
   const language = negotiator.language() || "*"
-  const locale = language === "*" ? "en-US" : language
+  return language === "*" ? "en-US" : language
+}
+
+export async function getHints() {
+  const headers = await getHeaders()
+  const locale = await getLocale()
 
   return {
     locale,
@@ -65,4 +69,4 @@ export const getHints = cache(async () => {
     hourFormat: getHourFormat(locale),
     saveData: headers.get("save-data") === "on",
   }
-})
+}

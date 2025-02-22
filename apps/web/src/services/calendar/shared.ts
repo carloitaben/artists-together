@@ -1,5 +1,5 @@
+import { cookieOptions } from "@standard-cookie/next"
 import * as v from "valibot"
-import { cookieOptions } from "~/lib/cookies"
 
 export const cookieCalendarTabOptions = cookieOptions({
   name: "calendar-tab",

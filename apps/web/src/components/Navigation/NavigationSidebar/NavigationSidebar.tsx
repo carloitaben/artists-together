@@ -1,11 +1,11 @@
 import { getHints } from "~/services/hints/server"
-import { getAuth } from "~/services/auth/server"
 import Avatar from "~/components/Avatar"
 import Icon from "~/components/Icon"
 import NavLink from "~/components/NavLink"
 import { navigation } from "~/lib/navigation/shared"
 import NavigationAuthLink from "../NavigationAuthLink"
 import NavigationSidebarTooltip from "./NavigationSidebarTooltip"
+import { getUser } from "~/services/auth/actions"
 
 const className = {
   navLink:
@@ -15,7 +15,7 @@ const className = {
 }
 
 export default async function NavigationSidebar() {
-  const [auth, hints] = await Promise.all([getAuth(), getHints()])
+  const [user, hints] = await Promise.all([getUser(), getHints()])
 
   return (
     <nav
@@ -26,12 +26,12 @@ export default async function NavigationSidebar() {
       <ul>
         <NavigationSidebarTooltip
           id="auth"
-          label={auth ? "Your profile" : "Log-in"}
+          label={user ? "Your profile" : "Log-in"}
         >
           <NavigationAuthLink className={className.navLink}>
             <span className={className.iconWrapper}>
-              {auth ? (
-                <Avatar username={auth.user.username} src={auth.user.avatar} />
+              {user ? (
+                <Avatar username={user.username} src={user.avatar} />
               ) : (
                 <Icon src="Face" alt="Log-in" />
               )}

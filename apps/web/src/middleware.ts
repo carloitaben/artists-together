@@ -1,15 +1,15 @@
+import { getCookie, setCookie } from "@standard-cookie/next"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
-import { getCookieSession } from "./services/auth/server"
+import { cookieSessionOptions } from "./services/auth/server"
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (request.method === "GET") {
-    const cookieSession = await getCookieSession()
-    const cookieSessionValue = cookieSession.get()
+    const cookieSession = await getCookie(cookieSessionOptions)
     const response = NextResponse.next()
 
-    if (cookieSessionValue.success) {
-      cookieSession.set(cookieSessionValue.output)
+    if (cookieSession) {
+      await setCookie(cookieSessionOptions, cookieSession)
     }
 
     return response

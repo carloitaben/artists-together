@@ -1,57 +1,44 @@
 "use client"
 
+import { useMutation } from "@tanstack/react-query"
 import { useDialogContext } from "@ark-ui/react/dialog"
-import { getFormProps, useForm } from "@conform-to/react"
-import { parseWithValibot } from "conform-to-valibot"
+import { getFormProps } from "@conform-to/react"
 import { usePathname, useRouter } from "next/navigation"
-import { startTransition, useActionState, useEffect } from "react"
+import { useFormMutation } from "~/lib/mutations"
 import { logout } from "~/lib/actions"
-import { useFormToastError } from "~/lib/forms"
 import { AuthFormSchema } from "~/lib/schemas"
 import { toaster } from "~/components/Toasts"
 import Button from "~/components/Button"
 
 export default function ProfileLogout() {
-  const [lastResult, action, isPending] = useActionState(logout, null)
   const pathname = usePathname()
   const router = useRouter()
   const dialog = useDialogContext()
 
-  useFormToastError(lastResult)
-
-  useEffect(() => {
-    if (lastResult?.status === "success") {
+  const mutation = useMutation({
+    async mutationFn(formData: FormData) {
+      return logout(formData)
+    },
+    onMutate() {
+      dialog.setOpen(false)
+    },
+    onSuccess() {
       router.refresh()
       toaster.create({
         type: "success",
         title: "Logged out succesfully",
       })
-    }
-  }, [lastResult?.status, router])
-
-  const [form, fields] = useForm({
-    onValidate(context) {
-      return parseWithValibot(context.formData, {
-        schema: AuthFormSchema,
-      })
-    },
-    async onSubmit(event, context) {
-      event.preventDefault()
-      dialog.setOpen(false)
-      startTransition(() => {
-        action(context.formData)
-      })
     },
   })
 
+  const [form, fields] = useFormMutation({
+    schema: AuthFormSchema,
+    mutation,
+  })
+
   return (
-    <form {...getFormProps(form)} action={action}>
-      <Button
-        type="submit"
-        name={fields.pathname.name}
-        value={pathname}
-        disabled={isPending}
-      >
+    <form {...getFormProps(form)}>
+      <Button type="submit" name={fields.pathname.name} value={pathname}>
         Log off
       </Button>
     </form>

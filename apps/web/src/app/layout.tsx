@@ -5,7 +5,7 @@ import { lazy } from "react"
 import { cx } from "cva"
 import { WEB_URL } from "~/lib/constants"
 import { colors } from "~/../tailwind.config"
-import { getAuth } from "~/services/auth/server"
+import { getUser } from "~/services/auth/actions"
 import { getHints } from "~/services/hints/server"
 import { QueryProvider } from "~/services/query/client"
 import { PromiseProvider } from "~/lib/promises"
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
 export const runtime = "edge"
 
 export default async function Layout({ children }: PropsWithChildren) {
-  const user = getAuth().then((auth) => auth?.user || null)
+  const user = getUser()
   const hints = getHints()
 
   return (

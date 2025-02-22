@@ -1,13 +1,13 @@
 import { Dialog } from "@ark-ui/react/dialog"
 import { cx } from "cva"
-import { getAuth } from "~/services/auth/server"
+import { getUser } from "~/services/auth/actions"
 import Backdrop from "~/components/Backdrop"
 import AuthRoot from "./AuthRoot"
 import Profile from "./Profile"
 import Login from "./Login"
 
 export default async function Auth() {
-  const auth = await getAuth()
+  const user = await getUser()
 
   return (
     <AuthRoot>
@@ -20,7 +20,7 @@ export default async function Auth() {
           "scroll-px-1 scroll-pb-4 scroll-pt-1 px-1 pb-4 pt-1 sm:scroll-p-12 sm:p-12",
         )}
       >
-        {auth ? <Profile /> : <Login />}
+        {user ? <Profile /> : <Login />}
       </Dialog.Positioner>
     </AuthRoot>
   )

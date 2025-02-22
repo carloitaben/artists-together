@@ -1,4 +1,5 @@
 import * as v from "valibot"
+import { deleteCookie, getCookie, setCookie } from "@standard-cookie/next"
 import {
   createSession,
   generateSessionToken,
@@ -13,22 +14,24 @@ import { createDiscord, discord, ROLE } from "@artists-together/core/discord"
 import type { NextRequest } from "next/server"
 import { after } from "next/server"
 import {
-  getAuth,
-  getCookieOauth,
-  getCookieSession,
+  cookieOauthOptions,
+  cookieSessionOptions,
   provider,
 } from "~/services/auth/server"
+import { getAuth } from "~/services/auth/actions"
 import { AuthEndpointSearchParams } from "~/lib/schemas"
 
 export async function GET(request: NextRequest) {
-  const cookieOauth = await getCookieOauth()
-  const cookieOauthValue = cookieOauth.get()
-  cookieOauth.delete()
+  const cookieOauth = await getCookie(cookieOauthOptions)
+  await deleteCookie(cookieOauthOptions)
 
-  if (!cookieOauthValue.success) {
-    return new Response(`Missing or invalid "${cookieOauth.name}" cookie`, {
-      status: 400,
-    })
+  if (!cookieOauth) {
+    return new Response(
+      `Missing or invalid "${cookieOauthOptions.name}" cookie`,
+      {
+        status: 400,
+      },
+    )
   }
 
   const params = v.safeParse(
@@ -40,7 +43,7 @@ export async function GET(request: NextRequest) {
     return new Response("Invalid params", {
       status: 307,
       headers: {
-        Location: `${cookieOauthValue.output.pathname}?error`,
+        Location: `${cookieOauth.pathname}?error`,
       },
     })
   }
@@ -51,24 +54,24 @@ export async function GET(request: NextRequest) {
         return new Response("Access denied", {
           status: 307,
           headers: {
-            Location: `${cookieOauthValue.output.pathname}?modal=auth`,
+            Location: `${cookieOauth.pathname}?modal=auth`,
           },
         })
       default:
         return new Response(params.output.error_description, {
           status: 307,
           headers: {
-            Location: `${cookieOauthValue.output.pathname}?error`,
+            Location: `${cookieOauth.pathname}?error`,
           },
         })
     }
   }
 
-  if (params.output.state !== cookieOauthValue.output.state) {
+  if (params.output.state !== cookieOauth.state) {
     return new Response("OAuth state mismatch", {
       status: 307,
       headers: {
-        Location: `${cookieOauthValue.output.pathname}?error`,
+        Location: `${cookieOauth.pathname}?error`,
       },
     })
   }
@@ -92,7 +95,7 @@ export async function GET(request: NextRequest) {
       return new Response("Unverified", {
         status: 307,
         headers: {
-          Location: `${cookieOauthValue.output.pathname}?error=Verify+your+Discord+account+first!`,
+          Location: `${cookieOauth.pathname}?error=Verify+your+Discord+account+first!`,
         },
       })
     }
@@ -111,10 +114,8 @@ export async function GET(request: NextRequest) {
         discordUsername: discordUser.username,
         discordMetadata: discordUser,
         settings: {
-          fahrenheit: Boolean(cookieOauthValue.output.hints?.fahrenheit),
-          fullHourFormat: Boolean(
-            cookieOauthValue.output.hints?.fullHourFormat,
-          ),
+          fahrenheit: Boolean(cookieOauth.hints?.fahrenheit),
+          fullHourFormat: Boolean(cookieOauth.hints?.fullHourFormat),
           shareCursor: true,
           shareStreaming: true,
         },
@@ -135,7 +136,7 @@ export async function GET(request: NextRequest) {
       return new Response("Failed to upsert user", {
         status: 307,
         headers: {
-          Location: `${cookieOauthValue.output.pathname}?error`,
+          Location: `${cookieOauth.pathname}?error`,
         },
       })
     }
@@ -143,17 +144,16 @@ export async function GET(request: NextRequest) {
     if (!auth) {
       const sessionToken = generateSessionToken()
       const session = await createSession(sessionToken, user.id)
-      const cookieSession = await getCookieSession()
-      cookieSession.set(sessionToken, {
+      await setCookie(cookieSessionOptions, sessionToken, {
         expires: session.expiresAt,
       })
     }
 
     after(async () => {
-      if (cookieOauthValue.output.hints?.geolocation) {
+      if (cookieOauth.hints?.geolocation) {
         await database
           .insert(locationTable)
-          .values(cookieOauthValue.output.hints.geolocation)
+          .values(cookieOauth.hints.geolocation)
           .onConflictDoNothing({
             target: locationTable.city,
           })
@@ -182,7 +182,7 @@ export async function GET(request: NextRequest) {
       {
         status: 307,
         headers: {
-          Location: `${cookieOauthValue.output.pathname}?toast=Logged+in+as+%40${user.username}`,
+          Location: `${cookieOauth.pathname}?toast=Logged+in+as+%40${user.username}`,
         },
       },
     )
@@ -196,7 +196,7 @@ export async function GET(request: NextRequest) {
       {
         status: 307,
         headers: {
-          Location: `${cookieOauthValue.output.pathname}?error`,
+          Location: `${cookieOauth.pathname}?error`,
         },
       },
     )
