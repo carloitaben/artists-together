@@ -1,3 +1,4 @@
+import { getUser } from "~/services/auth/server"
 import { getHints } from "~/services/hints/server"
 import Avatar from "~/components/Avatar"
 import Icon from "~/components/Icon"
@@ -5,7 +6,6 @@ import NavLink from "~/components/NavLink"
 import { navigation } from "~/lib/navigation/shared"
 import NavigationAuthLink from "../NavigationAuthLink"
 import NavigationSidebarTooltip from "./NavigationSidebarTooltip"
-import { getUser } from "~/services/auth/actions"
 
 const className = {
   navLink:

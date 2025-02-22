@@ -11,9 +11,9 @@ import { getHints } from "~/services/hints/server"
 import {
   cookieOauthOptions,
   cookieSessionOptions,
+  getAuth,
   provider,
 } from "~/services/auth/server"
-import { getAuth } from "~/services/auth/actions"
 import { createFormAction } from "~/lib/server"
 import {
   AuthFormSchema,

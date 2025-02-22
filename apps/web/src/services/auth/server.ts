@@ -1,10 +1,16 @@
 import "server-only"
 import * as v from "valibot"
-import { cookieOptions } from "@standard-cookie/next"
-import { SESSION_COOKIE_NAME } from "@artists-together/core/auth"
+import { cookieOptions, getCookie } from "@standard-cookie/next"
+import {
+  SESSION_COOKIE_NAME,
+  SessionValidationResult,
+  validateSessionToken,
+} from "@artists-together/core/auth"
 import { Discord, Twitch } from "arctic"
 import { AuthFormSchema, Geolocation } from "~/lib/schemas"
 import { WEB_URL } from "~/lib/constants"
+import { cache } from "react"
+import { User } from "@artists-together/core/database"
 
 export const cookieSessionOptions = cookieOptions({
   name: SESSION_COOKIE_NAME,
@@ -48,3 +54,17 @@ export const provider = {
     new URL("/api/auth/callback/twitch", WEB_URL).href,
   ),
 }
+
+export const getAuth = cache(async (): Promise<SessionValidationResult> => {
+  const cookieSession = await getCookie(cookieSessionOptions)
+
+  if (!cookieSession) {
+    return null
+  }
+
+  return validateSessionToken(cookieSession)
+})
+
+export const getUser = cache(async (): Promise<User | null> => {
+  return getAuth().then((auth) => auth?.user || null)
+})
