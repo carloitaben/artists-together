@@ -33,7 +33,7 @@ function isPlainObject(o: any): o is Object {
   return true
 }
 
-// Modified from the amazing Tanstack Query library (MIT)
+// Modified from Tanstack Query
 // https://github.com/TanStack/query/blob/main/packages/query-core/src/utils.ts#L205
 export function hashArgs<T extends any[]>(args: T): string {
   return JSON.stringify(args, (_, val) =>
