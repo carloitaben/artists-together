@@ -108,4 +108,8 @@ export const ContactSupportFormSchema = v.object({
   message: v.pipe(v.string(), v.nonEmpty(), v.maxLength(300)),
 })
 
-export const UpdateProfileFormSchema = v.pick(UserTableInsert, ["bio", "links"]) 
+export const UpdateProfileFormSchema = v.pick(UserTableInsert, [
+  "bio",
+  "links",
+  "settings",
+]) 

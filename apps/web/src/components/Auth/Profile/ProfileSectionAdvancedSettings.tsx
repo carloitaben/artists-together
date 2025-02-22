@@ -1,4 +1,12 @@
+"use client"
+
+import { UserSettings } from "@artists-together/core/database"
+import { useMutation } from "@tanstack/react-query"
 import { Switch } from "@ark-ui/react/switch"
+import { getFormProps, getInputProps } from "@conform-to/react"
+import { useUser } from "~/lib/promises"
+import { updateProfile } from "~/lib/actions"
+import { useFormMutation } from "~/lib/mutations"
 import SwitchControl from "~/components/SwitchControl"
 import InlineTooltip from "~/components/InlineTooltip"
 import DialogTitle from "../DialogTitle"
@@ -6,30 +14,30 @@ import { sectionData } from "./lib"
 import ProfileDialogContainer from "./ProfileDialogContainer"
 
 type Setting = {
-  name: string
+  name: keyof UserSettings
   label: string
   tooltip?: string
 }
 
 const settings = [
   {
-    name: "0",
+    name: "fullHourFormat",
     label: "24-hour time format",
   },
   {
-    name: "1",
+    name: "shareStreaming",
     label: "Share streaming status",
     tooltip:
       "We use your approximate location (region) to let other members know your timezone.",
   },
   {
-    name: "2",
+    name: "shareCursor",
     label: "Share cursor location",
     tooltip:
       "We use your approximate location (region) to let other members know your timezone.",
   },
   {
-    name: "3",
+    name: "fahrenheit",
     label: "Temperature in Fahrenheit",
   },
 ] satisfies Setting[]
@@ -37,16 +45,31 @@ const settings = [
 export default function ProfileSectionAdvancedSettings() {
   const section = sectionData["advanced-settings"]
 
+  const user = useUser()
+  const mutation = useMutation({
+    async mutationFn(formData: FormData) {
+      return updateProfile(formData)
+    },
+  })
+
+  const [form, fields] = useFormMutation({
+    mutation,
+    schema: UserSettings,
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onInput",
+    defaultValue: user?.settings,
+  })
+
   return (
     <ProfileDialogContainer id="advanced-settings">
       <DialogTitle sm="inter" className="pb-4 md:pb-6">
         {section.label}
       </DialogTitle>
-      <form className="space-y-2">
+      <form {...getFormProps(form)} className="space-y-2">
         {settings.map((setting) => (
           <Switch.Root
+            {...getInputProps(fields[setting.name], { type: "checkbox" })}
             key={setting.name}
-            name={setting.name}
             className="flex items-center justify-between"
           >
             <Switch.Label className="flex items-center gap-x-2 text-sm md:px-3.5">
