@@ -8,6 +8,8 @@ import {
   useField,
 } from "@conform-to/react"
 import type { Variants } from "motion/react"
+import { useRouter } from "next/navigation"
+import { useMemo } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { updateProfile } from "~/lib/actions"
 import { UpdateProfileFormSchema } from "~/lib/schemas"
@@ -68,9 +70,13 @@ export default function ProfileSectionSocialMedia() {
   const section = sectionData["social-media"]
 
   const user = useUser()
+  const router = useRouter()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
       return updateProfile(formData)
+    },
+    onSuccess() {
+      router.refresh()
     },
   })
 
@@ -79,10 +85,10 @@ export default function ProfileSectionSocialMedia() {
     schema: UpdateProfileFormSchema,
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
-    defaultValue: {
-      links: user?.links,
-    },
+    defaultValue: user,
   })
+
+  const fieldList = useMemo(() => fields.links.getFieldList(), [fields.links])
 
   return (
     <ProfileDialogContainer id="social-media">
@@ -107,8 +113,9 @@ export default function ProfileSectionSocialMedia() {
         }}
         onBlur={(event) => {
           if (!(event.target instanceof HTMLInputElement)) return
-          if (mutation.isPending) return
-          event.currentTarget.requestSubmit()
+          if (event.target.value !== event.target.defaultValue) {
+            event.currentTarget.requestSubmit()
+          }
         }}
       >
         <FormProvider context={form.context}>
@@ -116,7 +123,6 @@ export default function ProfileSectionSocialMedia() {
             <legend className="px-3 pb-1 md:px-3.5">Links</legend>
             {array.map((_, index) => {
               const name = `${fields.links.name}[${index}]`
-              const disabled = index > 0 && !fields.links.value?.[index - 1]
 
               return (
                 <div
@@ -129,11 +135,11 @@ export default function ProfileSectionSocialMedia() {
                   </label>
                   <input
                     name={name}
-                    disabled={disabled}
+                    defaultValue={fieldList[index]?.initialValue}
                     className="block h-10 w-full rounded-4 bg-not-so-white pl-3.5 pr-10 text-gunpla-white-700 caret-gunpla-white-700 transition-shadow placeholder:text-gunpla-white-300"
                     placeholder="https://example.com/user"
                   />
-                  <SocialMediaIcon name={name} />
+                  {/* <SocialMediaIcon /> */}
                 </div>
               )
             })}

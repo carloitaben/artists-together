@@ -4,14 +4,17 @@ import { UserSettings } from "@artists-together/core/database"
 import { useMutation } from "@tanstack/react-query"
 import { Switch } from "@ark-ui/react/switch"
 import { getFormProps, getInputProps } from "@conform-to/react"
+import { useRouter } from "next/navigation"
+import { useMemo } from "react"
 import { useUser } from "~/lib/promises"
 import { updateProfile } from "~/lib/actions"
 import { useFormMutation } from "~/lib/mutations"
+import { UpdateProfileFormSchema } from "~/lib/schemas"
 import SwitchControl from "~/components/SwitchControl"
 import InlineTooltip from "~/components/InlineTooltip"
 import DialogTitle from "../DialogTitle"
-import { sectionData } from "./lib"
 import ProfileDialogContainer from "./ProfileDialogContainer"
+import { sectionData } from "./lib"
 
 type Setting = {
   name: keyof UserSettings
@@ -46,29 +49,46 @@ export default function ProfileSectionAdvancedSettings() {
   const section = sectionData["advanced-settings"]
 
   const user = useUser()
+  const router = useRouter()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
       return updateProfile(formData)
+    },
+    onSuccess() {
+      console.log("refrshing router...")
+      router.refresh()
     },
   })
 
   const [form, fields] = useFormMutation({
     mutation,
-    schema: UserSettings,
+    schema: UpdateProfileFormSchema,
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
-    defaultValue: user?.settings,
+    defaultValue: user,
   })
+
+  const fieldset = useMemo(
+    () => fields.settings.getFieldset(),
+    [fields.settings],
+  )
 
   return (
     <ProfileDialogContainer id="advanced-settings">
       <DialogTitle sm="inter" className="pb-4 md:pb-6">
         {section.label}
       </DialogTitle>
-      <form {...getFormProps(form)} className="space-y-2">
+      <form
+        {...getFormProps(form)}
+        className="space-y-2"
+        onChange={(event) => {
+          if (!(event.target instanceof HTMLInputElement)) return
+          event.currentTarget.requestSubmit()
+        }}
+      >
         {settings.map((setting) => (
           <Switch.Root
-            {...getInputProps(fields[setting.name], { type: "checkbox" })}
+            {...getInputProps(fieldset[setting.name], { type: "checkbox" })}
             key={setting.name}
             className="flex items-center justify-between"
           >
@@ -81,8 +101,8 @@ export default function ProfileSectionAdvancedSettings() {
                 <span>{setting.label}</span>
               )}
             </Switch.Label>
-            <Switch.HiddenInput />
             <SwitchControl />
+            <Switch.HiddenInput />
           </Switch.Root>
         ))}
       </form>

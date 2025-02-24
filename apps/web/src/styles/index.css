@@ -36,7 +36,7 @@
       "WONK" 100,
       "opsz" 144;
   }
-  
+
   * {
     -webkit-tap-highlight-color: transparent;
   }
@@ -47,11 +47,13 @@
 }
 
 @layer components {
-  html.cursor, html.cursor * {
+  html.cursor,
+  html.cursor * {
     @apply cursor-none;
   }
 
-  input, textarea {
-    @apply ring-0 aria-[invalid]:ring-acrylic-red-500 aria-[invalid]:ring-1;
+  input,
+  textarea {
+    @apply ring-0 aria-[invalid]:ring-1 aria-[invalid]:ring-acrylic-red-500;
   }
 }

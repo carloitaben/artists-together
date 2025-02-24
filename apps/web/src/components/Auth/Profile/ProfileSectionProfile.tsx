@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useMutation } from "@tanstack/react-query"
 import { Dialog } from "@ark-ui/react/dialog"
 import { FormProvider, getFormProps, getTextareaProps } from "@conform-to/react"
+import { useRouter } from "next/navigation"
 import { useUser } from "~/lib/promises"
 import { useFormMutation } from "~/lib/mutations"
 import { updateProfile } from "~/lib/actions"
@@ -18,14 +19,14 @@ import { sectionData } from "./lib"
 
 export default function ProfileSectionProfile() {
   const user = useUser()
-
-  if (!user) {
-    throw Error("Unauthorized")
-  }
-
+  const router = useRouter()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
+      console.log("mutating...")
       return updateProfile(formData)
+    },
+    onSuccess() {
+      router.refresh()
     },
   })
 
@@ -34,9 +35,7 @@ export default function ProfileSectionProfile() {
     schema: UpdateProfileFormSchema,
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
-    defaultValue: {
-      bio: user.bio,
-    },
+    defaultValue: user,
   })
 
   const section = sectionData["profile"]
@@ -49,15 +48,17 @@ export default function ProfileSectionProfile() {
         </DialogTitle>
       </Dialog.Title>
       <DialogTitle sm="fraunces" className="md:pt:0 pb-4 pt-3 md:pb-6">
-        {user.username}
+        {user?.username}
       </DialogTitle>
       <form
         {...getFormProps(form)}
         className="flex grid-cols-3 flex-col gap-7 pb-6 md:grid md:gap-3 md:pb-3"
         onBlur={(event) => {
-          if (!(event.target instanceof HTMLInputElement)) return
-          if (mutation.isPending) return
-          event.currentTarget.requestSubmit()
+          if (!(event.target instanceof HTMLTextAreaElement)) return
+          if (!(event.target.name in fields)) return
+          if (event.target.value !== event.target.defaultValue) {
+            event.currentTarget.requestSubmit()
+          }
         }}
       >
         <FormProvider context={form.context}>
@@ -67,7 +68,7 @@ export default function ProfileSectionProfile() {
             </div>
             <AspectRatio.Root ratio={1}>
               <AspectRatio.Content className="overflow-hidden rounded-4 bg-not-so-white">
-                {user.avatar ? (
+                {user?.avatar ? (
                   <Image
                     className="size-full object-cover"
                     alt="Your avatar"

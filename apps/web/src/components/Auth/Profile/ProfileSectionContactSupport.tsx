@@ -23,13 +23,11 @@ function ContactSupportForm() {
     async mutationFn(formData: FormData) {
       return contactSupport(formData)
     },
-    onSuccess(data) {
-      if (data.message) {
-        toaster.create({
-          type: "success",
-          title: data.message,
-        })
-      }
+    onSuccess() {
+      toaster.create({
+        type: "success",
+        title: "Your message has been sent",
+      })
     },
   })
 

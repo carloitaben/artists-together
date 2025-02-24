@@ -73,11 +73,11 @@ export const updateProfile = createFormAction(
       }
     }
 
+    console.log("update profile", context.form.value)
+
     await database
       .update(userTable)
-      .set({
-        links: context.form.value.links,
-      })
+      .set(context.form.value)
       .where(eq(userTable.id, auth.user.id))
   },
 )
@@ -167,11 +167,9 @@ export const contactSupport = createFormAction(
     const auth = await getAuth()
 
     if (!auth) {
-      return {
-        result: context.form.reply({
-          formErrors: ["Unauthorized"],
-        }),
-      }
+      throw context.form.reply({
+        formErrors: ["Unauthorized"],
+      })
     }
 
     await discord.channels.createMessage(CHANNEL.BOT_SHENANIGANS, {
@@ -201,12 +199,5 @@ export const contactSupport = createFormAction(
         },
       ],
     })
-
-    return {
-      message: "Message sent!",
-      result: context.form.reply({
-        resetForm: true,
-      }),
-    }
   },
 )
