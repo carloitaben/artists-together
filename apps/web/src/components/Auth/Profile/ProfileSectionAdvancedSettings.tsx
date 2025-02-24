@@ -87,23 +87,24 @@ export default function ProfileSectionAdvancedSettings() {
         }}
       >
         {settings.map((setting) => (
-          <Switch.Root
-            {...getInputProps(fieldset[setting.name], { type: "checkbox" })}
-            key={setting.name}
-            className="flex items-center justify-between"
-          >
-            <Switch.Label className="flex items-center gap-x-2 text-sm md:px-3.5">
-              {setting.tooltip ? (
-                <InlineTooltip tooltip={setting.tooltip}>
+          <div key={setting.name}>
+            <Switch.Root
+              {...getInputProps(fieldset[setting.name], { type: "checkbox" })}
+              className="flex items-center justify-between"
+            >
+              <Switch.Label className="flex items-center gap-x-2 text-sm md:px-3.5">
+                {setting.tooltip ? (
+                  <InlineTooltip tooltip={setting.tooltip}>
+                    <span>{setting.label}</span>
+                  </InlineTooltip>
+                ) : (
                   <span>{setting.label}</span>
-                </InlineTooltip>
-              ) : (
-                <span>{setting.label}</span>
-              )}
-            </Switch.Label>
-            <SwitchControl />
-            <Switch.HiddenInput />
-          </Switch.Root>
+                )}
+              </Switch.Label>
+              <SwitchControl />
+              <Switch.HiddenInput />
+            </Switch.Root>
+          </div>
         ))}
       </form>
     </ProfileDialogContainer>
