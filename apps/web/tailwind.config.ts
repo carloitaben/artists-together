@@ -1,4 +1,5 @@
 import pluginScrollbar from "tailwind-scrollbar"
+import pluginZag from "tailwindcss-plugin-zag"
 import type { Config } from "tailwindcss"
 import type {
   ScreensConfig,
@@ -284,5 +285,6 @@ export default {
     pluginSubgrid,
     pluginAnimation,
     pluginScrollbar,
+    pluginZag,
   ],
 } satisfies Config
