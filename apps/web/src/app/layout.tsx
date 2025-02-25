@@ -93,11 +93,10 @@ export default async function Layout({ children }: PropsWithChildren) {
         <QueryProvider>
           <PromiseProvider user={user} hints={hints}>
             <PageTransition>
-              <Navigation />
-              <div data-transition-container>
+              <Navigation>
                 {children}
                 <Footer />
-              </div>
+              </Navigation>
             </PageTransition>
             <Auth />
             <Toasts />
@@ -105,7 +104,7 @@ export default async function Layout({ children }: PropsWithChildren) {
             <WebSocket />
           </PromiseProvider>
           <EnsureUppercaseSerifAmpersand />
-          <QueryDevtools />
+          <QueryDevtools buttonPosition="top-right" />
         </QueryProvider>
       </body>
     </html>

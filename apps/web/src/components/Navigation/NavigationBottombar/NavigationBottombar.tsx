@@ -21,7 +21,7 @@ export default function NavigationBottombar() {
     return onMeasure(ref.current, (rect) => {
       inputMinWidth.set(rect.width - rect.height * 2)
     })
-  }, [])
+  }, [inputMinWidth])
 
   return (
     <>
