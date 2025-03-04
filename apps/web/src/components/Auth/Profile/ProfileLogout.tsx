@@ -6,6 +6,7 @@ import { getFormProps } from "@conform-to/react"
 import { usePathname, useRouter } from "next/navigation"
 import { useFormMutation } from "~/lib/mutations"
 import { logout } from "~/lib/actions"
+import { webSocket } from "~/lib/websocket"
 import { AuthFormSchema } from "~/lib/schemas"
 import { toaster } from "~/components/Toasts"
 import Button from "~/components/Button"
@@ -23,6 +24,7 @@ export default function ProfileLogout() {
       dialog.setOpen(false)
     },
     onSuccess() {
+      webSocket.reconnect()
       router.refresh()
       toaster.create({
         type: "success",

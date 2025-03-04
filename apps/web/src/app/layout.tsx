@@ -4,7 +4,7 @@ import type { PropsWithChildren } from "react"
 import { lazy } from "react"
 import { cx } from "cva"
 import { WEB_URL } from "~/lib/constants"
-import { colors } from "~/../tailwind.config"
+import { colors } from "~/tailwind.config"
 import { getUser } from "~/services/auth/server"
 import { getHints } from "~/services/hints/server"
 import { QueryProvider } from "~/services/query/client"
@@ -21,15 +21,6 @@ import "~/styles/index.css"
 const EnsureUppercaseSerifAmpersand =
   process.env.NODE_ENV === "development"
     ? lazy(() => import("~/components/EnsureUppercaseSerifAmpersand"))
-    : () => null
-
-const QueryDevtools =
-  process.env.NODE_ENV === "development"
-    ? lazy(() =>
-        import("@tanstack/react-query-devtools").then((module) => ({
-          default: module.ReactQueryDevtools,
-        })),
-      )
     : () => null
 
 const inter = font({
@@ -98,13 +89,13 @@ export default async function Layout({ children }: PropsWithChildren) {
                 <Footer />
               </Navigation>
             </PageTransition>
-            <Auth />
-            <Toasts />
-            <Cursors />
+            <Cursors>
+              <Auth />
+              <Toasts />
+            </Cursors>
             <WebSocket />
           </PromiseProvider>
           <EnsureUppercaseSerifAmpersand />
-          <QueryDevtools buttonPosition="top-right" />
         </QueryProvider>
       </body>
     </html>

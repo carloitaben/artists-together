@@ -278,6 +278,11 @@ export default {
     }),
     blur: ({ theme }) => theme("spacing"),
     backdropBlur: ({ theme }) => theme("spacing"),
+    extend: {
+      spacing: {
+        scrollbar: "var(--scrollbar-width)",
+      },
+    },
   },
   plugins: [
     pluginTheme,

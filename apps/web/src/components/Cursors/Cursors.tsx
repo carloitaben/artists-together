@@ -1,5 +1,6 @@
 "use client"
 
+import type { PropsWithChildren } from "react"
 import { Suspense, lazy, useEffect } from "react"
 import { useReducedMotion, useScroll } from "motion/react"
 import { onMeasure, useScreen } from "~/lib/media"
@@ -8,7 +9,7 @@ import Me from "./Me"
 
 const CursorPresenceRoom = lazy(() => import("./CursorPresenceRoom"))
 
-export default function Cursors() {
+export default function Cursors({ children }: PropsWithChildren) {
   const sm = useScreen("sm")
   const scroll = useScroll()
   const shouldReduceMotion = useReducedMotion()
@@ -45,7 +46,7 @@ export default function Cursors() {
     }
   }, [renderOtherCursors, scroll.scrollX, scroll.scrollY, sm])
 
-  if (shouldReduceMotion) return null
+  if (shouldReduceMotion) return children
 
   return (
     <div
@@ -57,6 +58,7 @@ export default function Cursors() {
           <CursorPresenceRoom />
         </Suspense>
       ) : null}
+      {children}
       <Me />
     </div>
   )

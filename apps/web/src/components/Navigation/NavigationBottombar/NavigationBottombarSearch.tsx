@@ -11,7 +11,7 @@ import type {
 } from "react"
 import { forwardRef } from "react"
 import Icon from "~/components/Icon"
-import { colors } from "~/../tailwind.config"
+import { colors } from "~/tailwind.config"
 import { scalePresenceVariants, spring } from "../lib"
 
 type Props = {

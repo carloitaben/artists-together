@@ -56,4 +56,29 @@
   textarea {
     @apply ring-0 aria-[invalid]:ring-1 aria-[invalid]:ring-acrylic-red-500;
   }
+
+  .pressable {
+    @apply transition-transform duration-100 active:scale-95 disabled:active:scale-100 ui-disabled:active:scale-100;
+  }
+
+  [data-scope="dialog"][data-part="backdrop"][data-state="open"] {
+    @apply animation-in animation-fade-in animation-duration-150 animation-ease-out animation-fill-mode-backwards;
+  }
+
+  [data-scope="dialog"][data-part="backdrop"][data-state="closed"] {
+    @apply animation-out animation-fade-out animation-duration-100 animation-delay-[0.50ms] animation-ease-in;
+  }
+
+  [data-scope="dialog"][data-part="backdrop"][data-state="closed"]
+    + [data-scope="dialog"][data-part="positioner"] {
+    @apply overflow-y-hidden;
+  }
+
+  [data-scope="dialog"][data-part="content"][data-state="open"] {
+    @apply animation-in animation-fade-in animation-zoom-in-[.99] animation-duration-150 animation-delay-[0.50ms] animation-ease-out animation-fill-mode-backwards;
+  }
+
+  [data-scope="dialog"][data-part="content"][data-state="closed"] {
+    @apply animation-out animation-fade-out animation-zoom-out-[.99] animation-duration-100 animation-ease-in;
+  }
 }

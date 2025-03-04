@@ -26,7 +26,7 @@
     "lottie-web": "^5.12.2",
     "motion": "^12.4.2",
     "negotiator": "^1.0.0",
-    "next": "canary",
+    "next": "^15.2.0",
     "partysocket": "^1.0.3",
     "perfect-cursors": "^1.0.5",
     "radashi": "^12.3.3",

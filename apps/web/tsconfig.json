@@ -28,6 +28,7 @@
       }
     ],
     "paths": {
+      "~/tailwind.config": ["./tailwind.config.ts"],
       "~/*": ["./src/*"]
     }
   },

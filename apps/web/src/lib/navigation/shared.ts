@@ -1,5 +1,6 @@
+import type { ComponentProps } from "react"
 import type { Props } from "~/components/NavLink"
-import type { IconName } from "../icons"
+import type { IconName } from "~/lib/icons"
 
 export type NavigationEventAction = {
   label: string
@@ -10,7 +11,7 @@ export type NavigationEventAction = {
 export type NavigationLinkAction = {
   label: string
   icon: IconName
-  link: Props
+  link: ComponentProps<"a">
 }
 
 export type NavigationAction = NavigationEventAction | NavigationLinkAction

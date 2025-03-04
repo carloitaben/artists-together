@@ -46,9 +46,13 @@ function NavigationBottombarActions(
         <Menu.Content className="space-y-2 focus:outline-none">
           {actions.map((action) => (
             <Menu.Item key={action.label} value={action.label} asChild>
-              <NavigationBottombarMenuItem justify="between">
-                <span className="truncate">{action.label}</span>
-                <Icon src={action.icon} alt="" />
+              <NavigationBottombarMenuItem justify="between" asChild>
+                {"link" in action ? (
+                  <a {...action.link}>
+                    <span className="truncate">{action.label}</span>
+                    <Icon src={action.icon} alt="" />
+                  </a>
+                ) : null}
               </NavigationBottombarMenuItem>
             </Menu.Item>
           ))}

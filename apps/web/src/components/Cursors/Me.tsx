@@ -68,6 +68,11 @@ export default function Me() {
       (event: MouseEvent, state?: CursorState) => {
         if (!canSend) return
 
+        if (!user?.settings?.shareCursor) {
+          updates = [[0, null]]
+          return notify()
+        }
+
         const now = Date.now()
         const delta = typeof timestamp === "number" ? now - timestamp : 0
 
@@ -155,7 +160,16 @@ export default function Me() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [alone.data, canSend, hasCursor, scale, state, x, y])
+  }, [
+    alone.data,
+    canSend,
+    hasCursor,
+    scale,
+    state,
+    user?.settings?.shareCursor,
+    x,
+    y,
+  ])
 
   return (
     <AnimatePresence initial={false}>

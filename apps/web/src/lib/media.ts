@@ -8,7 +8,7 @@ import {
   useTransition,
 } from "react"
 import type { ScreensConfig } from "tailwindcss/types/config"
-import { screens } from "~/../tailwind.config"
+import { screens } from "~/tailwind.config"
 import type { Screen } from "./tailwind"
 
 function getScreenMediaQuery(screen: Screen) {

@@ -1,12 +1,25 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import type { ComponentProps } from "react"
 import { useMatches } from "~/lib/navigation/client"
-
-import { anchor } from "./Anchor"
 import { useRouterTransition } from "~/lib/transition"
-import { useRouter } from "next/navigation"
+import { anchor } from "./Anchor"
+
+// Copied from  https://github.com/vercel/next.js/blob/canary/packages/next/src/client/link.tsx#L180-L191
+function isModifiedEvent(event: React.MouseEvent): boolean {
+  const eventTarget = event.currentTarget as HTMLAnchorElement | SVGAElement
+  const target = eventTarget.getAttribute("target")
+  return (
+    (target && target !== "_self") ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey || // triggers resource download
+    (event.nativeEvent && event.nativeEvent.which === 2)
+  )
+}
 
 export type Props = ComponentProps<typeof Link> & {
   match?: string
@@ -20,7 +33,7 @@ export default function NavLink({
   prefetch,
   ...props
 }: Props) {
-  const [, startTransition] = useRouterTransition()
+  const [isPending, startTransition] = useRouterTransition()
   const router = useRouter()
   const matches = useMatches({ href, match })
   const aria = matches
@@ -42,10 +55,16 @@ export default function NavLink({
       onClick={(event) => {
         props.onClick?.(event)
 
+        if (isModifiedEvent(event)) {
+          return
+        }
+
         if (matches) {
           event.preventDefault()
           return anchor(event)
         }
+
+        if (isPending) return
 
         startTransition(href.toString(), () => {
           router.push(href.toString())

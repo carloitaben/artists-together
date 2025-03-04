@@ -59,7 +59,7 @@ export default function NavigationSidebarTooltip({
         <li>
           <Tooltip.Trigger
             asChild
-            className={cx(disabled && "cursor-not-allowed")}
+            className={cx("pressable", disabled && "cursor-not-allowed")}
           >
             {children}
           </Tooltip.Trigger>
