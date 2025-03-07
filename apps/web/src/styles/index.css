@@ -61,6 +61,10 @@
     @apply transition-transform duration-100 active:scale-95 disabled:active:scale-100 ui-disabled:active:scale-100;
   }
 
+  .backdrop {
+    @apply fixed inset-0 bg-arpeggio-black-900/75 backdrop-b;
+  }
+
   [data-scope="dialog"][data-part="backdrop"][data-state="open"] {
     @apply animation-in animation-fade-in animation-duration-150 animation-ease-out animation-fill-mode-backwards;
   }

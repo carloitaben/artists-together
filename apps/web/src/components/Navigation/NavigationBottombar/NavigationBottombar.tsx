@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion, useMotionValue } from "motion/react"
 import { useNavigationMatch } from "~/lib/navigation/client"
 import { onMeasure } from "~/lib/media"
-import Backdrop from "~/components/Backdrop"
 import NavigationBottombarMenu from "./NavigationBottombarMenu"
 import NavigationBottombarSearch from "./NavigationBottombarSearch"
 import NavigationBottombarActions from "./NavigationBottombarActions"
@@ -25,7 +24,7 @@ export default function NavigationBottombar() {
 
   return (
     <>
-      {showBackdrop ? <Backdrop className="sm:hidden" /> : null}
+      {showBackdrop ? <div className="backdrop sm:hidden" /> : null}
       <motion.div
         ref={ref}
         className="fixed inset-x-0 bottom-0 flex h-16 flex-row-reverse items-stretch justify-center gap-1 p-2 sm:hidden"
