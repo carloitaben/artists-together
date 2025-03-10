@@ -62,7 +62,7 @@
   }
 
   .backdrop {
-    @apply fixed inset-0 bg-arpeggio-black-900/75 backdrop-b;
+    @apply fixed inset-0 bg-arpeggio-black-900/75 backdrop-blur-8;
   }
 
   [data-scope="dialog"][data-part="backdrop"][data-state="open"] {
