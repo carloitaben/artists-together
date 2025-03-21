@@ -1,6 +1,6 @@
 import { Dialog } from "@ark-ui/react/dialog"
 import { cx } from "cva"
-import { getUser } from "~/services/auth/server"
+import { getUser } from "~/features/auth/server"
 import AuthRoot from "./AuthRoot"
 import Profile from "./Profile"
 import Login from "./Login"

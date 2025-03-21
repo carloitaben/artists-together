@@ -1,5 +1,5 @@
-import { getUser } from "~/services/auth/server"
-import { getHints } from "~/services/hints/server"
+import { getUser } from "~/features/auth/server"
+import { getHints } from "~/features/hints/server"
 import Avatar from "~/components/Avatar"
 import Icon from "~/components/Icon"
 import NavLink from "~/components/NavLink"

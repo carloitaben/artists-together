@@ -3,7 +3,7 @@
 import { draw } from "@artists-together/core/utils"
 import { useInView } from "motion/react"
 import { use, useMemo, useRef } from "react"
-import type { getRandomLiveUsers } from "~/services/live-user/server"
+import type { getRandomLiveUsers } from "~/features/live-user/server"
 
 type Props = {
   usersPromise: ReturnType<typeof getRandomLiveUsers>

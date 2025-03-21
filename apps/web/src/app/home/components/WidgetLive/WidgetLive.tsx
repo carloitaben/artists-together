@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react"
-import { getRandomLiveUsers } from "~/services/live-user/server"
+import { getRandomLiveUsers } from "~/features/live-user/server"
 import { CursorPrecision } from "~/components/Cursors"
 import AspectRatio from "~/components/AspectRatio"
 

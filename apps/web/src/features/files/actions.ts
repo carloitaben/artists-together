@@ -1,7 +1,7 @@
 // "use server"
 
 // import { DeleteObjectCommand } from "@aws-sdk/client-s3"
-// import { authenticate } from "~/services/auth/server"
+// import { authenticate } from "~/features/auth/server"
 // import { S3, getSignedURL as getSignedURLFn } from "./server"
 // import { decodeUrl } from "./shared"
 // import type { FileUpload } from "./shared"

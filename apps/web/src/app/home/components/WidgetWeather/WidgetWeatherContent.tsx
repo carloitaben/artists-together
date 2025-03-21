@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { use } from "react"
 import { useHints, useUser } from "~/lib/promises"
-import type { getRandomLocationWithWeather } from "~/services/locations/server"
+import type { getRandomLocationWithWeather } from "~/features/locations/server"
 
 type Props = {
   promise: ReturnType<typeof getRandomLocationWithWeather>

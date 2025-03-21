@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { use, useEffect, useState } from "react"
 import { motion, wrap, AnimatePresence } from "motion/react"
-import type { getRandomContentShared } from "~/services/content-shared/server"
+import type { getRandomContentShared } from "~/features/content-shared/server"
 import { usePreloadImages } from "~/lib/media"
 
 const SLIDER_DURATION = 10_000

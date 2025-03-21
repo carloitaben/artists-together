@@ -7,7 +7,7 @@ import {
   getInputProps,
   getTextareaProps,
 } from "@conform-to/react"
-import { contactSupport } from "~/lib/actions"
+import { contactSupport } from "~/features/contact/actions"
 import { ContactSupportFormSchema } from "~/lib/schemas"
 import { useFormMutation } from "~/lib/mutations"
 import { toaster } from "~/components/Toasts"

@@ -18,7 +18,7 @@ import {
   cookieSessionOptions,
   getAuth,
   provider,
-} from "~/services/auth/server"
+} from "~/features/auth/server"
 import { AuthEndpointSearchParams } from "~/lib/schemas"
 
 export async function GET(request: NextRequest) {

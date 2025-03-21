@@ -3,7 +3,7 @@
 import type { User } from "@artists-together/core/database"
 import type { PropsWithChildren } from "react"
 import { use } from "react"
-import type { getHints } from "~/services/hints/server"
+import type { getHints } from "~/features/hints/server"
 import { createRequiredContext } from "./react"
 
 type Promises = {

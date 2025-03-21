@@ -7,7 +7,7 @@ import advancedFormat from "dayjs/plugin/advancedFormat"
 import { use, useEffect, useMemo, useState } from "react"
 import { useSpring, motion } from "motion/react"
 import type { SpringOptions } from "motion/react"
-import type { getRandomLocationWithWeather } from "~/services/locations/server"
+import type { getRandomLocationWithWeather } from "~/features/locations/server"
 import { useUser, useHints } from "~/lib/promises"
 import { clientOnly } from "~/components/ClientOnly"
 

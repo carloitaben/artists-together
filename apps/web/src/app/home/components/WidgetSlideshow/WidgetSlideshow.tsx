@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react"
-import { getRandomContentShared } from "~/services/content-shared/server"
+import { getRandomContentShared } from "~/features/content-shared/server"
 import { CursorPrecision } from "~/components/Cursors"
 import AspectRatio from "~/components/AspectRatio"
 

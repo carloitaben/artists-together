@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react"
-import { getRandomLocationWithWeather } from "~/services/locations/server"
+import { getRandomLocationWithWeather } from "~/features/locations/server"
 import { CursorPrecision } from "~/components/Cursors"
 import AspectRatio from "~/components/AspectRatio"
 

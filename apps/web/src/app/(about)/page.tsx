@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { lazy, Suspense } from "react"
-import { getHints } from "~/services/hints/server"
+import { getHints } from "~/features/hints/server"
 import Container from "~/components/Container"
 import Grid from "~/components/Grid"
 import Logo from "~/components/Logo"
