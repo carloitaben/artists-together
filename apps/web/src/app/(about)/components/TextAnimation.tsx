@@ -4,26 +4,15 @@ import SplitType from "split-type"
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
 import type { ComponentRef, ForwardedRef } from "react"
-import { forwardRef } from "react"
-import { useEffect } from "react"
+import { forwardRef, useEffect } from "react"
 import { mergeRefs } from "react-merge-refs"
-import type { Segment } from "motion/react"
-import { useAnimate, useInView, useScroll, useSpring } from "motion/react"
+import { scroll, useAnimate, useInView } from "motion/react"
 
 type Props = HTMLArkProps<"div">
 
 function TextAnimation(props: Props, ref: ForwardedRef<ComponentRef<"div">>) {
   const [scope, animate] = useAnimate<ComponentRef<"div">>()
   const inView = useInView(scope)
-  const scroll = useScroll({
-    target: scope,
-    offset: ["start center", "end end"],
-    layoutEffect: false,
-  })
-
-  const scrollSpring = useSpring(scroll.scrollYProgress, {
-    mass: 0.01,
-  })
 
   useEffect(() => {
     if (!inView) return
@@ -37,33 +26,27 @@ function TextAnimation(props: Props, ref: ForwardedRef<ComponentRef<"div">>) {
       return split.revert()
     }
 
-    const animation = animate(
-      split.words.map<Segment>((word) => [
-        word,
-        {
-          opacity: [0, 1],
-          "--blur": ["4px", "0px"],
-        },
-      ]),
+    const stop = scroll(
+      animate(
+        split.words.map((word) => [
+          word,
+          {
+            opacity: [0, 1],
+            "--blur": ["4px", "0px"],
+          },
+        ]),
+      ),
       {
-        duration: 1,
+        target: scope.current,
+        offset: ["start center", "end end"],
       },
     )
 
-    animation.pause()
-
-    function scrub(progress: number) {
-      animation.time = progress
-    }
-
-    const stop = scrollSpring.on("change", scrub)
-
     return () => {
-      stop()
-      animation.stop()
       split.revert()
+      stop()
     }
-  }, [animate, scope, inView, scrollSpring])
+  }, [animate, inView, scope])
 
   return <ark.div {...props} ref={mergeRefs([ref, scope])} />
 }

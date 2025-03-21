@@ -9,7 +9,7 @@
   "dependencies": {
     "@standard-cookie/core": "^0.0.2",
     "@artists-together/core": "workspace:*",
-    "valibot": "1.0.0-rc.3"
+    "valibot": "^1.0.0"
   },
   "devDependencies": {
     "@artists-together/config": "workspace:*",

@@ -21,7 +21,7 @@ export default function Me() {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const user = useUser()
-  const scale = useSpring(0, { mass: 0.05, stiffness: 200 })
+  const scale = useSpring(0, { mass: 0.025, stiffness: 200 })
   const alone = useQuery({
     ...webSocketQueryOptions("room:update", {
       count: 0,

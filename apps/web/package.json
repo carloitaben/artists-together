@@ -24,9 +24,9 @@
     "cva": "beta",
     "dayjs": "^1.11.10",
     "lottie-web": "^5.12.2",
-    "motion": "^12.4.11",
+    "motion": "^12.5.0",
     "negotiator": "^1.0.0",
-    "next": "^15.2.1",
+    "next": "canary",
     "partysocket": "^1.0.3",
     "perfect-cursors": "^1.0.5",
     "radashi": "^12.3.3",
@@ -36,7 +36,7 @@
     "server-only": "^0.0.1",
     "split-type": "^0.3.4",
     "three": "^0.174.0",
-    "valibot": "1.0.0-rc.3"
+    "valibot": "^1.0.0"
   },
   "devDependencies": {
     "@artists-together/config": "workspace:*",
