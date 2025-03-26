@@ -1,4 +1,3 @@
-import type { Metadata } from "next"
 import { lazy, Suspense } from "react"
 import Container from "~/components/Container"
 import Grid from "~/components/Grid"
@@ -8,10 +7,6 @@ import { getHints } from "~/features/hints/server"
 import TextAnimation from "./components/TextAnimation"
 
 const Stars = lazy(() => import("./components/Stars"))
-
-export const metadata: Metadata = {
-  title: "About",
-}
 
 export default async function Page() {
   const hints = await getHints()
