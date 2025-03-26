@@ -44,7 +44,6 @@ export const navigation = [
       href: "/",
       disabled: false,
     },
-    search: "Search something",
     actions: [
       {
         label: "Twitch",
