@@ -1,11 +1,11 @@
 "use client"
 
 import { Tooltip } from "@ark-ui/react/tooltip"
+import { cx } from "cva"
+import type { Transition } from "motion/react"
+import { mix,motion } from "motion/react"
 import type { ReactNode } from "react"
 import { useState, useTransition } from "react"
-import type { Transition } from "motion/react"
-import { motion, mix } from "motion/react"
-import { cx } from "cva"
 import { CursorPrecision } from "~/components/Cursors"
 
 let sign = 1

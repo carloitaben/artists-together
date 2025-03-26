@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react"
-import { getRandomLocationWithWeather } from "~/features/locations/server"
-import { CursorPrecision } from "~/components/Cursors"
 import AspectRatio from "~/components/AspectRatio"
+import { CursorPrecision } from "~/components/Cursors"
+import { getRandomLocationWithWeather } from "~/features/locations/server"
 
 const WidgetClockContent = lazy(() => import("./WidgetClockContent"))
 

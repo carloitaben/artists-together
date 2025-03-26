@@ -1,8 +1,9 @@
-import lottie from "lottie-web/build/player/lottie_svg"
+import { cx } from "cva"
 import type {
   AnimationConfigWithData,
   AnimationItem,
 } from "lottie-web/build/player/lottie_svg"
+import lottie from "lottie-web/build/player/lottie_svg"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import {
   forwardRef,
@@ -11,7 +12,6 @@ import {
   useRef,
   useState,
 } from "react"
-import { cx } from "cva"
 
 type Props = ComponentProps<"div"> &
   Pick<AnimationConfigWithData, "autoplay" | "loop"> & {

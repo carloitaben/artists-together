@@ -1,12 +1,12 @@
 import { Dialog } from "@ark-ui/react/dialog"
 import { sections } from "./lib"
 import ProfileBanner from "./ProfileBanner"
-import ProfileTab from "./ProfileTab"
-import ProfileSectionProfile from "./ProfileSectionProfile"
-import ProfileSectionSocialMedia from "./ProfileSectionSocialMedia"
+import ProfileLogout from "./ProfileLogout"
 import ProfileSectionAdvancedSettings from "./ProfileSectionAdvancedSettings"
 import ProfileSectionContactSupport from "./ProfileSectionContactSupport"
-import ProfileLogout from "./ProfileLogout"
+import ProfileSectionProfile from "./ProfileSectionProfile"
+import ProfileSectionSocialMedia from "./ProfileSectionSocialMedia"
+import ProfileTab from "./ProfileTab"
 
 export default function Profile() {
   return (

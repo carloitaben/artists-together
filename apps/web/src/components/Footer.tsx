@@ -1,5 +1,5 @@
-import { CursorPrecision } from "~/components/Cursors"
 import Container from "~/components/Container"
+import { CursorPrecision } from "~/components/Cursors"
 import Grid from "~/components/Grid"
 
 const links = [

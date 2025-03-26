@@ -1,9 +1,9 @@
 "use client"
 
 import { useNavigationMatch } from "~/lib/navigation/client"
-import Icon from "../Icon"
 import Container from "../Container"
 import { CursorPrecision } from "../Cursors"
+import Icon from "../Icon"
 
 export default function NavigationTopbar() {
   const match = useNavigationMatch()

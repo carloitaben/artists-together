@@ -1,7 +1,7 @@
 import { getCookie, setCookie } from "@standard-cookie/next"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
-import { cookieSessionOptions } from "./services/auth/server"
+import { cookieSessionOptions } from "./features/auth/server"
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (request.method === "GET") {

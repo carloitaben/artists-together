@@ -1,16 +1,16 @@
 "use client"
 
-import { useMutation } from "@tanstack/react-query"
 import { getFormProps } from "@conform-to/react"
-import type { ComponentProps } from "react"
-import { usePathname } from "next/navigation"
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { cx } from "cva"
-import type { IconName } from "~/lib/icons"
+import { usePathname } from "next/navigation"
+import type { ComponentProps } from "react"
+import Icon from "~/components/Icon"
 import { connect } from "~/features/auth/actions"
-import { useUser } from "~/lib/promises"
+import { userQueryOptions } from "~/features/auth/shared"
+import type { IconName } from "~/lib/icons"
 import { useFormMutation } from "~/lib/mutations"
 import { AuthConnectionFormSchema } from "~/lib/schemas"
-import Icon from "~/components/Icon"
 
 function Connection({
   children,
@@ -62,7 +62,7 @@ function Connection({
 }
 
 export default function Connections() {
-  const user = useUser()
+  const user = useSuspenseQuery(userQueryOptions)
   const pathname = usePathname()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
@@ -75,8 +75,8 @@ export default function Connections() {
     schema: AuthConnectionFormSchema,
   })
 
-  const discordUsername = user?.discordUsername
-  const twitchUsername = user?.twitchUsername
+  const discordUsername = user.data?.discordUsername
+  const twitchUsername = user.data?.twitchUsername
 
   return (
     <div className="pb-3 text-xs md:text-sm">

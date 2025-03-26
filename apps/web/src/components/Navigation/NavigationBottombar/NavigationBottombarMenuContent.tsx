@@ -1,16 +1,18 @@
 "use client"
 
 import { Menu } from "@ark-ui/react/menu"
-import { navigation } from "~/lib/navigation/shared"
-import { useUser, useHints } from "~/lib/promises"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import Avatar from "~/components/Avatar"
 import Icon from "~/components/Icon"
 import NavLink from "~/components/NavLink"
-import Avatar from "~/components/Avatar"
+import { userQueryOptions } from "~/features/auth/shared"
+import { navigation } from "~/lib/navigation/shared"
+import { useHints } from "~/lib/promises"
 import NavigationAuthLink from "../NavigationAuthLink"
 import NavigationBottombarMenuContentItem from "./NavigationBottombarMenuContentItem"
 
 export default function NavigationBottombarMenuContent() {
-  const user = useUser()
+  const user = useSuspenseQuery(userQueryOptions)
   const hints = useHints()
 
   return (
@@ -18,8 +20,8 @@ export default function NavigationBottombarMenuContent() {
       <Menu.Item value="auth" asChild>
         <NavigationBottombarMenuContentItem asChild>
           <NavigationAuthLink>
-            {user ? (
-              <Avatar username={user.username} src={user.avatar} />
+            {user.data ? (
+              <Avatar username={user.data.username} src={user.data.avatar} />
             ) : (
               <Icon src="Face" alt="Log-in" />
             )}

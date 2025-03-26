@@ -1,5 +1,3 @@
-import * as v from "valibot"
-import { deleteCookie, getCookie, setCookie } from "@standard-cookie/next"
 import {
   createSession,
   generateSessionToken,
@@ -11,8 +9,10 @@ import {
   userTable,
 } from "@artists-together/core/database"
 import { createDiscord, discord, ROLE } from "@artists-together/core/discord"
+import { deleteCookie, getCookie, setCookie } from "@standard-cookie/next"
 import type { NextRequest } from "next/server"
 import { after } from "next/server"
+import * as v from "valibot"
 import {
   cookieOauthOptions,
   cookieSessionOptions,

@@ -2,15 +2,15 @@ import type {
   CursorState,
   CursorUpdates,
 } from "@artists-together/core/websocket"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query"
 import { AnimatePresence, clamp, useMotionValue, useSpring } from "motion/react"
-import { useEffect, useState } from "react"
 import { throttle } from "radashi"
+import { useEffect, useState } from "react"
+import { userQueryOptions } from "~/features/auth/shared"
 import { useScreen } from "~/lib/media"
-import { useUser } from "~/lib/promises"
 import { sendWebSocketMessage, webSocketQueryOptions } from "~/lib/websocket"
-import { ATTR_NAME_DATA_CURSOR_PRECISION, SCOPE_ROOT, measure } from "./lib"
 import Cursor from "./Cursor"
+import { ATTR_NAME_DATA_CURSOR_PRECISION, measure,SCOPE_ROOT } from "./lib"
 
 const limit = clamp.bind(null, 0, 1)
 
@@ -20,7 +20,7 @@ export default function Me() {
   const hasCursor = useScreen("cursor")
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const user = useUser()
+  const user = useSuspenseQuery(userQueryOptions)
   const scale = useSpring(0, { mass: 0.025, stiffness: 200 })
   const alone = useQuery({
     ...webSocketQueryOptions("room:update", {
@@ -31,7 +31,7 @@ export default function Me() {
   })
 
   const render = state && hasCursor
-  const canSend = Boolean(user && sm)
+  const canSend = Boolean(user.data && sm)
 
   useEffect(() => {
     if (!hasCursor) {
@@ -68,7 +68,7 @@ export default function Me() {
       (event: MouseEvent, state?: CursorState) => {
         if (!canSend) return
 
-        if (!user?.settings?.shareCursor) {
+        if (!user.data?.settings?.shareCursor) {
           updates = [[0, null]]
           return notify()
         }
@@ -166,7 +166,7 @@ export default function Me() {
     hasCursor,
     scale,
     state,
-    user?.settings?.shareCursor,
+    user.data?.settings?.shareCursor,
     x,
     y,
   ])

@@ -1,24 +1,29 @@
 "use server"
 
-import { deleteCookie, getCookie, setCookie } from "@standard-cookie/next"
-import { database, eq, userTable } from "@artists-together/core/database"
 import { invalidateSession } from "@artists-together/core/auth"
+import { database, eq, userTable } from "@artists-together/core/database"
 import { unreachable } from "@artists-together/core/utils"
+import { deleteCookie, getCookie, setCookie } from "@standard-cookie/next"
 import { generateState } from "arctic"
 import { redirect } from "next/navigation"
-import { getHints } from "~/features/hints/server"
 import {
   cookieOauthOptions,
   cookieSessionOptions,
   getAuth,
+  getUser,
   provider,
 } from "~/features/auth/server"
-import { createFormAction } from "~/lib/server"
+import { getHints } from "~/features/hints/server"
 import {
-  AuthFormSchema,
   AuthConnectionFormSchema,
+  AuthFormSchema,
   UpdateProfileFormSchema,
 } from "~/lib/schemas"
+import { createFormAction } from "~/lib/server"
+
+export async function authenticate() {
+  return getUser()
+}
 
 export const login = createFormAction(AuthFormSchema, async (context) => {
   const cookieSession = await getCookie(cookieSessionOptions)

@@ -1,7 +1,7 @@
-import * as v from "valibot"
-import { deleteCookie, getCookie } from "@standard-cookie/next"
 import { database, eq, userTable } from "@artists-together/core/database"
+import { deleteCookie, getCookie } from "@standard-cookie/next"
 import type { NextRequest } from "next/server"
+import * as v from "valibot"
 import { cookieOauthOptions, getAuth, provider } from "~/features/auth/server"
 import {
   AuthEndpointSearchParams,

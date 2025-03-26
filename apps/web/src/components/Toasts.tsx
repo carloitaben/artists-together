@@ -1,9 +1,9 @@
 "use client"
 
-import { Toast, Toaster, createToaster } from "@ark-ui/react/toast"
+import { createToaster,Toast, Toaster } from "@ark-ui/react/toast"
+import { cx } from "cva"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
-import { cx } from "cva"
 import Icon from "./Icon"
 
 export const toaster = createToaster({

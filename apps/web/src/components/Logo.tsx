@@ -1,10 +1,10 @@
 "use client"
 
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
-import { Suspense, forwardRef } from "react"
+import { forwardRef,Suspense } from "react"
 import { useHints } from "~/lib/promises"
-import { CursorPrecision } from "./Cursors"
 import AspectRatio from "./AspectRatio"
+import { CursorPrecision } from "./Cursors"
 import Icon from "./Icon"
 import Lottie from "./Lottie"
 

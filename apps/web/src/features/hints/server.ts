@@ -1,8 +1,8 @@
 import "server-only"
-import * as v from "valibot"
 import Negotiator from "negotiator"
 import { headers as getHeaders } from "next/headers"
 import { userAgent as getUserAgent } from "next/server"
+import * as v from "valibot"
 import { Geolocation } from "~/lib/schemas"
 
 function getTemperatureUnit(locale: string) {

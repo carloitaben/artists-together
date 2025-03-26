@@ -5,7 +5,7 @@ import { ark } from "@ark-ui/react/factory"
 import type { VariantProps } from "cva"
 import { cva } from "cva"
 import type { ComponentRef, ForwardedRef } from "react"
-import { forwardRef, createContext, useContext } from "react"
+import { createContext, forwardRef, useContext } from "react"
 
 export const gap = {
   x: "gap-x-1 sm:scale:gap-x-4",

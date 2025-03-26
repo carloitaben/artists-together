@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
 import { lazy, Suspense } from "react"
-import { getHints } from "~/features/hints/server"
 import Container from "~/components/Container"
 import Grid from "~/components/Grid"
 import Logo from "~/components/Logo"
 import Marquee from "~/components/Marquee"
+import { getHints } from "~/features/hints/server"
 import TextAnimation from "./components/TextAnimation"
 
 const Stars = lazy(() => import("./components/Stars"))

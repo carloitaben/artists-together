@@ -1,20 +1,20 @@
 "use client"
 
-import { UserSettings } from "@artists-together/core/database"
-import { useMutation } from "@tanstack/react-query"
 import { Switch } from "@ark-ui/react/switch"
+import { UserSettings } from "@artists-together/core/database"
 import { getFormProps, getInputProps } from "@conform-to/react"
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useMemo } from "react"
-import { useUser } from "~/lib/promises"
+import InlineTooltip from "~/components/InlineTooltip"
+import SwitchControl from "~/components/SwitchControl"
 import { updateProfile } from "~/features/auth/actions"
+import { userQueryOptions } from "~/features/auth/shared"
 import { useFormMutation } from "~/lib/mutations"
 import { UpdateProfileFormSchema } from "~/lib/schemas"
-import SwitchControl from "~/components/SwitchControl"
-import InlineTooltip from "~/components/InlineTooltip"
 import DialogTitle from "../DialogTitle"
-import ProfileDialogContainer from "./ProfileDialogContainer"
 import { sectionData } from "./lib"
+import ProfileDialogContainer from "./ProfileDialogContainer"
 
 type Setting = {
   name: keyof UserSettings
@@ -48,7 +48,7 @@ const settings = [
 export default function ProfileSectionAdvancedSettings() {
   const section = sectionData["advanced-settings"]
 
-  const user = useUser()
+  const user = useSuspenseQuery(userQueryOptions)
   const router = useRouter()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
@@ -65,7 +65,7 @@ export default function ProfileSectionAdvancedSettings() {
     schema: UpdateProfileFormSchema,
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
-    defaultValue: user,
+    defaultValue: user.data,
   })
 
   const fieldset = useMemo(

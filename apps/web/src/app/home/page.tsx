@@ -1,12 +1,6 @@
 import Container from "~/components/Container"
 import Grid from "~/components/Grid"
 import Logo from "~/components/Logo"
-import WidgetInstagram from "./components/WidgetInstagram"
-import WidgetLive from "./components/WidgetLive"
-import WidgetCalendar from "./components/WidgetCalendar"
-import WidgetClock from "./components/WidgetClock"
-import WidgetSlideshow from "./components/WidgetSlideshow"
-import WidgetWeather from "./components/WidgetWeather"
 import {
   HorizontalSpheresStackShape,
   ScribbleShape,
@@ -15,6 +9,12 @@ import {
   VerticalRoundedRectanglesStackShape,
   VerticalSpheresStackShape,
 } from "./components/Shapes"
+import WidgetCalendar from "./components/WidgetCalendar"
+import WidgetClock from "./components/WidgetClock"
+import WidgetInstagram from "./components/WidgetInstagram"
+import WidgetLive from "./components/WidgetLive"
+import WidgetSlideshow from "./components/WidgetSlideshow"
+import WidgetWeather from "./components/WidgetWeather"
 
 export default function Home() {
   return (

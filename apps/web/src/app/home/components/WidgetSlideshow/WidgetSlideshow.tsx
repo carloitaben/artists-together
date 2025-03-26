@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react"
-import { getRandomContentShared } from "~/features/content-shared/server"
-import { CursorPrecision } from "~/components/Cursors"
 import AspectRatio from "~/components/AspectRatio"
+import { CursorPrecision } from "~/components/Cursors"
+import { getRandomContentShared } from "~/features/content-shared/server"
 
 const WidgetSlideshowContent = lazy(() => import("./WidgetSlideshowContent"))
 

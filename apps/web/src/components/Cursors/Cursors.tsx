@@ -1,8 +1,8 @@
 "use client"
 
-import type { PropsWithChildren } from "react"
-import { Suspense, lazy, useEffect } from "react"
 import { useReducedMotion, useScroll } from "motion/react"
+import type { PropsWithChildren } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { onMeasure, useScreen } from "~/lib/media"
 import { measure, measurements, SCOPE_ROOT } from "./lib"
 import Me from "./Me"

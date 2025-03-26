@@ -1,7 +1,7 @@
-import * as v from "valibot"
+import defaultTheme from "tailwindcss/defaultTheme"
 import plugin from "tailwindcss/plugin"
 import type { PluginAPI } from "tailwindcss/types/config"
-import defaultTheme from "tailwindcss/defaultTheme"
+import * as v from "valibot"
 import type { screens } from "../../tailwind.config"
 import { colors } from "../../tailwind.config"
 

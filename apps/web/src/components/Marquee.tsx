@@ -1,14 +1,14 @@
 "use client"
 
+import { cx } from "cva"
+import { transform } from "motion/react"
 import type {
-  CSSProperties,
   ComponentProps,
   ComponentRef,
+  CSSProperties,
   ForwardedRef,
 } from "react"
-import { startTransition, forwardRef, useEffect, useRef, useState } from "react"
-import { transform } from "motion/react"
-import { cx } from "cva"
+import { forwardRef, startTransition, useEffect, useRef, useState } from "react"
 
 const duration = transform([0, 100], ["0s", "30s"], {
   clamp: false,

@@ -50,6 +50,7 @@
     "dotenv-mono": "^1.3.14",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.2.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "postcss": "^8.5.2",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.9",
@@ -67,9 +68,29 @@
   },
   "eslintConfig": {
     "root": true,
+    "plugins": [
+      "simple-import-sort"
+    ],
     "extends": [
       "next/core-web-vitals",
       "plugin:@tanstack/query/recommended"
-    ]
+    ],
+    "rules": {
+      "simple-import-sort/imports": [
+        "warn",
+        {
+          "groups": [
+            [
+              "^\\u0000",
+              "^node:",
+              "^@?\\w",
+              "^",
+              "^\\."
+            ]
+          ]
+        }
+      ],
+      "simple-import-sort/exports": "warn"
+    }
   }
 }

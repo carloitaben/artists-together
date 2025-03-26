@@ -1,19 +1,19 @@
 "use client"
 
 import type {
-  CursorState,
   Cursor as CursorType,
+  CursorState,
   CursorUpdates,
 } from "@artists-together/core/websocket"
 import { QueryObserver, useQueryClient } from "@tanstack/react-query"
+import type { Spring } from "motion/react"
+import { AnimatePresence, useMotionTemplate, useSpring } from "motion/react"
 import { PerfectCursor } from "perfect-cursors"
 import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef, useEffect, useState } from "react"
-import type { Spring } from "motion/react"
-import { AnimatePresence, useMotionTemplate, useSpring } from "motion/react"
 import { webSocketQueryOptions } from "~/lib/websocket"
-import { ATTR_NAME_DATA_CURSOR_PRECISION, measure, SCOPE_ROOT } from "./lib"
 import Cursor from "./Cursor"
+import { ATTR_NAME_DATA_CURSOR_PRECISION, measure, SCOPE_ROOT } from "./lib"
 
 type Props = {
   username: string

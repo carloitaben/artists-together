@@ -1,12 +1,15 @@
-import { Dialog } from "@ark-ui/react/dialog"
-import { cx } from "cva"
-import { getUser } from "~/features/auth/server"
-import AuthRoot from "./AuthRoot"
-import Profile from "./Profile"
-import Login from "./Login"
+"use client"
 
-export default async function Auth() {
-  const user = await getUser()
+import { Dialog } from "@ark-ui/react/dialog"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { cx } from "cva"
+import { userQueryOptions } from "~/features/auth/shared"
+import AuthRoot from "./AuthRoot"
+import Login from "./Login"
+import Profile from "./Profile"
+
+export default function Auth() {
+  const user = useSuspenseQuery(userQueryOptions)
 
   return (
     <AuthRoot>
@@ -17,7 +20,7 @@ export default async function Auth() {
           "scroll-px-1 scroll-pb-4 scroll-pt-1 px-1 pb-4 pt-1 sm:scroll-p-12 sm:p-12",
         )}
       >
-        {user ? <Profile /> : <Login />}
+        {user.data ? <Profile /> : <Login />}
       </Dialog.Positioner>
     </AuthRoot>
   )

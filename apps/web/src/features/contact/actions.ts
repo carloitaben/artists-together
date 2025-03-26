@@ -1,9 +1,9 @@
 "use server"
 
-import { discord, CHANNEL } from "@artists-together/core/discord"
+import { CHANNEL,discord } from "@artists-together/core/discord"
 import { getAuth } from "~/features/auth/server"
-import { createFormAction } from "~/lib/server"
 import { ContactSupportFormSchema } from "~/lib/schemas"
+import { createFormAction } from "~/lib/server"
 
 export const contactSupport = createFormAction(
   ContactSupportFormSchema,

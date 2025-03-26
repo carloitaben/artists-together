@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react"
-import { getRandomLiveUsers } from "~/features/live-user/server"
-import { CursorPrecision } from "~/components/Cursors"
 import AspectRatio from "~/components/AspectRatio"
+import { CursorPrecision } from "~/components/Cursors"
+import { getRandomLiveUsers } from "~/features/live-user/server"
 
 const WidgetLiveContent = lazy(() => import("./WidgetLiveContent"))
 

@@ -1,6 +1,5 @@
 "use client"
 
-import * as v from "valibot"
 import type {
   ClientEvent,
   ClientEventOutput,
@@ -16,8 +15,9 @@ import {
   queryOptions,
   useQueryClient,
 } from "@tanstack/react-query"
-import { useEffect } from "react"
 import { WebSocket as ReconnectingWebSocket } from "partysocket"
+import { useEffect } from "react"
+import * as v from "valibot"
 import { useNavigationMatch } from "./navigation/client"
 import { useHints } from "./promises"
 

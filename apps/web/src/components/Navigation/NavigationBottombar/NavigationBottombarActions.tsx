@@ -1,6 +1,7 @@
 "use client"
 
 import { Menu } from "@ark-ui/react/menu"
+import { motion } from "motion/react"
 import type {
   ComponentRef,
   Dispatch,
@@ -8,9 +9,8 @@ import type {
   SetStateAction,
 } from "react"
 import { forwardRef } from "react"
-import { motion } from "motion/react"
-import type { NavigationAction } from "~/lib/navigation/shared"
 import Icon from "~/components/Icon"
+import type { NavigationAction } from "~/lib/navigation/shared"
 import { scalePresenceVariants, spring } from "../lib"
 import NavigationBottombarMenuItem from "./NavigationBottombarMenuContentItem"
 

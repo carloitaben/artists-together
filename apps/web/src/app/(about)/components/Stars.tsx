@@ -1,10 +1,10 @@
 "use client"
 
 import { Canvas, useFrame } from "@react-three/fiber"
+import { motion, useScroll, useSpring } from "motion/react"
 import { useEffect, useRef, useState } from "react"
-import { useScroll, motion, useSpring } from "motion/react"
 import type { InstancedMesh } from "three"
-import { Object3D, Matrix4, Vector3, Color } from "three"
+import { Color,Matrix4, Object3D, Vector3 } from "three"
 import { useMediaQuery } from "~/lib/media"
 
 const COUNT = 500

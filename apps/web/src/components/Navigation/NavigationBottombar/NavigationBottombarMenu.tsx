@@ -6,8 +6,8 @@ import type { MotionValue, Transition } from "motion/react"
 import { AnimatePresence, motion } from "motion/react"
 import type { Dispatch, SetStateAction } from "react"
 import Icon from "~/components/Icon"
-import NavigationBottombarMenuContent from "./NavigationBottombarMenuContent"
 import { spring } from "../lib"
+import NavigationBottombarMenuContent from "./NavigationBottombarMenuContent"
 
 type Props = {
   label: string

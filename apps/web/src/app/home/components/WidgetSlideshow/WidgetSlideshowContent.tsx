@@ -1,8 +1,8 @@
 "use client"
 
+import { AnimatePresence,motion, wrap } from "motion/react"
 import Image from "next/image"
 import { use, useEffect, useState } from "react"
-import { motion, wrap, AnimatePresence } from "motion/react"
 import type { getRandomContentShared } from "~/features/content-shared/server"
 import { usePreloadImages } from "~/lib/media"
 

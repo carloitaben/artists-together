@@ -3,10 +3,10 @@
 import dayjs from "dayjs"
 import Link from "next/link"
 import { useSelectedLayoutSegments } from "next/navigation"
-import { MonthNameList } from "~/lib/schemas"
 import Button from "~/components/Button"
-import Icon from "~/components/Icon"
 import Container from "~/components/Container"
+import Icon from "~/components/Icon"
+import { MonthNameList } from "~/lib/schemas"
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1)

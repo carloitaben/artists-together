@@ -1,17 +1,17 @@
 import pluginScrollbar from "tailwind-scrollbar"
-import pluginZag from "tailwindcss-plugin-zag"
 import type { Config } from "tailwindcss"
 import type {
-  ScreensConfig,
-  ResolvableTo,
-  RecursiveKeyValuePair,
   KeyValuePair,
+  RecursiveKeyValuePair,
+  ResolvableTo,
+  ScreensConfig,
 } from "tailwindcss/types/config"
+import pluginZag from "tailwindcss-plugin-zag"
 import {
-  pluginTheme,
+  pluginAnimation,
   pluginScale,
   pluginSubgrid,
-  pluginAnimation,
+  pluginTheme,
 } from "./src/lib/tailwind"
 
 export const screens = {

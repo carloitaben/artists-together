@@ -1,7 +1,7 @@
 import { Switch } from "@ark-ui/react/switch"
+import { cx } from "cva"
 import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
-import { cx } from "cva"
 
 type Props = ComponentProps<typeof Switch.Control>
 

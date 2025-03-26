@@ -1,7 +1,7 @@
 import "server-only"
 import { Tag } from "@artists-together/core/cache"
-import { cache } from "react"
 import { unstable_cache } from "next/cache"
+import { cache } from "react"
 
 export const getRandomContentShared = cache(
   unstable_cache(

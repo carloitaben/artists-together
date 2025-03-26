@@ -1,9 +1,9 @@
-import * as v from "valibot"
 import {
   TwitchMetadata,
   UserSettings,
   UserTableInsert,
 } from "@artists-together/core/database"
+import * as v from "valibot"
 
 export const Pathname = v.pipe(
   v.string(),

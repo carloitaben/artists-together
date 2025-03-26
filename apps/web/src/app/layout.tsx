@@ -1,22 +1,24 @@
-import font from "next/font/local"
+import "~/styles/index.css"
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
+import { cx } from "cva"
 import type { Metadata, Viewport } from "next"
+import font from "next/font/local"
 import type { PropsWithChildren } from "react"
 import { lazy } from "react"
-import { cx } from "cva"
-import { WEB_URL } from "~/lib/constants"
-import { colors } from "~/tailwind.config"
-import { getUser } from "~/features/auth/server"
-import { getHints } from "~/features/hints/server"
-import { QueryProvider } from "~/features/query/client"
-import { PromiseProvider } from "~/lib/promises"
-import { WebSocket } from "~/lib/websocket"
 import Auth from "~/components/Auth"
 import Cursors from "~/components/Cursors"
 import Footer from "~/components/Footer"
 import Navigation from "~/components/Navigation"
 import PageTransition from "~/components/PageTransition"
 import Toasts from "~/components/Toasts"
-import "~/styles/index.css"
+import { userQueryOptions } from "~/features/auth/shared"
+import { getHints } from "~/features/hints/server"
+import { QueryProvider } from "~/features/query/client"
+import { getQueryClient } from "~/features/query/shared"
+import { WEB_URL } from "~/lib/constants"
+import { PromiseProvider } from "~/lib/promises"
+import { WebSocket } from "~/lib/websocket"
+import { colors } from "~/tailwind.config"
 
 const EnsureUppercaseSerifAmpersand =
   process.env.NODE_ENV === "development"
@@ -66,8 +68,9 @@ export const metadata: Metadata = {
 export const runtime = "edge"
 
 export default async function Layout({ children }: PropsWithChildren) {
-  const user = getUser()
   const hints = getHints()
+  const queryClient = getQueryClient()
+  await queryClient.prefetchQuery(userQueryOptions)
 
   return (
     <html
@@ -82,20 +85,22 @@ export default async function Layout({ children }: PropsWithChildren) {
     >
       <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
         <QueryProvider>
-          <PromiseProvider user={user} hints={hints}>
-            <PageTransition>
-              <Navigation>
-                {children}
-                <Footer />
-              </Navigation>
-            </PageTransition>
-            <Cursors>
-              <Auth />
-              <Toasts />
-            </Cursors>
-            <WebSocket />
-          </PromiseProvider>
-          <EnsureUppercaseSerifAmpersand />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <PromiseProvider hints={hints}>
+              <PageTransition>
+                <Navigation>
+                  {children}
+                  <Footer />
+                </Navigation>
+              </PageTransition>
+              <Cursors>
+                <Auth />
+                <Toasts />
+              </Cursors>
+              <WebSocket />
+            </PromiseProvider>
+            <EnsureUppercaseSerifAmpersand />
+          </HydrationBoundary>
         </QueryProvider>
       </body>
     </html>

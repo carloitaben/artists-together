@@ -1,12 +1,12 @@
 "use client"
 
-import SplitType from "split-type"
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
+import { scroll, useAnimate, useInView } from "motion/react"
 import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef, useEffect } from "react"
 import { mergeRefs } from "react-merge-refs"
-import { scroll, useAnimate, useInView } from "motion/react"
+import SplitType from "split-type"
 
 type Props = HTMLArkProps<"div">
 

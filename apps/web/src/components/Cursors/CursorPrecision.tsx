@@ -8,9 +8,9 @@ import { mergeRefs } from "react-merge-refs"
 import { onMeasure } from "~/lib/media"
 import {
   ATTR_NAME_DATA_CURSOR_PRECISION,
-  SCOPE_ROOT,
   createPrecisionScope,
   measurements,
+  SCOPE_ROOT,
 } from "./lib"
 
 type Props = HTMLArkProps<"div"> & {

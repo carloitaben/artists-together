@@ -1,24 +1,24 @@
 "use client"
 
-import Image from "next/image"
-import { useMutation } from "@tanstack/react-query"
 import { Dialog } from "@ark-ui/react/dialog"
 import { FormProvider, getFormProps, getTextareaProps } from "@conform-to/react"
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useUser } from "~/lib/promises"
-import { useFormMutation } from "~/lib/mutations"
-import { updateProfile } from "~/features/auth/actions"
-import { UpdateProfileFormSchema } from "~/lib/schemas"
-import Icon from "~/components/Icon"
-import FieldLength from "~/components/FieldLength"
 import AspectRatio from "~/components/AspectRatio"
+import FieldLength from "~/components/FieldLength"
+import Icon from "~/components/Icon"
+import { updateProfile } from "~/features/auth/actions"
+import { userQueryOptions } from "~/features/auth/shared"
+import { useFormMutation } from "~/lib/mutations"
+import { UpdateProfileFormSchema } from "~/lib/schemas"
 import DialogTitle from "../DialogTitle"
 import Connections from "./Connections"
-import ProfileDialogContainer from "./ProfileDialogContainer"
 import { sectionData } from "./lib"
+import ProfileDialogContainer from "./ProfileDialogContainer"
 
 export default function ProfileSectionProfile() {
-  const user = useUser()
+  const user = useSuspenseQuery(userQueryOptions)
   const router = useRouter()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
@@ -35,7 +35,7 @@ export default function ProfileSectionProfile() {
     schema: UpdateProfileFormSchema,
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
-    defaultValue: user,
+    defaultValue: user.data,
   })
 
   const section = sectionData["profile"]
@@ -48,7 +48,7 @@ export default function ProfileSectionProfile() {
         </DialogTitle>
       </Dialog.Title>
       <DialogTitle sm="fraunces" className="md:pt:0 pb-4 pt-3 md:pb-6">
-        {user?.username}
+        {user.data?.username}
       </DialogTitle>
       <form
         {...getFormProps(form)}
@@ -68,11 +68,11 @@ export default function ProfileSectionProfile() {
             </div>
             <AspectRatio.Root ratio={1}>
               <AspectRatio.Content className="overflow-hidden rounded-4 bg-not-so-white">
-                {user?.avatar ? (
+                {user.data?.avatar ? (
                   <Image
                     className="size-full object-cover"
                     alt="Your avatar"
-                    src={user.avatar}
+                    src={user.data.avatar}
                     draggable={false}
                     unoptimized
                     fill

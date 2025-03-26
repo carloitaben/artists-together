@@ -1,10 +1,10 @@
 "use client"
 
-import lottie from "lottie-web/build/player/lottie_svg"
+import { cx } from "cva"
 import type { AnimationConfigWithData } from "lottie-web/build/player/lottie_svg"
+import lottie from "lottie-web/build/player/lottie_svg"
 import type { ComponentProps, ComponentRef, RefCallback } from "react"
 import { use, useCallback } from "react"
-import { cx } from "cva"
 import { clientOnly } from "~/components/ClientOnly"
 
 type Props = ComponentProps<"div"> &

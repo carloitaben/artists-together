@@ -1,5 +1,5 @@
-import * as v from "valibot"
 import { notFound } from "next/navigation"
+import * as v from "valibot"
 import { CalendarYearPathParams } from "~/lib/schemas"
 
 export default async function Page({ params }: { params: Promise<unknown> }) {
