@@ -79,10 +79,10 @@
   }
 
   [data-scope="dialog"][data-part="content"][data-state="open"] {
-    @apply animation-in animation-fade-in animation-zoom-in-[.99] animation-duration-150 animation-delay-[0.50ms] animation-ease-out animation-fill-mode-backwards;
+    @apply animation-in animation-fade-in animation-zoom-in-[.985] animation-duration-150 animation-delay-[0.50ms] animation-ease-out animation-fill-mode-backwards;
   }
 
   [data-scope="dialog"][data-part="content"][data-state="closed"] {
-    @apply animation-out animation-fade-out animation-zoom-out-[.99] animation-duration-100 animation-ease-in;
+    @apply animation-out animation-fade-out animation-zoom-out-[.985] animation-duration-100 animation-ease-in;
   }
 }
