@@ -3,16 +3,27 @@
 import { Dialog } from "@ark-ui/react/dialog"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { cx } from "cva"
+import { useSearchParams } from "next/navigation"
 import { userQueryOptions } from "~/features/auth/shared"
-import AuthRoot from "./AuthRoot"
 import Login from "./Login"
 import Profile from "./Profile"
 
 export default function Auth() {
   const user = useSuspenseQuery(userQueryOptions)
+  const search = useSearchParams()
+  const open = search.get("modal") === "auth"
 
   return (
-    <AuthRoot>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(details) => {
+        if (!details.open) {
+          const url = new URL(window.location.href)
+          url.searchParams.delete("modal")
+          window.history.replaceState(null, "", url)
+        }
+      }}
+    >
       <Dialog.Backdrop className="backdrop z-50" />
       <Dialog.Positioner
         className={cx(
@@ -22,6 +33,6 @@ export default function Auth() {
       >
         {user.data ? <Profile /> : <Login />}
       </Dialog.Positioner>
-    </AuthRoot>
+    </Dialog.Root>
   )
 }
