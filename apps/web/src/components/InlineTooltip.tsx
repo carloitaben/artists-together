@@ -19,13 +19,6 @@ export default function InlineTooltip({
   return (
     <>
       <Tooltip.Root
-        // closeDelay={0}
-        // openDelay={200}
-        // positioning={{
-        //   gutter: 0,
-        //   offset: { crossAxis: 0, mainAxis: 0 },
-        //   placement,
-        // }}
         openDelay={0}
         closeDelay={0}
         closeOnEscape={false}
