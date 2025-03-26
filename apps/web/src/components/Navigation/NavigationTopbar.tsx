@@ -15,7 +15,7 @@ export default function NavigationTopbar() {
   return (
     <Container asChild>
       <aside className="pointer-events-none absolute inset-x-0 top-0 hidden py-4 sm:block">
-        <ul className="pr-scrollbar flex items-center justify-end gap-2">
+        <ul className="flex items-center justify-end gap-2 pe-scrollbar">
           {match.actions.map((action, index) => (
             <li key={action.label}>
               <CursorPrecision id={`topbar-action-${index}`}>
