@@ -28,8 +28,12 @@ export function webSocketQueryOptions<T extends ServerEvent>(
   initialData: ServerEventOutput<T>,
 ) {
   return queryOptions({
+    queryFn: async () => {
+      throw new Error("Unexpectedly run webSocket queryFn")
+    },
     initialData,
     queryKey: [`ws:${event}`],
+    staleTime: Infinity,
   })
 }
 
