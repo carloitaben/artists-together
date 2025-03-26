@@ -28,7 +28,7 @@ export default function Auth() {
       <Dialog.Positioner
         className={cx(
           "fixed inset-0 z-50 grid size-full place-items-center overflow-y-auto",
-          "scroll-px-1 scroll-pb-4 scroll-pt-1 pb-4 pe-scrollbar ps-1 pt-1 sm:scroll-p-12 sm:py-12 sm:pe-scrollbar sm:ps-12",
+          "scroll-px-1 scroll-pb-4 scroll-pt-1 px-1 pb-4 pt-1 sm:scroll-p-12 sm:p-12",
         )}
       >
         {user.data ? <Profile /> : <Login />}
