@@ -48,7 +48,7 @@ function TextAnimation(props: Props, ref: ForwardedRef<ComponentRef<"div">>) {
     }
 
     let width = 0
-    let cleanupAnimation: VoidFunction
+    let cleanupAnimation: VoidFunction | undefined = undefined
     const cleanupMeasure = onMeasure(scope.current, (rect) => {
       if (width === rect.width) return
       width = rect.width
@@ -56,7 +56,7 @@ function TextAnimation(props: Props, ref: ForwardedRef<ComponentRef<"div">>) {
     })
 
     return () => {
-      cleanupAnimation()
+      cleanupAnimation?.()
       cleanupMeasure()
     }
   }, [animate, scope])
