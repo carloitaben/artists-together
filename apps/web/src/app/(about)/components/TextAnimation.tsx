@@ -2,7 +2,7 @@
 
 import type { HTMLArkProps } from "@ark-ui/react/factory"
 import { ark } from "@ark-ui/react/factory"
-import { scroll, useAnimate } from "motion/react"
+import { useAnimate, useScroll, useSpring } from "motion/react"
 import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef, useEffect } from "react"
 import { mergeRefs } from "react-merge-refs"
@@ -13,6 +13,14 @@ type Props = HTMLArkProps<"div">
 
 function TextAnimation(props: Props, ref: ForwardedRef<ComponentRef<"div">>) {
   const [scope, animate] = useAnimate<ComponentRef<"div">>()
+  const scroll = useScroll({
+    target: scope,
+    offset: ["start center", "end end"],
+  })
+
+  const scrollYProgress = useSpring(scroll.scrollYProgress, {
+    mass: 0.15,
+  })
 
   useEffect(() => {
     function setup() {
@@ -25,21 +33,23 @@ function TextAnimation(props: Props, ref: ForwardedRef<ComponentRef<"div">>) {
         return split.revert
       }
 
-      const cleanup = scroll(
-        animate(
-          split.words.map((word) => [
-            word,
-            {
-              opacity: [0, 1],
-              "--blur": ["4px", "0px"],
-            },
-          ]),
-        ),
-        {
-          target: scope.current,
-          offset: ["start center", "end end"],
-        },
+      const animation = animate(
+        split.words.map((word) => [
+          word,
+          {
+            opacity: [0, 1],
+            "--blur": ["4px", "0px"],
+          },
+        ]),
+        { duration: 1 },
       )
+
+      animation.pause()
+      animation.time = 0
+
+      const cleanup = scrollYProgress.on("change", (progress) => {
+        animation.time = progress
+      })
 
       return () => {
         cleanup()
@@ -59,41 +69,7 @@ function TextAnimation(props: Props, ref: ForwardedRef<ComponentRef<"div">>) {
       cleanupAnimation?.()
       cleanupMeasure()
     }
-  }, [animate, scope])
-
-  useEffect(() => {
-    // const split = new SplitType(scope.current, {
-    //   split: "words",
-    //   wordClass: "blur-[--blur]",
-    // })
-    // if (!split.words) {
-    //   return split.revert()
-    // }
-    // const stop = scroll(
-    //   animate(
-    //     split.words.map((word) => [
-    //       word,
-    //       {
-    //         opacity: [0, 1],
-    //         "--blur": ["4px", "0px"],
-    //       },
-    //     ]),
-    //   ),
-    //   {
-    //     target: scope.current,
-    //     offset: ["start center", "end end"],
-    //   },
-    // )
-    // const measure = onMeasure(scope.current, () => {
-    //   console.log("e")
-    //   split.split()
-    //   rect
-    // })
-    // return () => {
-    //   split.revert()
-    //   stop()
-    // }
-  }, [animate, scope])
+  }, [animate, scope, scrollYProgress])
 
   return <ark.div {...props} ref={mergeRefs([ref, scope])} />
 }
