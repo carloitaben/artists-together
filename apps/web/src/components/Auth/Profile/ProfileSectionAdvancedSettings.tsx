@@ -6,7 +6,6 @@ import { getFormProps, getInputProps } from "@conform-to/react"
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useMemo } from "react"
-import InlineTooltip from "~/components/InlineTooltip"
 import SwitchControl from "~/components/SwitchControl"
 import { updateProfile } from "~/features/auth/actions"
 import { userQueryOptions } from "~/features/auth/shared"
@@ -30,14 +29,14 @@ const settings = [
   {
     name: "shareStreaming",
     label: "Share streaming status",
-    tooltip:
-      "We use your approximate location (region) to let other members know your timezone.",
+    // tooltip:
+    //   "We use your approximate location (region) to let other members know your timezone.",
   },
   {
     name: "shareCursor",
     label: "Share cursor location",
-    tooltip:
-      "We use your approximate location (region) to let other members know your timezone.",
+    // tooltip:
+    //   "We use your approximate location (region) to let other members know your timezone.",
   },
   {
     name: "fahrenheit",
@@ -93,13 +92,14 @@ export default function ProfileSectionAdvancedSettings() {
               className="flex items-center justify-between"
             >
               <Switch.Label className="flex items-center gap-x-2 text-sm md:px-3.5">
-                {setting.tooltip ? (
+                {/* {setting.tooltip ? (
                   <InlineTooltip tooltip={setting.tooltip}>
                     <span>{setting.label}</span>
                   </InlineTooltip>
                 ) : (
                   <span>{setting.label}</span>
-                )}
+                )} */}
+                <span>{setting.label}</span>
               </Switch.Label>
               <SwitchControl />
               <Switch.HiddenInput />

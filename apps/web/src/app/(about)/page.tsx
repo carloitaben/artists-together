@@ -86,8 +86,13 @@ export default async function Page() {
             </Grid>
           </TextAnimation>
         </Container>
-        <Container className="grid h-screen items-center text-center scale:text-[2rem] sm:scale:text-[4rem]">
-          <h6>Artists, together.</h6>
+        <Container
+          className="grid h-screen items-center text-center scale:text-[2rem] sm:scale:text-[4rem]"
+          asChild
+        >
+          <TextAnimation>
+            <h6>Artists, together.</h6>
+          </TextAnimation>
         </Container>
       </main>
     </>
