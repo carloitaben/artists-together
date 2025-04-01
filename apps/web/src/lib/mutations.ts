@@ -11,7 +11,7 @@ import {
   useMutationState,
   useQueryClient,
 } from "@tanstack/react-query"
-import { parseWithValibot } from "conform-to-valibot"
+import { parseWithValibot } from "@conform-to/valibot"
 import { useMemo } from "react"
 import * as v from "valibot"
 

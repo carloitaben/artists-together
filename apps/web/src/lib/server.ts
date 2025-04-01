@@ -1,6 +1,6 @@
 import "server-only"
 import type { Submission } from "@conform-to/react"
-import { parseWithValibot } from "conform-to-valibot"
+import { parseWithValibot } from "@conform-to/valibot"
 import * as v from "valibot"
 
 type SuccessfulSubmission<
