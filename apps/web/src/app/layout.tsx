@@ -8,6 +8,7 @@ import { lazy } from "react"
 import Auth from "~/components/Auth"
 import Cursors from "~/components/Cursors"
 import Footer from "~/components/Footer"
+import Html from "~/components/Html"
 import Navigation from "~/components/Navigation"
 import PageTransition from "~/components/PageTransition"
 import Toasts from "~/components/Toasts"
@@ -73,7 +74,7 @@ export default async function Layout({ children }: PropsWithChildren) {
   await queryClient.prefetchQuery(userQueryOptions)
 
   return (
-    <html
+    <Html
       lang="en"
       className={cx(
         inter.variable,
@@ -103,6 +104,6 @@ export default async function Layout({ children }: PropsWithChildren) {
           </HydrationBoundary>
         </QueryProvider>
       </body>
-    </html>
+    </Html>
   )
 }
