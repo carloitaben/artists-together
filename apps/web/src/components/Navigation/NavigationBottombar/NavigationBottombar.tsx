@@ -1,5 +1,6 @@
 "use client"
 
+import { Presence } from "@ark-ui/react/presence"
 import { AnimatePresence, motion, useMotionValue } from "motion/react"
 import type { ComponentRef } from "react"
 import { useEffect, useRef, useState } from "react"
@@ -24,7 +25,7 @@ export default function NavigationBottombar() {
 
   return (
     <>
-      {showBackdrop ? <div className="backdrop sm:hidden" /> : null}
+      <Presence className="backdrop sm:hidden" present={showBackdrop} />
       <motion.div
         ref={ref}
         className="fixed inset-x-0 bottom-0 flex h-16 flex-row-reverse items-stretch justify-center gap-1 p-2 sm:hidden"

@@ -65,15 +65,15 @@
     @apply fixed inset-0 bg-arpeggio-black-900/75 backdrop-blur-8;
   }
 
-  [data-scope="dialog"][data-part="backdrop"][data-state="open"] {
+  .backdrop[data-state="open"] {
     @apply animation-in animation-fade-in animation-duration-150 animation-ease-out animation-fill-mode-backwards;
   }
 
-  [data-scope="dialog"][data-part="backdrop"][data-state="closed"] {
+  .backdrop[data-state="closed"] {
     @apply animation-out animation-fade-out animation-duration-100 animation-delay-[0.50ms] animation-ease-in;
   }
 
-  [data-scope="dialog"][data-part="backdrop"][data-state="closed"]
+  .backdrop[data-state="closed"]
     + [data-scope="dialog"][data-part="positioner"] {
     @apply overflow-y-hidden;
   }
@@ -84,5 +84,13 @@
 
   [data-scope="dialog"][data-part="content"][data-state="closed"] {
     @apply animation-out animation-fade-out animation-zoom-out-[.985] animation-duration-100 animation-ease-in;
+  }
+
+  [data-scope="menu"][data-state="open"] [data-part="item"] {
+    @apply animation-in animation-fade-in animation-zoom-in-95 animation-duration-150 animation-delay-[--animation-in-delay] animation-ease-out animation-fill-mode-backwards;
+  }
+
+  [data-scope="menu"][data-state="closed"] [data-part="item"] {
+    @apply animation-out animation-fade-out animation-duration-100 animation-ease-in;
   }
 }

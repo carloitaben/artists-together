@@ -34,6 +34,7 @@ export const navigation = [
       href: "/home",
       disabled: true,
     },
+    search: false,
     actions: [],
   },
   {
@@ -44,6 +45,7 @@ export const navigation = [
       href: "/",
       disabled: false,
     },
+    search: false,
     actions: [
       {
         label: "Twitch",
@@ -79,6 +81,7 @@ export const navigation = [
       href: "/lounge",
       disabled: true,
     },
+    search: false,
     actions: [],
   },
   {
@@ -89,6 +92,7 @@ export const navigation = [
       href: "/art",
       disabled: true,
     },
+    search: false,
     actions: [],
   },
   {
@@ -100,6 +104,7 @@ export const navigation = [
       match: "^\/calendar",
       disabled: true,
     },
+    search: false,
     actions: [],
   },
 ] satisfies NavigationItem[]

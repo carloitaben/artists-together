@@ -2,6 +2,7 @@
 
 import { Menu } from "@ark-ui/react/menu"
 import { useSuspenseQuery } from "@tanstack/react-query"
+import type { CSSProperties } from "react"
 import Avatar from "~/components/Avatar"
 import Icon from "~/components/Icon"
 import NavLink from "~/components/NavLink"
@@ -17,7 +18,15 @@ export default function NavigationBottombarMenuContent() {
 
   return (
     <Menu.Content className="fixed bottom-16 left-2 space-y-2 focus:outline-none">
-      <Menu.Item value="auth" asChild>
+      <Menu.Item
+        value="auth"
+        asChild
+        style={
+          {
+            "--animation-in-delay": `${(navigation.length + 1) * 10}ms`,
+          } as CSSProperties
+        }
+      >
         <NavigationBottombarMenuContentItem asChild>
           <NavigationAuthLink>
             {user.data ? (
@@ -29,11 +38,16 @@ export default function NavigationBottombarMenuContent() {
           </NavigationAuthLink>
         </NavigationBottombarMenuContentItem>
       </Menu.Item>
-      {navigation.map((item) => (
+      {navigation.map((item, index, array) => (
         <Menu.Item
           key={item.id}
           value={item.link.href.toString()}
           disabled={item.link.disabled}
+          style={
+            {
+              "--animation-in-delay": `${(array.length + 1 - index) * 10}ms`,
+            } as CSSProperties
+          }
           asChild
         >
           <NavigationBottombarMenuContentItem

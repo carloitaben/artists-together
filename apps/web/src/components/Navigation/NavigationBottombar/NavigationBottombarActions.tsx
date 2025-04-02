@@ -4,6 +4,7 @@ import { Menu } from "@ark-ui/react/menu"
 import { motion } from "motion/react"
 import type {
   ComponentRef,
+  CSSProperties,
   Dispatch,
   ForwardedRef,
   SetStateAction,
@@ -44,8 +45,17 @@ function NavigationBottombarActions(
       </Menu.Trigger>
       <Menu.Positioner>
         <Menu.Content className="space-y-2 focus:outline-none">
-          {actions.map((action) => (
-            <Menu.Item key={action.label} value={action.label} asChild>
+          {actions.map((action, index, array) => (
+            <Menu.Item
+              key={action.label}
+              value={action.label}
+              style={
+                {
+                  "--animation-in-delay": `${(array.length - index) * 10}ms`,
+                } as CSSProperties
+              }
+              asChild
+            >
               <NavigationBottombarMenuItem justify="between" asChild>
                 {"link" in action ? (
                   <a {...action.link}>
