@@ -29,6 +29,7 @@ export default function NavigationAuthLink({
         pathname,
         search: urlSearchParams.toString(),
       }}
+      rel="nofollow"
     />
   )
 }
