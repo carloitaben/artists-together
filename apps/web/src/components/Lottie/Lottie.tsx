@@ -1,47 +1,14 @@
 "use client"
 
-import { cx } from "cva"
-import type { AnimationConfigWithData } from "lottie-web/build/player/lottie_svg"
-import lottie from "lottie-web/build/player/lottie_svg"
-import type { ComponentProps, ComponentRef, RefCallback } from "react"
-import { use, useCallback } from "react"
-import { clientOnly } from "~/components/ClientOnly"
+import type { ComponentProps } from "react"
+import { lazy } from "react"
+import { clientOnly } from "../ClientOnly"
 
-type Props = ComponentProps<"div"> &
-  Pick<AnimationConfigWithData, "autoplay" | "loop"> & {
-    /**
-     * A dynamic import with the Lottie JSON animation
-     */
-    src: Promise<{ default: unknown }>
-  }
+const LottieComponent = lazy(() => import("./LottieComponent"))
 
-export default function Lottie({
-  src,
-  className,
-  autoplay = false,
-  loop = false,
-  ...props
-}: Props) {
+type Props = ComponentProps<typeof LottieComponent>
+
+export default function Lottie(props: Props) {
   clientOnly()
-
-  const animationData = use(src)
-  const ref = useCallback<RefCallback<ComponentRef<"div">>>(
-    (container) => {
-      if (!container) return
-
-      const animation = lottie.loadAnimation({
-        animationData: animationData.default,
-        container,
-        autoplay,
-        loop,
-      })
-
-      return () => animation.destroy()
-    },
-    [animationData.default, autoplay, loop],
-  )
-
-  return (
-    <div {...props} ref={ref} className={cx(className, "*:!transform-none")} />
-  )
+  return <LottieComponent {...props} />
 }

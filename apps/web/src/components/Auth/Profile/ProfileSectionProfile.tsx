@@ -2,9 +2,12 @@
 
 import { Dialog } from "@ark-ui/react/dialog"
 import { FormProvider, getFormProps, getTextareaProps } from "@conform-to/react"
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
 import AspectRatio from "~/components/AspectRatio"
 import FieldLength from "~/components/FieldLength"
 import Icon from "~/components/Icon"
@@ -19,14 +22,15 @@ import ProfileDialogContainer from "./ProfileDialogContainer"
 
 export default function ProfileSectionProfile() {
   const user = useSuspenseQuery(userQueryOptions)
-  const router = useRouter()
+  const queryClient = useQueryClient()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
-      console.log("mutating...")
       return updateProfile(formData)
     },
     onSuccess() {
-      router.refresh()
+      queryClient.invalidateQueries({
+        queryKey: userQueryOptions.queryKey,
+      })
     },
   })
 
@@ -54,8 +58,8 @@ export default function ProfileSectionProfile() {
         {...getFormProps(form)}
         className="flex grid-cols-3 flex-col gap-7 pb-6 md:grid md:gap-3 md:pb-3"
         onBlur={(event) => {
-          if (!(event.target instanceof HTMLTextAreaElement)) return
-          if (!(event.target.name in fields)) return
+          if (!("name" in event.target)) return
+          if (!fields[event.target.name as keyof typeof fields]) return
           if (event.target.value !== event.target.defaultValue) {
             event.currentTarget.requestSubmit()
           }

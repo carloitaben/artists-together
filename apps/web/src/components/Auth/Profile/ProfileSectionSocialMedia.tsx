@@ -6,10 +6,13 @@ import {
   getFormProps,
   useField,
 } from "@conform-to/react"
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query"
 import type { Variants } from "motion/react"
-import { AnimatePresence,motion } from "motion/react"
-import { useRouter } from "next/navigation"
+import { AnimatePresence, motion } from "motion/react"
 import { useMemo } from "react"
 import Icon from "~/components/Icon"
 import { updateProfile } from "~/features/auth/actions"
@@ -70,13 +73,15 @@ export default function ProfileSectionSocialMedia() {
   const section = sectionData["social-media"]
 
   const user = useSuspenseQuery(userQueryOptions)
-  const router = useRouter()
+  const queryClient = useQueryClient()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
       return updateProfile(formData)
     },
     onSuccess() {
-      router.refresh()
+      queryClient.invalidateQueries({
+        queryKey: userQueryOptions.queryKey,
+      })
     },
   })
 

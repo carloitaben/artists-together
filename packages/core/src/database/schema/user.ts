@@ -45,8 +45,8 @@ export type UserLinks = v.InferOutput<typeof UserLinks>
 
 export const UserSettings = v.object({
   fullHourFormat: v.optional(v.boolean(), false),
-  shareStreaming: v.optional(v.boolean(), true),
-  shareCursor: v.optional(v.boolean(), true),
+  shareStreaming: v.optional(v.boolean(), false),
+  shareCursor: v.optional(v.boolean(), false),
   fahrenheit: v.optional(v.boolean(), false),
 })
 

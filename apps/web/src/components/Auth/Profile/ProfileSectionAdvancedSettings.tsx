@@ -3,14 +3,15 @@
 import { Switch } from "@ark-ui/react/switch"
 import { UserSettings } from "@artists-together/core/database"
 import { getFormProps, getInputProps } from "@conform-to/react"
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
-import { useMemo } from "react"
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query"
 import SwitchControl from "~/components/SwitchControl"
-import { updateProfile } from "~/features/auth/actions"
+import { updateProfileSettings } from "~/features/auth/actions"
 import { userQueryOptions } from "~/features/auth/shared"
 import { useFormMutation } from "~/lib/mutations"
-import { UpdateProfileFormSchema } from "~/lib/schemas"
 import DialogTitle from "../DialogTitle"
 import { sectionData } from "./lib"
 import ProfileDialogContainer from "./ProfileDialogContainer"
@@ -48,29 +49,25 @@ export default function ProfileSectionAdvancedSettings() {
   const section = sectionData["advanced-settings"]
 
   const user = useSuspenseQuery(userQueryOptions)
-  const router = useRouter()
+  const queryClient = useQueryClient()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
-      return updateProfile(formData)
+      return updateProfileSettings(formData)
     },
     onSuccess() {
-      console.log("refrshing router...")
-      router.refresh()
+      queryClient.invalidateQueries({
+        queryKey: userQueryOptions.queryKey,
+      })
     },
   })
 
   const [form, fields] = useFormMutation({
     mutation,
-    schema: UpdateProfileFormSchema,
+    schema: UserSettings,
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
-    defaultValue: user.data,
+    defaultValue: user.data?.settings,
   })
-
-  const fieldset = useMemo(
-    () => fields.settings.getFieldset(),
-    [fields.settings],
-  )
 
   return (
     <ProfileDialogContainer id="advanced-settings">
@@ -88,8 +85,9 @@ export default function ProfileSectionAdvancedSettings() {
         {settings.map((setting) => (
           <div key={setting.name}>
             <Switch.Root
-              {...getInputProps(fieldset[setting.name], { type: "checkbox" })}
+              {...getInputProps(fields[setting.name], { type: "checkbox" })}
               className="flex items-center justify-between"
+              defaultChecked={fields[setting.name].initialValue === "on"}
             >
               <Switch.Label className="flex items-center gap-x-2 text-sm md:px-3.5">
                 {/* {setting.tooltip ? (

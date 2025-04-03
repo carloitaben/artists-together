@@ -1,73 +1,44 @@
+"use client"
+
 import { cx } from "cva"
-import type {
-  AnimationConfigWithData,
-  AnimationItem,
-} from "lottie-web/build/player/lottie_svg"
+import type { AnimationConfigWithData } from "lottie-web/build/player/lottie_svg"
 import lottie from "lottie-web/build/player/lottie_svg"
-import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react"
+import type { ComponentProps, ComponentRef, RefCallback } from "react"
+import { use, useCallback } from "react"
 
 type Props = ComponentProps<"div"> &
   Pick<AnimationConfigWithData, "autoplay" | "loop"> & {
-    src: Promise<unknown>
+    /**
+     * A dynamic import with the Lottie JSON animation
+     */
+    src: Promise<{ default: unknown }>
   }
 
-function LottieComponent(
-  { src, className, autoplay = false, loop = false, ...props }: Props,
-  ref: ForwardedRef<AnimationItem | undefined>,
-) {
-  const innerRef = useRef<ComponentRef<"div">>(null)
-  const [animationData, setAnimationData] = useState<unknown>()
-  const [animation, setAnimation] = useState<AnimationItem>()
+export default function LottieComponent({
+  src,
+  className,
+  autoplay = false,
+  loop = false,
+  ...props
+}: Props) {
+  const animationData = use(src)
+  const ref = useCallback<RefCallback<ComponentRef<"div">>>(
+    (container) => {
+      if (!container) return
 
-  useImperativeHandle(ref, () => animation, [animation])
+      const animation = lottie.loadAnimation({
+        animationData: animationData.default,
+        container,
+        autoplay,
+        loop,
+      })
 
-  useEffect(() => {
-    let unmounting = false
-
-    src.then((data) => {
-      if (!unmounting) {
-        setAnimationData(data)
-      }
-    })
-
-    return () => {
-      unmounting = true
-    }
-  }, [src])
-
-  useEffect(() => {
-    if (!animationData) return
-    if (!innerRef.current) return
-
-    const animation = lottie.loadAnimation({
-      animationData,
-      container: innerRef.current,
-      autoplay,
-      loop,
-    })
-
-    setAnimation(animation)
-
-    return () => {
-      animation.destroy()
-      setAnimation(undefined)
-    }
-  }, [animationData, autoplay, loop])
+      return () => animation.destroy()
+    },
+    [animationData.default, autoplay, loop],
+  )
 
   return (
-    <div
-      {...props}
-      ref={innerRef}
-      className={cx(className, "*:!transform-none")}
-    />
+    <div {...props} ref={ref} className={cx(className, "*:!transform-none")} />
   )
 }
-
-export default forwardRef(LottieComponent)

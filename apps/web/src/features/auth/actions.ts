@@ -1,7 +1,12 @@
 "use server"
 
 import { invalidateSession } from "@artists-together/core/auth"
-import { database, eq, userTable } from "@artists-together/core/database"
+import {
+  database,
+  eq,
+  UserSettings,
+  userTable,
+} from "@artists-together/core/database"
 import { unreachable } from "@artists-together/core/utils"
 import { deleteCookie, getCookie, setCookie } from "@standard-cookie/next"
 import { generateState } from "arctic"
@@ -63,6 +68,28 @@ export const logout = createFormAction(AuthFormSchema, async () => {
   await deleteCookie(cookieSessionOptions)
 })
 
+export const updateProfileSettings = createFormAction(
+  UserSettings,
+  async (context) => {
+    const auth = await getAuth()
+
+    if (!auth) {
+      return {
+        result: context.form.reply({
+          formErrors: ["Unauthorized"],
+        }),
+      }
+    }
+
+    await database
+      .update(userTable)
+      .set({
+        settings: context.form.value,
+      })
+      .where(eq(userTable.id, auth.user.id))
+  },
+)
+
 export const updateProfile = createFormAction(
   UpdateProfileFormSchema,
   async (context) => {
@@ -75,8 +102,6 @@ export const updateProfile = createFormAction(
         }),
       }
     }
-
-    console.log("update profile", context.form.value)
 
     await database
       .update(userTable)
