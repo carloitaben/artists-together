@@ -66,8 +66,6 @@ export const metadata: Metadata = {
   },
 }
 
-export const runtime = "edge"
-
 export default async function Layout({ children }: PropsWithChildren) {
   const hints = getHints()
   const queryClient = getQueryClient()
