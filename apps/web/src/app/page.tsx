@@ -1,6 +1,5 @@
 import { logo } from "~/components/Icons"
 import Icon from "~/components/Icon"
-import Animations from "./components/Animations"
 import Countdown from "./components/Countdown"
 
 function Social() {
@@ -9,7 +8,7 @@ function Social() {
 
   return (
     <>
-      <h3 data-animated-text className="hidden js:invisible sm:block">
+      <h3 className="hidden sm:block">
         Follow us on{" "}
         <a
           className="underline transition-[font-weight] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:font-medium"
@@ -31,10 +30,7 @@ function Social() {
         </a>{" "}
         server.
       </h3>
-      <ul
-        data-animated-text
-        className="whitespace-nowrap text-center js:invisible sm:hidden sm:pb-3"
-      >
+      <ul className="whitespace-nowrap text-center sm:hidden sm:pb-3">
         <li className="mx-2.5 inline-block">
           <a
             target="_blank"
@@ -68,7 +64,7 @@ export default function Home() {
         <Icon
           label=""
           data-element="logo"
-          className="w-full max-w-[16.25rem] js:opacity-0 sm:max-w-[22vw] 3xl:max-w-[27.5rem]"
+          className="w-full max-w-[16.25rem] sm:max-w-[22vw] 3xl:max-w-[27.5rem]"
         >
           {logo}
         </Icon>
@@ -79,7 +75,6 @@ export default function Home() {
         </div>
         <Social />
       </main>
-      <Animations />
     </div>
   )
 }

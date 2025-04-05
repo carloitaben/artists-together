@@ -16,7 +16,6 @@ const target = dayjs("2025-04-14")
 
 export default function Countdown(props: Props) {
   const ref = useRef<HTMLHeadingElement>(null)
-  const [start, setStart] = useState(false)
   const [now, setNow] = useState(dayjs(props.now))
   const diff = target.diff(now)
   const duration = dayjs.duration(diff)
@@ -39,14 +38,6 @@ export default function Countdown(props: Props) {
   }, [])
 
   useEffect(() => {
-    if (start) return
-    const onComplete = setStart.bind(null, true)
-    window.addEventListener("animation:complete", onComplete)
-    return () => window.removeEventListener("animation:complete", onComplete)
-  }, [start])
-
-  useEffect(() => {
-    if (!start) return
     if (!ref.current) return
 
     const daysValueElement = ref.current.querySelector("[data-days-value]")!
@@ -84,11 +75,10 @@ export default function Countdown(props: Props) {
     minutesLabel,
     seconds,
     secondsLabel,
-    start,
   ])
 
   return (
-    <h2 data-animated-text ref={ref} className="capitalize js:invisible">
+    <h2 ref={ref} className="capitalize">
       <span>
         <span data-days-value>{days}</span>
         &nbsp;

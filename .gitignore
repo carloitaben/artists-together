@@ -4,3 +4,4 @@ node_modules
 *.local
 .local.db
 .env
+.vercel
