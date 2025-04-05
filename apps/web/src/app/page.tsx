@@ -1,6 +1,7 @@
 import { logo } from "~/components/Icons"
 import Icon from "~/components/Icon"
 import Animations from "./components/Animations"
+import Countdown from "./components/Countdown"
 
 function Social() {
   const discordHref = "https://discord.gg/9Ayh9dvhHe"
@@ -67,18 +68,14 @@ export default function Home() {
         <Icon
           label=""
           data-element="logo"
-          className="3xl:max-w-[27.5rem] w-full max-w-[16.25rem] js:opacity-0 sm:max-w-[22vw]"
+          className="w-full max-w-[16.25rem] js:opacity-0 sm:max-w-[22vw] 3xl:max-w-[27.5rem]"
         >
           {logo}
         </Icon>
       </header>
-      <main className="3xl:text-[6.25rem]/[6.25rem] flex flex-1 flex-col justify-end gap-16 overflow-hidden px-3 pb-3 font-serif text-[8.333vw] font-light leading-none xs:text-3xl sm:gap-[4.167vw] sm:pb-[3.25rem] sm:pr-5 sm:text-[5vw]/[5vw]">
+      <main className="flex flex-1 flex-col justify-end gap-16 overflow-hidden px-3 pb-3 font-serif text-[8.333vw] font-light leading-none xs:text-3xl sm:gap-[4.167vw] sm:pb-[3.25rem] sm:pr-5 sm:text-[5vw]/[5vw] 3xl:text-[6.25rem]/[6.25rem]">
         <div className="flex flex-1 items-center justify-center text-center sm:block sm:flex-none sm:text-right">
-          <h2 data-animated-text className="js:invisible">
-            An inclusive community
-            <br />
-            for all kinds of artists.
-          </h2>
+          <Countdown now={Date.now()} />
         </div>
         <Social />
       </main>

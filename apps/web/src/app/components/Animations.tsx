@@ -45,7 +45,7 @@ export default function Animations() {
         throw Error(`Could not generate any words for target ${target}`)
       }
 
-      animate(
+      const animation = animate(
         split.words,
         {
           y: ["50%", "0%"],
@@ -56,9 +56,13 @@ export default function Animations() {
           duration: 0.5,
           ease: [0.68, -0.6, 0.32, 1.6],
           delay: stagger(0.03, { startDelay: (index + 1) / 3 }),
-          onComplete: split.revert,
         },
       )
+
+      animation.then(() => {
+        split.revert()
+        window.dispatchEvent(new CustomEvent("animation:complete"))
+      })
     })
   })
 
