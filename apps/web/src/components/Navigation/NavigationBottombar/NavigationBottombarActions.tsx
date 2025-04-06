@@ -58,7 +58,7 @@ function NavigationBottombarActions(
             >
               <NavigationBottombarMenuItem justify="between" asChild>
                 {"link" in action ? (
-                  <a {...action.link}>
+                  <a {...action.link} draggable={false}>
                     <span className="truncate">{action.label}</span>
                     <Icon src={action.icon} alt="" />
                   </a>

@@ -63,7 +63,7 @@ export default function CalendarHeader() {
             </li>
             <li>
               <Button icon asChild>
-                <Link href={move(-1)}>
+                <Link href={move(-1)} draggable={false}>
                   <Icon
                     src="Arrow"
                     className="-rotate-90"
@@ -74,7 +74,7 @@ export default function CalendarHeader() {
             </li>
             <li>
               <Button icon asChild>
-                <Link href={move(1)}>
+                <Link href={move(1)} draggable={false}>
                   <Icon
                     src="Arrow"
                     className="rotate-90"

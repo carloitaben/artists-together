@@ -64,7 +64,15 @@ function Anchor(
     [href, onClick],
   )
 
-  return <ark.a {...props} ref={ref} href={href} onClick={scroll} />
+  return (
+    <ark.a
+      {...props}
+      ref={ref}
+      href={href}
+      onClick={scroll}
+      draggable={false}
+    />
+  )
 }
 
 export default forwardRef(Anchor)

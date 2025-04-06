@@ -141,7 +141,7 @@ export default function ProfileSectionSocialMedia() {
                   <input
                     name={name}
                     defaultValue={fieldList[index]?.initialValue}
-                    className="block h-10 w-full rounded-4 bg-not-so-white pl-3.5 pr-10 text-gunpla-white-700 caret-gunpla-white-700 transition-shadow placeholder:text-gunpla-white-300"
+                    className="block h-10 w-full rounded-3 bg-not-so-white pl-3.5 pr-10 text-gunpla-white-700 caret-gunpla-white-700 transition-shadow placeholder:text-gunpla-white-300"
                     placeholder="https://example.com/user"
                   />
                   {/* <SocialMediaIcon /> */}

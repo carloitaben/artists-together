@@ -40,6 +40,7 @@ export default function Footer() {
                         <CursorPrecision id={String(index)} asChild>
                           <a
                             href={link.href}
+                            draggable={false}
                             target="_blank"
                             className="hover:underline"
                           >

@@ -18,6 +18,7 @@ export default function NavigationAuthLink({
   return (
     <Link
       {...props}
+      draggable={false}
       prefetch={prefetch}
       onClick={(event) => {
         event.preventDefault()

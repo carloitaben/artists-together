@@ -9,9 +9,9 @@ import NavigationSidebarTooltip from "./NavigationSidebarTooltip"
 
 const className = {
   navLink:
-    "group block size-14 p-1 text-arpeggio-black-800 hover:text-theme-800 aria-[current='page']:text-theme-300 focus-visible:text-theme-800 aria-[current='page']:focus-visible:text-theme-800 focus:outline-none",
+    "group block size-14 p-1 text-theme-700 hover:text-theme-700 aria-[current='page']:text-theme-300 focus-visible:text-theme-700 aria-[current='page']:focus-visible:text-theme-700 focus:outline-none",
   iconWrapper:
-    "grid size-12 place-items-center rounded-2 group-hover:bg-theme-300 group-aria-[current='page']:group-hover:text-theme-800 *:size-6 *:text-current group-focus-visible:bg-theme-300",
+    "grid size-12 place-items-center rounded-2 group-hover:bg-theme-300 group-aria-[current='page']:group-hover:text-theme-700 *:size-6 *:text-current group-focus-visible:bg-theme-300",
 }
 
 export default async function NavigationSidebar() {
@@ -21,7 +21,7 @@ export default async function NavigationSidebar() {
     <nav
       aria-label="Main Navigation"
       role="navigation"
-      className="fixed inset-y-0 left-0 z-20 hidden w-16 place-items-center gap-y-4 bg-arpeggio-black-900/75 px-1 py-2 backdrop-blur-1 sm:grid"
+      className="fixed inset-y-0 left-0 z-20 hidden w-16 place-items-center gap-y-4 px-1 py-2 sm:grid"
     >
       <ul>
         <NavigationSidebarTooltip

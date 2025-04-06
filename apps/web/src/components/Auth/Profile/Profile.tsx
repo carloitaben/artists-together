@@ -3,7 +3,6 @@ import { sections } from "./lib"
 import ProfileBanner from "./ProfileBanner"
 import ProfileLogout from "./ProfileLogout"
 import ProfileSectionAdvancedSettings from "./ProfileSectionAdvancedSettings"
-import ProfileSectionContactSupport from "./ProfileSectionContactSupport"
 import ProfileSectionProfile from "./ProfileSectionProfile"
 import ProfileSectionSocialMedia from "./ProfileSectionSocialMedia"
 import ProfileTab from "./ProfileTab"
@@ -23,7 +22,6 @@ export default function Profile() {
             <ProfileSectionProfile />
             <ProfileSectionSocialMedia />
             <ProfileSectionAdvancedSettings />
-            <ProfileSectionContactSupport />
           </main>
           <footer>
             <ProfileLogout />

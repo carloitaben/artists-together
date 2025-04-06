@@ -42,6 +42,7 @@ export default function CalendarHeaderToggle({ date, mode }: Props) {
         <Link
           className="relative grid place-items-center rounded-full px-5 text-center"
           href={`/calendar/${date.get("year")}/${MonthNumberToName.parse(date.get("month") + 1)}`}
+          draggable={false}
         >
           <SegmentGroup.Context>
             {(context) => (context.value === "month" ? <Indicator /> : null)}
@@ -57,6 +58,7 @@ export default function CalendarHeaderToggle({ date, mode }: Props) {
         <Link
           className="relative grid place-items-center rounded-full px-5 text-center"
           href={`/calendar/${date.get("year")}`}
+          draggable={false}
         >
           <SegmentGroup.Context>
             {(context) => (context.value === "year" ? <Indicator /> : null)}

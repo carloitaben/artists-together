@@ -6,7 +6,7 @@ import type { ComponentRef, ForwardedRef } from "react"
 import { forwardRef } from "react"
 
 const variants = cva({
-  base: "rounded-full pressable",
+  base: "rounded-4 pressable",
   variants: {
     color: {
       theme:

@@ -28,18 +28,6 @@ const settings = [
     label: "24-hour time format",
   },
   {
-    name: "shareStreaming",
-    label: "Share streaming status",
-    // tooltip:
-    //   "We use your approximate location (region) to let other members know your timezone.",
-  },
-  {
-    name: "shareCursor",
-    label: "Share cursor location",
-    // tooltip:
-    //   "We use your approximate location (region) to let other members know your timezone.",
-  },
-  {
     name: "fahrenheit",
     label: "Temperature in Fahrenheit",
   },
@@ -90,13 +78,6 @@ export default function ProfileSectionAdvancedSettings() {
               defaultChecked={fields[setting.name].initialValue === "on"}
             >
               <Switch.Label className="flex items-center gap-x-2 text-sm md:px-3.5">
-                {/* {setting.tooltip ? (
-                  <InlineTooltip tooltip={setting.tooltip}>
-                    <span>{setting.label}</span>
-                  </InlineTooltip>
-                ) : (
-                  <span>{setting.label}</span>
-                )} */}
                 <span>{setting.label}</span>
               </Switch.Label>
               <SwitchControl />

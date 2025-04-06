@@ -78,19 +78,15 @@ export default async function Layout({ children }: PropsWithChildren) {
         inter.variable,
         fraunces.variable,
         "relative min-h-full scroll-p-0 font-inter antialiased",
-        "theme-arpeggio-black bg-arpeggio-black-900 text-gunpla-white-50",
-        "selection:bg-arpeggio-black-300 selection:text-arpeggio-black-900",
+        "theme-outsider-violet bg-arpeggio-black-900 text-gunpla-white-50",
       )}
     >
-      <body className="size-full min-h-full min-w-fit text-sm sm:pl-16">
+      <body className="size-full min-h-full min-w-fit text-sm selection:bg-theme-300 selection:text-theme-900 sm:pl-16">
         <QueryProvider>
           <HydrationBoundary state={dehydrate(queryClient)}>
             <PromiseProvider hints={hints}>
               <PageTransition>
-                <Navigation>
-                  {children}
-                  <Footer />
-                </Navigation>
+                <Navigation>{children}</Navigation>
               </PageTransition>
               <Cursors>
                 <Auth />

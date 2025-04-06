@@ -43,7 +43,7 @@ export default function NavLink({
     : undefined
 
   if (disabled) {
-    return <a {...props} {...aria} />
+    return <a {...props} {...aria} draggable={false} />
   }
 
   return (
@@ -51,6 +51,7 @@ export default function NavLink({
       {...props}
       {...aria}
       href={href}
+      draggable={false}
       prefetch={prefetch}
       onClick={(event) => {
         props.onClick?.(event)

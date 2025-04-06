@@ -4,7 +4,7 @@ export const sections = [
   "profile",
   "social-media",
   "advanced-settings",
-  "contact-support",
+  // "contact-support",
 ] as const
 
 export type Sections = typeof sections
@@ -29,8 +29,8 @@ export const sectionData = {
     label: "Advanced settings",
     icon: "Settings",
   },
-  "contact-support": {
-    label: "Contact support",
-    icon: "ContactSupport",
-  },
+  // "contact-support": {
+  //   label: "Contact support",
+  //   icon: "ContactSupport",
+  // },
 } satisfies Record<Section, SectionData>

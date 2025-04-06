@@ -18,6 +18,14 @@ export default async function Page() {
           <Stars />
         </Suspense>
       )}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 size-full bg-gradient-to-b from-arpeggio-black-900 from-[24%] to-theme-800"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(11, 14, 30, 0) 24%, #2B0049 100%);",
+        }}
+      />
       <header>
         <Container asChild>
           <Grid className="min-h-screen place-items-center py-16">
@@ -60,8 +68,8 @@ export default async function Page() {
             writing, singing, building,
           </Marquee>
           <Grid aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="col-span-1 h-full bg-gradient-to-r from-theme-900 to-transparent" />
-            <div className="col-span-1 col-end-9 h-full bg-gradient-to-l from-theme-900 to-transparent" />
+            <div className="col-span-1 h-full bg-gradient-to-r from-arpeggio-black-900 to-transparent" />
+            <div className="col-span-1 col-end-9 h-full bg-gradient-to-l from-arpeggio-black-900 to-transparent" />
           </Grid>
         </div>
         <Container asChild>
