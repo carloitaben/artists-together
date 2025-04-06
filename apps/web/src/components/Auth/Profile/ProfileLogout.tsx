@@ -27,7 +27,7 @@ export default function ProfileLogout() {
       webSocket.reconnect()
       router.refresh()
       toaster.create({
-        type: "success",
+        type: "neutral",
         title: "Logged out succesfully",
       })
     },

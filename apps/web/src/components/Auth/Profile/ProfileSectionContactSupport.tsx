@@ -27,7 +27,7 @@ export default function ProfileSectionContactSupport() {
     },
     onSuccess() {
       toaster.create({
-        type: "success",
+        type: "neutral",
         title: "Your message has been sent",
       })
     },
