@@ -20,11 +20,7 @@ export default async function Page() {
       )}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 size-full bg-gradient-to-b from-arpeggio-black-900 from-[24%] to-theme-800"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(11, 14, 30, 0) 24%, #2B0049 100%);",
-        }}
+        className="pointer-events-none fixed inset-0 size-full bg-gradient-to-b from-arpeggio-black-900/0 from-[24%] to-theme-800"
       />
       <header>
         <Container asChild>

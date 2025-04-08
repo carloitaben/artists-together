@@ -8,7 +8,7 @@ import { CursorPrecision } from "./Cursors"
 import Icon from "./Icon"
 import Lottie from "./Lottie"
 
-const lottie = () => import("~/assets/lottie/logo-w.json")
+const lottie = () => import("~/assets/lottie/at_logo_25.json")
 
 type Props = Omit<ComponentProps<typeof AspectRatio.Root>, "ratio">
 
@@ -20,7 +20,7 @@ function Logo(
 
   return (
     <CursorPrecision id="logo" asChild>
-      <AspectRatio.Root {...props} ref={ref} ratio={2 / 1}>
+      <AspectRatio.Root {...props} ref={ref} ratio={600 / 324}>
         <AspectRatio.Content>
           <h2 className="sr-only">Artists Together</h2>
           {hints.saveData ? (
