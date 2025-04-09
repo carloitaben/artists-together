@@ -43,9 +43,11 @@ export default function Toasts() {
 
     if (toast === null && error === null) return
 
-    toaster.create({
-      title: toast || error || "Oops! Something went wrong…",
-      type: error ? "error" : "neutral",
+    queueMicrotask(() => {
+      toaster.create({
+        title: toast || error || "Oops! Something went wrong…",
+        type: error ? "error" : "neutral",
+      })
     })
 
     const url = new URL(window.location.href)
