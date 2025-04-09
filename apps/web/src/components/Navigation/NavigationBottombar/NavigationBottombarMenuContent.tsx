@@ -30,7 +30,11 @@ export default function NavigationBottombarMenuContent() {
         <NavigationBottombarMenuContentItem asChild>
           <NavigationAuthLink>
             {user.data ? (
-              <Avatar username={user.data.username} src={user.data.avatar} />
+              <Avatar
+                className="size-6"
+                username={user.data.username}
+                src={user.data.avatar}
+              />
             ) : (
               <Icon src="Face" alt="Log-in" />
             )}
