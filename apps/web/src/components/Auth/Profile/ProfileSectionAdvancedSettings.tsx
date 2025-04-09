@@ -1,28 +1,25 @@
 "use client"
 
 import { Switch } from "@ark-ui/react/switch"
-import { UserSettings } from "@artists-together/core/database"
 import { getFormProps, getInputProps } from "@conform-to/react"
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import SwitchControl from "~/components/SwitchControl"
 import { updateProfileSettings } from "~/features/auth/actions"
 import { userQueryOptions } from "~/features/auth/shared"
 import { useFormMutation } from "~/lib/mutations"
+import { useSettings } from "~/lib/promises"
+import { Settings, SettingsUpdate } from "~/lib/schemas"
 import DialogTitle from "../DialogTitle"
 import { sectionData } from "./lib"
 import ProfileDialogContainer from "./ProfileDialogContainer"
 
 type Setting = {
-  name: keyof UserSettings
+  name: keyof Settings
   label: string
   tooltip?: string
 }
 
-const settings = [
+const inputs = [
   {
     name: "fullHourFormat",
     label: "24-hour time format",
@@ -36,7 +33,7 @@ const settings = [
 export default function ProfileSectionAdvancedSettings() {
   const section = sectionData["advanced-settings"]
 
-  const user = useSuspenseQuery(userQueryOptions)
+  const settings = useSettings()
   const queryClient = useQueryClient()
   const mutation = useMutation({
     async mutationFn(formData: FormData) {
@@ -51,10 +48,10 @@ export default function ProfileSectionAdvancedSettings() {
 
   const [form, fields] = useFormMutation({
     mutation,
-    schema: UserSettings,
+    schema: SettingsUpdate,
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
-    defaultValue: user.data?.settings,
+    defaultValue: settings,
   })
 
   return (
@@ -70,15 +67,15 @@ export default function ProfileSectionAdvancedSettings() {
           event.currentTarget.requestSubmit()
         }}
       >
-        {settings.map((setting) => (
-          <div key={setting.name}>
+        {inputs.map((input) => (
+          <div key={input.name}>
             <Switch.Root
-              {...getInputProps(fields[setting.name], { type: "checkbox" })}
+              {...getInputProps(fields[input.name], { type: "checkbox" })}
               className="flex items-center justify-between"
-              defaultChecked={fields[setting.name].initialValue === "on"}
+              defaultChecked={fields[input.name].initialValue === "on"}
             >
               <Switch.Label className="flex items-center gap-x-2 text-sm md:px-3.5">
-                <span>{setting.label}</span>
+                <span>{input.label}</span>
               </Switch.Label>
               <SwitchControl />
               <Switch.HiddenInput />

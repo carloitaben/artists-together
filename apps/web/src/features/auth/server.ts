@@ -26,14 +26,8 @@ export const cookieOauthOptions = cookieOptions({
   name: "oauth",
   schema: v.object({
     ...AuthFormSchema.entries,
+    geolocation: Geolocation,
     state: v.string(),
-    hints: v.optional(
-      v.object({
-        geolocation: Geolocation,
-        fahrenheit: v.boolean(),
-        fullHourFormat: v.boolean(),
-      }),
-    ),
   }),
   secure: process.env.NODE_ENV === "production",
   httpOnly: true,

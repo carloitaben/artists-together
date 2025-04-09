@@ -1,4 +1,5 @@
 import "~/styles/index.css"
+import { getCookie } from "@standard-cookie/next"
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import { cx } from "cva"
 import type { Metadata, Viewport } from "next"
@@ -7,13 +8,13 @@ import type { PropsWithChildren } from "react"
 import { lazy } from "react"
 import Auth from "~/components/Auth"
 import Cursors from "~/components/Cursors"
-import Footer from "~/components/Footer"
 import Html from "~/components/Html"
 import Navigation from "~/components/Navigation"
 import PageTransition from "~/components/PageTransition"
 import Toasts from "~/components/Toasts"
 import { userQueryOptions } from "~/features/auth/shared"
 import { getHints } from "~/features/hints/server"
+import { cookieSettingsOptions } from "~/features/hints/shared"
 import { QueryProvider } from "~/features/query/client"
 import { getQueryClient } from "~/features/query/shared"
 import { WEB_URL } from "~/lib/constants"
@@ -68,6 +69,7 @@ export const metadata: Metadata = {
 
 export default async function Layout({ children }: PropsWithChildren) {
   const hints = getHints()
+  const settings = await getCookie(cookieSettingsOptions)
   const queryClient = getQueryClient()
   await queryClient.prefetchQuery(userQueryOptions)
 
@@ -84,7 +86,7 @@ export default async function Layout({ children }: PropsWithChildren) {
       <body className="size-full min-h-full min-w-fit text-sm selection:bg-theme-300 selection:text-theme-900 sm:pl-16">
         <QueryProvider>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <PromiseProvider hints={hints}>
+            <PromiseProvider hints={hints} settings={settings}>
               <PageTransition>
                 <Navigation>{children}</Navigation>
               </PageTransition>

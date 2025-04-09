@@ -43,15 +43,6 @@ export const UserLinks = v.pipe(
 
 export type UserLinks = v.InferOutput<typeof UserLinks>
 
-export const UserSettings = v.object({
-  fullHourFormat: v.optional(v.boolean(), false),
-  shareStreaming: v.optional(v.boolean(), false),
-  shareCursor: v.optional(v.boolean(), false),
-  fahrenheit: v.optional(v.boolean(), false),
-})
-
-export type UserSettings = v.InferOutput<typeof UserSettings>
-
 export const userTable = sqliteTable(
   "user",
   {
@@ -69,7 +60,6 @@ export const userTable = sqliteTable(
     twitchId: text().unique(),
     twitchUsername: text().unique(),
     twitchMetadata: text({ mode: "json" }).$type<TwitchMetadata>(),
-    settings: text({ mode: "json" }).$type<UserSettings>(),
   },
   (table) => [
     index("username_idx").on(table.username),

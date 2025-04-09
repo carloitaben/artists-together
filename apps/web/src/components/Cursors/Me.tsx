@@ -8,15 +8,17 @@ import { throttle } from "radashi"
 import { useEffect, useState } from "react"
 import { userQueryOptions } from "~/features/auth/shared"
 import { useScreen } from "~/lib/media"
+import { useSettings } from "~/lib/promises"
 import { sendWebSocketMessage, webSocketQueryOptions } from "~/lib/websocket"
 import Cursor from "./Cursor"
-import { ATTR_NAME_DATA_CURSOR_PRECISION, measure,SCOPE_ROOT } from "./lib"
+import { ATTR_NAME_DATA_CURSOR_PRECISION, measure, SCOPE_ROOT } from "./lib"
 
 const limit = clamp.bind(null, 0, 1)
 
 export default function Me() {
   const [state, setState] = useState<CursorState>()
   const sm = useScreen("sm")
+  const settings = useSettings()
   const hasCursor = useScreen("cursor")
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -68,7 +70,7 @@ export default function Me() {
       (event: MouseEvent, state?: CursorState) => {
         if (!canSend) return
 
-        if (!user.data?.settings?.shareCursor) {
+        if (!settings.shareCursor) {
           updates = [[0, null]]
           return notify()
         }
@@ -160,16 +162,7 @@ export default function Me() {
       window.removeEventListener("mousedown", onMouseDown)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [
-    alone.data,
-    canSend,
-    hasCursor,
-    scale,
-    state,
-    user.data?.settings?.shareCursor,
-    x,
-    y,
-  ])
+  }, [alone.data, canSend, hasCursor, scale, settings.shareCursor, state, x, y])
 
   return (
     <AnimatePresence initial={false}>

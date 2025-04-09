@@ -1,12 +1,7 @@
 "use server"
 
 import { invalidateSession } from "@artists-together/core/auth"
-import {
-  database,
-  eq,
-  UserSettings,
-  userTable,
-} from "@artists-together/core/database"
+import { database, eq, userTable } from "@artists-together/core/database"
 import { unreachable } from "@artists-together/core/utils"
 import { deleteCookie, getCookie, setCookie } from "@standard-cookie/next"
 import { generateState } from "arctic"
@@ -22,9 +17,11 @@ import { getHints } from "~/features/hints/server"
 import {
   AuthConnectionFormSchema,
   AuthFormSchema,
+  SettingsUpdate,
   UpdateProfileFormSchema,
 } from "~/lib/schemas"
 import { createFormAction } from "~/lib/server"
+import { cookieSettingsOptions, defaultCookieSettings } from "../hints/shared"
 
 export async function authenticate() {
   return getUser()
@@ -48,12 +45,8 @@ export const login = createFormAction(AuthFormSchema, async (context) => {
 
   await setCookie(cookieOauthOptions, {
     pathname: context.form.value.pathname,
+    geolocation: hints.geolocation,
     state,
-    hints: {
-      fahrenheit: hints.temperatureUnit === "fahrenheit",
-      fullHourFormat: hints.hourFormat === "24",
-      geolocation: hints.geolocation,
-    },
   })
 
   redirect(url.href)
@@ -69,7 +62,7 @@ export const logout = createFormAction(AuthFormSchema, async () => {
 })
 
 export const updateProfileSettings = createFormAction(
-  UserSettings,
+  SettingsUpdate,
   async (context) => {
     const auth = await getAuth()
 
@@ -81,12 +74,14 @@ export const updateProfileSettings = createFormAction(
       }
     }
 
-    await database
-      .update(userTable)
-      .set({
-        settings: context.form.value,
-      })
-      .where(eq(userTable.id, auth.user.id))
+    const current =
+      (await getCookie(cookieSettingsOptions)) || defaultCookieSettings
+
+    await setCookie(cookieSettingsOptions, {
+      ...current,
+      fahrenheit: Boolean(context.form.value.fahrenheit),
+      fullHourFormat: Boolean(context.form.value.fullHourFormat),
+    })
   },
 )
 
@@ -127,6 +122,7 @@ export const connect = createFormAction(
 
     await setCookie(cookieOauthOptions, {
       pathname: context.form.value.pathname,
+      geolocation: null,
       state,
     })
 

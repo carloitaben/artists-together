@@ -1,17 +1,15 @@
 "use client"
 
-import { useSuspenseQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
 import type { SpringOptions } from "motion/react"
-import { motion,useSpring } from "motion/react"
+import { motion, useSpring } from "motion/react"
 import { use, useEffect, useMemo, useState } from "react"
 import { clientOnly } from "~/components/ClientOnly"
-import { userQueryOptions } from "~/features/auth/shared"
 import type { getRandomLocationWithWeather } from "~/features/locations/server"
-import { useHints } from "~/lib/promises"
+import { useSettings } from "~/lib/promises"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -41,8 +39,7 @@ type Props = {
 
 export default function WidgetClockContent({ promise }: Props) {
   clientOnly()
-  const hints = useHints()
-  const user = useSuspenseQuery(userQueryOptions)
+  const settings = useSettings()
   const data = use(promise)
   const now = useMemo(
     () => dayjs().tz(data.location.timezone),
@@ -79,13 +76,7 @@ export default function WidgetClockContent({ promise }: Props) {
     return () => clearInterval(interval)
   }, [now, hours, minutes, seconds, data.location.timezone])
 
-  const hourFormat = user.data?.settings
-    ? user.data.settings.fullHourFormat
-      ? "HH"
-      : "hh"
-    : hints.hourFormat === "24"
-      ? "HH"
-      : "hh"
+  const hourFormat = settings.fullHourFormat ? "HH" : "hh"
 
   return (
     <>

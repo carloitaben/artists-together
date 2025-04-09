@@ -113,12 +113,6 @@ export async function GET(request: NextRequest) {
         discordId: discordUser.id,
         discordUsername: discordUser.username,
         discordMetadata: discordUser,
-        settings: {
-          fahrenheit: Boolean(cookieOauth.hints?.fahrenheit),
-          fullHourFormat: Boolean(cookieOauth.hints?.fullHourFormat),
-          shareCursor: true,
-          shareStreaming: true,
-        },
       })
       .onConflictDoUpdate({
         target: userTable.email,
@@ -150,10 +144,10 @@ export async function GET(request: NextRequest) {
     }
 
     after(async () => {
-      if (cookieOauth.hints?.geolocation) {
+      if (cookieOauth?.geolocation) {
         await database
           .insert(locationTable)
-          .values(cookieOauth.hints.geolocation)
+          .values(cookieOauth.geolocation)
           .onConflictDoNothing({
             target: locationTable.city,
           })

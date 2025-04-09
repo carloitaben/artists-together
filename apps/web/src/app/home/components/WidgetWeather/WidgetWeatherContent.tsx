@@ -1,11 +1,9 @@
 "use client"
 
-import { useSuspenseQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import { use } from "react"
-import { userQueryOptions } from "~/features/auth/shared"
 import type { getRandomLocationWithWeather } from "~/features/locations/server"
-import { useHints } from "~/lib/promises"
+import { useSettings } from "~/lib/promises"
 
 type Props = {
   promise: ReturnType<typeof getRandomLocationWithWeather>
@@ -17,13 +15,9 @@ function celsiusToFahrenheit(celsius: number) {
 
 export default function WidgetWeatherContent({ promise }: Props) {
   const data = use(promise)
-  const user = useSuspenseQuery(userQueryOptions)
-  const hints = useHints()
+  const settings = useSettings()
 
-  const unit =
-    user.data?.settings?.fahrenheit || hints.temperatureUnit === "fahrenheit"
-      ? "F"
-      : "C"
+  const unit = settings.fahrenheit ? "F" : "C"
 
   function formatTemp(celsius: number) {
     return Math.round(unit === "C" ? celsius : celsiusToFahrenheit(celsius))

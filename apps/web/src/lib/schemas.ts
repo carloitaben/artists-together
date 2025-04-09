@@ -1,6 +1,5 @@
 import {
   TwitchMetadata,
-  UserSettings,
   UserTableInsert,
 } from "@artists-together/core/database"
 import * as v from "valibot"
@@ -26,6 +25,17 @@ export const Geolocation = v.nullable(
 )
 
 export type Geolocation = v.InferOutput<typeof Geolocation>
+
+export const Settings = v.object({
+  fullHourFormat: v.boolean(),
+  shareStreaming: v.boolean(),
+  shareCursor: v.boolean(),
+  fahrenheit: v.boolean(),
+})
+
+export type Settings = v.InferOutput<typeof Settings>
+
+export const SettingsUpdate = v.partial(Settings)
 
 export const MonthNameList = v.picklist([
   "january",
@@ -112,5 +122,4 @@ export const ContactSupportFormSchema = v.object({
 export const UpdateProfileFormSchema = v.object({
   bio: v.optional(UserTableInsert.entries.bio),
   links: v.optional(UserTableInsert.entries.links),
-  settings: v.optional(UserSettings),
 })
