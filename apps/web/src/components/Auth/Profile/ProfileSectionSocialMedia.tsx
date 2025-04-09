@@ -15,6 +15,7 @@ import type { Variants } from "motion/react"
 import { AnimatePresence, motion } from "motion/react"
 import { useMemo } from "react"
 import Icon from "~/components/Icon"
+import { toaster } from "~/components/Toasts"
 import { updateProfile } from "~/features/auth/actions"
 import { userQueryOptions } from "~/features/auth/shared"
 import type { IconName } from "~/lib/icons"
@@ -79,6 +80,11 @@ export default function ProfileSectionSocialMedia() {
       return updateProfile(formData)
     },
     onSuccess() {
+      toaster.create({
+        type: "neutral",
+        title: "Updated profile!",
+      })
+
       queryClient.invalidateQueries({
         queryKey: userQueryOptions.queryKey,
       })

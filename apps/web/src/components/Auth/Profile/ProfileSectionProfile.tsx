@@ -11,6 +11,7 @@ import Image from "next/image"
 import AspectRatio from "~/components/AspectRatio"
 import FieldLength from "~/components/FieldLength"
 import Icon from "~/components/Icon"
+import { toaster } from "~/components/Toasts"
 import { updateProfile } from "~/features/auth/actions"
 import { userQueryOptions } from "~/features/auth/shared"
 import { useFormMutation } from "~/lib/mutations"
@@ -28,6 +29,11 @@ export default function ProfileSectionProfile() {
       return updateProfile(formData)
     },
     onSuccess() {
+      toaster.create({
+        type: "neutral",
+        title: "Updated profile!",
+      })
+
       queryClient.invalidateQueries({
         queryKey: userQueryOptions.queryKey,
       })
