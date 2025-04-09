@@ -3,25 +3,16 @@ import Container from "~/components/Container"
 import Grid from "~/components/Grid"
 import Logo from "~/components/Logo"
 import Marquee from "~/components/Marquee"
-import { getHints } from "~/features/hints/server"
 import TextAnimation from "./components/TextAnimation"
 
 const Stars = lazy(() => import("./components/Stars"))
 
 export default async function Page() {
-  const hints = await getHints()
-
   return (
     <>
-      {hints.saveData ? null : (
-        <Suspense>
-          <Stars />
-        </Suspense>
-      )}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 size-full bg-gradient-to-b from-arpeggio-black-900/0 from-[24%] to-theme-800"
-      />
+      <Suspense>
+        <Stars />
+      </Suspense>
       <header>
         <Container asChild>
           <Grid className="min-h-screen place-items-center py-16">
@@ -99,6 +90,10 @@ export default async function Page() {
           </TextAnimation>
         </Container>
       </main>
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 size-full bg-gradient-to-b from-arpeggio-black-900/0 from-[24%] to-theme-800 mix-blend-lighten"
+      />
     </>
   )
 }
