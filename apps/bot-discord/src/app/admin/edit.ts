@@ -8,7 +8,7 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js"
-import { CHANNELS } from "@artists-together/core/discord"
+import { CHANNEL } from "@artists-together/core/discord"
 import { registerContextMenuCommand, registerEventHandler } from "~/lib/core"
 import { template } from "~/lib/messages"
 import { getTextBasedChannel, parseMentions } from "~/lib/utils"
@@ -84,7 +84,7 @@ registerContextMenuCommand(builder, async (interaction) => {
   const hasMessage = !!interaction.targetMessage.content
 
   const isErrorMessage =
-    interaction.targetMessage.channelId === CHANNELS.BOT_SHENANIGANS
+    interaction.targetMessage.channelId === CHANNEL.BOT_SHENANIGANS
 
   if ((!hasEmbed && !hasMessage) || isErrorMessage) {
     return interaction.reply({

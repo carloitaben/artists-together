@@ -7,7 +7,7 @@ import {
   ComponentType,
   TextChannel,
 } from "discord.js"
-import { CHANNELS } from "@artists-together/core/discord"
+import { CHANNEL } from "@artists-together/core/discord"
 import { template } from "~/lib/messages"
 import { getTextBasedChannel } from "~/lib/utils"
 
@@ -36,11 +36,11 @@ async function deleteAllMessages(channel: TextChannel) {
 }
 
 export default async function handleExtinguishSubcommand(
-  interaction: ChatInputCommandInteraction,
+  interaction: ChatInputCommandInteraction
 ) {
   const channel = await getTextBasedChannel(
     interaction.client,
-    CHANNELS.ART_EMERGENCIES
+    CHANNEL.ART_EMERGENCIES
   )
 
   if (channel.type !== ChannelType.GuildText) {
@@ -55,7 +55,7 @@ export default async function handleExtinguishSubcommand(
     components: [
       new ActionRowBuilder<ButtonBuilder>().addComponents(
         deleteButton,
-        cancelButton,
+        cancelButton
       ),
     ],
   })
@@ -84,7 +84,7 @@ export default async function handleExtinguishSubcommand(
           console.error(error)
           return confirmation.editReply({
             content: template.oops(
-              "There was an error while deleting messages.",
+              "There was an error while deleting messages."
             ),
             components: [],
           })

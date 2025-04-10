@@ -4,15 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run --watch src/index.ts",
-    "seed": "bun run src/scripts/seed.ts",
-    "sync": "bun run src/scripts/sync.ts",
+    "dev": "NODE_ENV=development bun run --watch src/index.ts",
+    "seed": "NODE_ENV=development bun run src/scripts/seed.ts",
+    "sync": "NODE_ENV=development bun run src/scripts/sync.ts",
     "start": "bun run src/scripts/sync.ts && bun run src/index.ts"
   },
   "dependencies": {
     "@artists-together/core": "workspace:*",
     "dayjs": "^1.11.10",
-    "discord.js": "^14.15.2",
+    "discord.js": "14.15.2",
     "node-cron": "^3.0.3"
   },
   "devDependencies": {

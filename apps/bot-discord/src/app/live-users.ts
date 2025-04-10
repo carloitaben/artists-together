@@ -1,5 +1,5 @@
-import { connect, eq, liveUsers } from "@artists-together/db"
-import { ROLES } from "@artists-together/core/discord"
+import { database, eq, liveUserTable } from "@artists-together/core/database"
+import { ROLE } from "@artists-together/core/discord"
 import { Activity, ActivityType, Presence } from "discord.js"
 import { registerEventHandler } from "~/lib/core"
 import { getGuild } from "~/lib/utils"
@@ -23,14 +23,13 @@ function getValidStreamActivity(presence: Presence | null) {
 }
 
 registerEventHandler("ready", async (client) => {
-  const db = connect()
   const guild = await getGuild(client)
 
   guild.members.cache.forEach((member) => {
     if (member.user.bot) return
 
-    const hasArtistRole = member.roles.cache.has(ROLES.ARTIST)
-    const hasLiveRole = member.roles.cache.has(ROLES.LIVE_NOW)
+    const hasArtistRole = member.roles.cache.has(ROLE.ARTIST)
+    const hasLiveRole = member.roles.cache.has(ROLE.LIVE_NOW)
     const streamingActivity = getValidStreamActivity(member.presence)
 
     if (!hasArtistRole && hasLiveRole) {
@@ -40,8 +39,10 @@ registerEventHandler("ready", async (client) => {
       )
 
       return Promise.all([
-        member.roles.remove(ROLES.LIVE_NOW),
-        db.delete(liveUsers).where(eq(liveUsers.discordId, member.user.id)),
+        member.roles.remove(ROLE.LIVE_NOW),
+        database
+          .delete(liveUserTable)
+          .where(eq(liveUserTable.discordId, member.user.id)),
       ])
     }
 
@@ -52,8 +53,10 @@ registerEventHandler("ready", async (client) => {
       )
 
       return Promise.all([
-        member.roles.remove(ROLES.LIVE_NOW),
-        db.delete(liveUsers).where(eq(liveUsers.discordId, member.user.id)),
+        member.roles.remove(ROLE.LIVE_NOW),
+        database
+          .delete(liveUserTable)
+          .where(eq(liveUserTable.discordId, member.user.id)),
       ])
     }
 
@@ -64,15 +67,15 @@ registerEventHandler("ready", async (client) => {
       )
 
       return Promise.all([
-        member.roles.add(ROLES.LIVE_NOW),
-        db
-          .insert(liveUsers)
+        member.roles.add(ROLE.LIVE_NOW),
+        database
+          .insert(liveUserTable)
           .values({
             url: streamingActivity.url,
             discordId: member.user.id,
           })
           .onConflictDoUpdate({
-            target: liveUsers.discordId,
+            target: liveUserTable.discordId,
             set: { url: streamingActivity.url },
           }),
       ])
@@ -86,9 +89,8 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence.user) return
   if (newPresence.user.bot) return
 
-  const hasArtistRole = newPresence.member.roles.cache.has(ROLES.ARTIST)
-
-  const hasLiveNowRole = newPresence.member.roles.cache.has(ROLES.LIVE_NOW)
+  const hasArtistRole = newPresence.member.roles.cache.has(ROLE.ARTIST)
+  const hasLiveNowRole = newPresence.member.roles.cache.has(ROLE.LIVE_NOW)
 
   if (!hasArtistRole) return
 
@@ -112,10 +114,10 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
       newStream.url
     )
 
-    return db
-      .update(liveUsers)
+    return database
+      .update(liveUserTable)
       .set({ url: newStream.url })
-      .where(eq(liveUsers.discordId, newPresence.member.user.id))
+      .where(eq(liveUserTable.discordId, newPresence.member.user.id))
   }
 
   if (hasLiveNowRole) {
@@ -125,10 +127,10 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
     )
 
     return Promise.all([
-      newPresence.member.roles.remove(ROLES.LIVE_NOW),
-      db
-        .delete(liveUsers)
-        .where(eq(liveUsers.discordId, newPresence.member.user.id)),
+      newPresence.member.roles.remove(ROLE.LIVE_NOW),
+      database
+        .delete(liveUserTable)
+        .where(eq(liveUserTable.discordId, newPresence.member.user.id)),
     ])
   }
 })

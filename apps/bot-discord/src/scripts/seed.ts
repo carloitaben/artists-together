@@ -12,7 +12,7 @@ import {
   getGuild,
   getPublicFile,
 } from "~/lib/utils"
-import { CHANNELS, ROLES } from "@artists-together/core/discord"
+import { CHANNEL, ROLE } from "@artists-together/core/discord"
 
 const bot = new Client({
   intents: [
@@ -25,8 +25,8 @@ const bot = new Client({
 
 async function bootstrapRulesChannel(client: Client) {
   const [rulesChannel, introductionsChannel] = await Promise.all([
-    getTextBasedChannel(client, CHANNELS.RULES_N_FAQ),
-    getChannel(client, CHANNELS.INTRODUCTIONS),
+    getTextBasedChannel(client, CHANNEL.RULES_N_FAQ),
+    getChannel(client, CHANNEL.INTRODUCTIONS),
   ])
 
   await rulesChannel.send({
@@ -127,7 +127,7 @@ async function bootstrapRulesChannel(client: Client) {
 
 async function bootstrapAboutChannel(client: Client) {
   const guild = await getGuild(client)
-  const channel = await getTextBasedChannel(client, CHANNELS.ABOUT)
+  const channel = await getTextBasedChannel(client, CHANNEL.ABOUT)
 
   await channel.send({
     files: [
@@ -252,12 +252,12 @@ async function bootstrapAboutChannel(client: Client) {
 
   const [roleAdmin, roleModerator, roleArtist, roleFriend, roleGuest, rolePal] =
     await Promise.all([
-      getRole(guild.roles, ROLES.ADMIN),
-      getRole(guild.roles, ROLES.MODERATOR),
-      getRole(guild.roles, ROLES.ARTIST),
-      getRole(guild.roles, ROLES.FRIEND),
-      getRole(guild.roles, ROLES.GUEST),
-      getRole(guild.roles, ROLES.PAL),
+      getRole(guild.roles, ROLE.ADMIN),
+      getRole(guild.roles, ROLE.MODERATOR),
+      getRole(guild.roles, ROLE.ARTIST),
+      getRole(guild.roles, ROLE.FRIEND),
+      getRole(guild.roles, ROLE.GUEST),
+      getRole(guild.roles, ROLE.PAL),
     ])
 
   await channel.send({

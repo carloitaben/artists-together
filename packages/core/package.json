@@ -25,6 +25,7 @@
     "drizzle-orm": "^0.38.3",
     "drizzle-seed": "^0.3.0",
     "drizzle-valibot": "^0.3.0",
+    "fetch-retry": "^6.0.0",
     "valibot": "^1.0.0"
   },
   "devDependencies": {

@@ -7,7 +7,7 @@ import type {
 } from "discord.js"
 import { validate, schedule } from "node-cron"
 import { readFileSync } from "node:fs"
-import { ROLES } from "@artists-together/core/discord"
+import { ROLE } from "@artists-together/core/discord"
 
 export function cron(...args: Parameters<typeof schedule>) {
   validate(args[0])
@@ -94,7 +94,7 @@ export async function parseMentions(manager: RoleManager, text: string) {
   if (!text.includes("@")) return text
 
   const roles = await Promise.all(
-    Object.entries(ROLES).map(async ([name, id]) => {
+    Object.entries(ROLE).map(async ([name, id]) => {
       const role = await getRole(manager, id)
       return [`@${name}`, role] as const
     })

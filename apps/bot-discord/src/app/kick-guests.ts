@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
-import { ROLES } from "@artists-together/core/discord"
+import { ROLE } from "@artists-together/core/discord"
 import { registerEventHandler } from "~/lib/core"
 import { cron, getGuild } from "~/lib/utils"
 
@@ -14,9 +14,9 @@ registerEventHandler("ready", (client) => {
     console.log("[kick-guests] members size", members.size)
 
     members.forEach(async (member) => {
-      if (!member.roles.cache.has(ROLES.GUEST)) return
-      if (member.roles.cache.has(ROLES.FRIEND)) return
-      if (member.roles.cache.has(ROLES.ARTIST)) return
+      if (!member.roles.cache.has(ROLE.GUEST)) return
+      if (member.roles.cache.has(ROLE.FRIEND)) return
+      if (member.roles.cache.has(ROLE.ARTIST)) return
 
       const joinedAt = dayjs(member.joinedAt)
       const aMonthAgo = dayjs().add(-1, "month")
