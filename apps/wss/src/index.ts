@@ -76,7 +76,7 @@ const server = Bun.serve<WebSocketData, {}>({
     const upgraded = server.upgrade<WebSocketData>(request, {
       data: {
         auth,
-        uuid: auth?.user.username || crypto.randomUUID(),
+        uuid: auth?.user.username || Math.random().toString(),
         cursor: null,
       },
     })

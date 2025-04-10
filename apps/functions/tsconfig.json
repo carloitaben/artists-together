@@ -1,5 +1,5 @@
 {
-  "extends": "@artists-together/ts/base.json",
+  "extends": "@artists-together/config/typescript/base.json",
   "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "types": ["bun-types"],
