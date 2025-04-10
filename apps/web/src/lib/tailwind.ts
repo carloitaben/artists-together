@@ -93,17 +93,19 @@ export const pluginSubgrid = plugin(({ addComponents, theme }) => {
 
 export const themeableColorRegex = /(?:rgb\()(\d+,)\s*(\d+,)\s*(\d+)(?:\))/
 
+const ThemeableColorShade = v.pipe(v.string(), v.regex(themeableColorRegex))
+
 const ThemeableColorConfig = v.object({
-  50: v.pipe(v.string(), v.regex(themeableColorRegex)),
-  100: v.pipe(v.string(), v.regex(themeableColorRegex)),
-  200: v.pipe(v.string(), v.regex(themeableColorRegex)),
-  300: v.pipe(v.string(), v.regex(themeableColorRegex)),
-  400: v.pipe(v.string(), v.regex(themeableColorRegex)),
-  500: v.pipe(v.string(), v.regex(themeableColorRegex)),
-  600: v.pipe(v.string(), v.regex(themeableColorRegex)),
-  700: v.pipe(v.string(), v.regex(themeableColorRegex)),
-  800: v.pipe(v.string(), v.regex(themeableColorRegex)),
-  900: v.pipe(v.string(), v.regex(themeableColorRegex)),
+  50: ThemeableColorShade,
+  100: ThemeableColorShade,
+  200: ThemeableColorShade,
+  300: ThemeableColorShade,
+  400: ThemeableColorShade,
+  500: ThemeableColorShade,
+  600: ThemeableColorShade,
+  700: ThemeableColorShade,
+  800: ThemeableColorShade,
+  900: ThemeableColorShade,
 })
 
 /**

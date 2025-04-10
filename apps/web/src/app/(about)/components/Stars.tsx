@@ -4,14 +4,43 @@ import { Canvas, useFrame } from "@react-three/fiber"
 import { motion, useScroll, useSpring } from "motion/react"
 import { useEffect, useRef, useState } from "react"
 import type { InstancedMesh } from "three"
-import { Color,Matrix4, Object3D, Vector3 } from "three"
+import { Color, Matrix4, Object3D, Vector3 } from "three"
 import { useMediaQuery } from "~/lib/media"
+import { themeableColorRegex } from "~/lib/tailwind"
+import { colors } from "../../../../tailwind.config"
 
 const COUNT = 500
 const XY_BOUNDS = 40
-const Z_BOUNDS = 100
+const Z_BOUNDS = 125
 const MAX_SPEED_FACTOR = 2
 const MAX_SCALE_FACTOR = 50
+
+function parseColor(color: string) {
+  const match = color.match(themeableColorRegex)
+
+  if (!match) {
+    throw Error(`Invalid color "${color}"`)
+  }
+
+  const [, r, g, b] = match
+
+  return [
+    parseInt(String(r)) / 255,
+    parseInt(String(g)) / 255,
+    parseInt(String(b)) / 255,
+  ] as const
+}
+
+const COLORS = [
+  parseColor(colors["arpeggio-black"][50]),
+  parseColor(colors["outsider-violet"][50]),
+  parseColor(colors["ruler-cyan"][50]),
+]
+
+const temp = new Matrix4()
+const tempPos = new Vector3()
+const tempObject = new Object3D()
+const tempColor = new Color()
 
 function Scene() {
   const ref = useRef<InstancedMesh>(null)
@@ -22,19 +51,18 @@ function Scene() {
 
     const t = new Object3D()
     let j = 0
+    let rnd = 0
     for (let i = 0; i < COUNT * 3; i += 3) {
       t.position.x = (Math.random() - 0.5) * XY_BOUNDS
       t.position.y = (Math.random() - 0.5) * XY_BOUNDS
       t.position.z = (Math.random() - 0.5) * Z_BOUNDS
       t.updateMatrix()
+      tempColor.setRGB(...COLORS[rnd]!)
+      rnd = ++rnd % COLORS.length
       ref.current.setMatrixAt(j++, t.matrix)
+      ref.current.setColorAt(j, tempColor)
     }
   }, [])
-
-  const temp = new Matrix4()
-  const tempPos = new Vector3()
-  const tempObject = new Object3D()
-  const tempColor = new Color()
 
   const { scrollYProgress } = useScroll()
   const y = useSpring(scrollYProgress, {
@@ -68,17 +96,6 @@ function Scene() {
       // apply transforms
       tempObject.updateMatrix()
       ref.current.setMatrixAt(i, tempObject.matrix)
-
-      // update and apply color
-      if (tempPos.z > 0) {
-        tempColor.r = tempColor.g = tempColor.b = 1
-      } else {
-        tempColor.r =
-          tempColor.g =
-          tempColor.b =
-            1 - tempPos.z / (-Z_BOUNDS / 2)
-      }
-      ref.current.setColorAt(i, tempColor)
     }
 
     ref.current.instanceMatrix.needsUpdate = true
