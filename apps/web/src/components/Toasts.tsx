@@ -16,7 +16,7 @@ export const toaster = createToaster({
 const variants = cva({
   base: [
     "z-[--z-index] translate-y-[--y] opacity-[--opacity]",
-    "pl-6 flex items-center justify-center whitespace-nowrap rounded-4 test-sm shadow-button transition-all",
+    "pl-6 flex items-center justify-center whitespace-nowrap rounded-4 test-sm shadow-button transition-all duration-[400ms]",
   ],
   variants: {
     type: {

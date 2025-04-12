@@ -81,8 +81,8 @@ export default function ProfileSectionSocialMedia() {
     },
     onSuccess() {
       toaster.create({
-        type: "neutral",
-        title: "Updated profile!",
+        type: "success",
+        title: "Change saved",
       })
 
       queryClient.invalidateQueries({

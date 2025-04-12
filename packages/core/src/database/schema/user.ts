@@ -36,8 +36,21 @@ export const TwitchMetadata = v.looseObject({
 
 export type TwitchMetadata = v.InferOutput<typeof TwitchMetadata>
 
+const linkWithoutProtocolRegex =
+  /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi
+
 export const UserLinks = v.pipe(
-  v.array(v.optional(v.pipe(v.string(), v.url()))),
+  v.array(
+    v.optional(
+      v.pipe(
+        v.string(),
+        v.check(
+          (string) => linkWithoutProtocolRegex.test(string),
+          "Invalid URL",
+        ),
+      ),
+    ),
+  ),
   v.maxLength(5),
 )
 

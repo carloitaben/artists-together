@@ -32,9 +32,9 @@ function parseColor(color: string) {
 }
 
 const COLORS = [
-  parseColor(colors["arpeggio-black"][50]),
-  parseColor(colors["outsider-violet"][50]),
-  parseColor(colors["ruler-cyan"][50]),
+  parseColor(colors["arpeggio-black"][500]),
+  parseColor(colors["smiley-yellow"][200]),
+  parseColor(colors["microscopic-green"][300]),
 ]
 
 const temp = new Matrix4()

@@ -13,7 +13,7 @@ export default async function Page() {
       <Suspense>
         <Stars />
       </Suspense>
-      <header>
+      <header className="text-outsider-violet-50">
         <Container asChild>
           <Grid className="min-h-screen place-items-center py-16">
             <div className="col-span-2 col-start-2 w-full max-w-[37.5rem] sm:col-span-4 sm:col-start-3">
@@ -22,14 +22,14 @@ export default async function Page() {
           </Grid>
         </Container>
       </header>
-      <main className="select-auto font-fraunces font-light scale:text-2xl scale:leading-[1.875rem] sm:scale:text-[4rem] sm:scale:leading-[4.9375rem]">
+      <main className="select-auto font-fraunces font-light text-outsider-violet-50 scale:text-2xl scale:leading-[1.875rem] sm:scale:text-[4rem] sm:scale:leading-[4.9375rem]">
         <Container asChild>
           <TextAnimation asChild>
             <Grid className="min-h-screen items-center">
               <h2 className="col-span-4 sm:col-span-7 sm:col-start-2">
-                Artists Together is an online, worldwide
+                Artists Together is a worldwide, inclusive,
                 <br />
-                inclusive community for all kinds of artists
+                and diverse community for all kinds of artists
                 <br />
                 and skill levels.
               </h2>
@@ -65,7 +65,7 @@ export default async function Page() {
               <h4 className="col-span-4 sm:col-span-7 sm:col-start-2">
                 We celebrate creativity, diversity,
                 <br />
-                entertainment and learning.
+                entertainment, and learning.
               </h4>
             </Grid>
           </TextAnimation>

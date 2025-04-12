@@ -2,7 +2,7 @@ import type { IconName } from "~/lib/icons"
 
 export const sections = [
   "profile",
-  "social-media",
+  // "social-media",
   "advanced-settings",
   // "contact-support",
 ] as const
@@ -21,10 +21,10 @@ export const sectionData = {
     label: "Profile",
     icon: "Face",
   },
-  "social-media": {
-    label: "Social media",
-    icon: "CaptivePortal",
-  },
+  // "social-media": {
+  //   label: "Social media",
+  //   icon: "CaptivePortal",
+  // },
   "advanced-settings": {
     label: "Advanced settings",
     icon: "Settings",

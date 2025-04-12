@@ -4,7 +4,6 @@ import ProfileBanner from "./ProfileBanner"
 import ProfileLogout from "./ProfileLogout"
 import ProfileSectionAdvancedSettings from "./ProfileSectionAdvancedSettings"
 import ProfileSectionProfile from "./ProfileSectionProfile"
-import ProfileSectionSocialMedia from "./ProfileSectionSocialMedia"
 import ProfileTab from "./ProfileTab"
 
 export default function Profile() {
@@ -20,7 +19,7 @@ export default function Profile() {
           <main className="space-y-1 pb-3 md:space-y-2 md:pb-0">
             <ProfileBanner />
             <ProfileSectionProfile />
-            <ProfileSectionSocialMedia />
+            {/* <ProfileSectionSocialMedia /> */}
             <ProfileSectionAdvancedSettings />
           </main>
           <footer>

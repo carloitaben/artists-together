@@ -39,6 +39,10 @@ export default function LottieComponent({
   )
 
   return (
-    <div {...props} ref={ref} className={cx(className, "*:!transform-none")} />
+    <div
+      {...props}
+      ref={ref}
+      className={cx(className, "lottie *:!transform-none")}
+    />
   )
 }
