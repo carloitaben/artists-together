@@ -12,6 +12,10 @@ function isValidActivity(activity: Activity) {
     case "Art":
     case "Food & Drink":
     case "Makers & Crafting":
+    case "DJs":
+    case "Music":
+    case "Miniatures & Models":
+    case "Writting & Reading":
       return true
     default:
       return false
