@@ -16,7 +16,7 @@ export default async function Page() {
       <header className="text-outsider-violet-50">
         <Container asChild>
           <Grid className="min-h-screen place-items-center py-16">
-            <div className="col-span-2 col-start-2 w-full max-w-[37.5rem] sm:col-span-4 sm:col-start-3">
+            <div className="col-span-4 w-full max-w-[37.5rem] px-12 sm:col-span-4 sm:col-start-3 sm:px-0">
               <Logo />
             </div>
           </Grid>
