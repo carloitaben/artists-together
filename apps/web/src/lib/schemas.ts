@@ -121,5 +121,4 @@ export const ContactSupportFormSchema = v.object({
 
 export const UpdateProfileFormSchema = v.object({
   bio: v.optional(UserTableInsert.entries.bio),
-  links: v.optional(UserTableInsert.entries.links),
 })

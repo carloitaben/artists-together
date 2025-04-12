@@ -17,7 +17,7 @@ export default function NotFound() {
           src={image}
           draggable={false}
           alt=""
-          className="mx-auto size-full max-w-[1136px] object-contain"
+          className="mx-auto size-full max-w-[700px] object-contain"
         />
       </section>
     </Container>
