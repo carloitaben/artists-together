@@ -52,7 +52,8 @@ export default async function Page() {
         <div className="relative grid min-h-screen items-center">
           <Marquee>
             drawing, modelling, refurbishing, sculpting, composing, filming,
-            writing, singing, building,
+            writing, singing, building, dancing, developing, designing, acting,
+            crafting, illustrating, performing, animating, photographing,
           </Marquee>
           <Grid aria-hidden className="pointer-events-none absolute inset-0">
             <div className="col-span-1 h-full bg-gradient-to-r from-arpeggio-black-900 to-transparent" />
