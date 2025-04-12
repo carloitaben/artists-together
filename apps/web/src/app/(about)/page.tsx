@@ -28,9 +28,9 @@ export default async function Page() {
             <Grid className="min-h-screen items-center">
               <h2 className="col-span-4 sm:col-span-7 sm:col-start-2">
                 Artists Together is a worldwide, inclusive,
-                <br />
+                <br className="hidden sm:block" />
                 and diverse community for all kinds of artists
-                <br />
+                <br className="hidden sm:block" />
                 and skill levels.
               </h2>
             </Grid>
@@ -41,9 +41,9 @@ export default async function Page() {
             <Grid className="min-h-screen items-center">
               <h3 className="col-span-4 sm:col-span-5 sm:col-start-4">
                 We want to give artists from around
-                <br />
+                <br className="hidden sm:block" />
                 the globe a place to share, learn
-                <br />
+                <br className="hidden sm:block" />
                 and talk with other creative folks.
               </h3>
             </Grid>
@@ -56,7 +56,7 @@ export default async function Page() {
           </Marquee>
           <Grid aria-hidden className="pointer-events-none absolute inset-0">
             <div className="col-span-1 h-full bg-gradient-to-r from-arpeggio-black-900 to-transparent" />
-            <div className="col-span-1 col-end-9 h-full bg-gradient-to-l from-arpeggio-black-900 to-transparent" />
+            <div className="col-span-1 col-end-5 h-full bg-gradient-to-l from-arpeggio-black-900 to-transparent sm:col-end-9" />
           </Grid>
         </div>
         <Container asChild>
@@ -64,7 +64,7 @@ export default async function Page() {
             <Grid className="min-h-screen items-center">
               <h4 className="col-span-4 sm:col-span-7 sm:col-start-2">
                 We celebrate creativity, diversity,
-                <br />
+                <br className="hidden sm:block" />
                 entertainment, and learning.
               </h4>
             </Grid>
@@ -75,7 +75,7 @@ export default async function Page() {
             <Grid className="min-h-screen items-center">
               <h5 className="col-span-4 sm:col-span-5 sm:col-start-4">
                 So, create, share and enjoy,
-                <br />
+                <br className="hidden sm:block" />
                 because we are glad to have you here.
               </h5>
             </Grid>
