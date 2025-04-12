@@ -1,9 +1,14 @@
+"use client"
+
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { cx } from "cva"
 import Avatar from "~/components/Avatar"
 import Icon from "~/components/Icon"
 import NavLink from "~/components/NavLink"
-import { getUser } from "~/features/auth/server"
-import { getHints } from "~/features/hints/server"
+import { userQueryOptions } from "~/features/auth/shared"
+import { useNavigationMatch } from "~/lib/navigation/client"
 import { navigation } from "~/lib/navigation/shared"
+import { useHints } from "~/lib/promises"
 import NavigationAuthLink from "../NavigationAuthLink"
 import NavigationSidebarTooltip from "./NavigationSidebarTooltip"
 
@@ -14,14 +19,19 @@ const className = {
     "grid size-12 place-items-center rounded-2 group-hover:bg-theme-300 group-aria-[current='page']:group-hover:text-theme-700 *:size-6 *:text-current group-focus-visible:bg-theme-300",
 }
 
-export default async function NavigationSidebar() {
-  const [user, hints] = await Promise.all([getUser(), getHints()])
+export default function NavigationSidebar() {
+  const match = useNavigationMatch()
+  const user = useSuspenseQuery(userQueryOptions)
+  const hints = useHints()
 
   return (
     <nav
       aria-label="Main Navigation"
       role="navigation"
-      className="fixed inset-y-0 left-0 z-20 hidden w-16 place-items-center gap-y-4 px-1 py-2 sm:grid"
+      className={cx(
+        "fixed inset-y-0 left-0 z-20 hidden w-16 place-items-center gap-y-4 px-1 py-2 sm:grid",
+        match ? "" : "theme-arpeggio-black",
+      )}
     >
       <ul>
         <NavigationSidebarTooltip
@@ -30,8 +40,8 @@ export default async function NavigationSidebar() {
         >
           <NavigationAuthLink className={className.navLink}>
             <span className={className.iconWrapper}>
-              {user ? (
-                <Avatar username={user.username} src={user.avatar} />
+              {user.data ? (
+                <Avatar username={user.data.username} src={user.data.avatar} />
               ) : (
                 <Icon src="Face" alt="Log-in" />
               )}
