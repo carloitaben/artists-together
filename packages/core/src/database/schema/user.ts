@@ -36,36 +36,14 @@ export const TwitchMetadata = v.looseObject({
 
 export type TwitchMetadata = v.InferOutput<typeof TwitchMetadata>
 
-const linkWithoutProtocolRegex =
-  /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi
-
-export const UserLinks = v.pipe(
-  v.array(
-    v.optional(
-      v.pipe(
-        v.string(),
-        v.check(
-          (string) => linkWithoutProtocolRegex.test(string),
-          "Invalid URL",
-        ),
-      ),
-    ),
-  ),
-  v.maxLength(5),
-)
-
-export type UserLinks = v.InferOutput<typeof UserLinks>
-
 export const userTable = sqliteTable(
   "user",
   {
     ...timestamps,
     id: int("id").primaryKey(),
     username: text().notNull().unique(),
-    pronouns: text(),
     avatar: text(),
     email: text().unique(),
-    links: text({ mode: "json" }).$type<UserLinks>(),
     bio: text(),
     discordId: text().unique(),
     discordUsername: text().unique(),
@@ -83,7 +61,6 @@ export const userTable = sqliteTable(
 export const UserTableInsert = createInsertSchema(userTable, {
   avatar: (schema) => v.pipe(schema, v.url()),
   email: (schema) => v.pipe(schema, v.email()),
-  links: UserLinks,
   bio: (schema) => v.pipe(schema, v.maxLength(128)),
   discordMetadata: DiscordMetadata,
   twitchMetadata: TwitchMetadata,
@@ -93,7 +70,6 @@ export const UserTableSelect = createSelectSchema(userTable, {
   createdAt: v.pipe(v.string(), v.isoTimestamp()),
   updatedAt: v.pipe(v.string(), v.isoTimestamp()),
   avatar: (schema) => v.pipe(schema, v.url()),
-  links: UserLinks,
   email: (schema) => v.pipe(schema, v.email()),
   bio: (schema) => v.pipe(schema, v.maxLength(128)),
   discordMetadata: DiscordMetadata,
@@ -104,7 +80,6 @@ export const UserTableUpdate = createUpdateSchema(userTable, {
   createdAt: v.pipe(v.string(), v.isoTimestamp()),
   updatedAt: v.pipe(v.string(), v.isoTimestamp()),
   avatar: (schema) => v.pipe(schema, v.url()),
-  links: UserLinks,
   email: (schema) => v.pipe(schema, v.email()),
   bio: (schema) => v.pipe(schema, v.maxLength(128)),
   discordMetadata: DiscordMetadata,

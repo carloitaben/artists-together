@@ -23,19 +23,6 @@ await seed(database, {
         values: ["https://picsum.photos/200"],
       }),
       username: f.firstName(),
-      pronouns: f.valuesFromArray({
-        values: ["she/her", "he/him", "they/them"],
-      }),
-      settings: f.valuesFromArray({
-        values: [
-          JSON.stringify({
-            fahrenheit: Math.random() > 0.5,
-            fullHourFormat: Math.random() > 0.5,
-            shareCursor: Math.random() > 0.5,
-            shareStreaming: Math.random() > 0.5,
-          }),
-        ],
-      }),
     },
   },
   locationTable: {
