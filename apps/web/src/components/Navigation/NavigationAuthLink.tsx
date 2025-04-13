@@ -1,10 +1,14 @@
 "use client"
 
+import type { LinkProps } from "next/link"
 import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
-import type { ComponentProps } from "react"
+import type { ReactNode } from "react"
 
-type Props = Omit<ComponentProps<typeof Link>, "href">
+type Props = Omit<LinkProps, "href"> & {
+  children?: ReactNode
+  className?: string
+}
 
 export default function NavigationAuthLink({
   prefetch = false,

@@ -36,7 +36,7 @@ export default function NavigationSidebar() {
       <ul>
         <NavigationSidebarTooltip
           id="auth"
-          label={user ? "Your profile" : "Log-in"}
+          label={user.data ? "Your profile" : "Log-in"}
         >
           <NavigationAuthLink className={className.navLink}>
             <span className={className.iconWrapper}>

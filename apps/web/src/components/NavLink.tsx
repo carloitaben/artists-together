@@ -1,8 +1,8 @@
 "use client"
 
-import Link from "next/link"
+import Link, { type LinkProps } from "next/link"
 import { useRouter } from "next/navigation"
-import type { ComponentProps } from "react"
+import type { ReactNode } from "react"
 import { useMatches } from "~/lib/navigation/client"
 import { useRouterTransition } from "~/lib/transition"
 import { anchor } from "./Anchor"
@@ -21,9 +21,11 @@ function isModifiedEvent(event: React.MouseEvent): boolean {
   )
 }
 
-export type Props = ComponentProps<typeof Link> & {
+export type Props = LinkProps & {
   match?: string
   disabled?: boolean
+  children?: ReactNode
+  className?: string
 }
 
 export default function NavLink({
