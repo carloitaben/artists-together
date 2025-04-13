@@ -27,9 +27,9 @@ export default async function Page() {
           <TextAnimation asChild>
             <Grid className="min-h-screen items-center">
               <h2 className="col-span-4 sm:col-span-7 sm:col-start-2">
-                Artists Together is a worldwide, inclusive,
+                Artists Together is a worldwide, inclusive,{" "}
                 <br className="hidden sm:block" />
-                and diverse community for all kinds of artists
+                and diverse community for all kinds of artists{" "}
                 <br className="hidden sm:block" />
                 and skill levels.
               </h2>
@@ -40,9 +40,9 @@ export default async function Page() {
           <TextAnimation asChild>
             <Grid className="min-h-screen items-center">
               <h3 className="col-span-4 sm:col-span-5 sm:col-start-4">
-                We want to give artists from around
+                We want to give artists from around{" "}
                 <br className="hidden sm:block" />
-                the globe a place to share, learn
+                the globe a place to share, learn{" "}
                 <br className="hidden sm:block" />
                 and talk with other creative folks.
               </h3>
@@ -64,7 +64,7 @@ export default async function Page() {
           <TextAnimation asChild>
             <Grid className="min-h-screen items-center">
               <h4 className="col-span-4 sm:col-span-7 sm:col-start-2">
-                We celebrate creativity, diversity,
+                We celebrate creativity, diversity,{" "}
                 <br className="hidden sm:block" />
                 entertainment, and learning.
               </h4>
@@ -75,8 +75,7 @@ export default async function Page() {
           <TextAnimation asChild>
             <Grid className="min-h-screen items-center">
               <h5 className="col-span-4 sm:col-span-5 sm:col-start-4">
-                So, create, share and enjoy,
-                <br className="hidden sm:block" />
+                So, create, share and enjoy, <br className="hidden sm:block" />
                 because we are glad to have you here.
               </h5>
             </Grid>
