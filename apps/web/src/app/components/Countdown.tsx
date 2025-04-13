@@ -12,7 +12,7 @@ type Props = {
   now: number
 }
 
-const target = dayjs("2025-04-14")
+const target = dayjs("2025-04-14T15:00:00.000Z")
 
 export default function Countdown(props: Props) {
   const ref = useRef<HTMLHeadingElement>(null)
