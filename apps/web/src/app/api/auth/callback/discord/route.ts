@@ -10,8 +10,10 @@ import {
 } from "@artists-together/core/database"
 import { createDiscord, discord, ROLE } from "@artists-together/core/discord"
 import { deleteCookie, getCookie, setCookie } from "@standard-cookie/next"
+import dayjs from "dayjs"
 import type { NextRequest } from "next/server"
 import { after } from "next/server"
+import { tryit } from "radashi"
 import * as v from "valibot"
 import {
   cookieOauthOptions,
@@ -100,6 +102,33 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    const [discordGuildMemberError, discordGuildMember] = await tryit(() =>
+      discord.guilds.getMember(
+        String(process.env.DISCORD_SERVER_ID),
+        discordUser.id,
+      ),
+    )()
+
+    if (discordGuildMemberError) {
+      return new Response("User not in guild", {
+        status: 307,
+        headers: {
+          Location: `${cookieOauth.pathname}?error=Join+the+Discord+server+first!`,
+        },
+      })
+    }
+
+    const diff = dayjs().diff(dayjs(discordGuildMember.joined_at), "week")
+
+    if (diff < 1) {
+      return new Response("Temporarily restricted", {
+        status: 307,
+        headers: {
+          Location: `${cookieOauth.pathname}?error=You+need+to+be+a+member+for+over+a+week!`,
+        },
+      })
+    }
+
     const discordAvatar = discordUser.avatar
       ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}`
       : null
@@ -153,10 +182,12 @@ export async function GET(request: NextRequest) {
           })
       }
 
-      const discordGuildMember = await discord.guilds.getMember(
-        String(process.env.DISCORD_SERVER_ID),
-        discordUser.id,
-      )
+      const [, discordGuildMember] = await tryit(() =>
+        discord.guilds.getMember(
+          String(process.env.DISCORD_SERVER_ID),
+          discordUser.id,
+        ),
+      )()
 
       const shouldAddWebRole =
         discordGuildMember && !discordGuildMember.roles.includes(ROLE.WEB)

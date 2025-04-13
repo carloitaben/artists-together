@@ -27,15 +27,16 @@ export default function Login() {
 
   return (
     <Dialog.Content className="space-y-4 focus:outline-none">
-      <DialogContainer className="px-8 pb-9 pt-7 md:px-[3.75rem] md:pb-12 md:pt-10">
+      <DialogContainer className="px-8 pb-9 pt-7 md:max-w-[576px] md:px-[3.75rem] md:pb-12 md:pt-10">
         <DialogTitle sm="fraunces" asChild>
           <Dialog.Title className="mb-4 text-center md:mb-5 md:[text-align:unset]">
             Welcome to <br className="md:hidden" />
-            Artists Together
+            Artists Together!
           </Dialog.Title>
         </DialogTitle>
         <Dialog.Description className="text-xs md:text-sm">
-          We will be using Discord to manage your Artists&nbsp;Together account.
+          As a temporary monitoring measure, to log in to Artists Together
+          you&nbsp;must be a member of the Discord server for over a week.
         </Dialog.Description>
       </DialogContainer>
       <form {...getFormProps(form)} className="flex justify-end">
