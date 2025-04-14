@@ -66,6 +66,7 @@ function getRoomState(room: string) {
 const server = Bun.serve<WebSocketData, {}>({
   port: process.env.PORT || 1999,
   async fetch(request, server) {
+    console.log("[INFO] cookies for request", request.headers.get("Cookie"))
     const cookiesHeader = request.headers.get("Cookie") || ""
     const cookie = parseCookies(cookiesHeader).get("session")
     const token = cookie ? genericDecode(cookie) : undefined
