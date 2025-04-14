@@ -38,8 +38,8 @@ export function webSocketQueryOptions<T extends ServerEvent>(
 }
 
 export const webSocket = new ReconnectingWebSocket(
-  process.env.WSS_URL || "ws://localhost:1999",
-  process.env.WSS_URL ? "https" : "http",
+  process.env.NEXT_PUBLIC_WSS_URL || "ws://localhost:1999",
+  process.env.NEXT_PUBLIC_WSS_URL ? "https" : "http",
   {
     startClosed: true,
   },
