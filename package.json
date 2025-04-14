@@ -1,6 +1,5 @@
 {
   "name": "artists-together",
-  "packageManager": "bun@1.1.37",
   "workspaces": [
     "apps/*",
     "packages/*"
