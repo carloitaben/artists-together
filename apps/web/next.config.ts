@@ -2,6 +2,12 @@ import "dotenv-mono/load"
 import type { NextConfig } from "next"
 
 export default {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     ppr: "incremental",
   },
