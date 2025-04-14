@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development bun run --watch src/index.ts",
     "seed": "NODE_ENV=development bun run src/scripts/seed.ts",
     "sync": "NODE_ENV=development bun run src/scripts/sync.ts",
-    "start": "bun run src/scripts/sync.ts && bun run src/index.ts"
+    "start": "NODE_ENV=production bun run src/scripts/sync.ts && bun run src/index.ts"
   },
   "dependencies": {
     "@artists-together/core": "workspace:*",

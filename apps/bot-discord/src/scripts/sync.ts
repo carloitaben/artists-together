@@ -1,3 +1,4 @@
+import "dotenv-mono/load"
 import { REST, Routes } from "discord.js"
 import { getRegistrations } from "~/lib/core"
 
