@@ -1,0 +1,12 @@
+{
+  "name": "@artists-together/functions",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@artists-together/core": "workspace:*",
+    "valibot": "^1.0.0"
+  },
+  "devDependencies": {
+    "@artists-together/config": "workspace:*"
+  }
+}

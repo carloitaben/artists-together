@@ -1,22 +1,30 @@
-"use client"
+import type { ComponentProps, ComponentRef, ForwardedRef } from "react"
+import { forwardRef } from "react"
+import type { IconName } from "~/lib/icons"
 
-import * as AccesibleIcon from "@radix-ui/react-accessible-icon"
-import type { ComponentProps, ForwardedRef, ReactElement } from "react"
-import { cloneElement, forwardRef } from "react"
-
-type Props = AccesibleIcon.AccessibleIconProps &
-  ComponentProps<"svg"> & {
-    children: ReactElement<ComponentProps<"svg">>
-  }
+type Props = Omit<ComponentProps<"svg">, "children"> & {
+  src: IconName
+  alt: string
+}
 
 function Icon(
-  { label, children, ...props }: Props,
-  ref: ForwardedRef<SVGSVGElement>
+  { src, alt, ...props }: Props,
+  ref: ForwardedRef<ComponentRef<"svg">>,
 ) {
   return (
-    <AccesibleIcon.Root label={label}>
-      {cloneElement(children, { ...children.props, ...props, ref })}
-    </AccesibleIcon.Root>
+    <>
+      <svg
+        ref={ref}
+        focusable={false}
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        aria-hidden
+        {...props}
+      >
+        <use href={`/spritesheet.svg#${src}`} />
+      </svg>
+      {alt ? <span className="sr-only">{alt}</span> : null}
+    </>
   )
 }
 

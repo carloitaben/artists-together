@@ -1,8 +1,8 @@
+import { draw } from "@artists-together/core/utils"
+import { CHANNEL, ROLE } from "@artists-together/core/discord"
 import { EmbedBuilder } from "discord.js"
-
 import { registerEventHandler } from "~/lib/core"
-import { getTextBasedChannel, oneOf } from "~/lib/helpers"
-import { CHANNELS, ROLES } from "~/lib/constants"
+import { getTextBasedChannel } from "~/lib/utils"
 
 const MESSAGE_TITLE = [
   "Oopsie!",
@@ -23,16 +23,16 @@ const MESSAGE_SUBTITLE = [
 ]
 
 registerEventHandler("ready", async (client) => {
-  const channel = await getTextBasedChannel(client, CHANNELS.BOT_SHENANIGANS)
+  const channel = await getTextBasedChannel(client, CHANNEL.BOT_SHENANIGANS)
 
   process.on("uncaughtException", async (error) => {
     await channel.send({
       content:
-        `<@&${ROLES.TECH_SUPPORT}>` +
+        `<@&${ROLE.TECH_SUPPORT}>` +
         " " +
-        oneOf(MESSAGE_TITLE) +
+        draw(MESSAGE_TITLE) +
         " " +
-        oneOf(MESSAGE_SUBTITLE),
+        draw(MESSAGE_SUBTITLE),
       embeds: [
         new EmbedBuilder({
           color: 0xff1800,

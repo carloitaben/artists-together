@@ -1,22 +1,65 @@
 "use client"
 
-import { lazy, startTransition, useState, Suspense } from "react"
+import { useReducedMotion, useScroll } from "motion/react"
+import type { PropsWithChildren } from "react"
+import { lazy, Suspense, useEffect } from "react"
+import { onMeasure, useScreen } from "~/lib/media"
+import { measure, measurements, SCOPE_ROOT } from "./lib"
+import Me from "./Me"
 
-import { useOnMatchScreen } from "~/hooks/media"
-import { url } from "~/hooks/ws"
+const CursorPresenceRoom = lazy(() => import("./CursorPresenceRoom"))
 
-const CursorsCanvas = lazy(() => import("./CursorsCanvas"))
+export default function Cursors({ children }: PropsWithChildren) {
+  const sm = useScreen("sm")
+  const scroll = useScroll()
+  const shouldReduceMotion = useReducedMotion()
+  const renderOtherCursors = sm && !shouldReduceMotion
 
-type Props = {
-  emoji: string
-}
+  useEffect(() => {
+    if (!renderOtherCursors) return
 
-export default function Cursors({ emoji }: Props) {
-  const [mount, setMount] = useState(false)
+    const clearX = scroll.scrollX.on("change", (x) => {
+      const rect = measure(SCOPE_ROOT, document.documentElement)
+      rect.x = -x
+      measurements.clear()
+      measurements.set(SCOPE_ROOT, rect)
+    })
 
-  useOnMatchScreen("md", (matches) => {
-    startTransition(() => setMount(matches && !!url))
-  })
+    const clearY = scroll.scrollY.on("change", (y) => {
+      const rect = measure(SCOPE_ROOT, document.documentElement)
+      rect.y = -y
+      measurements.clear()
+      measurements.set(SCOPE_ROOT, rect)
+    })
 
-  return <Suspense>{mount && <CursorsCanvas emoji={emoji} />}</Suspense>
+    const clearMeasure = onMeasure(document.documentElement, (entry) => {
+      const rect = DOMRect.fromRect(entry)
+      rect.x = -scroll.scrollX.get()
+      rect.y = -scroll.scrollY.get()
+      measurements.set(SCOPE_ROOT, DOMRect.fromRect(entry))
+    })
+
+    return () => {
+      clearX()
+      clearY()
+      clearMeasure()
+    }
+  }, [renderOtherCursors, scroll.scrollX, scroll.scrollY, sm])
+
+  if (shouldReduceMotion) return children
+
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 isolate z-50 size-full select-none overflow-hidden"
+    >
+      {sm ? (
+        <Suspense>
+          <CursorPresenceRoom />
+        </Suspense>
+      ) : null}
+      {children}
+      <Me />
+    </div>
+  )
 }

@@ -1,0 +1,5 @@
+{
+  "extends": "@artists-together/config/typescript/lib.json",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}

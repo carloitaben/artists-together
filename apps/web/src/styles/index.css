@@ -3,8 +3,15 @@
 @tailwind utilities;
 
 @layer base {
-  html.js.cursor * {
-    @apply cursor-none;
+  :root {
+    --root-font-size: 16;
+    --root-viewport-width: 360;
+  }
+
+  @screen sm {
+    :root {
+      --root-viewport-width: 1920;
+    }
   }
 
   @font-face {
@@ -12,7 +19,7 @@
     font-display: block;
     font-style: normal;
     font-weight: 100 900;
-    src: url("/fonts/fraunces.woff2") format("woff2");
+    src: url(../assets/fonts/fraunces.woff2) format("woff2");
   }
 
   @font-face {
@@ -20,6 +27,74 @@
     font-display: block;
     font-style: normal;
     font-weight: 100 900;
-    src: url("/fonts/inter.woff2") format("woff2");
+    src: url(../assets/fonts/inter.woff2) format("woff2");
+  }
+
+  .font-serif-ampersand {
+    font-variation-settings:
+      "SOFT" 100,
+      "WONK" 100,
+      "opsz" 144;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  img {
+    @apply select-none;
+  }
+}
+
+@layer components {
+  html.cursor,
+  html.cursor * {
+    @apply cursor-none;
+  }
+
+  input,
+  textarea {
+    @apply ring-0 aria-[invalid]:ring-1 aria-[invalid]:ring-acrylic-red-500;
+  }
+
+  .pressable {
+    @apply transition-transform duration-100 active:scale-95 disabled:active:scale-100 ui-disabled:active:scale-100;
+  }
+
+  .backdrop {
+    @apply fixed inset-0 bg-arpeggio-black-900/75 backdrop-blur-8;
+  }
+
+  .backdrop[data-state="open"] {
+    @apply animation-in animation-fade-in animation-duration-150 animation-ease-out animation-fill-mode-backwards;
+  }
+
+  .backdrop[data-state="closed"] {
+    @apply animation-out animation-fade-out animation-duration-100 animation-delay-[0.50ms] animation-ease-in;
+  }
+
+  .backdrop[data-state="closed"]
+    + [data-scope="dialog"][data-part="positioner"] {
+    @apply overflow-y-hidden;
+  }
+
+  [data-scope="dialog"][data-part="content"][data-state="open"] {
+    @apply animation-in animation-fade-in animation-zoom-in-[.985] animation-duration-150 animation-delay-[0.50ms] animation-ease-out animation-fill-mode-backwards;
+  }
+
+  [data-scope="dialog"][data-part="content"][data-state="closed"] {
+    @apply animation-out animation-fade-out animation-zoom-out-[.985] animation-duration-100 animation-ease-in;
+  }
+
+  [data-scope="menu"][data-state="open"] [data-part="item"] {
+    @apply animation-in animation-fade-in animation-zoom-in-95 animation-duration-150 animation-delay-[--animation-in-delay] animation-ease-out animation-fill-mode-backwards;
+  }
+
+  [data-scope="menu"][data-state="closed"] [data-part="item"] {
+    @apply animation-out animation-fade-out animation-duration-100 animation-ease-in;
+  }
+
+  .lottie path {
+    fill: currentColor;
   }
 }

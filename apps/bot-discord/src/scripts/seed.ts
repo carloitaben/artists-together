@@ -1,14 +1,18 @@
-import { Client, Partials, GatewayIntentBits, EmbedBuilder, AttachmentBuilder } from "discord.js"
-
-import { env } from "~/lib/env"
+import {
+  Client,
+  Partials,
+  GatewayIntentBits,
+  EmbedBuilder,
+  AttachmentBuilder,
+} from "discord.js"
 import {
   getChannel,
   getTextBasedChannel,
   getRole,
   getGuild,
   getPublicFile,
-} from "~/lib/helpers"
-import { CHANNELS, ROLES } from "~/lib/constants"
+} from "~/lib/utils"
+import { CHANNEL, ROLE } from "@artists-together/core/discord"
 
 const bot = new Client({
   intents: [
@@ -21,8 +25,8 @@ const bot = new Client({
 
 async function bootstrapRulesChannel(client: Client) {
   const [rulesChannel, introductionsChannel] = await Promise.all([
-    getTextBasedChannel(client, CHANNELS.RULES_N_FAQ),
-    getChannel(client, CHANNELS.INTRODUCTIONS),
+    getTextBasedChannel(client, CHANNEL.RULES_N_FAQ),
+    getChannel(client, CHANNEL.INTRODUCTIONS),
   ])
 
   await rulesChannel.send({
@@ -39,11 +43,6 @@ async function bootstrapRulesChannel(client: Client) {
           "# RULES" +
           "\n" +
           "————————————————————" +
-          "\n" +
-          "\n" +
-          '## :eight_spoked_asterisk:  Enable "Show All Channels".' +
-          "\n" +
-          "- Enabling this option will show you all server channels." +
           "\n" +
           "\n" +
           "## :one:  Follow Discord's ToS and Community Guidelines." +
@@ -114,29 +113,25 @@ async function bootstrapRulesChannel(client: Client) {
 
 async function bootstrapAboutChannel(client: Client) {
   const guild = await getGuild(client)
+  const channel = await getTextBasedChannel(client, CHANNEL.ABOUT)
 
-  const [aboutChannel, artistsRaidTrainChannel] = await Promise.all([
-    getTextBasedChannel(client, CHANNELS.ABOUT),
-    getChannel(client, CHANNELS.ARTISTS_RAID_TRAIN),
-  ])
-
-  await aboutChannel.send({
+  await channel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-about.png")),
     ],
   })
 
-  await aboutChannel.send({
+  await channel.send({
     embeds: [
       new EmbedBuilder({
         color: 0xff1800,
         description:
-          "✨ Artists Together is an online, worldwide inclusive community for all kinds of artists and all skill levels." +
+          "**Artists Together** is an online, worldwide inclusive community for all kinds of artists and all skill levels." +
           "\n" +
           "\n" +
           "## Our goal" +
           "\n" +
-          "Give artists from around the globe a voice, a place to celebrate and promote their creative content and, of course, have some fun!" +
+          "The main objective of this community is to give artists from around the globe a voice, a place to celebrate and promote their creative content and, of course, have some fun!" +
           "\n" +
           "\n" +
           "We hope that members of A.T. will see this server as a safe space to learn, build, and share their creative journey among each other." +
@@ -146,7 +141,7 @@ async function bootstrapAboutChannel(client: Client) {
     ],
   })
 
-  await aboutChannel.send({
+  await channel.send({
     embeds: [
       new EmbedBuilder({
         color: 0xff1800,
@@ -156,7 +151,7 @@ async function bootstrapAboutChannel(client: Client) {
           'This server was created in October 2020 as *"Artist Back Alley"* by *MissDaisyDee*, *AnonymousTurtle*, and *LittleChook* as an accountability group for fellow creatives with online shops to prepare for the impending holiday shopping season.' +
           "\n" +
           "\n" +
-          'As a big debut for the birth of this server, Artist Back Alley successfully launched its first community art project the "Hyper Train" where members submitted their designed box-cars to be hooked up together by other submissions, creating one glorious hyper train!' +
+          'As a big debut for the birth of this server, Artist Back Alley successfully launched its first community art project the "Hyper Train" where members submitted their designed box-cars to be hooked up together by other submissions, creating one glorious hyper train! You can still view the Hyper Train here: https://artistbackalley.com/' +
           "\n" +
           "\n" +
           "Since launch, this server has grown and evolved - Still remaining true to the founders' goal of creating an inclusive space for all creatives to mingle, grow, and collaborate." +
@@ -167,7 +162,7 @@ async function bootstrapAboutChannel(client: Client) {
     ],
   })
 
-  await aboutChannel.send({
+  await channel.send({
     content:
       "**Website:** https://artiststogether.online/" +
       "\n" +
@@ -181,19 +176,17 @@ async function bootstrapAboutChannel(client: Client) {
       "\n" +
       "**Donate:** https://ko-fi.com/artiststogether" +
       "\n" +
-      "**Feedback:** https://forms.gle/umJvNfzrtcHzLQrn9" +
-      "\n" +
       "\n" +
       "*You can also contact us at info@artiststogether.online*",
   })
 
-  await aboutChannel.send({
+  await channel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-art.png")),
     ],
   })
 
-  await aboutChannel.send({
+  await channel.send({
     embeds: [
       new EmbedBuilder({
         color: 0xffdc48,
@@ -203,34 +196,31 @@ async function bootstrapAboutChannel(client: Client) {
           "\n" +
           "Participating in the A.R.T. event is an excellent opportunity to:" +
           "\n" +
-          "- *Meet new friends in the art streaming community.*" +
+          "- *Meet and make new friends in the art streaming community.*" +
           "\n" +
-          "- *Engage with the A.T. members on a more personal level.*" +
+          "- *Connect and engage with the A.T. members on a more personal level.*" +
           "\n" +
-          "- *Promote your work and social media.*" +
+          "- *Promote your work, your channel, your shop/commissions page, etc.*" +
           "\n" +
           "- *Learn more about new art mediums/styles/processes.*" +
           "\n" +
-          "- *Help you reach your stream goals.*" +
-          "\n" +
-          "\n" +
-          `${artistsRaidTrainChannel}`,
+          "- *Help you reach your stream goals.*",
       }),
     ],
   })
 
-  await aboutChannel.send({
+  await channel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-pal.png")),
     ],
   })
 
-  await aboutChannel.send({
+  await channel.send({
     embeds: [
       new EmbedBuilder({
         color: 0x3924ff,
         description:
-          "Hey there! **I am Pal** *(Programmable Artistic Life-form)*, the assistant bot of Artists Together." +
+          "Hey there! **I am Pal** *(Programmable Artistic Life-form)*, the assistant bot of this community." +
           "\n" +
           "\n" +
           "I have been created to be as diverse as possible, so no one can say I am ugly- That's why I have so many faces! But if you see a blob of color with horns and floating extremities, you can be 96.33% sure that's me!" +
@@ -241,35 +231,35 @@ async function bootstrapAboutChannel(client: Client) {
           "For now, I'll be announcing events and updates too." +
           "\n" +
           "\n" +
-          "I'm your Pal!",
+          "I am the Pal you need!",
       }),
     ],
   })
 
   const [roleAdmin, roleModerator, roleArtist, roleFriend, roleGuest, rolePal] =
     await Promise.all([
-      getRole(guild.roles, ROLES.ADMIN),
-      getRole(guild.roles, ROLES.MODERATOR),
-      getRole(guild.roles, ROLES.ARTIST),
-      getRole(guild.roles, ROLES.FRIEND),
-      getRole(guild.roles, ROLES.GUEST),
-      getRole(guild.roles, ROLES.PAL),
+      getRole(guild.roles, ROLE.ADMIN),
+      getRole(guild.roles, ROLE.MODERATOR),
+      getRole(guild.roles, ROLE.ARTIST),
+      getRole(guild.roles, ROLE.FRIEND),
+      getRole(guild.roles, ROLE.GUEST),
+      getRole(guild.roles, ROLE.PAL),
     ])
 
-  await aboutChannel.send({
+  await channel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-roles.png")),
     ],
   })
 
-  await aboutChannel.send({
+  await channel.send({
     embeds: [
       new EmbedBuilder({
         color: 0xf4f4f4,
         description:
-          `${roleAdmin} - Server administrator.` +
+          `${roleAdmin} - Administrator of the server.` +
           "\n" +
-          `${roleModerator} - Server moderator.` +
+          `${roleModerator} - Moderator of the server.` +
           "\n" +
           `${roleArtist} - Member that takes part in creative activities.` +
           "\n" +
@@ -277,15 +267,18 @@ async function bootstrapAboutChannel(client: Client) {
           "\n" +
           `${roleGuest} - Peep who just joined the server.` +
           "\n" +
-          `${rolePal} - That's me, Pal! Friendly A.T. assistant bot.`,
+          `${rolePal} - That's me, Pal! Friendly A.T. assistant bot!`,
       }),
     ],
   })
 }
 
 bot.once("ready", async (client) => {
-  await Promise.all([bootstrapRulesChannel(client), bootstrapAboutChannel(client)])
+  await Promise.all([
+    bootstrapRulesChannel(client),
+    bootstrapAboutChannel(client),
+  ])
   console.log("🎉")
 })
 
-await bot.login(env.DISCORD_BOT_TOKEN)
+await bot.login(process.env.DISCORD_BOT_TOKEN)

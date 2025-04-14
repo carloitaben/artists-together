@@ -1,138 +1,170 @@
-import { WebSocket, WebSocketServer } from "ws"
-import { ClientEvent, ClientEventDataMap, Cursor, ServerEvent, ServerEventDataMap } from "ws-types"
-import { nanoid } from "nanoid"
-import express from "express"
-import helmet from "helmet"
-import http from "http"
-import cors from "cors"
+import "dotenv-mono/load"
+import type { ServerWebSocket } from "bun"
+import { genericDecode } from "@standard-cookie/core"
+import type { SessionValidationResult } from "@artists-together/core/auth"
+import { validateSessionToken } from "@artists-together/core/auth"
+import type {
+  Cursor,
+  ServerEventOutput,
+} from "@artists-together/core/websocket"
+import {
+  encodeServerMessage,
+  safeParseClientMessage,
+} from "@artists-together/core/websocket"
 
-type ExtendedWebSocket = WebSocket & {
-  id: string
-  room: string | null
-  cursor: Cursor | null
-  isAlive: boolean
+type WebSocketData = {
+  uuid: string
+  room?: string
+  auth: SessionValidationResult
+  cursor: Cursor
 }
 
-function send<T extends ServerEvent>(ws: ExtendedWebSocket, event: T, data: ServerEventDataMap[T]) {
-  if (ws.readyState === ws.OPEN) ws.send(JSON.stringify([event, data]))
+const connections = new Map<string, ServerWebSocket<WebSocketData>>()
+
+// Adapted from https://github.com/pilcrowonpaper/oslo/blob/main/src/cookie/index.ts#L46-L57
+function parseCookies(header: string): Map<string, string> {
+  const cookies = new Map<string, string>()
+  const items = header.split("; ")
+
+  for (const item of items) {
+    const pair = item.split("=")
+    const rawKey = pair[0]
+    const rawValue = pair[1] ?? ""
+
+    if (!rawKey) continue
+
+    cookies.set(decodeURIComponent(rawKey), decodeURIComponent(rawValue))
+  }
+
+  return cookies
 }
 
-const rooms = new Map<string, Set<ExtendedWebSocket>>()
-const wss = new WebSocketServer<ExtendedWebSocket>({ noServer: true })
+function update(ws: ServerWebSocket<WebSocketData>) {
+  connections.set(ws.data.uuid, ws)
+}
 
-const pingInterval = setInterval(() => {
-  wss.clients.forEach((ws) => {
-    if (!ws.isAlive) return ws.terminate()
-    ws.isAlive = false
-    ws.ping()
-  })
-}, 30000)
+function getRoomState(room: string) {
+  return connections.values().reduce<ServerEventOutput<"room:update">>(
+    (state, ws) => {
+      if (ws.data.room !== room) return state
 
-wss.on("connection", (ws) => {
-  ws.id = nanoid()
-  ws.isAlive = true
-  ws.room = null
-  ws.cursor = null
+      ++state.count
 
-  ws.on("error", console.error)
+      if (ws.data.auth) {
+        state.members.push({
+          cursor: ws.data.cursor,
+          username: ws.data.auth.user.username,
+        })
+      }
 
-  ws.on("pong", () => {
-    ws.isAlive = true
-  })
+      return state
+    },
+    { count: 0, members: [] }
+  )
+}
 
-  ws.on("close", () => {
-    if (ws.room) {
-      const room = rooms.get(ws.room)
-      room?.delete(ws)
-      room?.forEach((client) => {
-        if (client === ws) return
-        send(client, "room:newdisconnection", ws.id)
+const server = Bun.serve<WebSocketData, {}>({
+  port: process.env.PORT || 1999,
+  async fetch(request, server) {
+    const cookiesHeader = request.headers.get("Cookie") || ""
+    const cookie = parseCookies(cookiesHeader).get("session")
+    const token = cookie ? genericDecode(cookie) : undefined
+
+    const auth =
+      typeof token === "string" ? await validateSessionToken(token) : null
+
+    const upgraded = server.upgrade<WebSocketData>(request, {
+      data: {
+        auth,
+        uuid: auth?.user.username || Math.random().toString(),
+        cursor: null,
+      },
+    })
+
+    if (!upgraded) {
+      return new Response("Upgrade failed", {
+        status: 500,
       })
     }
-  })
+  },
+  websocket: {
+    open(ws) {
+      connections.set(ws.data.uuid, ws)
+    },
+    close(ws) {
+      connections.delete(ws.data.uuid)
 
-  ws.on("message", (rawData) => {
-    const [name, _data] = JSON.parse(rawData.toString())
+      if (!ws.data.room) return
 
-    switch (name as ClientEvent) {
-      case "navigate":
-        {
-          const data = _data as ClientEventDataMap["navigate"] // TODO: zod
+      ws.unsubscribe(ws.data.room)
 
-          if (ws.room) {
-            const room = rooms.get(ws.room)
-            room?.delete(ws)
-            room?.forEach((client) => {
-              if (client === ws) return
-              send(client, "room:newdisconnection", ws.id)
-            })
-          }
+      server.publish(
+        ws.data.room,
+        encodeServerMessage("room:update", getRoomState(ws.data.room))
+      )
+    },
+    async message(ws, message) {
+      const parsed = safeParseClientMessage(message)
 
-          ws.room = data
-
-          if (rooms.has(data)) {
-            const room = rooms.get(data)
-            const roomState = Array.from(room?.values() || []).map((client) => [client.id, client.cursor] as const)
-            send(ws, "room:join", roomState)
-            room?.add(ws)
-            room?.forEach((client) => {
-              if (client === ws) return
-              send(client, "room:newconnection", [ws.id, ws.cursor])
-            })
-          } else {
-            rooms.set(data, new Set([ws]))
-            send(ws, "room:join", [])
-          }
-        }
-        break
-      case "cursor": {
-        const data = _data as ClientEventDataMap["cursor"] // TODO: zod
-
-        ws.cursor = data
-
-        if (!ws.room) {
-          // No-op, client needs to connect first
-          console.log(ws.id, "needs to connect to a room")
-          return
-        }
-
-        const room = rooms.get(ws.room)
-
-        room?.forEach((client) => {
-          if (client === ws) return
-          send(client, "cursor:update", [ws.id, data])
-        })
-        break
+      if (!parsed.success) {
+        console.warn("Received invalid message", parsed)
+        return ws.close(1009, "Invalid message")
       }
-    }
-  })
-})
 
-wss.on("close", () => {
-  clearInterval(pingInterval)
-})
+      switch (parsed.output.event) {
+        case "room:update":
+          // Bail out when trying to join the same room
+          if (ws.data.room === parsed.output.data.room) return
 
-const app = express()
+          // Leave the previous room
+          if (ws.data.room) {
+            const previous = ws.data.room
+            delete ws.data.room
+            ws.unsubscribe(previous)
+            update(ws)
 
-app.use(helmet())
+            server.publish(
+              previous,
+              encodeServerMessage("room:update", getRoomState(previous))
+            )
+          }
 
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? ["https://artists-together-web.vercel.app/", "https://artiststogether.online/"]
-        : "*",
-  })
-)
+          // Join the new room
+          ws.data.room = parsed.output.data.room
+          ws.subscribe(ws.data.room)
+          update(ws)
 
-const server = http.createServer(app)
+          ws.send(
+            encodeServerMessage("room:update", getRoomState(ws.data.room))
+          )
 
-server.on("upgrade", (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit("connection", ws, request)
-  })
-})
+          server.publish(
+            ws.data.room,
+            encodeServerMessage("room:update", getRoomState(ws.data.room))
+          )
+          break
+        case "cursor:update":
+          if (ws.data.room && ws.data.auth) {
+            ws.data.cursor =
+              parsed.output.data[parsed.output.data.length - 1]?.[1] || null
 
-server.listen(process.env.PORT ? Number(process.env.PORT) : 8080, () => {
-  console.log("🚀")
+            update(ws)
+            server.publish(
+              ws.data.room,
+              encodeServerMessage("cursor:update", {
+                cursor: parsed.output.data,
+                username: ws.data.auth.user.username,
+              })
+            )
+          }
+          break
+        case "invalidate":
+          console.warn("TODO: not implemented")
+          break
+        default:
+          console.warn("Received unsupported message", parsed)
+          return ws.close(1009, "Unsupported message")
+      }
+    },
+  },
 })

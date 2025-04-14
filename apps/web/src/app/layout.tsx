@@ -1,97 +1,105 @@
-/* eslint-disable @next/next/no-before-interactive-script-outside-document */
-
-import { ReactNode } from "react"
-import { Metadata } from "next"
-import Script from "next/script"
-
 import "~/styles/index.css"
+import { getCookie } from "@standard-cookie/next"
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
+import { cx } from "cva"
+import type { Metadata, Viewport } from "next"
+import font from "next/font/local"
+import type { PropsWithChildren } from "react"
+import { lazy } from "react"
+import Auth from "~/components/Auth"
+import Cursors from "~/components/Cursors"
+import Html from "~/components/Html"
+import Navigation from "~/components/Navigation"
+import PageTransition from "~/components/PageTransition"
+import Toasts from "~/components/Toasts"
+import { userQueryOptions } from "~/features/auth/shared"
+import { getHints } from "~/features/hints/server"
+import { cookieSettingsOptions } from "~/features/hints/shared"
+import { QueryProvider } from "~/features/query/client"
+import { getQueryClient } from "~/features/query/shared"
+import { WEB_URL } from "~/lib/constants"
+import { PromiseProvider } from "~/lib/promises"
+import { WebSocket } from "~/lib/websocket"
+import { colors } from "~/tailwind.config"
 
-import { getTheme, makeThemeStyle, Theme } from "~/lib/themes"
-import { oneOf } from "~/lib/utils"
-import { WebSocketProvider } from "~/hooks/ws"
-import NavigationSideBar from "~/components/NavigationSideBar"
-import NavigationBottomBar from "~/components/NavigationBottomBar"
-import Toast from "~/components/Toast"
-import Cursors from "~/components/Cursors/Cursors"
-import Cursor from "~/components/Cursor"
+const EnsureUppercaseSerifAmpersand =
+  process.env.NODE_ENV === "development"
+    ? lazy(() => import("~/components/EnsureUppercaseSerifAmpersand"))
+    : () => null
 
-const metadataBase = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : `http://localhost:${process.env.PORT || 3000}`
+const inter = font({
+  src: "../assets/fonts/inter.woff2",
+  variable: "--font-inter",
+  display: "block",
+  preload: true,
+})
+
+const fraunces = font({
+  src: "../assets/fonts/fraunces.woff2",
+  variable: "--font-fraunces",
+  display: "block",
+  preload: true,
+})
+
+export const viewport: Viewport = {
+  themeColor: colors["arpeggio-black"][900],
+  colorScheme: "dark",
+}
 
 export const metadata: Metadata = {
-  metadataBase: new URL(metadataBase),
-  title: "Artists Together – Website soon!",
+  title: {
+    default: "Artists Together",
+    template: "%s – Artists Together",
+  },
   description: "An inclusive community for all kinds of artists.",
   keywords: ["Art", "Artist Community"],
-  twitter: {
-    card: "summary_large_image",
+  openGraph: {
+    title: "Artists Together",
+    description: "An inclusive community for all kinds of artists.",
+    siteName: "Artists Together",
+    locale: "en",
+    type: "website",
+    url: WEB_URL,
+  },
+  robots: {
+    index: process.env.VERCEL_ENV === "production",
+    follow: process.env.VERCEL_ENV === "production",
   },
 }
 
-export const runtime = "edge"
-
-const themes = [
-  Theme["anamorphic-teal"],
-  Theme["arpeggio-black"],
-  Theme["outsider-violet"],
-  Theme["tuxedo-crimson"],
-]
-
-const emojis = [
-  "🐶",
-  "🐵",
-  "🐯",
-  "🐮",
-  "🐴",
-  "🦊",
-  "🐷",
-  "🐨",
-  "🐭",
-  "🐹",
-  "🐰",
-  "🐼",
-  "🐻",
-  "🐸",
-  "🐲",
-  "🦁",
-  "🐱",
-  "🐦",
-  "🐤",
-  "🐔",
-  "🐧",
-]
-
-type Props = {
-  children: ReactNode
-}
-
-export default async function Layout({ children }: Props) {
-  const theme = getTheme(oneOf(themes))
-  const style = makeThemeStyle(theme)
-  const emoji = oneOf(emojis)
+export default async function Layout({ children }: PropsWithChildren) {
+  const hints = getHints()
+  const settings = await getCookie(cookieSettingsOptions)
+  const queryClient = getQueryClient()
+  await queryClient.prefetchQuery(userQueryOptions)
 
   return (
-    <html
+    <Html
       lang="en"
-      className="h-full bg-theme-900 text-gunpla-white-50"
-      style={style}
-      suppressHydrationWarning
+      className={cx(
+        inter.variable,
+        fraunces.variable,
+        "relative min-h-full scroll-p-0 font-inter antialiased",
+        "theme-outsider-violet bg-arpeggio-black-900 text-gunpla-white-50",
+      )}
     >
-      <body className="grid min-h-full pb-14 selection:bg-theme-300 selection:text-theme-900 sm:pb-0 sm:pl-16">
-        <Toast>
-          <WebSocketProvider>
-            <NavigationSideBar />
-            {children}
-            <Cursors emoji={emoji} />
-            <Cursor />
-            <NavigationBottomBar />
-          </WebSocketProvider>
-        </Toast>
-        <Script id="tailwindcss-noscript" strategy="beforeInteractive">
-          {`(function(){typeof document !== "undefined" && document.documentElement.classList.add("js");}())`}
-        </Script>
+      <body className="size-full min-h-full min-w-fit text-sm selection:bg-theme-300 selection:text-theme-900 sm:pl-16">
+        <QueryProvider>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <PromiseProvider hints={hints} settings={settings}>
+              <PageTransition>
+                <Navigation>{children}</Navigation>
+              </PageTransition>
+              <Cursors>
+                <Auth />
+                <Toasts />
+              </Cursors>
+              <WebSocket />
+            </PromiseProvider>
+            <EnsureUppercaseSerifAmpersand />
+          </HydrationBoundary>
+        </QueryProvider>
       </body>
-    </html>
+    </Html>
   )
 }
