@@ -17,7 +17,7 @@ export const cookieSessionOptions = cookieOptions({
   schema: v.pipe(v.string(), v.nonEmpty()),
   secure: process.env.NODE_ENV === "production",
   httpOnly: true,
-  sameSite: "lax",
+  sameSite: "none",
   maxAge: 60 * 60 * 24 * 30,
   path: "/",
 })
