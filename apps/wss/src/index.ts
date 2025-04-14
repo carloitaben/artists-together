@@ -69,9 +69,18 @@ const server = Bun.serve<WebSocketData, {}>({
     const cookiesHeader = request.headers.get("Cookie") || ""
     const cookie = parseCookies(cookiesHeader).get("session")
     const token = cookie ? genericDecode(cookie) : undefined
+    console.log("[INFO] incoming request", {
+      cookie,
+      token
+    })
 
     const auth =
       typeof token === "string" ? await validateSessionToken(token) : null
+
+    console.log("[INFO] found auth for cookie", {
+      cookie,
+      uuid: auth?.user.username || Math.random().toString(),
+    })
 
     const upgraded = server.upgrade<WebSocketData>(request, {
       data: {
