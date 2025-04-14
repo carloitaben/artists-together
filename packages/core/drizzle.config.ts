@@ -7,6 +7,6 @@ export default defineConfig({
   strict: true,
   dbCredentials: {
     url: String(process.env.DATABASE_URL),
-    authToken: process.env.DATABASE_TOKEN || undefined,
+    authToken: process.env.DATABASE_AUTH_TOKEN || undefined,
   },
 })
