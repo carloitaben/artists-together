@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
   )
 
   if (!params.success) {
+    console.log("Invalid params", params.issues)
     return new Response("Invalid params", {
       status: 307,
       headers: {
@@ -51,6 +52,7 @@ export async function GET(request: NextRequest) {
   }
 
   if ("error" in params.output) {
+    console.log("Found error in oauth response", params.output)
     switch (params.output.error) {
       case "access_denied":
         return new Response("Access denied", {
@@ -70,6 +72,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (params.output.state !== cookieOauth.state) {
+    console.log("OAuth state mismatch")
     return new Response("OAuth state mismatch", {
       status: 307,
       headers: {
@@ -212,6 +215,7 @@ export async function GET(request: NextRequest) {
       },
     )
   } catch (error) {
+    console.log("Internal server error", error)
     if (process.env.NODE_ENV === "development") {
       throw error
     }
