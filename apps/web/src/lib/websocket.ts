@@ -20,6 +20,8 @@ import { useEffect } from "react"
 import * as v from "valibot"
 import { useNavigationMatch } from "./navigation/client"
 import { useHints } from "./promises"
+import { getQueryClient } from "~/features/query/shared"
+import { userQueryOptions } from "~/features/auth/shared"
 
 const queue = new Map<ClientEvent, string>()
 
@@ -38,7 +40,19 @@ export function webSocketQueryOptions<T extends ServerEvent>(
 }
 
 export const webSocket = new ReconnectingWebSocket(
-  process.env.NEXT_PUBLIC_WSS_URL || "ws://localhost:1999",
+  async () => {
+    const queryClient = getQueryClient()
+    const user = await queryClient.ensureQueryData(userQueryOptions)
+    const url = new URL(
+      process.env.NEXT_PUBLIC_WSS_URL || "ws://localhost:1999",
+    )
+
+    if (user) {
+      url.searchParams.set("user", user.username)
+    }
+
+    return url.href
+  },
   process.env.NEXT_PUBLIC_WSS_URL ? "https" : "http",
   {
     startClosed: true,

@@ -1,8 +1,5 @@
 import "dotenv-mono/load"
 import type { ServerWebSocket } from "bun"
-import { genericDecode } from "@standard-cookie/core"
-import type { SessionValidationResult } from "@artists-together/core/auth"
-import { validateSessionToken } from "@artists-together/core/auth"
 import type {
   Cursor,
   ServerEventOutput,
@@ -15,29 +12,11 @@ import {
 type WebSocketData = {
   uuid: string
   room?: string
-  auth: SessionValidationResult
+  auth: boolean
   cursor: Cursor
 }
 
 const connections = new Map<string, ServerWebSocket<WebSocketData>>()
-
-// Adapted from https://github.com/pilcrowonpaper/oslo/blob/main/src/cookie/index.ts#L46-L57
-function parseCookies(header: string): Map<string, string> {
-  const cookies = new Map<string, string>()
-  const items = header.split("; ")
-
-  for (const item of items) {
-    const pair = item.split("=")
-    const rawKey = pair[0]
-    const rawValue = pair[1] ?? ""
-
-    if (!rawKey) continue
-
-    cookies.set(decodeURIComponent(rawKey), decodeURIComponent(rawValue))
-  }
-
-  return cookies
-}
 
 function update(ws: ServerWebSocket<WebSocketData>) {
   connections.set(ws.data.uuid, ws)
@@ -53,7 +32,7 @@ function getRoomState(room: string) {
       if (ws.data.auth) {
         state.members.push({
           cursor: ws.data.cursor,
-          username: ws.data.auth.user.username,
+          username: ws.data.uuid,
         })
       }
 
@@ -66,27 +45,17 @@ function getRoomState(room: string) {
 const server = Bun.serve<WebSocketData, {}>({
   port: process.env.PORT || 1999,
   async fetch(request, server) {
-    console.log("[INFO] cookies for request", request.headers.get("Cookie"))
-    const cookiesHeader = request.headers.get("Cookie") || ""
-    const cookie = parseCookies(cookiesHeader).get("session")
-    const token = cookie ? genericDecode(cookie) : undefined
-    console.log("[INFO] incoming request", {
-      cookie,
-      token
-    })
-
-    const auth =
-      typeof token === "string" ? await validateSessionToken(token) : null
+    const url = new URL(request.url)
+    const user = url.searchParams.get("user")
 
     console.log("[INFO] found auth for cookie", {
-      cookie,
-      uuid: auth?.user.username || Math.random().toString(),
+      uuid: user || Math.random().toString(),
     })
 
     const upgraded = server.upgrade<WebSocketData>(request, {
       data: {
-        auth,
-        uuid: auth?.user.username || Math.random().toString(),
+        auth: Boolean(user),
+        uuid: user || Math.random().toString(),
         cursor: null,
       },
     })
@@ -163,7 +132,7 @@ const server = Bun.serve<WebSocketData, {}>({
               ws.data.room,
               encodeServerMessage("cursor:update", {
                 cursor: parsed.output.data,
-                username: ws.data.auth.user.username,
+                username: ws.data.uuid,
               })
             )
           }
