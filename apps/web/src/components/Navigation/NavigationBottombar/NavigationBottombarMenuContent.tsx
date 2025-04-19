@@ -60,7 +60,9 @@ export default function NavigationBottombarMenuContent() {
           >
             <NavLink {...item.link} prefetch={!hints.saveData}>
               <Icon src={item.icon} alt="" />
-              <span className="truncate">{item.label}</span>
+              <span className="truncate">
+                {item.link.disabled ? "Coming soon!" : item.label}
+              </span>
             </NavLink>
           </NavigationBottombarMenuContentItem>
         </Menu.Item>

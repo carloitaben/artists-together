@@ -59,7 +59,7 @@ export const navigation = [
         label: "Discord",
         icon: "Discord",
         link: {
-          href: "https://discord.gg/9Ayh9dvhHe",
+          href: "https://discord.artiststogether.online",
           target: "_blank,",
         },
       },

@@ -49,7 +49,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: {
     default: "Artists Together",
-    template: "%s – Artists Together",
+    template: "Artists Together – %s",
   },
   description: "An inclusive community for all kinds of artists.",
   keywords: ["Art", "Artist Community"],
