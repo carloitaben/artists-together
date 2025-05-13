@@ -101,9 +101,14 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
   const oldStream = getValidStreamActivity(oldPresence)
   const newStream = getValidStreamActivity(newPresence)
 
-  if (oldStream?.url && newStream?.url && oldStream.url === newStream.url) {
+  if (
+    oldStream?.url &&
+    newStream?.url &&
+    oldStream.url === newStream.url &&
+    hasLiveNowRole
+  ) {
     console.log(
-      "[live-users] presenceUpdate: ignoring update (url is the same)",
+      "[live-users] presenceUpdate: ignoring update (url is the same and user already has live role)",
       newPresence.user.username,
       newStream.url
     )
