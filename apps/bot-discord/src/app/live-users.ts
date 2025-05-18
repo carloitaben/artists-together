@@ -1,4 +1,3 @@
-import { database, eq, liveUserTable } from "@artists-together/core/database"
 import { ROLE } from "@artists-together/core/discord"
 import { Activity, ActivityType, Presence } from "discord.js"
 import { registerEventHandler } from "~/lib/core"
@@ -42,12 +41,7 @@ registerEventHandler("ready", async (client) => {
         member.user.username
       )
 
-      return Promise.all([
-        member.roles.remove(ROLE.LIVE_NOW),
-        database
-          .delete(liveUserTable)
-          .where(eq(liveUserTable.discordId, member.user.id)),
-      ])
+      return member.roles.remove(ROLE.LIVE_NOW)
     }
 
     if (!streamingActivity && hasLiveRole) {
@@ -56,12 +50,7 @@ registerEventHandler("ready", async (client) => {
         member.user.username
       )
 
-      return Promise.all([
-        member.roles.remove(ROLE.LIVE_NOW),
-        database
-          .delete(liveUserTable)
-          .where(eq(liveUserTable.discordId, member.user.id)),
-      ])
+      return member.roles.remove(ROLE.LIVE_NOW)
     }
 
     if (streamingActivity?.url && hasArtistRole && !hasLiveRole) {
@@ -70,19 +59,7 @@ registerEventHandler("ready", async (client) => {
         member.user.username
       )
 
-      return Promise.all([
-        member.roles.add(ROLE.LIVE_NOW),
-        database
-          .insert(liveUserTable)
-          .values({
-            url: streamingActivity.url,
-            discordId: member.user.id,
-          })
-          .onConflictDoUpdate({
-            target: liveUserTable.discordId,
-            set: { url: streamingActivity.url },
-          }),
-      ])
+      return member.roles.add(ROLE.LIVE_NOW)
     }
   })
 })
@@ -123,10 +100,7 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
       newStream.url
     )
 
-    return database
-      .update(liveUserTable)
-      .set({ url: newStream.url })
-      .where(eq(liveUserTable.discordId, newPresence.member.user.id))
+    return
   }
 
   if (hasLiveNowRole) {
@@ -135,11 +109,6 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
       newPresence.user.username
     )
 
-    return Promise.all([
-      newPresence.member.roles.remove(ROLE.LIVE_NOW),
-      database
-        .delete(liveUserTable)
-        .where(eq(liveUserTable.discordId, newPresence.member.user.id)),
-    ])
+    return newPresence.member.roles.remove(ROLE.LIVE_NOW)
   }
 })
