@@ -15,6 +15,9 @@ function isValidActivity(activity: Activity) {
     case "Music":
     case "Miniatures & Models":
     case "Writting & Reading":
+    case "Co-working & Studying":
+    case "Lego & Brickbuilding":
+    case "Beauty and Body Art":
       return true
     default:
       return false
