@@ -98,12 +98,12 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
 
   if (oldStream?.url && newStream?.url) {
     console.log(
-      "[live-users] presenceUpdate: updating db entry (url changed)",
+      "[live-users] presenceUpdate: url changed",
       newPresence.user.username,
       newStream.url
     )
 
-    return
+    return newPresence.member.roles.add(ROLE.LIVE_NOW)
   }
 
   if (hasLiveNowRole) {
