@@ -31,7 +31,7 @@ registerEventHandler("ready", async (client) => {
   guild.members.cache.forEach((member) => {
     if (member.user.bot) return
 
-    const hasArtistRole = member.roles.cache.has(ROLE.ARTIST)
+    const hasArtistRole = member.roles.cache.has(ROLE.VERIFIED)
     const hasLiveRole = member.roles.cache.has(ROLE.LIVE_NOW)
     const streamingActivity = getValidStreamActivity(member.presence)
 
@@ -70,7 +70,7 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence.user) return
   if (newPresence.user.bot) return
 
-  const hasArtistRole = newPresence.member.roles.cache.has(ROLE.ARTIST)
+  const hasArtistRole = newPresence.member.roles.cache.has(ROLE.VERIFIED)
   const hasLiveNowRole = newPresence.member.roles.cache.has(ROLE.LIVE_NOW)
 
   if (!hasArtistRole) return

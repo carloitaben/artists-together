@@ -14,9 +14,9 @@ registerEventHandler("ready", (client) => {
     console.log("[kick-guests] members size", members.size)
 
     members.forEach(async (member) => {
-      if (!member.roles.cache.has(ROLE.GUEST)) return
-      if (member.roles.cache.has(ROLE.FRIEND)) return
-      if (member.roles.cache.has(ROLE.ARTIST)) return
+      if (!member.roles.cache.has(ROLE.INACTIVE)) return
+      if (member.roles.cache.has(ROLE.UNVERIFIED)) return
+      if (member.roles.cache.has(ROLE.VERIFIED)) return
 
       const joinedAt = dayjs(member.joinedAt)
       const aMonthAgo = dayjs().add(-1, "month")

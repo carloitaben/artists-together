@@ -1,8 +1,8 @@
+import "dotenv-mono/load"
 import {
   Client,
   Partials,
   GatewayIntentBits,
-  EmbedBuilder,
   AttachmentBuilder,
 } from "discord.js"
 import {
@@ -31,253 +31,180 @@ async function bootstrapRulesChannel(client: Client) {
 
   await rulesChannel.send({
     files: [
-      new AttachmentBuilder(getPublicFile("/images/banners/banner-rules.png")),
+      new AttachmentBuilder(
+        getPublicFile("/images/banners/banner-about-rules.png")
+      ),
     ],
   })
 
   await rulesChannel.send({
     embeds: [
-      new EmbedBuilder({
-        color: 0x024456,
+      {
+        color: 0xf0913f,
         description:
-          "# RULES" +
-          "\n" +
-          "————————————————————" +
-          "\n" +
-          "\n" +
-          "## :one:  Follow Discord's ToS and Community Guidelines." +
-          "\n" +
-          "- [*Terms of Service*](https://discord.com/terms)" +
-          "\n" +
-          "- [*Community Guidelines*](https://discord.com/guidelines)" +
-          "\n" +
-          "\n" +
-          "## :two:  Be respectful." +
-          "\n" +
-          "- Any form of harassment, hate speech or bullying will not be tolerated." +
-          "\n" +
-          "\n" +
-          "## :three:  Keep topics relevant to the appropriate channels." +
-          "\n" +
-          `- Refrain from critiquing others' work unless it is asked for.` +
-          "\n" +
-          "- Use the off-topic category accordingly." +
-          "\n" +
-          "\n" +
-          "## :four:  No spam." +
-          "\n" +
-          "- Avoid repetitive and excessive messages, pings or embeds." +
-          "\n" +
-          "\n" +
-          "————————————————————" +
-          "\n" +
-          "\n" +
-          "*✱ If you experience a rule break, please contact a moderator.*" +
-          "\n" +
-          "\n" +
-          "*✱ These rules are non-exhaustive, human beings will use their judgement when dealing with disruptive behaviour!*" +
-          "\n" +
-          "\n" +
-          "*✱ Please keep in mind that these rules extend to behaviour in the Voice channels, DMs and all content linked in the channels, as well.*",
-      }),
+          `## ✅ If you are an artist, introduce yourself in ${introductionsChannel} to get verified` +
+          `\n` +
+          `​` +
+          `\n` +
+          `## 👀 Enable "Show All Channels" to not miss anything!` +
+          `\n` +
+          `​` +
+          `\n` +
+          `## :one: Follow Discord's [ToS](https://discord.com/terms) & [Community Guidelines](https://discord.com/guidelines)` +
+          `\n` +
+          `​` +
+          `\n` +
+          `## :two: Be respectful` +
+          `\n` +
+          `- Any form of harassment, hate speech, or bullying will not be tolerated.` +
+          `\n` +
+          `- Refrain from critiquing others' work unless it's asked for.` +
+          `\n` +
+          `\n` +
+          `## :three: Keep topics relevant to the appropriate channels` +
+          `\n` +
+          `​` +
+          `\n` +
+          `## :four: No spam` +
+          `\n` +
+          `- Avoid repetitive and excessive messages, pings or embeds, and such.`,
+      },
     ],
   })
 
   await rulesChannel.send({
     embeds: [
-      new EmbedBuilder({
-        color: 0x024456,
+      {
+        color: 0xf0913f,
         description:
-          "# FAQ" +
-          "\n" +
-          "————————————————————" +
-          "\n" +
-          "\n" +
-          "## :question:  How can I be part of this community?" +
-          "\n" +
-          "By being here you already are! Everyone is free to join or leave whenever they want." +
-          "\n" +
-          "\n" +
-          "## :question:  Do I need to be an artist/creative to join this community?" +
-          "\n" +
-          "If you do not practise any art medium and you just want to see others' creations, you're more than welcome too." +
-          "\n" +
-          "\n" +
-          "## :question:  Is there any kind of subscription fee?" +
-          "\n" +
-          "No, it is and it will keep being totally free! You can of course donate to help us cover the expenses.",
-      }),
-    ],
-  })
-}
-
-async function bootstrapAboutChannel(client: Client) {
-  const guild = await getGuild(client)
-  const channel = await getTextBasedChannel(client, CHANNEL.ABOUT)
-
-  await channel.send({
-    files: [
-      new AttachmentBuilder(getPublicFile("/images/banners/banner-about.png")),
+          `*✱ If you experience a rule break, please contact a moderator.*` +
+          `\n` +
+          `\n` +
+          `*✱ These rules are non-exhaustive, human beings will use their judgement when dealing with disruptive behaviour!*` +
+          `\n` +
+          `\n` +
+          `*✱ Please keep in mind these rules extend to behaviour in the voice channels, DMs, and all content linked, as well.*`,
+      },
     ],
   })
 
-  await channel.send({
+  await rulesChannel.send({
     embeds: [
-      new EmbedBuilder({
-        color: 0xff1800,
+      {
+        color: 0xf4f4f4,
         description:
-          "**Artists Together** is an online, worldwide inclusive community for all kinds of artists and all skill levels." +
-          "\n" +
-          "\n" +
-          "## Our goal" +
-          "\n" +
-          "The main objective of this community is to give artists from around the globe a voice, a place to celebrate and promote their creative content and, of course, have some fun!" +
-          "\n" +
-          "\n" +
-          "We hope that members of A.T. will see this server as a safe space to learn, build, and share their creative journey among each other." +
-          "\n" +
-          "Collaboration is highly encouraged!",
-      }),
+          `**✨ A worldwide, inclusive, and diverse community for all kinds of artists and skill levels.**` +
+          `\n` +
+          `## Our goal` +
+          `\n` +
+          `Give artists from around the globe a voice, a place to celebrate and promote their creative content and, of course, have some fun.` +
+          `\n` +
+          `\n` +
+          `We hope you see this community as a safe space to learn, build, and share your creative journey among each other. Collaboration is highly encouraged!`,
+      },
     ],
   })
 
-  await channel.send({
+  await rulesChannel.send({
     embeds: [
-      new EmbedBuilder({
-        color: 0xff1800,
+      {
+        color: 0xf4f4f4,
         description:
-          "## Backstory" +
-          "\n" +
-          'This server was created in October 2020 as *"Artist Back Alley"* by *MissDaisyDee*, *AnonymousTurtle*, and *LittleChook* as an accountability group for fellow creatives with online shops to prepare for the impending holiday shopping season.' +
-          "\n" +
-          "\n" +
-          'As a big debut for the birth of this server, Artist Back Alley successfully launched its first community art project the "Hyper Train" where members submitted their designed box-cars to be hooked up together by other submissions, creating one glorious hyper train! You can still view the Hyper Train here: https://artistbackalley.com/' +
-          "\n" +
-          "\n" +
-          "Since launch, this server has grown and evolved - Still remaining true to the founders' goal of creating an inclusive space for all creatives to mingle, grow, and collaborate." +
-          "\n" +
-          "\n" +
-          '*"Collaboration is the heart of this server. I am grateful for the efforts and genius of both Daisy and Turtle in creating this, but it took a VILLAGE of fellow passionate creatives to keep this community growing and thriving. I take immense pride in helping to lay the foundation, and I hope that members share this same pride - because we built this together. We\'re artists together."* - LittleChook',
-      }),
+          `## Backstory` +
+          `\n` +
+          `In October 2020, MissDaisyDee, AnonymousTurtle, and LittleChook created *"Artist Back Alley"* as an accountability group for online artists to prepare for the holidays shopping season.` +
+          `\n` +
+          `\n` +
+          `Then, the first community project was launched, the *"Hype Train"* invited members to submit their unique box-cars to be hooked up together, creating one glorious hyper train!` +
+          `\n` +
+          `\n` +
+          `Later, this event renamed as *"Artist Raid Train"*, kept inviting streamers to raid each other on Twitch.` +
+          `\n` +
+          `\n` +
+          `Since launch, this community keeps evolving, still remaining true to the founders' goal of creating an inclusive space for all creatives to mingle, grow, and collaborate.` +
+          `\n` +
+          `\n` +
+          `In 2023, we rebranded as *"Artists Together"* with the debut of a new website as a part of our own ecosystem, lead by Vanilla.` +
+          `\n` +
+          `\n` +
+          `*"Collaboration is the heart of this server. I am grateful for the efforts and genius of both Daisy and Turtle, but it took a VILLAGE of fellow passionate creatives to keep this community thriving. I take immense pride in helping to lay the foundation, and I hope members share this same pride- Because we built this together. We're artists together."* - LittleChook`,
+      },
     ],
   })
 
-  await channel.send({
+  await rulesChannel.send({
     content:
       "**Website:** https://artiststogether.online/" +
       "\n" +
       "**Instagram:** https://instagram.com/artiststogether.online" +
       "\n" +
+      "**Bluesky:** https://bsky.app/profile/artiststogether.online" +
+      "\n" +
       "**Twitch:** https://twitch.tv/artiststogether" +
       "\n" +
       "**Youtube:** https://www.youtube.com/@artiststogether" +
       "\n" +
-      "**Discord:** https://discord.gg/9Ayh9dvhHe" +
+      "**Discord:** https://discord.artiststogether.online" +
       "\n" +
-      "**Donate:** https://ko-fi.com/artiststogether" +
-      "\n" +
-      "\n" +
-      "*You can also contact us at info@artiststogether.online*",
+      "**Mail:** [info@artiststogether.online](mailto:info@artiststogether.online)",
   })
 
-  await channel.send({
-    files: [
-      new AttachmentBuilder(getPublicFile("/images/banners/banner-art.png")),
-    ],
-  })
-
-  await channel.send({
-    embeds: [
-      new EmbedBuilder({
-        color: 0xffdc48,
-        description:
-          "**Artist Raid Train** is an online event done periodically where artists from the community stream and raid each other on Twitch." +
-          "\n" +
-          "\n" +
-          "Participating in the A.R.T. event is an excellent opportunity to:" +
-          "\n" +
-          "- *Meet and make new friends in the art streaming community.*" +
-          "\n" +
-          "- *Connect and engage with the A.T. members on a more personal level.*" +
-          "\n" +
-          "- *Promote your work, your channel, your shop/commissions page, etc.*" +
-          "\n" +
-          "- *Learn more about new art mediums/styles/processes.*" +
-          "\n" +
-          "- *Help you reach your stream goals.*",
-      }),
-    ],
-  })
-
-  await channel.send({
+  await rulesChannel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-pal.png")),
     ],
   })
 
-  await channel.send({
+  await rulesChannel.send({
     embeds: [
-      new EmbedBuilder({
-        color: 0x3924ff,
+      {
+        color: 0x3524f5,
         description:
-          "Hey there! **I am Pal** *(Programmable Artistic Life-form)*, the assistant bot of this community." +
-          "\n" +
-          "\n" +
-          "I have been created to be as diverse as possible, so no one can say I am ugly- That's why I have so many faces! But if you see a blob of color with horns and floating extremities, you can be 96.33% sure that's me!" +
-          "\n" +
-          "\n" +
-          "My current job is to assist members on community-related topics and help moderators with automated processes." +
-          "\n" +
-          "For now, I'll be announcing events and updates too." +
-          "\n" +
-          "\n" +
-          "I am the Pal you need!",
-      }),
+          `Hey there! I am Pal *(Programmable Artistic Life-form)*, the assistant bot of Artists Together.` +
+          `\n` +
+          `\n` +
+          `I have been created to assist the community in creative-related matters. I am still in development, please be patient!`,
+      },
     ],
   })
 
-  const [roleAdmin, roleModerator, roleArtist, roleFriend, roleGuest, rolePal] =
-    await Promise.all([
-      getRole(guild.roles, ROLE.ADMIN),
-      getRole(guild.roles, ROLE.MODERATOR),
-      getRole(guild.roles, ROLE.ARTIST),
-      getRole(guild.roles, ROLE.FRIEND),
-      getRole(guild.roles, ROLE.GUEST),
-      getRole(guild.roles, ROLE.PAL),
-    ])
-
-  await channel.send({
+  await rulesChannel.send({
     files: [
       new AttachmentBuilder(getPublicFile("/images/banners/banner-roles.png")),
     ],
   })
 
-  await channel.send({
+  const guild = await getGuild(client)
+  const [roleModerator, roleVerified, roleUnverified, roleWeb, rolePal] =
+    await Promise.all([
+      getRole(guild.roles, ROLE.MOD),
+      getRole(guild.roles, ROLE.VERIFIED),
+      getRole(guild.roles, ROLE.UNVERIFIED),
+      getRole(guild.roles, ROLE.WEB),
+      getRole(guild.roles, ROLE.PAL),
+    ])
+
+  await rulesChannel.send({
     embeds: [
-      new EmbedBuilder({
-        color: 0xf4f4f4,
+      {
+        color: 0xddfe6e,
         description:
-          `${roleAdmin} - Administrator of the server.` +
+          `${roleModerator} — Server moderator` +
           "\n" +
-          `${roleModerator} - Moderator of the server.` +
+          `${roleVerified} — Verified member involved in creative activities` +
           "\n" +
-          `${roleArtist} - Member that takes part in creative activities.` +
+          `${roleUnverified} — Unverified member of the community` +
           "\n" +
-          `${roleFriend} - Member who is just hanging around~` +
+          `${roleWeb} — Member registered in [artiststogether.online](https://www.artiststogether.online/)` +
           "\n" +
-          `${roleGuest} - Peep who just joined the server.` +
-          "\n" +
-          `${rolePal} - That's me, Pal! Friendly A.T. assistant bot!`,
-      }),
+          `${rolePal} — This is Pal, our assistant bot`,
+      },
     ],
   })
 }
 
 bot.once("ready", async (client) => {
-  await Promise.all([
-    bootstrapRulesChannel(client),
-    bootstrapAboutChannel(client),
-  ])
+  await bootstrapRulesChannel(client)
   console.log("🎉")
 })
 

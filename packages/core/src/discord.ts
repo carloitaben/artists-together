@@ -55,19 +55,19 @@ export const ROLE = {
     process.env.NODE_ENV === "development"
       ? "1096870186461696152"
       : "762898079862882367",
-  MODERATOR:
+  MOD:
     process.env.NODE_ENV === "development"
       ? "1101842475947139122"
       : "766375640639209472",
-  ARTIST:
+  VERIFIED:
     process.env.NODE_ENV === "development"
       ? "1101560472685248583"
       : "766376379456421918",
-  FRIEND:
+  UNVERIFIED:
     process.env.NODE_ENV === "development"
       ? "1099296505438937088"
       : "766932970107699211",
-  GUEST:
+  INACTIVE:
     process.env.NODE_ENV === "development"
       ? "1099287460715954246"
       : "1101174650018480168",
