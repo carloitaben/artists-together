@@ -73,10 +73,10 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
   if (!newPresence.user) return
   if (newPresence.user.bot) return
 
-  const hasArtistRole = newPresence.member.roles.cache.has(ROLE.VERIFIED)
+  const hasVerifiedRole = newPresence.member.roles.cache.has(ROLE.VERIFIED)
   const hasLiveNowRole = newPresence.member.roles.cache.has(ROLE.LIVE_NOW)
 
-  if (!hasArtistRole) return
+  if (!hasVerifiedRole) return
 
   const oldStream = getValidStreamActivity(oldPresence)
   const newStream = getValidStreamActivity(newPresence)
@@ -96,17 +96,7 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
     return
   }
 
-  if (oldStream?.url && newStream?.url) {
-    console.log(
-      "[live-users] presenceUpdate: url changed",
-      newPresence.user.username,
-      newStream.url
-    )
-
-    return newPresence.member.roles.add(ROLE.LIVE_NOW)
-  }
-
-  if (hasLiveNowRole) {
+  if (!newStream?.url) {
     console.log(
       "[live-users] presenceUpdate: removing db entry and role",
       newPresence.user.username
@@ -114,4 +104,12 @@ registerEventHandler("presenceUpdate", async (oldPresence, newPresence) => {
 
     return newPresence.member.roles.remove(ROLE.LIVE_NOW)
   }
+
+  console.log(
+    "[live-users] presenceUpdate: adding rule",
+    newPresence.user.username,
+    newStream.url
+  )
+
+  return newPresence.member.roles.add(ROLE.LIVE_NOW)
 })
