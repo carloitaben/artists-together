@@ -22,10 +22,6 @@ export const discord = createDiscord({
 })
 
 export const CHANNEL = {
-  ABOUT:
-    process.env.NODE_ENV === "development"
-      ? "1100827961244008510"
-      : "770660333747568680",
   ARTISTS_RAID_TRAIN:
     process.env.NODE_ENV === "development"
       ? "1198610257732190218"
